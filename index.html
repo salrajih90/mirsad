@@ -30,7 +30,7 @@
   --font-display:"Readex Pro","IBM Plex Sans Arabic","SF Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
+html,body{margin:0;padding:0;overflow-x:clip}
 body{
   background:var(--bg); color:var(--ink);
   font-family:var(--font-ui);
@@ -261,6 +261,42 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
 .domswitch span{font-size:11.5px;color:var(--ink-3)}
 .domswitch button.on span{color:var(--brand-soft)}
 @media(max-width:700px){.domswitch{flex-direction:column}.domswitch button{min-width:0;width:100%}}
+
+/* ===== تحسينات الجوال ===== */
+@media(max-width:700px){
+  /* شريط التبويبات: صف واحد يُمرَّر أفقياً بدل خمسة صفوف تبتلع الشاشة */
+  nav.tabs{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;
+    margin-inline:-20px;padding-inline:20px;scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs .tab{flex:0 0 auto;scroll-snap-align:center;min-height:40px}
+
+  /* مبدّل اللوحات: بطاقتان في الصف بلا وصف، بدل أربع بطاقات طوليّة */
+  .domswitch{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .domswitch button{width:auto;min-width:0;padding:10px 12px;min-height:44px;
+    align-items:center;justify-content:center;text-align:center}
+  .domswitch button span{display:none}
+  .domswitch b{font-size:13.5px}
+
+  /* الترويسة أهدأ وأصغر ارتفاعاً */
+  h1{font-size:21px}
+  .mark{width:38px;height:38px}
+  header.top{gap:12px;padding-bottom:16px;margin-bottom:18px}
+  .wrap{padding:18px 16px 64px}
+
+  /* أهداف لمس لا تقل عن 44px ونصوص لا تقل عن 11px */
+  select,button,.chip{min-height:38px}
+  .perbar .chip{min-height:0;font-size:11.5px}
+  .perbar .chip i{font-size:10.5px}
+  .covbar .cl{font-size:11px}
+
+  /* رسوم أطول قليلاً: الشاشة الضيقة تحتاج ارتفاعاً لتُقرأ المحاور */
+  .chartbox{height:300px}
+}
+@media(max-width:340px){
+  .domswitch{grid-template-columns:1fr}
+  .chartbox{height:280px}
+}
 </style>
 </head>
 <body>
