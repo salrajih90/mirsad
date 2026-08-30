@@ -181,7 +181,7 @@ canvas{cursor:pointer}
   padding:11px 16px;background:var(--surface-1);border:1px solid var(--line-soft);
   border-inline-start:3px solid var(--brand);border-radius:11px;font-size:13px;color:var(--ink-2)}
 .scopebar b{color:var(--ink);font-weight:600}
-.scopebar .sep{color:var(--line);}
+.scopebar .sep{color:var(--ink-3)}   /* فاصل زخرفي — رُفع تباينه ومع ذلك يُخفى عن قارئات الشاشة */
 .scopebar .tag{font-size:11px;color:var(--brand);border:1px solid var(--line);
   background:var(--surface-2);border-radius:6px;padding:2px 9px;letter-spacing:.04em}
 /* ===== الشاشة الرئيسة ===== */
@@ -1541,22 +1541,34 @@ function redundantEncode(cfg){
   try{
     const ds=(cfg.data&&cfg.data.datasets)||[];
     const t=cfg.type;
-    /* حلقة أو رسم بسلسلة واحدة متعددة الألوان: نمط لكل شريحة */
-    if(ds.length===1 && Array.isArray(ds[0].backgroundColor) && ds[0].backgroundColor.length>2){
-      const arr=ds[0].backgroundColor;
-      if(!arr.some(isPat))
-        ds[0].backgroundColor=arr.map((c,i)=>ixHatch(c,IX_PATS[i%IX_PATS.length]));
+
+    /* الحلقة والقطاع وحدهما: سلسلة واحدة بألوان فئوية — نمط لكل شريحة.
+       أما رسمُ أعمدةٍ بسلسلة واحدة ملوّنة فلونه عتبة أو إشارة أو إبراز لا فئة،
+       وقيمته معروضة على المحور، فاللون فيه مُكرِّر لا حامل وحيد — ولا يُنمَّط،
+       لأن نمطاً يدور بالموضع يخترع فئات لا وجود لها. */
+    if(ds.length===1){
+      if((t==='doughnut'||t==='pie') && Array.isArray(ds[0].backgroundColor)
+         && ds[0].backgroundColor.length>2 && !ds[0].backgroundColor.some(isPat))
+        ds[0].backgroundColor=ds[0].backgroundColor.map((c,i)=>ixHatch(c,IX_PATS[i%IX_PATS.length]));
       return cfg;
     }
-    if(ds.length<2) return cfg;
+
+    /* حين يُعلن المؤلف أن التقطيع نفسه يحمل معنى (كالتمييز بين الفعلي والمتوقع)
+       عبر meta.dashMeans، لا يُضاف تقطيع إلى أي سلسلة لئلا ينقلب المعنى.
+       وعندئذٍ تقع على المؤلف مسؤولية تمييز السلاسل بوسيلة أخرى. */
+    const dashIsMeaningful = cfg.options && cfg.options.__dashMeans;
+
     let k=0;
     ds.forEach(d=>{
       if(!d||d.label==='_') return;
       const type=d.type||t;
       if(type==='line'||type==='radar'){
         if(d.borderColor==='transparent') return;              /* حدود نطاق الثقة */
-        if(!d.borderDash||!d.borderDash.length) d.borderDash=IX_DASH[k%IX_DASH.length];
-        if(!d.pointStyle) d.pointStyle=IX_PTS[k%IX_PTS.length];
+        if(!dashIsMeaningful && (!d.borderDash||!d.borderDash.length))
+          d.borderDash=IX_DASH[k%IX_DASH.length];
+        /* شكل النقطة لا يُضاف إلى خط بلا نقاط: لا يظهر في الرسم ويظهر في الأسطورة فيضلّل */
+        if(!d.pointStyle && d.pointRadius!==0 && d.pointRadius!=null)
+          d.pointStyle=IX_PTS[k%IX_PTS.length];
         k++;
       } else if(type==='scatter'||type==='bubble'){
         if(!d.pointStyle) d.pointStyle=IX_PTS[k%IX_PTS.length];
@@ -1610,6 +1622,7 @@ window.MIRSAD_IX={
     if(meta) REG[id]=meta;
     cfg.options=cfg.options||{};
     if(meta&&meta.zeroOk) cfg.options.__zeroOk=true;
+    if(meta&&meta.dashMeans) cfg.options.__dashMeans=true;
     if(!(meta&&meta.colorOk)) redundantEncode(cfg);
     if(cfg.type!=='pie'&&cfg.type!=='doughnut'&&cfg.type!=='radar'&&cfg.type!=='scatter'){
       const p=cfg.options.plugins=cfg.options.plugins||{};
@@ -1840,11 +1853,11 @@ function renderScopeBar(){
   const ref = annual ? ylab(yOf(b)) : qlab(P[b]);
   el.innerHTML='<span class="tag">النطاق المعروض</span>'+
     '<b>'+scopeLabel()+'</b>'+
-    '<span class="sep">·</span>'+FREQ()+
-    '<span class="sep">·</span>'+cnt+
+    '<span class="sep" aria-hidden="true">·</span>'+FREQ()+
+    '<span class="sep" aria-hidden="true">·</span>'+cnt+
     '<span class="sep">·</span>الفترة المرجعية للمؤشرات <b>'+ref+'</b>'+
-    (b<P.length-1? '<span class="sep">·</span><span class="muted">آخر فترة منشورة '+qlab(P[P.length-1])+'</span>':'')+
-    (shown===1? '<span class="sep">·</span><span class="muted">نقطة واحدة: رسوم الاتجاه تحتاج فترتين فأكثر، والمفيد هنا رسوم التركيبة</span>':'');
+    (b<P.length-1? '<span class="sep" aria-hidden="true">·</span><span class="muted">آخر فترة منشورة '+qlab(P[P.length-1])+'</span>':'')+
+    (shown===1? '<span class="sep" aria-hidden="true">·</span><span class="muted">نقطة واحدة: رسوم الاتجاه تحتاج فترتين فأكثر، والمفيد هنا رسوم التركيبة</span>':'');
 }
 function renderKPI(){
   const _idx=periodIdx();
@@ -2106,11 +2119,35 @@ function decompose(arr){
   const m=sum(seas)/4; for(let q=0;q<4;q++) seas[q]-=m;
   const fitted = x.map(xi=>a+b*xi+seas[xi%4]);
   const err = y.map((v,i)=>v-fitted[i]);
-  const sd = Math.sqrt(sum(err.map(e=>e*e))/(n-3));
-  const sst = sum(y.map(v=>(v-my)**2)), sse=sum(err.map(e=>e*e));
+  /* النموذج يقدّر خمسة معالم: الحدّ الثابت والميل وثلاث موسميات حرة
+     (الرابعة مقيَّدة بأن مجموع الموسميات صفر) — فدرجات الحرية n−5 لا n−3. */
+  const K=5, df=Math.max(1,n-K);
+  const sse=sum(err.map(e=>e*e));
+  const sd = Math.sqrt(sse/df);
+  const sst = sum(y.map(v=>(v-my)**2));
   const mape = sum(y.map((v,i)=>Math.abs(err[i]/v)))/n*100;
   const errAt={}; x.forEach((xi,i)=>{ errAt[xi]=err[i]; });
-  return {a,b,seas,sd,r2:1-sse/sst,mape,n,errAt};
+  return {a,b,seas,sd,r2:1-sse/sst,mape,n,df,mx,sxx:den,errAt};
+}
+/* الخطأ المعياري لتنبؤ مشاهدة جديدة عند الموضع x0 — الصيغة المعيارية للانحدار:
+   sd × √(1 + 1/n + (x0 − x̄)² ÷ Sxx). تتسع مع البعد عن مركز البيانات، بخلاف صيغة تقريبية. */
+function sePred(m,x0){
+  return m.sd*Math.sqrt(1 + 1/m.n + (m.sxx? Math.pow(x0-m.mx,2)/m.sxx : 0));
+}
+/* قيم t الحرجة — جدول للدرجات الصغيرة ثم استيفاء خطي */
+function tCrit(df,two){
+  const T90={1:3.078,2:1.886,3:1.638,4:1.533,5:1.476,6:1.440,7:1.415,8:1.397,9:1.383,10:1.372,
+    12:1.356,15:1.341,20:1.325,24:1.318,30:1.310,40:1.303,60:1.296,120:1.289};
+  const T975={1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228,
+    12:2.179,15:2.131,20:2.086,24:2.064,30:2.042,40:2.021,60:2.000,120:1.980};
+  const T = two===0.80? T90 : T975, inf = two===0.80? 1.2816 : 1.9600;
+  if(T[df]) return T[df];
+  const ks=Object.keys(T).map(Number).sort((a,b)=>a-b);
+  if(df<ks[0]) return T[ks[0]];
+  for(let i=0;i<ks.length-1;i++) if(df>ks[i]&&df<ks[i+1]){
+    const f=(df-ks[i])/(ks[i+1]-ks[i]); return T[ks[i]]+f*(T[ks[i+1]]-T[ks[i]]);
+  }
+  return inf;
 }
 /* معامل الارتباط بين بواقي نموذجين على الفترات المشتركة */
 function residCorr(m1,m2){
@@ -2123,7 +2160,8 @@ function residCorr(m1,m2){
   return (va&&vb)? {r:cov/Math.sqrt(va*vb), n:n} : null;
 }
 function renderFc(){
-  ST('cFc','ربعي','ستة أرباع قادمة','مليون ريال','انحدار خطي على الاتجاه مع مكوّن موسمي · نطاق ثقة 80%');
+  ST('cFc','ربعي','ستة أرباع قادمة','مليون ريال',
+     'انحدار خطي على الاتجاه مع مكوّن موسمي · نطاق تنبؤ 80% بتوزيع t ودرجات حرية n−5');
   ST('cSeas','ربعي',COV(),'مليون ريال','متوسط انحراف كل ربع عن الاتجاه العام');
   const H=6;
   const mR=decompose(D.rev.TOTAL), mE=decompose(D.exp.TOTAL);
@@ -2132,46 +2170,61 @@ function renderFc(){
   const labels=P.map(qlab).concat(futLbl);
   const pad=new Array(P.length).fill(null);
   const proj=(m)=>fut.map(i=>m.a+m.b*i+m.seas[i%4]);
-  const band=(m,s)=>fut.map((i,k)=>m.a+m.b*i+m.seas[i%4]+s*1.2816*m.sd*Math.sqrt(1+(k+1)/m.n));
+  const band=(m,s)=>fut.map(i=>m.a+m.b*i+m.seas[i%4]+s*tCrit(m.df,0.80)*sePred(m,i));
   const lastR=D.rev.TOTAL[P.length-1], lastE=D.exp.TOTAL[P.length-1];
   draw('cFc',{type:'line',data:{labels,datasets:[
+      /* التقطيع محجوز لمعنى واحد: المتصل فعلي والمتقطع متوقع.
+         ويُفرَّق جانبا الإيراد والمصروف بعلامات نقطية متباعدة لا باللون وحده. */
       {label:'الإيرادات (فعلي)',data:D.rev.TOTAL,borderColor:C.s1,borderWidth:2,pointRadius:0,tension:.25},
-      {label:'المصروفات (فعلي)',data:D.exp.TOTAL,borderColor:C.s2,borderWidth:2,pointRadius:0,tension:.25},
+      {label:'المصروفات (فعلي)',data:D.exp.TOTAL,borderColor:C.s2,borderWidth:2,tension:.25,
+       pointStyle:'rectRot',pointRadius:c=>c.dataIndex%4===0?3.4:0,pointBorderColor:C.s2,
+       pointBackgroundColor:'transparent',pointBorderWidth:1.6},
+      /* التقطيع هنا يحمل معنى: المتصل فعلي والمتقطع متوقع.
+         ويُفرَّق المتوقعان بنمطَي تقطيع مختلفين، فلا يبقى اللون وحده حاملاً للفرق. */
       {label:'الإيرادات (متوقع)',data:pad.slice(0,-1).concat([lastR],proj(mR)),borderColor:C.s1,borderWidth:2,
-       borderDash:[6,4],pointRadius:0,tension:.25},
-      {label:'المصروفات (متوقع)',data:pad.slice(0,-1).concat([lastE],proj(mE)),borderColor:C.s2,borderWidth:2,
-       borderDash:[6,4],pointRadius:0,tension:.25},
+       borderDash:[10,4],pointRadius:0,tension:.25},
+      {label:'المصروفات (متوقع)',data:pad.slice(0,-1).concat([lastE],proj(mE)),borderColor:C.s2,borderWidth:2.4,
+       borderDash:[2,3],tension:.25,pointStyle:'rectRot',pointRadius:c=>c.dataIndex%2===0?3.4:0,
+       pointBorderColor:C.s2,pointBackgroundColor:'transparent',pointBorderWidth:1.6},
       {label:'نطاق ثقة 80% (إيرادات)',data:pad.concat(band(mR,1)),borderColor:'transparent',
        backgroundColor:C.s1+'1f',pointRadius:0,fill:'+1'},
       {label:'_',data:pad.concat(band(mR,-1)),borderColor:'transparent',pointRadius:0,fill:false}]},
     options:{interaction:{mode:'index',intersect:false},scales:{x:gridX,y:gridY()},
       plugins:{legend:{labels:{filter:i=>i.text!=='_'}},
-        tooltip:{filter:i=>i.dataset.label!=='_',callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}}}});
+        tooltip:{filter:i=>i.dataset.label!=='_',callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}}}},
+    {dashMeans:true});
 
   draw('cSeas',{type:'bar',data:{labels:['الربع الأول','الربع الثاني','الربع الثالث','الربع الرابع'],datasets:[
       {label:'الإيرادات',data:mR.seas,backgroundColor:C.s1,borderRadius:4,borderSkipped:false},
       {label:'المصروفات',data:mE.seas,backgroundColor:C.s2,borderRadius:4,borderSkipped:false}]},
     options:{scales:{x:gridX,y:gridY()},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}}}});
 
+  const rc=residCorr(mR,mE);
   const rowsT=[['المؤشر','الإيرادات','المصروفات'],
-    ['معامل التحديد R²',nf1.format(mR.r2*100)+'%',nf1.format(mE.r2*100)+'%'],
-    ['متوسط الخطأ النسبي MAPE',nf1.format(mR.mape)+'%',nf1.format(mE.mape)+'%'],
+    ['معامل التحديد R²',(mR.r2*100).toFixed(1)+'%',(mE.r2*100).toFixed(1)+'%'],
+    ['متوسط الخطأ النسبي MAPE',mR.mape.toFixed(1)+'%',mE.mape.toFixed(1)+'%'],
     ['الانحراف المعياري للبواقي',fmt(mR.sd),fmt(mE.sd)],
     ['الاتجاه لكل ربع',fmt(mR.b),fmt(mE.b)],
-    ['عدد المشاهدات',mR.n,mE.n]];
+    ['عدد المشاهدات',mR.n,mE.n],
+    ['درجات الحرية (المشاهدات − 5 معالم)',mR.df,mE.df]];
+  const rcRow = rc? '<tr><td colspan="3" class="dim">الارتباط بين بواقي النموذجين: '+
+      '<b><span dir="ltr">r = '+rc.r.toFixed(3)+'</span></b> على '+arQtrs(rc.n)+
+      ' — كمية بلا وحدة في المدى من (1) إلى 1، لا نسبة مئوية. '+
+      '(وحصة التباين المشترك <span dir="ltr">r² = '+nf1.format(rc.r*rc.r*100)+'%</span>.)</td></tr>' : '';
   document.getElementById('fcStats').innerHTML='<table>'+rowsT.map((r,i)=>'<tr>'+r.map(c=>
-    (i===0?'<th>':'<td>')+c+(i===0?'</th>':'</td>')).join('')+'</tr>').join('')+'</table>';
+    (i===0?'<th>':'<td>')+c+(i===0?'</th>':'</td>')).join('')+'</tr>').join('')+rcRow+'</table>';
 
   const gapNow=lastR-lastE, gapEnd=proj(mR)[H-1]-proj(mE)[H-1];
   /* نطاق الفارق: تباين(إيراد − مصروف) = تباين الإيراد + تباين المصروف − 2×التغاير.
      التغاير يُقاس ولا يُفترض صفراً — بواقي النموذجين مرتبطة، وإهمال ذلك يشوّه عرض النطاق. */
-  const seH=(m,k)=>m.sd*Math.sqrt(1+(k+1)/m.n);
-  const sR=seH(mR,H-1), sE=seH(mE,H-1);
-  const rc=residCorr(mR,mE), rho=rc?rc.r:0;
+  const xEnd=fut[H-1];
+  const sR=sePred(mR,xEnd), sE=sePred(mE,xEnd);
+  const rho=rc?rc.r:0;
   const sGap=Math.sqrt(sR*sR+sE*sE-2*rho*sR*sE);
   const sInd=Math.sqrt(sR*sR+sE*sE);
-  const gLo=gapEnd-1.2816*sGap, gHi=gapEnd+1.2816*sGap;
-  const half=1.2816*sGap;
+  const tG=tCrit(Math.min(mR.df,mE.df),0.80);
+  const gLo=gapEnd-tG*sGap, gHi=gapEnd+tG*sGap;
+  const half=tG*sGap;
   document.getElementById('nFc').innerHTML='<b>قراءة النموذج:</b> باستمرار الاتجاه الحالي دون تدخل في السياسة، '+
     (gapEnd<gapNow?'يتسع':'يضيق')+' الفارق من '+fmt(gapNow)+' في آخر ربع فعلي إلى نحو '+fmt(gapEnd)+
     ' بعد ستة أرباع — و<b>نطاق ثقة 80% لهذا الفارق من '+fmt(gLo)+' إلى '+fmt(gHi)+'</b>، '+
@@ -2184,8 +2237,20 @@ function renderFc(){
        : 'بافتراض استقلال بواقيهما، إذ تعذّر تقدير التغاير. ')+
     'والرسم أعلاه يرسم نطاق الإيرادات وحدها لا نطاق الفارق.</span> '+
     'ملاحظة منهجية: النموذج خطي ولا يلتقط الصدمات السعرية أو التغيرات التشريعية، لذا يُقرأ كخط أساس لا كتنبؤ.';
-  document.getElementById('nSeas').innerHTML='<b>الموسمية:</b> الربع الرابع يحمل أعلى انحراف موجب في المصروفات، '+
-    'وهو نمط ثابت عبر السنوات ويجب استبعاده عند مقارنة الأرباع ببعضها.';
+  /* «نمط ثابت عبر السنوات» ادّعاء يُقاس ولا يُؤكَّد: نفحص في كم سنة كان الربع الرابع هو الأعلى فعلاً */
+  const qMaxE=mE.seas.indexOf(Math.max(...mE.seas));
+  const yrsQ={}, expS=D.exp.TOTAL;
+  P.forEach((pp,i)=>{ if(expS[i]==null) return; const y=+pp.slice(0,4), q=+pp.slice(5)||((i%4)+1);
+    (yrsQ[y]=yrsQ[y]||{})[q]=expS[i]; });
+  const full=Object.keys(yrsQ).filter(y=>Object.keys(yrsQ[y]).length===4);
+  const hits=full.filter(y=>{const o=yrsQ[y]; let mq=1; for(let q=2;q<=4;q++) if(o[q]>o[mq]) mq=q; return mq===qMaxE+1;});
+  const QN=['الأول','الثاني','الثالث','الرابع'];
+  document.getElementById('nSeas').innerHTML='<b>الموسمية:</b> الربع '+QN[qMaxE]+' يحمل أعلى انحراف موجب في المصروفات '+
+    '('+fmt(mE.seas[qMaxE])+' مليون ريال فوق الاتجاه في المتوسط). '+
+    (full.length? '<b>وثباته مقيس لا مُدّعى:</b> كان الأعلى فعلياً في '+hits.length+' من '+arYears(full.length)+
+      ' مكتملة ('+nf0.format(Math.round(hits.length/full.length*100))+'%)'+
+      (hits.length===full.length?' — أي في كل سنة.':'، فهو نمط غالب لا مطّرد.')+' ':'')+
+    'ويجب استبعاده عند مقارنة الأرباع ببعضها.';
 }
 
 /* ---------- simulator ---------- */
@@ -2539,7 +2604,7 @@ function residuals(arr){
   for(let q=0;q<4;q++) seas[q]=cnt[q]?seas[q]/cnt[q]:0;
   const m=sum(seas)/4; for(let q=0;q<4;q++) seas[q]-=m;
   const err=y.map((v,i)=>v-(a+b*x[i]+seas[x[i]%4]));
-  const sd=Math.sqrt(sum(err.map(e=>e*e))/(n-3));
+  const sd=Math.sqrt(sum(err.map(e=>e*e))/Math.max(1,n-5));   /* خمسة معالم مقدَّرة */
   const out=new Array(arr.length).fill(null);
   x.forEach((xi,i)=>out[xi]={e:err[i],z:err[i]/sd,exp:a+b*xi+seas[xi%4]});
   return out;
@@ -5707,7 +5772,7 @@ init();
   "caution": "تداولت تقارير صحفية مستهدفاً بنسبة 80% محلياً و20% دولياً. لا يرد هذا في أي وثيقة للصندوق، وهو قريب مما تحقق فعلاً في 2025م — فلا يُعرض كمستهدف."
  },
  "tadawul": {
-  "src": "تقرير كبار الملاك، السوق المالية السعودية (تداول)",
+  "src": "تقرير كبار المُلاك (Substantial Shareholders) على صفحة كل شركة في موقع السوق المالية السعودية (تداول)",
   "asOf": "2026-08-27",
   "rule": "تلزم المادة 53 من قواعد طرح الأوراق المالية بالإفصاح عند بلوغ 5% وعند كل تغير بنسبة 1% بعدها، خلال ثلاثة أيام تداول.",
   "holdings": [
@@ -5717,7 +5782,8 @@ init();
     "t": "7010",
     "p": 62.0,
     "s": "الاتصالات",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "62%"
    },
    {
     "n": "شركة علم",
@@ -5725,15 +5791,17 @@ init();
     "t": "7203",
     "p": 67.0,
     "s": "التقنية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "67%"
    },
    {
     "n": "الشركة السعودية للعقار (العقارية)",
     "e": "Saudi Real Estate",
     "t": "4020",
-    "p": 64.58,
+    "p": 64.577,
     "s": "إدارة وتطوير العقارات",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "64.577%"
    },
    {
     "n": "شركة التعدين العربية السعودية (معادن)",
@@ -5741,7 +5809,8 @@ init();
     "t": "1211",
     "p": 63.78,
     "s": "المواد الأساسية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "63.78%"
    },
    {
     "n": "مجموعة تداول السعودية القابضة",
@@ -5749,15 +5818,17 @@ init();
     "t": "1111",
     "p": 60.0,
     "s": "الخدمات المالية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "60%"
    },
    {
     "n": "إعمار المدينة الاقتصادية",
     "e": "Emaar EC",
     "t": "4220",
-    "p": 55.55,
+    "p": 55.552,
     "s": "إدارة وتطوير العقارات",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "55.552%"
    },
    {
     "n": "مجموعة إم بي سي",
@@ -5765,87 +5836,101 @@ init();
     "t": "4072",
     "p": 54.0,
     "s": "الإعلام",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "54%"
    },
    {
     "n": "أكوا باور",
     "e": "ACWA Power",
     "t": "2082",
-    "p": 44.16,
+    "p": 44.164,
     "s": "المرافق العامة",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "44.164%"
    },
    {
     "n": "الشركة الوطنية للتنمية الزراعية (نادك)",
     "e": "NADEC",
     "t": "6010",
-    "p": 38.65,
+    "p": 38.648,
     "s": "إنتاج الأغذية",
-    "v": "سالك"
+    "v": "سالك",
+    "note": "الحصة مُفصَح عنها لدى تداول باسم <b>سالك</b> — الشركة السعودية للاستثمار الزراعي والإنتاج الحيواني، وهي مملوكة للصندوق — لا باسم الصندوق مباشرةً.",
+    "pp": "38.648%"
    },
    {
     "n": "أسمنت المنطقة الجنوبية",
     "e": "Southern Cement",
     "t": "3050",
-    "p": 37.43,
+    "p": 37.434,
     "s": "المواد الأساسية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "37.434%"
    },
    {
     "n": "البنك الأهلي السعودي",
     "e": "Saudi National Bank",
     "t": "1180",
-    "p": 37.24,
+    "p": 37.238,
     "s": "البنوك",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "37.238%"
    },
    {
     "n": "أديس القابضة",
     "e": "ADES Holding",
     "t": "2382",
-    "p": 23.79,
+    "p": 23.785,
     "s": "الطاقة",
-    "v": "مباشر"
+    "v": "مباشر",
+    "note": "إلى جانب حصة الصندوق المباشرة، يُفصح عن <b>أديس إنفستمنتس هولدينج ليميتد بنسبة 36.515%</b> — كيان يسيطر عليه الصندوق. فالحصة الفعلية أعلى من الرقم المباشر، ولا تنشر تداول رقماً موحّداً لهما، فلا تجمعهما اللوحة.",
+    "pp": "23.785%"
    },
    {
     "n": "الشرق الأوسط للورق",
     "e": "MEPCO",
     "t": "1202",
-    "p": 23.08,
+    "p": 23.077,
     "s": "المواد الأساسية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "23.077%"
    },
    {
     "n": "الإعادة السعودية",
     "e": "Saudi Re",
     "t": "8200",
-    "p": 22.74,
+    "p": 22.737,
     "s": "التأمين",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "22.737%"
    },
    {
     "n": "البحري",
     "e": "Bahri",
     "t": "4030",
-    "p": 22.55,
+    "p": 22.554,
     "s": "النقل",
-    "v": "مباشر"
+    "v": "مباشر",
+    "note": "يُفصح كذلك عن أرامكو السعودية للتطوير بنسبة 20%.",
+    "pp": "22.554%"
    },
    {
     "n": "بنك الرياض",
     "e": "Riyad Bank",
     "t": "1010",
-    "p": 21.75,
+    "p": 21.754,
     "s": "البنوك",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "21.754%"
    },
    {
     "n": "أسمنت القصيم",
     "e": "Qassim Cement",
     "t": "3040",
-    "p": 19.01,
+    "p": 19.012,
     "s": "المواد الأساسية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "19.012%"
    },
    {
     "n": "مرافق",
@@ -5853,39 +5938,48 @@ init();
     "t": "2083",
     "p": 17.5,
     "s": "المرافق العامة",
-    "v": "مباشر"
+    "v": "مباشر",
+    "note": "أربعة مُلاك متساوين بنسبة 17.5% لكلٍّ: الصندوق · سابك · الهيئة الملكية للجبيل وينبع · أرامكو السعودية للطاقة.",
+    "pp": "17.5%"
    },
    {
     "n": "المملكة القابضة",
     "e": "Kingdom Holding",
     "t": "4280",
-    "p": 16.87,
+    "p": 16.865,
     "s": "الاستثمار",
-    "v": "مباشر"
+    "v": "مباشر",
+    "note": "يُفصح كذلك عن الأمير الوليد بن طلال بنسبة 78.135%.",
+    "pp": "16.865%"
    },
    {
     "n": "المراعي",
     "e": "Almarai",
     "t": "2280",
-    "p": 16.32,
+    "p": 16.323,
     "s": "إنتاج الأغذية",
-    "v": "سالك"
+    "v": "سالك",
+    "note": "الحصة مُفصَح عنها لدى تداول باسم <b>سالك</b> لا باسم الصندوق مباشرةً. ويُفصح كذلك عن شركة سلطان القابضة بنسبة 23.696%.",
+    "pp": "16.323%"
    },
    {
     "n": "أم القرى للتنمية والإعمار (مسار)",
     "e": "MASAR",
-    "t": "4331",
-    "p": 16.29,
+    "t": "4325",
+    "p": 16.286,
     "s": "إدارة وتطوير العقارات",
-    "v": "مباشر"
+    "v": "مباشر",
+    "note": "يُفصح كذلك عن المؤسسة العامة للتأمينات الاجتماعية بنسبة 24.049%.",
+    "pp": "16.286%"
    },
    {
     "n": "النقل الجماعي (سابتكو)",
     "e": "SAPTCO",
     "t": "4040",
-    "p": 15.73,
+    "p": 15.725,
     "s": "النقل",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "15.725%"
    },
    {
     "n": "مصرف الإنماء",
@@ -5893,7 +5987,8 @@ init();
     "t": "1150",
     "p": 10.0,
     "s": "البنوك",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "10%"
    },
    {
     "n": "أسمنت ينبع",
@@ -5901,7 +5996,8 @@ init();
     "t": "3060",
     "p": 10.0,
     "s": "المواد الأساسية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "10%"
    },
    {
     "n": "أسمنت المنطقة الشرقية",
@@ -5909,7 +6005,8 @@ init();
     "t": "3080",
     "p": 10.0,
     "s": "المواد الأساسية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "10%"
    },
    {
     "n": "طيبة للاستثمار",
@@ -5917,7 +6014,8 @@ init();
     "t": "4090",
     "p": 8.49,
     "s": "إدارة وتطوير العقارات",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "8.49%"
    },
    {
     "n": "الشركة السعودية للسيراميك",
@@ -5925,7 +6023,8 @@ init();
     "t": "2040",
     "p": 5.4,
     "s": "السلع الرأسمالية",
-    "v": "مباشر"
+    "v": "مباشر",
+    "pp": "5.4%"
    }
   ],
   "below5": [
@@ -5943,12 +6042,18 @@ init();
   "conflict": {
    "n": "الشركة السعودية للكهرباء",
    "t": "5110",
-   "txt": "القوائم المالية الموحدة للصندوق (2024م و2025م) تذكر ملكية 75.10%، وقوائم الشركة تذكر نقل 74.31% من الدولة إلى الصندوق بمرسوم ملكي في 2017م. ومع ذلك **لا تظهر الشركة إطلاقاً في تقرير كبار الملاك لدى تداول** بتاريخ 27-08-2026م. ثلاثة مصادر رسمية لا تتفق، ولم أجد ما يوفّق بينها."
+   "txt": "تنشر ثلاثة مصادر رسمية ثلاثة أرقام لملكية الصندوق: 75.10% و74.31%، ولم نتمكن من استخراج صفّ الشركة من تقرير كبار المُلاك لدى تداول — <b>وتعذُّر الاستخراج ليس دليلاً على غياب الصفّ</b>: صفحة التقرير تُبنى بجافاسكربت، وفشل القراءة أرجح من إخلال مالكٍ بهذا الحجم بموجب المادة 53. فتُعرض الأرقام المنشورة ولا تُرجَّح، ولا يُبنى على غياب الصفّ استنتاج."
   },
   "seh": {
    "v": "أكثر من 994 مليار ريال",
    "txt": "يذكر التقرير السنوي 2025م أن محفظة الأسهم السعودية تضم أكثر من 15 شركة مدرجة بقيمة سوقية مجتمعة تتجاوز 994 مليار ريال. الصياغة لا توضّح هل هذا إجمالي القيمة السوقية للشركات أم قيمة حصص الصندوق فيها — والفرق جوهري."
-  }
+  },
+  "verified": "<b>ما جرى فعلاً:</b> فُتحت صفحة كل شركة من الشركات السبع والعشرين على موقع تداول، وقُرئ جدول كبار المُلاك <span dir=\"ltr\">(Substantial Shareholders)</span> فيها، ونُقلت النسبة كما وردت. تاريخ القراءة <b>27-08-2026م</b>، وهو تاريخ آخر يوم تداول ظهر في الجدول لكل الشركات — <b>وليس تاريخ إفصاح كل مالك على حدة</b>، فتقرير تداول يعرض الحيازة القائمة في ذلك اليوم لا تاريخ نشوئها. <b>وحدّ هذا التحقق:</b> أجراه مُنتِج اللوحة لا طرف مستقل، ولم يُعَد إنتاجه من جهة أخرى بعدُ.",
+  "indirect": "<b>حصّتان مُفصَح عنهما باسم شركة تابعة لا باسم الصندوق:</b> نادك والمراعي، وكلتاهما باسم <b>سالك</b> (الشركة السعودية للاستثمار الزراعي والإنتاج الحيواني) — شركة مملوكة للصندوق. كانت اللوحة تعرضهما ضمن حصص الصندوق دون تمييز، فوُسمتا الآن «غير مباشرة». والقاعدة المعتمدة: تُعرض النسبة كما أُفصح عنها، ويُسمّى المالك المُفصِح، ولا تُجمع الحصص المباشرة وغير المباشرة في رقم واحد لأن تداول لا تنشر مجموعاً موحّداً.",
+  "precision": "تُعرض كل نسبة <b>كما نشرها المصدر حرفاً</b> (حقل نصّي، لا رقم) — فبعضها بثلاث منازل وبعضها بمنزلة أو بلا منازل. ولا تُضاف منزلة لم تُنشر ولا تُحذف منزلة نُشرت. والقيمة الرقمية تُستعمل للترتيب والرسم فقط.",
+  "ownerRule": "<b>قاعدة الإدراج:</b> يُدرَج صفٌّ لكل حيازة <b>مُفصَح عنها لدى تداول</b> باسم الصندوق أو باسم شركة مملوكة له تظهر في جدول كبار المُلاك. وعمود «المالك» يبيّن الجهة المُفصِحة: «مباشر» باسم الصندوق نفسه، و«سالك» باسم الشركة السعودية للاستثمار الزراعي والإنتاج الحيواني المملوكة له. <br><b>وما لا يُدرَج صفّاً مستقلاً:</b> حيازة كيان يسيطر عليه الصندوق حين تكون <b>في الشركة نفسها</b> التي للصندوق فيها حصة مباشرة — كأديس إنفستمنتس هولدينج في أديس القابضة (36.515%) — فتُذكر في حاشية الصف بدل أن تُعدّ حيازة ثانية. <b>وأثر ذلك على العدّادات:</b> «حيازات معلنة» و«ملكية أغلبية» و«تأثير جوهري» محتسبة على <b>الحصص المباشرة المُفصَح عنها باسم كل مالك</b>، لا على الحصص المجمَّعة. ولو جُمعت حصتا أديس (23.785% + 36.515% = 60.3%) لانتقلت الشركة إلى فئة الأغلبية — ولا تُجمع لأن تداول لا تنشر مجموعاً موحّداً، ولأن الجمع يفترض سيطرة لم تُفصح.",
+  "readOn": "27-08-2026م",
+  "asOfLabel": "27-08-2026م"
  },
  "us13f": {
   "src": "إقرارات نموذج 13F لدى هيئة الأوراق المالية والبورصات الأمريكية — الرقم النظامي 0001767640",
@@ -6092,7 +6197,7 @@ init();
      "sh": 1281250
     }
    ],
-   "recon": "مجموع الصفوف يطابق إجمالي الغلاف المُقرّ (37,908,748,002 دولاراً) بالسنت. تحققتُ منه بجمع صفوف informationtable.xml بنفسي."
+   "recon": "مجموع صفوف <span dir=\"ltr\">informationtable.xml</span> يطابق إجمالي الغلاف المُقرّ (37,908,748,002 دولاراً) <b>بالدولار الكامل</b> — والإقرارات بعد 2023م تُبلَّغ بالدولار لا بآلافه، فلا كسور فيها. جمعتُ الصفوف الخمسة بنفسي وطابقتُها بـ <span dir=\"ltr\">tableValueTotal</span>."
   },
   "split": "عدد أسهم Lucid يظهر 1,770,888,684 في 2024م و177,088,867 في 2025م — تجزئة عكسية 1:10 مع تغيّر رمز CUSIP، وليست تخفيضاً للمركز.",
   "restated": "أُعيد تقرير إقرار الربع الأول 2026م في 14-08-2026م بالقيد 0001011438-26-000536 (نوع التعديل: إعادة تقرير). سبب التعديل كما ورد في الإقرار: إغفال غير مقصود لشركة Saudi Electronic Games Holding Co من قائمة المديرين الآخرين، وإعادة تصنيف الإقرار تقريراً مجمّعاً بدل تقرير حيازات. قيم الصفوف وإجماليها لم تتغير (12,005,605,739 دولاراً · أربعة مراكز)، فسلسلة اللوحة لهذا الربع تبقى كما هي.",
@@ -6496,6 +6601,27 @@ init();
    "was": "«لا تعتمد اللوحة سعر صرف غير مثبَّت» — وقاعدةٌ تخرقها تحويلات النرويج وتيماسك",
    "now": "أُعلنت القاعدة كما تُطبَّق فعلاً، ووُسم السعران المعوَّمان بتاريخ قياسهما",
    "why": "المراجعة المركّزة وجدت التناقض بين القاعدة المعلنة وما تسجّله بيانات الصفوف."
+  },
+  {
+   "d": "30-08-2026م",
+   "w": "نسب الملكية في سوق الأسهم السعودي",
+   "was": "27 نسبة منسوبة كلها إلى الصندوق مباشرةً، ومقرَّبة إلى منزلتين، بلا رموز شركات",
+   "now": "27 نسبة محقَّقة من صفحة كل شركة على تداول، بدقة المصدر، مع رمز الشركة واسم المالك المُفصِح ووسم المباشر وغير المباشر",
+   "why": "المراجعة المستقلة سجّلت أن 26 من 27 نسبة غير محقَّقة. وكشف التحقق أن حصّتَي نادك والمراعي مُفصَح عنهما باسم سالك لا باسم الصندوق."
+  },
+  {
+   "d": "30-08-2026م",
+   "w": "رمز شركة أم القرى للتنمية والإعمار (مسار)",
+   "was": "4331",
+   "now": "4325",
+   "why": "الرمز المنشور كان خاطئاً. صُحّح بعد فتح صفحة الشركة على تداول والتحقق من اسمها ورمزها."
+  },
+  {
+   "d": "30-08-2026م",
+   "w": "دقة نسب الملكية في تداول",
+   "was": "27 نسبة مقرَّبة إلى منزلتين وغير محقَّقة من المصدر",
+   "now": "27 نسبة محقَّقة واحدةً واحدةً من صفحة كل شركة، بدقة المصدر (ثلاث منازل حيث تُنشر)",
+   "why": "المراجعة المستقلة سجّلت أن 26 من 27 غير محقَّقة. والتحقق أثبت صحة القيم كلها ولم يغيّر أي حصة تغييراً جوهرياً؛ وأضاف ملاحظات على الملكية غير المباشرة في أديس، وصحّح رمز مسار."
   }
  ],
  "tsrNote": "ثلاثة أرقام منشورة لنفس الفترة (منذ 2017م) بمسمّيات مختلفة. المصدران الرسميان لا يستعملان المصطلح نفسه: بيان 2024م يقول <span dir=\"ltr\">total portfolio return</span> (عائد المحفظة) وبيان 2025م يقول <span dir=\"ltr\">total shareholder return</span> (عائد المساهم) — وهما مقياسان متمايزان في أدبيات الأداء ومعايير <span dir=\"ltr\">GIPS</span>. <b>ولم يُنشر ما يوضّح إن كانا يقيسان الشيء نفسه</b>، فلا تقرّر اللوحة تطابقهما. وتعتمد اللوحة الرقم الأحدث (5.8%) لأنه الوارد في التقرير السنوي 2025م، مع إبقاء الثلاثة ظاهرةً بمصادرها."
@@ -6593,12 +6719,14 @@ function ols(xs,ys){
   return {a,b,r2: st? 1-ss/st : null, n, se, se2:s2!=null?Math.sqrt(s2):null,
           t: se? b/se : null, lo: se? b-tcrit*se : null, hi: se? b+tcrit*se : null, tcrit};
 }
-/* قيمة t الحرجة عند 95% ثنائية الطرف — جدول للدرجات الصغيرة ثم تقريب */
+/* قيمة t الحرجة عند 95% ثنائية الطرف — جدول للدرجات الصغيرة ثم استيفاء خطي */
 function tinv95(df){
   const T={1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228,
-    12:2.179,15:2.131,20:2.086,24:2.064,30:2.042,40:2.021,60:2.000,120:1.980};
+    11:2.201,12:2.179,13:2.160,14:2.145,15:2.131,16:2.120,17:2.110,18:2.101,19:2.093,20:2.086,
+    22:2.074,24:2.064,26:2.056,28:2.048,30:2.042,35:2.030,36:2.028,40:2.021,50:2.009,60:2.000,120:1.980};
   if(T[df]) return T[df];
   const ks=Object.keys(T).map(Number).sort((a,b)=>a-b);
+  if(df<ks[0]) return T[ks[0]];
   for(let i=0;i<ks.length-1;i++) if(df>ks[i]&&df<ks[i+1]){
     const f=(df-ks[i])/(ks[i+1]-ks[i]); return T[ks[i]]+f*(T[ks[i+1]]-T[ks[i]]);
   }
@@ -6666,6 +6794,8 @@ function renderPrice(){
   document.getElementById('nNMon').innerHTML='<b>المدى التاريخي:</b> أدنى شهر '+mlab(mnM[0])+' عند '+usd(mnM[1])+
     ' دولاراً، وأعلاه '+mlab(mxM[0])+' عند '+usd(mxM[1])+'. '+
     'الأخضر شهور تتجاوز 90 دولاراً والأحمر ما دون 50 — والحدّان مختاران للقراءة البصرية لا لدلالة رسمية. '+
+    '<span class="muted">واللون هنا <b>يكرّر</b> ما يقوله المحور ولا ينفرد بحمل المعنى: قيمة كل شهر مقروءة '+
+    'من المحور ومن التلميح، فمن لا يميّز الألوان لا يفوته شيء.</span> '+
     '<span class="muted">'+PARTNOTE+'</span>';
 
   /* التقلب: انحراف معياري متحرك 30 يوماً للعوائد اللوغاريتمية، مُسنَّن سنوياً */
@@ -6825,7 +6955,7 @@ function renderBreak(){
   document.getElementById('nNGap').innerHTML='<b>كيف تُقرأ:</b> وقوع الخط البرتقالي فوق الأزرق يعني أن الميزانية '+
     'احتاجت سعراً أعلى مما تحقق — أي عجزاً، ومساحة الفارق هي حجمه بالدولار للبرميل. '+
     'في '+ylab(l.y)+' بلغ الفارق '+usd(Math.abs(gap))+' دولاراً '+(gap>=0?'لصالح الميزانية':'ضدّ الميزانية')+
-    '، وتحقق فائض في '+surp+' من '+arYears(r.length)+'. '+
+    '، وتحقق فائض في '+arYears(surp)+' من '+arYears(r.length)+'. '+
     '<b>تحسين على النسخة السابقة:</b> السعر هنا هو المتوسط الفعلي المحقق لبرنت لا افتراضاً يُدخله المستخدم، '+
     'فصارت الفجوة قياساً لا تمريناً. '+
     '<br><b>مصالحة مع الرقم الرسمي المنشور:</b> '+(function(){
@@ -7133,7 +7263,11 @@ function renderTargets(){
        المستهدفات السقفية تُعرض بحالة الالتزام في الجدول، ولا تُقحم على محور النِّسب. */
     const meas=T.rows.filter(r=>r.pct!=null&&r.kind!=='ceil');
     const ceil=T.rows.filter(r=>r.kind==='ceil');
-    draw('f-cTgt',{type:'bar',data:{labels:meas.map(r=>r.t+(r.kind==='floor'?' (أرضية)':'')),
+    /* عمود المحتوى المحلي متحققه من سنة سابقة — يُوسم في الرسم لا في الجدول وحده */
+    const END='2025';   /* سنة نهاية البرنامج — لا يُوسم إلا ما تحقق في سنة أخرى */
+    const yrOf=r=>{const m=/\((\d{4})م\)/.exec(r.act||''); return (m&&m[1]!==END)?m[1]:null;};
+    draw('f-cTgt',{type:'bar',data:{labels:meas.map(r=>r.t+(r.kind==='floor'?' (أرضية)':'')+
+        (yrOf(r)?' — متحقق '+yrOf(r)+'م':'')),
       datasets:[{label:'نسبة التحقق من المستهدف',data:meas.map(r=>r.pct),
         backgroundColor:meas.map(r=>r.pct>=100?C.good:(r.pct>=90?C.warn:C.bad)),borderRadius:5}]},
       options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:noLeg,
@@ -7190,26 +7324,36 @@ function renderTad(){
   const maj=T.holdings.filter(h=>h.p>50).length;
   const infl=T.holdings.filter(h=>h.p>=20&&h.p<=50).length;
   set('f-tadKpis',
-    kpi('حيازات معلنة', T.holdings.length, 'شركة مدرجة · تتجاوز عتبة الإفصاح 5%')+
-    kpi('ملكية أغلبية', maj, 'شركة يملك فيها الصندوق أكثر من 50%')+
-    kpi('تأثير جوهري', infl, 'شركة بملكية بين 20% و50%')+
-    kpi('تاريخ المرجع', ltr(T.asOf), 'تقرير كبار الملاك — تداول')
+    kpi('حيازات معلنة', T.holdings.length, arN(T.holdings.length,'شركة مدرجة','شركتان مدرجتان','شركات مدرجة','شركة مدرجة')+' · تتجاوز عتبة الإفصاح 5%')+
+    kpi('ملكية أغلبية', maj, arN(maj,'شركة','شركتان','شركات','شركة')+' يملك فيها الصندوق أكثر من 50%')+
+    kpi('تأثير جوهري', infl, arN(infl,'شركة','شركتان','شركات','شركة')+' بملكية بين 20% و50%')+
+    kpi('يوم التداول المرجعي', T.asOfLabel, 'تقرير كبار المُلاك — تداول')
   );
 
   draw('f-cTad',{type:'bar',data:{labels:H.map(h=>h.n),
     datasets:[{label:'نسبة الملكية',data:H.map(h=>h.p),
       backgroundColor:H.map(h=>h.p>50?C.s3:(h.p>=20?C.s1:C.s7)),borderRadius:4}]},
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:noLeg,
-      scales:{x:{...gridY(v=>v+'%'),beginAtZero:true,max:70},
+      scales:{x:{...gridY(v=>v+'%'),beginAtZero:true,
+                 max:Math.ceil(Math.max(...H.map(h=>h.p),10)/10)*10},
               y:{grid:{display:false},ticks:{color:C.ink2,font:{size:10.5},autoSkip:false}}}}},
-    {unit:'% من رأس المال',note:'أخضر: ملكية أغلبية · أزرق: تأثير جوهري · بنفسجي: أقل من 20%'});
-  ST('f-cTad','يومي (تحدّثه تداول كل يوم تداول)',ltr(T.asOf),'% من رأس المال','الملكية المعلنة');
+    {unit:'% من رأس المال',note:'أخضر: ملكية أغلبية · أزرق: تأثير جوهري · بنفسجي: أقل من 20%. '+
+      'واللون يكرّر ما يقوله المحور ولا ينفرد بحمل المعنى — النسبة مقروءة من المحور ومن الجدول أدناه.'});
+  ST('f-cTad','يومي (تحدّثه تداول كل يوم تداول)',T.asOfLabel,'% من رأس المال','الحصة المباشرة المُفصَح عنها لكل مالك');
 
-  set('f-tadTbl','<div class="tblwrap"><table class="tbl"><thead><tr><th>الشركة</th><th>الرمز</th><th>الملكية</th><th>القطاع</th><th>المالك</th></tr></thead><tbody>'+
-    H.map(h=>'<tr class="rowclick" data-t="'+esc(h.t)+'"><td>'+esc(h.n)+'<span class="dim"> · '+ltr(h.e)+'</span></td>'+
-      '<td>'+ltr(h.t)+'</td><td><b>'+pct2(h.p)+'</b></td><td class="dim">'+esc(h.s)+'</td>'+
-      '<td class="dim">'+esc(h.v)+'</td></tr>').join('')+'</tbody></table></div>'+
-    '<p class="hint">'+esc(T.rule)+'</p>');
+  /* الدقة كما ينشرها المصدر: ثلاث منازل حيث نُشرت، ومنزلتان حيث لا */
+  set('f-tadTbl','<div class="tblwrap"><table class="tbl"><thead><tr><th>الشركة</th><th>الرمز</th>'+
+    '<th>الملكية كما نُشرت</th><th>القطاع</th><th>المالك المُفصِح</th></tr></thead><tbody>'+
+    H.map(h=>'<tr class="rowclick" data-t="'+esc(h.t)+'"><td>'+esc(h.n)+'<span class="dim"> · '+ltr(h.e)+'</span>'+
+      (h.v!=='مباشر'?' <span class="badge na">غير مباشرة</span>':'')+'</td>'+
+      '<td>'+ltr(h.t)+'</td><td><b>'+ltr(h.pp||(h.p+'%'))+'</b></td><td class="dim">'+esc(h.s)+'</td>'+
+      '<td class="dim">'+esc(h.v)+'</td></tr>'+
+      (h.note?'<tr class="sub"><td colspan="5" class="dim">'+h.note+'</td></tr>':'')
+    ).join('')+'</tbody></table></div>'+
+    '<p class="hint">'+esc(T.rule)+' · الحيازة القائمة في يوم التداول '+esc(T.asOfLabel)+'.</p>'+
+    '<div class="note"><b>كيف تحققنا:</b> '+T.verified+'</div>'+
+    '<div class="note">'+T.ownerRule+'</div>'+
+    '<div class="note"><b>الدقة:</b> '+T.precision+'</div>');
 
   set('f-tadNotes',
     '<div class="blockhead">حيازات دون عتبة الإفصاح</div>'+
@@ -7224,14 +7368,15 @@ function renderTad(){
 function renderUS(){
   const U=P.us13f, n=U.q.length-1;
   const peak=Math.max(...U.val), peakQ=U.q[U.val.indexOf(peak)];
+  const qlbl=k=>{const m=/^(\d{4})ر(\d)$/.exec(k); return m?('ر'+m[2]+' '+m[1]+'م'):k;};
   set('f-usKpis',
-    kpi('قيمة المراكز المُقرّة', nf1.format(U.val[n]), 'مليار دولار · '+U.q[n])+
+    kpi('قيمة المراكز المُقرّة', nf1.format(U.val[n]), 'مليار دولار · '+qlbl(U.q[n]))+
     kpi('عدد المراكز', U.n[n], arN(U.n[n],'مركز','مركزان','مراكز','مركزاً')+' في آخر إقرار')+
-    kpi('الذروة المسجلة', nf1.format(peak), 'مليار دولار · '+peakQ)+
+    kpi('الذروة المسجلة', nf1.format(peak), 'مليار دولار · '+qlbl(peakQ))+
     kpi('التغير عن الذروة', pct1((U.val[n]-peak)/peak*100), 'في القيمة المُقرّة', 'bad')
   );
 
-  draw('f-cUs',{data:{labels:U.q,datasets:[
+  draw('f-cUs',{data:{labels:U.q.map(qlbl),datasets:[
     {type:'line',label:'القيمة المُقرّة (مليار دولار)',data:U.val,borderColor:C.s1,backgroundColor:'rgba(57,135,229,.13)',
      fill:true,tension:.28,pointRadius:0,borderWidth:2,yAxisID:'y'},
     {type:'line',label:'عدد المراكز',data:U.n,borderColor:C.s4,tension:.28,pointRadius:0,borderWidth:1.6,
@@ -7239,8 +7384,9 @@ function renderUS(){
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:leg,
     scales:{x:gridX,y:{...gridY(v=>nf0.format(v)),position:'right'},
             y1:{...gridY(v=>nf0.format(v)),position:'left',grid:{display:false}}}}},
-    {unit:'مليار دولار',note:'المصدر: إقرارات 13F. القيمة سوقية في نهاية الربع، ولا تتضمن تكلفة الشراء.'});
-  ST('f-cUs','ربعي',U.q[0]+' — '+U.q[n],'مليار دولار','القيمة السوقية آخر الربع');
+    {unit:'مليار دولار',note:'المصدر: إقرارات 13F. القيمة سوقية في نهاية الربع، ولا تتضمن تكلفة الشراء. '+
+      '<b>محوران مستقلان:</b> القيمة على اليمين وعدد المراكز على اليسار، ولكلٍّ مقياسه — فتقاطع الخطين لا يعني شيئاً.'});
+  ST('f-cUs','ربعي',qlbl(U.q[0])+' — '+qlbl(U.q[n]),'مليار دولار (يمين) · عدد (يسار)','القيمة السوقية آخر الربع — محوران مستقلان');
 
   const L=U.latest;
   set('f-usTbl','<div class="blockhead">تفصيل آخر إقرار — '+esc(L.q)+'</div>'+
@@ -7250,7 +7396,7 @@ function renderUS(){
       '<td>'+ltr(r.cls||'—')+'</td><td>'+nf0.format(r.sh)+'</td><td>'+nf0.format(r.v)+'</td>'+
       '<td>'+pct1(r.v/L.total*100)+'</td></tr>').join('')+
     '<tr class="tot"><td><b>الإجمالي</b></td><td></td><td></td><td><b>'+nf0.format(L.total)+'</b></td><td>100%</td></tr>'+
-    '</tbody></table><p class="hint">'+esc(L.recon)+'</p>');
+    '</tbody></table><p class="hint">'+L.recon+'</p>');
 
   set('f-usNotes',
     '<div class="warnbox"><b>ما لا يُنشر:</b> نموذج 13F لا يتضمن تكلفة الشراء إطلاقاً. فلا يمكن احتساب ربح أو خسارة أو عائد متحقق من مصدر رسمي. ما تعرضه اللوحة هو <b>القيمة السوقية المُقرّة</b> وتغيّرها بين ربع وربع — وهو رقم منشور لا مُقدَّر.</div>'+
@@ -7293,6 +7439,8 @@ function renderPeers(){
        backgroundColor:hatch5(C.s7),borderColor:C.s7,borderWidth:1.5,borderRadius:5}
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{...leg,
+      legend:{...(leg.legend||{}),labels:{...((leg.legend||{}).labels||{}),
+        filter:(it,data)=>(data.datasets[it.datasetIndex].data||[]).some(v=>v!=null)}},
       tooltip:{callbacks:{afterLabel:c=>(withV[c.dataIndex]||{}).vnote||''}}},
       scales:{x:gridX,y:gridY()}}},
     {unit:'مليار دولار',note:'العمود المصمت مشتق من رقم رسمي؛ والمهشَّر تقدير مزوّد خاص لصندوق لا يُفصح.'});
@@ -7321,7 +7469,7 @@ function renderPeers(){
       '<td>'+(r.fs?'نعم':'لا')+'</td><td>'+(r.h?'نعم':'لا')+'</td><td>'+(r.if?'نعم':'لا')+'</td>'+
       '<td><b>'+dscore(r)+'/5</b></td></tr>').join('')+'</tbody></table></div>'+
     '<div class="warnbox">'+P.peers.vcolNote+'</div>'+
-    '<div class="note"><b>عن منهجية المزوّد:</b> '+esc(P.peers.vendorNote)+'</div>'+
+    '<div class="note"><b>عن منهجية المزوّد:</b> '+P.peers.vendorNote+'</div>'+
     '<div class="note">'+esc(P.peers.swfiNote)+'</div>');
 
   const G=P.gsr;
