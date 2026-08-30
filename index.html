@@ -1506,6 +1506,73 @@ function stamp(canvasId, chips){
   const card=cv.closest('.card'); if(!card) return;
   card.__chips=chips; paintStamps(card);
 }
+/* ── قاعدة عامة: لا يحمل اللون المعنى وحده — WCAG 2.2 SC 1.4.1 ──
+   تُطبَّق على كل رسم متعدد السلاسل تلقائياً بدل تسميتها رسماً رسماً:
+   الأعمدة والحلقات تأخذ أنماط تعبئة متمايزة، والخطوط أنماط تقطيع وأشكال نقاط.
+   ما ضُبط يدوياً يُترك كما هو، ومن يريد الإعفاء يمرّر meta.colorOk. */
+const IX_PATS=['solid','diag','back','dots','grid','vert','horz','wide'];
+const IX_DASH=[[],[7,4],[2,3],[10,4,2,4],[5,3,1,3],[14,5],[9,3,3,3],[4,4]];
+const IX_PTS=['circle','rect','triangle','rectRot','star','crossRot','cross','line'];
+const _ixPat={};
+function ixHatch(color,kind){
+  if(!kind||kind==='solid'||typeof color!=='string') return color;
+  const key=color+'|'+kind; if(_ixPat[key]) return _ixPat[key];
+  try{
+    const cv=document.createElement('canvas'); cv.width=cv.height=8;
+    const x=cv.getContext('2d'); if(!x) return color;
+    x.fillStyle=color; x.fillRect(0,0,8,8);
+    x.strokeStyle='rgba(13,23,43,.55)'; x.lineWidth=1.6; x.beginPath();
+    if(kind==='diag'){ x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
+    else if(kind==='back'){ x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
+    else if(kind==='vert'){ x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
+    else if(kind==='horz'){ x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
+    else if(kind==='grid'){ x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
+    else if(kind==='wide'){ x.lineWidth=2.6; x.moveTo(-2,8);x.lineTo(8,-2); }
+    x.stroke();
+    if(kind==='dots'){ x.fillStyle='rgba(13,23,43,.6)';
+      [[2,2],[6,6]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
+    const c2=document.createElement('canvas').getContext('2d');
+    _ixPat[key]=(c2&&c2.createPattern(cv,'repeat'))||color;
+  }catch(e){ _ixPat[key]=color; }
+  return _ixPat[key];
+}
+const isPat = v => typeof v==='object' && v!==null && typeof v!=='string';
+function redundantEncode(cfg){
+  try{
+    const ds=(cfg.data&&cfg.data.datasets)||[];
+    const t=cfg.type;
+    /* حلقة أو رسم بسلسلة واحدة متعددة الألوان: نمط لكل شريحة */
+    if(ds.length===1 && Array.isArray(ds[0].backgroundColor) && ds[0].backgroundColor.length>2){
+      const arr=ds[0].backgroundColor;
+      if(!arr.some(isPat))
+        ds[0].backgroundColor=arr.map((c,i)=>ixHatch(c,IX_PATS[i%IX_PATS.length]));
+      return cfg;
+    }
+    if(ds.length<2) return cfg;
+    let k=0;
+    ds.forEach(d=>{
+      if(!d||d.label==='_') return;
+      const type=d.type||t;
+      if(type==='line'||type==='radar'){
+        if(d.borderColor==='transparent') return;              /* حدود نطاق الثقة */
+        if(!d.borderDash||!d.borderDash.length) d.borderDash=IX_DASH[k%IX_DASH.length];
+        if(!d.pointStyle) d.pointStyle=IX_PTS[k%IX_PTS.length];
+        k++;
+      } else if(type==='scatter'||type==='bubble'){
+        if(!d.pointStyle) d.pointStyle=IX_PTS[k%IX_PTS.length];
+        k++;
+      } else if(type==='bar'){
+        const bg=d.backgroundColor;
+        if(typeof bg==='string') d.backgroundColor=ixHatch(bg,IX_PATS[k%IX_PATS.length]);
+        else if(Array.isArray(bg)&&!bg.some(isPat))
+          d.backgroundColor=bg.map(c=>ixHatch(c,IX_PATS[k%IX_PATS.length]));
+        k++;
+      }
+    });
+  }catch(e){}
+  return cfg;
+}
+
 /* ── الإفصاح عن خط الأساس ────────────────────────────────────
    الدستور: خط الأساس الصفري إلزامي على الأعمدة، اختياري على الخطوط «مع الإفصاح».
    هذه الإضافة تُنتج الإفصاح آلياً: أي رسم لا يشمل محور قيمته الصفر يُختم بمداه. */
@@ -1543,6 +1610,7 @@ window.MIRSAD_IX={
     if(meta) REG[id]=meta;
     cfg.options=cfg.options||{};
     if(meta&&meta.zeroOk) cfg.options.__zeroOk=true;
+    if(!(meta&&meta.colorOk)) redundantEncode(cfg);
     if(cfg.type!=='pie'&&cfg.type!=='doughnut'&&cfg.type!=='radar'&&cfg.type!=='scatter'){
       const p=cfg.options.plugins=cfg.options.plugins||{};
       const t=p.tooltip=p.tooltip||{};
@@ -1582,6 +1650,19 @@ const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181'
 
 /* ---------- helpers ---------- */
 const nf0 = new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+
+/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+function arN(n,one,two,few,many){
+  n=Math.abs(+n);
+  if(n===1) return one;
+  if(n===2) return two;
+  if(n>=3&&n<=10) return few;
+  return many||one;
+}
+const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
+const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
+const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
+const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1 = new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const fmt  = v => v==null? '—' : (v<0? '('+nf0.format(Math.round(-v))+')' : nf0.format(Math.round(v)));
 const fmtB = v => v==null? '—' : nf1.format(v/1000)+' مليار';
@@ -2005,7 +2086,7 @@ function renderDebt(){
     ? 'والفارق بينهما أقل من نصف نقطة مئوية، فلا يُقرأ على أنه تفوّق جانب على آخر في دقة التقدير'
     : 'فالخطأ المطلق الأكبر في جانب <b>'+(aR>aE?'الإيرادات':'المصروفات')+'</b> بفارق '+nf1.format(diff)+' نقطة مئوية';
   document.getElementById('nAcc').innerHTML='<b>دقة التقدير:</b> متوسط الخطأ المطلق في تقدير الإيرادات '+
-    nf1.format(aR)+'% مقابل '+nf1.format(aE)+'% للمصروفات على '+nObs+' سنة — '+cmp+'. '+
+    nf1.format(aR)+'% مقابل '+nf1.format(aE)+'% للمصروفات على '+arYears(nObs)+' — '+cmp+'. '+
     'ومتوسط الانحراف <em>بإشارته</em> '+sgn(bR)+' للإيرادات و'+sgn(bE)+' للمصروفات؛ '+
     'الموجب يعني أن المتحقق فاق المقدَّر. '+
     '<span class="hint">الخطأ المطلق يقيس حجم الانحراف لا اتجاهه، ولا يدلّ وحده على فاعلية أداة سياسة. '+
@@ -2028,7 +2109,18 @@ function decompose(arr){
   const sd = Math.sqrt(sum(err.map(e=>e*e))/(n-3));
   const sst = sum(y.map(v=>(v-my)**2)), sse=sum(err.map(e=>e*e));
   const mape = sum(y.map((v,i)=>Math.abs(err[i]/v)))/n*100;
-  return {a,b,seas,sd,r2:1-sse/sst,mape,n};
+  const errAt={}; x.forEach((xi,i)=>{ errAt[xi]=err[i]; });
+  return {a,b,seas,sd,r2:1-sse/sst,mape,n,errAt};
+}
+/* معامل الارتباط بين بواقي نموذجين على الفترات المشتركة */
+function residCorr(m1,m2){
+  const k=Object.keys(m1.errAt).filter(i=>i in m2.errAt);
+  if(k.length<8) return null;
+  const a=k.map(i=>m1.errAt[i]), b=k.map(i=>m2.errAt[i]);
+  const n=a.length, ma=sum(a)/n, mb=sum(b)/n;
+  let cov=0,va=0,vb=0;
+  for(let i=0;i<n;i++){ cov+=(a[i]-ma)*(b[i]-mb); va+=(a[i]-ma)**2; vb+=(b[i]-mb)**2; }
+  return (va&&vb)? {r:cov/Math.sqrt(va*vb), n:n} : null;
 }
 function renderFc(){
   ST('cFc','ربعي','ستة أرباع قادمة','مليون ريال','انحدار خطي على الاتجاه مع مكوّن موسمي · نطاق ثقة 80%');
@@ -2071,18 +2163,25 @@ function renderFc(){
     (i===0?'<th>':'<td>')+c+(i===0?'</th>':'</td>')).join('')+'</tr>').join('')+'</table>';
 
   const gapNow=lastR-lastE, gapEnd=proj(mR)[H-1]-proj(mE)[H-1];
-  /* نطاق الفارق: تباين الفارق = تباين الإيرادات + تباين المصروفات (بافتراض استقلال البواقي).
-     نشر الفارق نقطةً وحدها يخفي عدم يقين يفوق نصف قيمته. */
+  /* نطاق الفارق: تباين(إيراد − مصروف) = تباين الإيراد + تباين المصروف − 2×التغاير.
+     التغاير يُقاس ولا يُفترض صفراً — بواقي النموذجين مرتبطة، وإهمال ذلك يشوّه عرض النطاق. */
   const seH=(m,k)=>m.sd*Math.sqrt(1+(k+1)/m.n);
-  const sGap=Math.sqrt(Math.pow(seH(mR,H-1),2)+Math.pow(seH(mE,H-1),2));
+  const sR=seH(mR,H-1), sE=seH(mE,H-1);
+  const rc=residCorr(mR,mE), rho=rc?rc.r:0;
+  const sGap=Math.sqrt(sR*sR+sE*sE-2*rho*sR*sE);
+  const sInd=Math.sqrt(sR*sR+sE*sE);
   const gLo=gapEnd-1.2816*sGap, gHi=gapEnd+1.2816*sGap;
+  const half=1.2816*sGap;
   document.getElementById('nFc').innerHTML='<b>قراءة النموذج:</b> باستمرار الاتجاه الحالي دون تدخل في السياسة، '+
-    'يتسع/يضيق الفارق من '+fmt(gapNow)+' في آخر ربع فعلي إلى نحو '+fmt(gapEnd)+' بعد ستة أرباع — '+
-    'و<b>نطاق ثقة 80% لهذا الفارق من '+fmt(gLo)+' إلى '+fmt(gHi)+'</b>، أي بعرض '+fmt(gHi-gLo)+
-    ' مليون ريال. فالرقم النقطي وحده يخفي عدم يقين يقارب '+
-    nf0.format(Math.round(Math.abs((gHi-gLo)/gapEnd)*100))+'% من قيمته، ولذلك يُقرأ مدىً لا رقماً. '+
-    '<span class="muted">النطاق محتسب بجمع تباينَي نموذجَي الإيرادات والمصروفات عند الأفق السادس '+
-    '(بافتراض استقلال بواقيهما، وهو افتراض مبسِّط يميل إلى تضييق النطاق لا توسيعه). '+
+    (gapEnd<gapNow?'يتسع':'يضيق')+' الفارق من '+fmt(gapNow)+' في آخر ربع فعلي إلى نحو '+fmt(gapEnd)+
+    ' بعد ستة أرباع — و<b>نطاق ثقة 80% لهذا الفارق من '+fmt(gLo)+' إلى '+fmt(gHi)+'</b>، '+
+    'أي <b>±'+nf0.format(Math.round(half/Math.abs(gapEnd)*100))+'%</b> حول الرقم المعروض ('+fmt(half)+' مليون ريال في كل اتجاه). '+
+    'فالرقم النقطي وحده لا يُقرأ، ويُقرأ المدى بدلاً منه. '+
+    '<span class="muted">النطاق محتسب من تباينَي نموذجَي الإيرادات والمصروفات عند الأفق السادس '+
+    (rc? '<b>مع التغاير بينهما</b>: معامل الارتباط بين بواقي النموذجين '+nf1.format(rho*100)+'% على '+rc.n+
+         ' ربعاً. وهو موجب، فإهماله (بافتراض الاستقلال) كان سيُوسّع النطاق لا يُضيّقه — '+
+         'بعرض '+nf0.format(Math.round((sInd/sGap-1)*100))+'% زائدة. '
+       : 'بافتراض استقلال بواقيهما، إذ تعذّر تقدير التغاير. ')+
     'والرسم أعلاه يرسم نطاق الإيرادات وحدها لا نطاق الفارق.</span> '+
     'ملاحظة منهجية: النموذج خطي ولا يلتقط الصدمات السعرية أو التغيرات التشريعية، لذا يُقرأ كخط أساس لا كتنبؤ.';
   document.getElementById('nSeas').innerHTML='<b>الموسمية:</b> الربع الرابع يحمل أعلى انحراف موجب في المصروفات، '+
@@ -2461,7 +2560,7 @@ function renderQuality(){
   const CAP=25, shown=alerts.slice(0,CAP);
   document.getElementById('tAlerts').innerHTML='<caption class="hint" style="caption-side:top;text-align:start;padding:0 0 8px">'+
     (alerts.length>CAP
-      ? 'يعرض الجدول أشدّ '+shown.length+' تنبيهاً (بالبعد المعياري) من أصل '+alerts.length+' — أي أن '+(alerts.length-CAP)+' تنبيهاً أقلّ شدة غير معروضة هنا.'
+      ? 'يعرض الجدول أشدّ '+arAlerts(shown.length)+' (بالبعد المعياري) من أصل '+alerts.length+' — أي أن '+arAlerts(alerts.length-CAP)+' أقلّ شدة غير معروضة هنا.'
       : 'يعرض الجدول التنبيهات كاملةً ('+alerts.length+').')+'</caption>'+
     '<thead><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+
     '</tr></thead><tbody>'+shown.map((a,k)=>'<tr tabindex="0" data-k="'+k+'"><td>'+qlab(a.p)+'</td><td>'+a.grp+'</td><td>'+a.name+
@@ -2489,7 +2588,7 @@ function renderQuality(){
   const recent=alerts.filter(a=>P.indexOf(a.p)>=P.length-4);
   document.getElementById('nAlerts').innerHTML='<b>القاعدة:</b> يُرصد البند حين تبتعد قيمته الفعلية عن القيمة '+
     'التي يتوقعها نموذج الاتجاه والموسمية بأكثر من انحرافين معياريين. '+
-    'رُصد '+alerts.length+' تنبيهاً عبر كامل السلسلة، منها '+recent.length+' في آخر أربعة أرباع، '+
+    'رُصد '+arAlerts(alerts.length)+' عبر كامل السلسلة، منها '+recent.length+' في آخر أربعة أرباع، '+
     'ويعرض الجدول أعلاه أشدّها '+Math.min(alerts.length,CAP)+'. '+
     '<b>تحذير تفسيري:</b> التنبيه إشارة إلى فترة تستحق التدقيق، لا دليلاً على خطأ — كثير منها يعود إلى قرارات '+
     'سياسة أو دفعات استثنائية موثّقة في التقارير نفسها.';
@@ -3031,6 +3130,19 @@ const DASH=[[],[7,4],[2,3],[10,4,2,4],[5,3,1,3],[14,5]];
 
 
 const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+
+/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+function arN(n,one,two,few,many){
+  n=Math.abs(+n);
+  if(n===1) return one;
+  if(n===2) return two;
+  if(n>=3&&n<=10) return few;
+  return many||one;
+}
+const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
+const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
+const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
+const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
 const pct1=v=>v==null?'—':(v<0?'('+(-v).toFixed(1)+'%)':v.toFixed(1)+'%');
@@ -3394,14 +3506,13 @@ function renderLink(){
   const md=vs.length?(vs.length%2?vs[(vs.length-1)/2]:(vs[vs.length/2-1]+vs[vs.length/2])/2):null;
   const fnum=v=>v<0?'('+nf1.format(-v)+')':nf1.format(v);
   const allv=vs.slice();
-  const yrWord=n=>n===1?'سنة واحدة':(n===2?'سنتين':(n<=10?n+' سنوات':n+' سنة'));
   document.getElementById('nElast').innerHTML=
     '<b>ما يُقاس:</b> هذا المؤشر هو <b>طواعية الإيرادات غير النفطية</b> — نسبة نمو الإيراد إلى نمو وعائه، '+
     '<em>شاملةً</em> أثر التغيرات التقديرية في السياسة الضريبية. وهي غير <b>المرونة</b> التي تُقاس بعد تنقية أثر السياسة، '+
     'ولا تسمح البيانات المنشورة بإجراء تلك التنقية. '+
     '<br><b>كيف تُقرأ:</b> قيمة أعلى من 1 تعني نمو الإيراد أسرع من وعائه في تلك السنة. '+
     'ولا يُستدلّ منها وحدها على توسّع القاعدة أو ارتفاع الكفاءة، لأنها لا تفصل أثر السياسة عن أثر النشاط. '+
-    (md!=null?'<br><b>الوسيط '+fnum(md)+'</b> على '+yrWord(vs.length)+' قابلة للقراءة'+
+    (md!=null?'<br><b>الوسيط '+fnum(md)+'</b> على '+arYears(vs.length)+' قابلة للقراءة'+
       (allv.length?'، والمدى من '+fnum(allv[0])+' إلى '+fnum(allv[allv.length-1])+'':'')+'. '+
       '<span class="hint">يُعرض الوسيط لا المتوسط لأن السلسلة قصيرة وفيها قيم متطرفة.</span>':'')+
     (denNeg.length?'<br><b>سنوات لا تُقرأ:</b> '+denNeg.map(ylab).join('، ')+' — انكمش فيها الناتج غير النفطي '+
@@ -3442,7 +3553,7 @@ const EFRM=[
   ['النمو التراكمي للنشاط','((قيمة النشاط في السنة المختارة <span class="op">÷</span> قيمته في سنة الأساس) <span class="op">−</span> 1) <span class="op">×</span> 100','%','']
  ]],
  ['الأوزان والحصص',[
-  ['حصة الأنشطة النفطية','(القيمة المضافة لاستخراج النفط الخام والغاز <span class="op">÷</span> الناتج المحلي الإجمالي) <span class="op">×</span> 100','% من الناتج',
+  ['حصة استخراج النفط الخام والغاز','(القيمة المضافة لاستخراج النفط الخام والغاز <span class="op">÷</span> الناتج المحلي الإجمالي) <span class="op">×</span> 100','% من الناتج',
    'مقياس هيكلي للاقتصاد، يختلف عن حصة الإيرادات النفطية التي تقيس الميزانية.'],
   ['وزن النشاط في الاقتصاد','(القيمة المضافة للنشاط <span class="op">÷</span> الناتج المحلي الإجمالي) <span class="op">×</span> 100','% من الناتج',''],
   ['حصة الاستثمار غير الحكومي','(تكوين رأس المال الثابت غير الحكومي <span class="op">÷</span> إجمالي تكوين رأس المال الثابت) <span class="op">×</span> 100','%',''],
@@ -3459,8 +3570,8 @@ const EFRM=[
  ['الجسر مع الميزانية',[
   ['حجم الحكومة في الاقتصاد','(الإيرادات — أو المصروفات — الحكومية <span class="op">÷</span> الناتج المحلي الإجمالي) <span class="op">×</span> 100','% من الناتج',
    'اتساع الفجوة بين النسبتين — لا ارتفاع إحداهما منفردة — هو ما يولّد الدين.'],
-  ['مرونة الإيرادات غير النفطية','نمو الإيرادات غير النفطية <span class="op">÷</span> نمو الناتج غير النفطي','نسبة بلا وحدة',
-   'كلاهما نمو سنوي. قيمة أعلى من 1 تعني توسّع القاعدة الإيرادية أسرع من الاقتصاد نفسه.'],
+  ['طواعية الإيرادات غير النفطية <span dir="ltr">(buoyancy)</span>','نمو الإيرادات غير النفطية <span class="op">÷</span> نمو الناتج غير النفطي','نسبة بلا وحدة',
+   'كلاهما نمو سنوي. قيمة أعلى من 1 تعني نمو الإيراد أسرع من وعائه في تلك السنة. وهي <b>الطواعية</b> لا <b>المرونة</b>: تشمل أثر التغيرات الضريبية التقديرية، فلا يُستدلّ منها وحدها على توسّع القاعدة أو ارتفاع الكفاءة. والسنة التي ينكمش فيها الوعاء ينقلب مقامها فلا تُقرأ، ولا تدخل في الوسيط.'],
   ['المؤشر بسنة أساس','(قيمة السنة <span class="op">÷</span> قيمة سنة الأساس) <span class="op">×</span> 100','مؤشر',
    'يُستخدم لمقارنة سلسلتين مختلفتي الوحدة أو الحجم على محور واحد.']
  ]]
@@ -5245,13 +5356,43 @@ init();
    "url": "https://fred.stlouisfed.org/series/SAUPZPIOILBEGUSD",
    "unit": "دولار للبرميل",
    "asOf": "آخر تحديث للسلسلة 06-11-2024م",
-   "note": "قيم السنة الجارية والسنوات اللاحقة <b>توقعات</b> بحسب توثيق الصندوق، لا نتائج محققة. ولذلك يُقارن رقم 2025م (توقع صدر في 2024م) برقم اللوحة المحتسب من النتائج الفعلية المنشورة.",
+   "note": "السلسلة الرسمية كاملة 2008م — 2025م (18 مشاهدة)، ويعرض الرسم منها ما يقابل سنوات اللوحة. قيم السنة الجارية والسنوات اللاحقة <b>توقعات</b> بحسب توثيق الصندوق لا نتائج محققة — ولذلك يُقارن رقم 2025م (توقع صدر في 2024م) برقم اللوحة المحتسب من النتائج الفعلية المنشورة.",
    "y": [
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
     2023,
     2024,
     2025
    ],
    "v": [
+    37.61,
+    73.64,
+    67.57,
+    77.05,
+    77.95,
+    89.35,
+    106.3,
+    94.21,
+    86.51,
+    83.65,
+    88.53,
+    81.83,
+    76.3,
+    83.61,
+    87.97,
     94.91,
     98.36,
     90.94
@@ -5400,12 +5541,12 @@ init();
     "k": "الإيرادات",
     "v24": 413,
     "v25": 449,
-    "src": "2024م: بيان واس (413 مليار ريال مقابل 331 في 2023م) · 2025م: 120 مليار دولار بنمو 9% = نحو 449 مليار ريال",
+    "src": "2024م: بيان واس (413 مليار ريال مقابل 331 في 2023م) · 2025م: القوائم الموحدة 2025م (119.73 مليار دولار = 448.99 مليار ريال عند 3.75) منقولاً عن التغطية الصحفية للقوائم",
     "conf": [
      "منشور",
-     "منشور"
+     "منقول"
     ],
-    "note": "نسبة النمو المعلنة 9% تتصالح مع الرقمين (449 ÷ 413 = 1.087)."
+    "note": "نسبة النمو المعلنة 9% تتصالح مع الرقمين (449 ÷ 413 = 1.087). <b>رقمان رسميان لسنة 2025م:</b> البيان الصحفي للصندوق يذكر <b>120</b> مليار دولار (= 450 مليار ريال بالتدوير)، والقوائم تعطي <b>449</b>. الفارق تدوير لا خلاف، وتعتمد اللوحة رقم القوائم لأنه غير مدوَّر."
    },
    {
     "k": "الربح التشغيلي",
@@ -5422,12 +5563,12 @@ init();
     "k": "صافي الربح",
     "v24": 25.8,
     "v25": 65.2,
-    "src": "2024م: بيان واس (26 مليار ريال) · 2025م: القوائم الموحدة المدققة (65,187 مليون ريال)",
+    "src": "2025م: القوائم الموحدة المدققة (65,187 مليون ريال) · 2024م: المقارن المدقَّق في القوائم نفسها (25.8 مليار ريال) — منقولاً عن التغطية الصحفية للقوائم",
     "conf": [
-     "منشور",
+     "منقول",
      "منشور"
     ],
-    "note": "من ربح 2025م ‏46.4 مليار ريال لحقوق مالك الصندوق و18.8 مليار لحقوق غير المسيطرين."
+    "note": "من ربح 2025م ‏46.4 مليار ريال لحقوق مالك الصندوق و18.8 مليار لحقوق غير المسيطرين. <b>رقمان رسميان لسنة 2024م:</b> بيان واس عن النتائج يذكر <b>26</b> مليار ريال، والمقارن المدقَّق في قوائم 2025م <b>25.8</b>. تعتمد اللوحة رقم القوائم لأنه مدقَّق ومُعدّ على الأساس نفسه المقارَن به، وتُبقي الرقم الآخر ظاهراً ولا تُرجّح بينهما ضمنياً."
    },
    {
     "k": "الأصول تحت الإدارة",
@@ -6000,7 +6141,7 @@ init();
     "y": 1990,
     "src": "عوائد النفط",
     "vsrc": "off",
-    "vnote": "محوَّل من 21,268 مليار كرونة عند 9.31"
+    "vnote": "محوَّل من 21,268 مليار كرونة عند 9.31 — سعر معوَّم في تاريخ القياس، لا ربط ثابت"
    },
    {
     "f": "إدارة النقد الأجنبي",
@@ -6098,7 +6239,7 @@ init();
     "y": 1974,
     "src": "أصول حكومية وعوائد",
     "vsrc": "off",
-    "vnote": "محوَّل من 518 مليار دولار سنغافوري عند 1.29"
+    "vnote": "محوَّل من 518 مليار دولار سنغافوري عند 1.29 — سعر معوَّم في تاريخ القياس، لا ربط ثابت"
    },
    {
     "f": "مبادلة",
@@ -6194,10 +6335,10 @@ init();
     "vsrc": null
    }
   ],
-  "vendorNote": "عمود «تقدير Global SWF» غير رسمي بالكامل. منهجية المزوّد تخلط الأرقام المنشورة بالتقديرات دون تمييزها. وتقديراته لأبوظبي والكويت وقطر — نحو 2.8 تريليون دولار — لا يقابلها رقم منشور واحد.",
+  "vendorNote": "منهجية <span dir=\"ltr\">Global SWF</span> تخلط الأرقام المنشورة بالتقديرات دون تمييزها، ولذلك فُصلت هنا خليةً خليةً. وتقديراته لأبوظبي والكويت وقطر — نحو 2.8 تريليون دولار — لا يقابلها رقم منشور واحد.",
   "swfiNote": "استُبعدت أرقام SWFI: صفحتها بلا تاريخ مرجعي، وتقديرها لصندوق النرويج يقل نحو 40% عن الرقم الرسمي المنشور.",
   "vcolNote": "<b>عمود «القيمة المقارَنة بالدولار» ليس عموداً واحداً في طبيعته.</b> خمس من قيمه <b>مشتقة من أرقام رسمية</b> (تحويل عملة أو الرقم الرسمي نفسه): صندوق الاستثمارات العامة · النرويج · مؤسسة الصين للاستثمار · تيماسك · مبادلة. وخمس أخرى <b>تقديرات مزوّد خاص غير رسمية</b> لصناديق لا تُفصح: إدارة النقد الأجنبي · جهاز أبوظبي للاستثمار · جي آي سي · الهيئة العامة للاستثمار · جهاز قطر للاستثمار. وكانت اللوحة تسمّي العمود «تقدير <span dir=\"ltr\">Global SWF</span>» وتصفه بأنه «غير رسمي بالكامل» — وذلك وصف غير دقيق أُصلح هنا، وكل خلية موسومة الآن بمصدرها.",
-  "excludedNote": "ستة صناديق لا تظهر في هذا الرسم لعدم توفر قيمة مقارَنة بالدولار لها: صندوق المستقبل (أستراليا) · لاكيس (كندا) · مؤسسة كوريا للاستثمار · صندوق الثروة الوطني (روسيا) · صندوق تركيا للثروة · هيئة الاستثمار الإندونيسية. وأرقامها الرسمية معروضة بعملاتها في الجدول أدناه، ولم تُحوَّل لأن اللوحة لا تعتمد سعر صرف غير مثبَّت لتحويل رقم مقارنة."
+  "excludedNote": "ستة صناديق لا تظهر في هذا الرسم لعدم توفر قيمة مقارَنة بالدولار لها: صندوق المستقبل (أستراليا) · لاكيس (كندا) · مؤسسة كوريا للاستثمار · صندوق الثروة الوطني (روسيا) · صندوق تركيا للثروة · هيئة الاستثمار الإندونيسية. وأرقامها الرسمية معروضة بعملاتها في الجدول أدناه. <b>وقاعدة التحويل المطبَّقة:</b> لا يُحوَّل رقم إلا حيث ينشر الصندوق نفسه ما يقابله بالدولار (الصندوق · مبادلة · مؤسسة الصين للاستثمار)، أو حيث تنشره تقاريره بسعر الصرف السائد في تاريخ القياس (النرويج عند 9.31 كرونة · تيماسك عند 1.29 دولار سنغافوري) — وهذان سعران <b>معوَّمان</b> موسومان بتاريخهما، لا سعرَي ربط ثابت. أما الستة أعلاه فلم يُنشر لها مقابل دولاري ولم تُحوَّل باجتهاد اللوحة."
  },
  "gsr": {
   "src": "مؤشر GSR للحوكمة والاستدامة والمرونة — Global SWF",
@@ -6341,6 +6482,20 @@ init();
    "was": "نسبة تحقق 100 مثبَّتة يدوياً",
    "now": "حالة «ضمن السقف» مع بيان أنه مستهدف سقفي",
    "why": "المعادلة المنشورة (المتحقق ÷ المستهدف) تعطي 83.3 لا 100، فكان الرقم المنشور لا يُعاد إنتاجه من معادلته."
+  },
+  {
+   "d": "30-08-2026م",
+   "w": "صافي ربح 2024م وإيرادات 2025م",
+   "was": "رقمان منشوران بلا مصالحة مع مصدرهما المُحال إليه",
+   "now": "أُسند كلٌّ إلى مصدره الفعلي ووُسم، وأُظهر الرقم الرسمي الآخر إلى جانبه",
+   "why": "المراجعة المركّزة وجدت أن سطر مصدر صافي ربح 2024م ينشر 26 والخلية تعرض 25.8، وأن سطر مصدر إيرادات 2025م (120 × 3.75) يعطي 450 لا 449."
+  },
+  {
+   "d": "30-08-2026م",
+   "w": "عمود القيمة المقارَنة بالدولار",
+   "was": "«لا تعتمد اللوحة سعر صرف غير مثبَّت» — وقاعدةٌ تخرقها تحويلات النرويج وتيماسك",
+   "now": "أُعلنت القاعدة كما تُطبَّق فعلاً، ووُسم السعران المعوَّمان بتاريخ قياسهما",
+   "why": "المراجعة المركّزة وجدت التناقض بين القاعدة المعلنة وما تسجّله بيانات الصفوف."
   }
  ],
  "tsrNote": "ثلاثة أرقام منشورة لنفس الفترة (منذ 2017م) بمسمّيات مختلفة. المصدران الرسميان لا يستعملان المصطلح نفسه: بيان 2024م يقول <span dir=\"ltr\">total portfolio return</span> (عائد المحفظة) وبيان 2025م يقول <span dir=\"ltr\">total shareholder return</span> (عائد المساهم) — وهما مقياسان متمايزان في أدبيات الأداء ومعايير <span dir=\"ltr\">GIPS</span>. <b>ولم يُنشر ما يوضّح إن كانا يقيسان الشيء نفسه</b>، فلا تقرّر اللوحة تطابقهما. وتعتمد اللوحة الرقم الأحدث (5.8%) لأنه الوارد في التقرير السنوي 2025م، مع إبقاء الثلاثة ظاهرةً بمصادرها."
@@ -6357,6 +6512,19 @@ const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181'
             ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
             brand:'#C8A96A', brandDeep:'#8C7237' };
 const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+
+/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+function arN(n,one,two,few,many){
+  n=Math.abs(+n);
+  if(n===1) return one;
+  if(n===2) return two;
+  if(n>=3&&n<=10) return few;
+  return many||one;
+}
+const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
+const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
+const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
+const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const usd=v=>v==null?'—':v.toFixed(2);
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
@@ -6452,9 +6620,21 @@ function renderPrice(){
     {l:'التغير عن اليوم السابق',v:pct1((last/prev-1)*100),cls:last>=prev?'up':'down',d:'مقارنة بـ'+dlab(dly[dly.length-2][0])},
     {l:'التغير عن الشهر المماثل قبل عام',v:(mNow&&mAgo)?pct1((mNow/mAgo-1)*100):'—',
      cls:(mNow&&mAgo&&mNow>=mAgo)?'up':'down',
-     d:(mNow&&mAgo)?(mlab(curM)+' '+mNow.toFixed(1)+' مقابل '+mAgo.toFixed(1)):''},
-    {l:'متوسط '+ylab(2026)+' حتى تاريخه',v:usd(y26[1])+' $',
-     d:'مقابل '+usd(y25[1])+' $ في '+ylab(2025)+' · '+y26[2]+' أشهر'}
+     d:(mNow&&mAgo)?(mlab(curM)+' '+mNow.toFixed(1)+' مقابل '+mAgo.toFixed(1)+
+        (PART&&PART.m===curM?' — مقارنة غير متجانسة: الشهر الجاري جزئي ('+PART.d+' يوم تداول) والمقارن كامل':'')):''},
+    (function(){
+      /* مقارنة متجانسة: الأشهر نفسها من السنتين، لا سنة جزئية مقابل سنة كاملة */
+      const lastM=mly[mly.length-1][0], yr=+lastM.slice(0,4), mo=lastM.slice(5,7);
+      const avg=y=>{const a=mly.filter(x=>+x[0].slice(0,4)===y&&x[0].slice(5,7)<=mo);
+                    return a.length?{v:a.reduce((s,x)=>s+x[1],0)/a.length,n:a.length}:null;};
+      const cur=avg(yr), prv=avg(yr-1);
+      if(!cur) return {l:'متوسط '+ylab(2026)+' حتى تاريخه',v:'—',d:''};
+      return {l:'متوسط أول '+cur.n+' أشهر '+ylab(yr),v:usd(cur.v)+' $',
+        cls:(prv&&cur.n===prv.n)?(cur.v>=prv.v?'up':'down'):'',
+        d:(prv&&cur.n===prv.n?'مقابل '+usd(prv.v)+' $ للأشهر نفسها من '+ylab(yr-1)+' · '+pct1((cur.v/prv.v-1)*100)
+                             :'الأشهر المنشورة من السنة')+
+          (PART?' · آخر شهر جزئي ('+PART.d+' يوم تداول)':'')};
+    })()
   ];
   document.getElementById('n-kpis').innerHTML=kp.map(x=>
     '<div class="card kpi"><div class="l">'+x.l+'</div><div class="v '+(x.cls||'')+'">'+x.v+
@@ -6555,7 +6735,7 @@ function renderLink(){
     (R.se!=null?fmt(R.se):'—')+(R.t!=null?' و<span dir="ltr">t = '+nf1.format(R.t)+'</span>':'')+
     (ciQ?'، وفترة ثقة 95% '+ciQ+' ربعياً (أي '+ciY+' سنوياً — نحو ±'+
       nf0.format(Math.round((R.hi-R.b)/R.b*100))+'% حول الرقم المعروض)':'')+'. '+
-    'وكل رقم مشتق من هذا الميل — ومنه رسم الحساسية أدناه — يحمل هذا العرض نفسه، فيُقرأ نطاقاً لا نقطة. '+
+    'وكل رقم مشتق من هذا الميل — ومنه رسم الحساسية في تبويب «فجوة التعادل» — يحمل هذا العرض نفسه، فيُقرأ نطاقاً لا نقطة. '+
     '<span class="muted">علاقة إحصائية مقدَّرة من '+R.n+' ربعاً، وليست معادلة محاسبية للنظام المالي. '+SRC+'</span>';
 
   /* تفكيك التغير السنوي: أثر السعر مقابل المتبقي */
@@ -6645,7 +6825,7 @@ function renderBreak(){
   document.getElementById('nNGap').innerHTML='<b>كيف تُقرأ:</b> وقوع الخط البرتقالي فوق الأزرق يعني أن الميزانية '+
     'احتاجت سعراً أعلى مما تحقق — أي عجزاً، ومساحة الفارق هي حجمه بالدولار للبرميل. '+
     'في '+ylab(l.y)+' بلغ الفارق '+usd(Math.abs(gap))+' دولاراً '+(gap>=0?'لصالح الميزانية':'ضدّ الميزانية')+
-    '، وتحقق فائض في '+surp+' من '+r.length+' سنوات. '+
+    '، وتحقق فائض في '+surp+' من '+arYears(r.length)+'. '+
     '<b>تحسين على النسخة السابقة:</b> السعر هنا هو المتوسط الفعلي المحقق لبرنت لا افتراضاً يُدخله المستخدم، '+
     'فصارت الفجوة قياساً لا تمريناً. '+
     '<br><b>مصالحة مع الرقم الرسمي المنشور:</b> '+(function(){
@@ -6679,10 +6859,16 @@ function renderBreak(){
     {unit:'مليون ريال',dec:0,freq:'y'});
   ST('cNSens','سنوي','مقدَّرة من '+R.n+' ربعاً','مليون ريال','أثر تغير متوسط السعر السنوي على الإيراد النفطي');
   const lastY=r[r.length-1];
+  const sLo=R.lo!=null?R.lo*4:null, sHi=R.hi!=null?R.hi*4:null;
   document.getElementById('nNSens').innerHTML='<b>المعامل:</b> كل دولار في المتوسط السنوي يرافقه نحو '+
-    fmt(perY)+' مليون ريال في الإيراد النفطي، مقدَّراً من العلاقة التاريخية لا مفترضاً. '+
-    'فتحرك عشرة دولارات يعادل نحو '+fmt(10*perY)+' مليون ريال، أي ما يقارب '+
+    fmt(perY)+' مليون ريال في الإيراد النفطي، مقدَّراً من العلاقة التاريخية لا مفترضاً'+
+    (sLo!=null?'، <b>بفترة ثقة 95% من '+fmt(sLo)+' إلى '+fmt(sHi)+'</b> (نحو ±'+
+      nf0.format(Math.round((sHi-perY)/perY*100))+'%)':'')+'. '+
+    'فتحرك عشرة دولارات يعادل نحو '+fmt(10*perY)+' مليون ريال'+
+    (sLo!=null?' (من '+fmt(10*sLo)+' إلى '+fmt(10*sHi)+')':'')+'، أي ما يقارب '+
     pct1(10*perY/lastY.exp*100)+' من مصروفات '+ylab(lastY.y)+'. '+
+    '<b>عدم اليقين ينتقل كاملاً:</b> كل عمود في الرسم أعلاه مشتق من هذا الميل، فيحمل النسبة نفسها '+
+    'حول قيمته — والأعمدة تعرض التقدير النقطي وحده. '+
     '<b>حدّ المنهجية:</b> العلاقة خطية ومقدَّرة على المدى المتاح، ولا تلتقط تغيّر الكمية ولا قرارات أوبك+ '+
     'ولا تعديلات النظام المالي — ولذلك تُقرأ رتبة مقدار لا رقماً دقيقاً.';
 }
@@ -6780,6 +6966,19 @@ const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181'
             brand:'#C8A96A', brandDeep:'#8C7237', good:'#199e70', bad:'#e66767', warn:'#c98500' };
 
 const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+
+/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+function arN(n,one,two,few,many){
+  n=Math.abs(+n);
+  if(n===1) return one;
+  if(n===2) return two;
+  if(n>=3&&n<=10) return few;
+  return many||one;
+}
+const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
+const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
+const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
+const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const nf2=new Intl.NumberFormat('en-US',{maximumFractionDigits:2});
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
@@ -6902,7 +7101,7 @@ function renderFin(){
         '<td>'+nf1.format(r.v25)+cf(r.conf&&r.conf[1])+'</td>'+
         '<td class="'+(ch==null?'':(ch>=0?'pos':'neg'))+'">'+(ch==null?'—':pct1(ch))+'</td>'+
         '<td>'+usd(r.v25)+'</td></tr>'+
-        (r.note?'<tr class="sub"><td colspan="5" class="dim">'+esc(r.note)+'</td></tr>':'');
+        (r.note?'<tr class="sub"><td colspan="5" class="dim">'+r.note+'</td></tr>':'');
     }).join('')+'</tbody></table>'+
     '<p class="hint">وسم «منقول» يعني أن الرقم مأخوذ عن تغطية صحفية للقوائم لا عن القوائم مباشرةً.</p>'+
     '<div class="note">'+FN.aumVsTa+'</div>'+
@@ -7027,7 +7226,7 @@ function renderUS(){
   const peak=Math.max(...U.val), peakQ=U.q[U.val.indexOf(peak)];
   set('f-usKpis',
     kpi('قيمة المراكز المُقرّة', nf1.format(U.val[n]), 'مليار دولار · '+U.q[n])+
-    kpi('عدد المراكز', U.n[n], 'مركزاً في آخر إقرار')+
+    kpi('عدد المراكز', U.n[n], arN(U.n[n],'مركز','مركزان','مراكز','مركزاً')+' في آخر إقرار')+
     kpi('الذروة المسجلة', nf1.format(peak), 'مليار دولار · '+peakQ)+
     kpi('التغير عن الذروة', pct1((U.val[n]-peak)/peak*100), 'في القيمة المُقرّة', 'bad')
   );
