@@ -1296,9 +1296,14 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
 <script>/* ===== طبقة التحليل التفاعلي المشتركة بين اللوحتين ===== */
 (function(){
 'use strict';
-const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
-const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
-const nf2=new Intl.NumberFormat('en-US',{maximumFractionDigits:2});
+/* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
+   فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
+   على كل مواضع التنسيق دفعةً واحدة لا على موضع بعينه. */
+const numFmt=o=>{const f=new Intl.NumberFormat('en-US',o);
+  return {format:v=>(v==null||typeof v!=='number'||!isFinite(v))?'—':f.format(v)};};
+const nf0=numFmt({maximumFractionDigits:0});
+const nf1=numFmt({maximumFractionDigits:1});
+const nf2=numFmt({maximumFractionDigits:2});
 const REG={};                                  // canvasId -> {unit, dec, freq, note, pct}
 let spark=null;
 
@@ -1315,7 +1320,7 @@ const fin =a=>a.filter(x=>typeof x==='number'&&isFinite(x));
 function fmtV(v,m){
   if(v==null) return '—';
   const d=(m&&m.dec!=null)?m.dec:(Math.abs(v)>=1000?0:(Math.abs(v)>=10?1:2));
-  const f=new Intl.NumberFormat('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const f=numFmt({minimumFractionDigits:d,maximumFractionDigits:d});
   return v<0? '('+f.format(-v)+')' : f.format(v);
 }
 /* التغير يُصاغ بالكلمات لا بالإشارات، تفادياً لانقلاب موضع الإشارة في النص العربي */
@@ -1524,15 +1529,14 @@ function ixHatch(color,kind){
     /* الخط معتم لا شفّاف: عند شفافية 0.55 يهبط تباينه على #008300 إلى 2.19:1،
        وبالإعتام يصير 3.62:1 وهو أدنى قيمة عبر ألوان السلاسل الثمانية — فوق عتبة 3:1. */
     x.strokeStyle='#0d172b'; x.lineWidth=1.6; x.beginPath();
-    /* القوائم والصفوف على أنصاف البكسل بعرض صحيح: خطّ حادّ بلا تنعيم، فلا تنشأ
-       بكسلات وسيطة تهبط دون العتبة. أما الأقطار فالتنعيم فيها لازم هندسياً،
-       فوُسّعت قليلاً حتى يبقى في قلبها بكسل كامل الشدّة. */
-    if(kind==='diag'){ x.lineWidth=2; x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
-    else if(kind==='back'){ x.lineWidth=2; x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
-    else if(kind==='vert'){ x.lineWidth=2; x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
-    else if(kind==='horz'){ x.lineWidth=2; x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
-    else if(kind==='grid'){ x.lineWidth=2; x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
-    else if(kind==='wide'){ x.lineWidth=3; x.moveTo(-2,8);x.lineTo(8,-2); }
+    /* عرض الخطوط كما كان: توسيعه يزيد مساحة الحبر داخل العمود فيبتلع الأعمدة
+       الرفيعة حتى تختفي. المكسب في التباين جاء من الإعتام وإيقاف التنعيم لا من العرض. */
+    if(kind==='diag'){ x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
+    else if(kind==='back'){ x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
+    else if(kind==='vert'){ x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
+    else if(kind==='horz'){ x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
+    else if(kind==='grid'){ x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
+    else if(kind==='wide'){ x.lineWidth=2.6; x.moveTo(-2,8);x.lineTo(8,-2); }
     x.stroke();
     if(kind==='dots'){ x.fillStyle='#0d172b';
       [[2,2],[6,6]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
@@ -1569,8 +1573,10 @@ function redundantEncode(cfg){
       const type=d.type||t;
       if(type==='line'||type==='radar'){
         if(d.borderColor==='transparent') return;              /* حدود نطاق الثقة */
-        if(!dashIsMeaningful && (!d.borderDash||!d.borderDash.length))
+        if(!dashIsMeaningful && (!d.borderDash||!d.borderDash.length)){
           d.borderDash=IX_DASH[k%IX_DASH.length];
+          d.__ixDash=true;   /* وسم التقطيع المُضاف آلياً ليكشفه فاحص vdash */
+        }
         /* شكل النقطة لا يُضاف إلى خط بلا نقاط: لا يظهر في الرسم ويظهر في الأسطورة فيضلّل */
         if(!d.pointStyle && d.pointRadius!==0 && d.pointRadius!=null)
           d.pointStyle=IX_PTS[k%IX_PTS.length];
@@ -1593,7 +1599,7 @@ function redundantEncode(cfg){
 /* ── الإفصاح عن خط الأساس ────────────────────────────────────
    الدستور: خط الأساس الصفري إلزامي على الأعمدة، اختياري على الخطوط «مع الإفصاح».
    هذه الإضافة تُنتج الإفصاح آلياً: أي رسم لا يشمل محور قيمته الصفر يُختم بمداه. */
-const AXFMT=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
+const AXFMT=numFmt({maximumFractionDigits:1});
 const axisPlugin={
   id:'mirsadAxisBaseline',
   afterLayout(chart){
@@ -1626,7 +1632,38 @@ const crispPlugin={
   id:'mirsadCrispPatterns',
   beforeDraw(chart){ try{ chart.ctx.imageSmoothingEnabled=false; }catch(e){} }
 };
-if(window.Chart&&window.Chart.register) try{ window.Chart.register(axisPlugin,crispPlugin); }catch(e){}
+/* المحور المتدهور: حين تنحصر البيانات في نقطة واحدة يبني Chart.js عشرة أوسمة أو
+   أحد عشر تنهار كلها إلى قيمتين بعد التقريب، فيرى القارئ سُلَّماً مكرَّراً لا يدلّ
+   على شيء. هذا الفاحص يحذف الوسم الذي يطابق نصُّه سابقَه — لا يخترع وسماً ولا
+   يغيّر مدى المحور، ويكتفي بإسقاط المكرَّر. */
+const dedupeTicks={
+  id:'mirsadDedupeTicks',
+  afterBuildTicks(chart,args){
+    try{
+      const sc=args&&args.scale; if(!sc) return;
+      if(sc.type==='category'||sc.type==='radialLinear') return;
+      const ticks=sc.ticks; if(!ticks||ticks.length<3) return;
+      const cb=sc.options&&sc.options.ticks&&sc.options.ticks.callback;
+      const lab=(t,i)=>{ try{ return String(cb? cb.call(sc,t.value,i,ticks) : t.value); }
+                         catch(e){ return String(t.value); } };
+      const seen=Object.create(null), out=[];
+      ticks.forEach((t,i)=>{ const k=lab(t,i); if(k in seen) return; seen[k]=1; out.push(t); });
+      if(out.length && out.length!==ticks.length) sc.ticks=out;
+    }catch(e){}
+  }
+};
+if(window.Chart&&window.Chart.register) try{ window.Chart.register(axisPlugin,crispPlugin,dedupeTicks); }catch(e){}
+
+/* ===== تمييز العدد في العربية — نسخة واحدة لكل اللوحات =====
+   1 مفرد · 2 مثنى · 0 و3-10 جمع مجرور · 11 فأكثر مفرد منصوب.
+   (كانت مكرَّرة حرفياً في أربعة ملفات، فتعديلها في واحد لا يبلغ الباقي.) */
+function arNIX(n,one,two,few,many){
+  n=Math.abs(+n);
+  if(n===1) return one;
+  if(n===2) return two;
+  if(n===0||(n>=3&&n<=10)) return few;
+  return many||one;
+}
 
 /* ===== جدول t الحرجة — واحد لكل اللوحات =====
    الوسيط conf هو مستوى الثقة ثنائي الطرف: 0.80 أو 0.95.
@@ -1648,11 +1685,16 @@ function tCritIX(df,conf){
     const f=(1/df-1/ks[i])/(1/ks[i+1]-1/ks[i]);
     return T[ks[i]]+f*(T[ks[i+1]]-T[ks[i]]);
   }
-  return conf===0.95?1.9600:1.2816;   /* حدّ التوزيع الطبيعي */
+  /* فوق آخر مدخل: الحدّ الطبيعي هو قيمة الجدول عند 1/df = 0، فيُستوفى إليه
+     بالطريقة نفسها بدل القفز إليه دفعةً (كانت القفزة 0.128%). */
+  const kL=ks[ks.length-1], inf=(conf===0.95?1.9600:1.2816);
+  const g=(1/df)/(1/kL);
+  return inf+g*(T[kL]-inf);
 }
 
 window.MIRSAD_IX={
   tCrit:tCritIX,
+  arN:arNIX,
   hatch:ixHatch,
   openData:openData,
   stamp:stamp,
@@ -1662,6 +1704,21 @@ window.MIRSAD_IX={
     if(meta&&meta.zeroOk) cfg.options.__zeroOk=true;
     if(meta&&meta.dashMeans) cfg.options.__dashMeans=true;
     if(!(meta&&meta.colorOk)) redundantEncode(cfg);
+    /* الأسطورة يجب أن تحمل ما يحمله الرسم: مع usePointStyle تبني Chart.js المفتاح
+       من شكل النقطة وحده فلا يصل التقطيع إليه، فيتطابق مفتاحا «فعلي» و«متوقع»
+       بكسلياً. فحيثما حملت سلسلةٌ تقطيعاً يُطفأ usePointStyle لهذا الرسم وحده،
+       فيُرسم المفتاح خطاً يحمل تقطيعه. */
+    try{
+      const dss=(cfg.data&&cfg.data.datasets)||[];
+      const anyDash=dss.some(d=>d&&d.borderDash&&d.borderDash.length&&
+        ((d.type||cfg.type)==='line'||(d.type||cfg.type)==='radar'));
+      if(anyDash){
+        const pl=cfg.options.plugins=cfg.options.plugins||{};
+        const lg=pl.legend=pl.legend||{};
+        const lb=lg.labels=lg.labels||{};
+        lb.usePointStyle=false;
+      }
+    }catch(e){}
     if(cfg.type!=='pie'&&cfg.type!=='doughnut'&&cfg.type!=='radar'&&cfg.type!=='scatter'){
       const p=cfg.options.plugins=cfg.options.plugins||{};
       const t=p.tooltip=p.tooltip||{};
@@ -1700,21 +1757,22 @@ const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181'
             brand:'#C8A96A', brandDeep:'#8C7237' };
 
 /* ---------- helpers ---------- */
-const nf0 = new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+/* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
+   فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
+   على كل مواضع التنسيق دفعةً واحدة لا على موضع بعينه. */
+const numFmt=o=>{const f=new Intl.NumberFormat('en-US',o);
+  return {format:v=>(v==null||typeof v!=='number'||!isFinite(v))?'—':f.format(v)};};
+const nf0 = numFmt({maximumFractionDigits:0});
 
-/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+/* تمييز العدد من الطبقة المشتركة — نسخة واحدة لكل اللوحات */
 function arN(n,one,two,few,many){
-  n=Math.abs(+n);
-  if(n===1) return one;
-  if(n===2) return two;
-  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
-  if(n===0||(n>=3&&n<=10)) return few;
-  return many||one;
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.arN)? IX.arN(n,one,two,few,many) : (Math.abs(+n)===1?one:(Math.abs(+n)===2?two:(many||few||one)));
 }
 const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
 const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
 const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
-const nf1 = new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
+const nf1 = numFmt({maximumFractionDigits:1});
 const fmt  = v => v==null? '—' : (v<0? '('+nf0.format(Math.round(-v))+')' : nf0.format(Math.round(v)));
 const fmtB = v => v==null? '—' : nf1.format(v/1000)+' مليار';
 const pct  = v => v==null? '—' : '<span dir="ltr">'+(v>=0?'+':'−')+nf1.format(Math.abs(v*100))+'%</span>';
@@ -2005,11 +2063,24 @@ function renderRev(){
   const yr0=ys[0], yrN=ys[ys.length-1];
   const cagr=(k)=>{const s=yearly(k);const a=s.find(x=>x!=null),b=[...s].reverse().find(x=>x!=null);
     const n=s.filter(x=>x!=null).length-1; return n>0?((b/a)**(1/n)-1)*100:null;};
+  /* الكمية غير المعرَّفة لا تُطبع صفراً: nf1.format(null) يعطي «0» فيقرؤه القارئ
+     نتيجةً، و null/null يعطي NaN. فإن لم يكفِ المدى المعروض لاحتساب تقلب أو نمو
+     مركّب، تُقال العلة صراحةً ولا يُنشر رقم. */
+  const cgN=cagr('NONOIL'), cgO=cagr('OIL');
+  const volOK = sdO!=null && sdN!=null && sdN>0;
+  const cagrOK = cgN!=null && cgO!=null;
+  const nY=ys.length;
   document.getElementById('nRev').innerHTML =
-    '<b>تحليل التقلب:</b> الانحراف المعياري لمعدل النمو السنوي للإيرادات النفطية '+nf1.format(sdO)+
-    ' نقطة مئوية مقابل '+nf1.format(sdN)+' نقطة فقط لغير النفطية — أي أن البند النفطي أعلى تقلباً بنحو '+
-    nf1.format(sdO/sdN)+' ضعفاً. ومعدل النمو السنوي المركّب (CAGR) بلغ '+nf1.format(cagr('NONOIL'))+
-    '% لغير النفطية مقابل '+nf1.format(cagr('OIL'))+'% للنفطية. '+
+    (volOK
+      ? '<b>تحليل التقلب:</b> الانحراف المعياري لمعدل النمو السنوي للإيرادات النفطية '+nf1.format(sdO)+
+        ' نقطة مئوية مقابل '+nf1.format(sdN)+' نقطة فقط لغير النفطية — أي أن البند النفطي أعلى تقلباً بنحو '+
+        nf1.format(sdO/sdN)+' ضعفاً. '
+      : '<b>تحليل التقلب:</b> لا يُحتسب على '+arYears(nY)+' معروضة — قياس تقلب معدل النمو السنوي '+
+        'يحتاج ثلاث سنوات كاملة على الأقل (سنتَي نمو). وسّع النطاق لعرضه. ')+
+    (cagrOK
+      ? 'ومعدل النمو السنوي المركّب (CAGR) بلغ '+nf1.format(cgN)+
+        '% لغير النفطية مقابل '+nf1.format(cgO)+'% للنفطية. '
+      : 'والنمو السنوي المركّب لا يُحتسب على سنة واحدة، إذ يحتاج نقطتَي بداية ونهاية مختلفتين. ')+
     '<b>الدلالة:</b> نمو الإيرادات غير النفطية لا يرفع الإيرادات فحسب، بل يخفض تباين الميزانية ككل — '+
     'وهو أثر مزدوج لا تلتقطه المقارنة بالمستوى المطلق وحده.';
 }
@@ -2102,7 +2173,11 @@ function renderDebt(){
       {label:'الاحتياطي العام',data:r.map(x=>x[2]),borderColor:C.s3,borderWidth:2,tension:.25,pointRadius:3,spanGaps:false},
       {label:'الحساب الجاري',data:r.map(x=>x[3]),borderColor:C.s4,borderWidth:2,tension:.25,pointRadius:3,spanGaps:false}]},
     options:{interaction:{mode:'index',intersect:false},scales:{x:gridX,y:gridY()},
-      plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}}}});
+      plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}}}},
+    /* البطاقة تُعلن أن الانقطاع يعني غياب بيان منشور، فلا يُضاف تقطيع آلي إلى أي
+       سلسلة هنا وإلا صارت السلسلة كلها في مظهر الفجوة. التمييز بين السلسلتين
+       باللون وبالنقاط المرسومة على كل مشاهدة. */
+    {dashMeans:true});
 
   const b=D.budget.filter(x=>x[0]>=YA()&&x[0]<=YB()&&x[4]!=null);
   const varRev=b.map(x=>x[1]&&x[4]?(x[4]/x[1]-1)*100:null);
@@ -2277,7 +2352,7 @@ function renderFc(){
     'أي <b>±'+nf0.format(Math.round(half/Math.abs(gapEnd)*100))+'%</b> حول الرقم المعروض ('+fmt(half)+' مليون ريال في كل اتجاه). '+
     'فالرقم النقطي وحده لا يُقرأ، ويُقرأ المدى بدلاً منه. '+
     '<span class="muted">النطاق محتسب من تباينَي نموذجَي الإيرادات والمصروفات عند الأفق السادس '+
-    (rc? '<b>مع التغاير بينهما</b>: معامل الارتباط بين بواقي النموذجين '+nf1.format(rho*100)+'% على '+rc.n+
+    (rc? '<b>مع التغاير بينهما</b>: معامل الارتباط بين بواقي النموذجين <span dir="ltr">r = '+rho.toFixed(3)+'</span> على '+rc.n+
          ' ربعاً. وهو موجب، فإهماله (بافتراض الاستقلال) كان سيُوسّع النطاق لا يُضيّقه — '+
          'بعرض '+nf0.format(Math.round((sInd/sGap-1)*100))+'% زائدة. '
        : 'بافتراض استقلال بواقيهما، إذ تعذّر تقدير التغاير. ')+
@@ -2860,7 +2935,7 @@ function iLatest(sr,cs){ const ys=iYears(sr);
   for(let k=ys.length-1;k>=0;k--){ const y=ys[k];
     if(cs.filter(c=>sr.d[c]&&sr.d[c][y]!=null).length>=Math.max(3,cs.length*0.5)) return y; }
   return ys[ys.length-1]; }
-const iFmt=(v,sr)=> v==null?'—':(v<0?'('+nf1.format(-v)+')':new Intl.NumberFormat('en-US',
+const iFmt=(v,sr)=> v==null?'—':(v<0?'('+nf1.format(-v)+')':numFmt(
   {minimumFractionDigits:sr.dec,maximumFractionDigits:sr.dec}).format(v));
 
 function renderIntl2(){
@@ -2962,7 +3037,7 @@ function renderIntl2(){
     bl.push(ylab(x.y)); bp.push(pr); be.push((x.e-(x.r-oil))/oil*pr);
   });
   draw('cBrent',{type:'line',data:{labels:bl,datasets:[
-      {label:'متوسط سعر برنت الفعلي',data:bp,borderColor:C.s1,backgroundColor:C.s1+'1F',
+      {label:'متوسط برنت السنوي — كما تنشره EIA',data:bp,borderColor:C.s1,backgroundColor:C.s1+'1F',
        borderWidth:2.6,tension:.25,pointRadius:3.5,fill:false},
       {label:'سعر التعادل المالي المحسوب',data:be,borderColor:C.s2,borderWidth:2.4,
        borderDash:[6,4],tension:.25,pointRadius:3.5,fill:'-1',
@@ -2972,15 +3047,20 @@ function renderIntl2(){
       plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf1.format(c.parsed.y)+' دولار'}}}}},
     {unit:'دولار للبرميل',dec:1,freq:'y'});
   const gp=bp.map((p,i)=>p-be[i]), lastG=gp[gp.length-1], lastY2=bl[bl.length-1];
-  const surplusYears=gp.filter(g=>g>0).length;
+  /* معيار الفائض واحد في اللوحتين: السعر المحقق ≥ سعر التعادل (كان هنا g>0 وهناك ≥). */
+  const surplusYears=bp.filter((p,i)=>be[i]!=null&&p!=null&&p>=be[i]).length;
   document.getElementById('nBrent').innerHTML='<b>كيف تُقرأ:</b> الخط الأزرق هو ما تحقق فعلاً في السوق، '+
     'والخط البرتقالي هو السعر الذي كانت الميزانية تحتاجه لتتوازن في تلك السنة. '+
     'وقوع البرتقالي فوق الأزرق يعني عجزاً، ومساحة الفارق هي حجمه مترجَماً إلى دولارات للبرميل. '+
     'في '+lastY2+' بلغ الفارق '+nf1.format(Math.abs(lastG))+' دولاراً '+(lastG>=0?'لصالح الميزانية':'ضدّ الميزانية')+
-    '، وتحقق فائض في '+surplusYears+' من '+gp.length+' سنوات. '+
+    '، وتحقق فائض في '+arYears(surplusYears)+' من '+arYears(gp.length)+'. '+
     '<b>حدود المنهجية:</b> سعر التعادل محسوب من المعادلة المالية الرسمية مضروباً في سعر برنت، '+
     'ويفترض أن السعر المحقق للخام السعودي يتحرك مع برنت — وهو افتراض معقول لا حقيقة محاسبية، '+
-    'ولذلك يُقرأ الرقم اتجاهاً لا قيمة رسمية. <span class="muted">أسعار برنت من إدارة معلومات الطاقة الأمريكية.</span>';
+    'ولذلك يُقرأ الرقم اتجاهاً لا قيمة رسمية. '+
+    '<span class="muted">السلسلة هنا هي <b>المتوسط السنوي كما تنشره</b> إدارة معلومات الطاقة الأمريكية. '+
+    'ولوحة الطاقة تعرض سلسلة أخرى للكمية نفسها: <b>متوسط المتوسطات الشهرية المحتسب في اللوحة</b> من الأسعار اليومية. '+
+    'والفارق بينهما لا يتجاوز 0.28 دولار في أي سنة مشتركة، لكنه فارق منهجية لا خطأ، '+
+    'فيختلف معه سعر التعادل بأقل من نصف دولار — ولذلك يُذكر المصدر مع كل رقم.</span>';
 
   /* --- مؤشرات الأداء --- */
   const kp=[];
@@ -2999,7 +3079,7 @@ function renderIntl2(){
     '</div><div class="d flat">'+x.d+'</div></div>').join('');
 }
 const span2=a=>ylab(a[0])+' — '+ylab(a[a.length-1]);
-const nf2i=new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const nf2i=numFmt({minimumFractionDigits:2,maximumFractionDigits:2});
 
 
 /* ============ معادلات احتساب المؤشرات ============ */
@@ -3225,19 +3305,20 @@ function hatch(color,kind){
 const DASH=[[],[7,4],[2,3],[10,4,2,4],[5,3,1,3],[14,5]];
 
 
-const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+/* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
+   فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
+   على كل مواضع التنسيق دفعةً واحدة لا على موضع بعينه. */
+const numFmt=o=>{const f=new Intl.NumberFormat('en-US',o);
+  return {format:v=>(v==null||typeof v!=='number'||!isFinite(v))?'—':f.format(v)};};
+const nf0=numFmt({maximumFractionDigits:0});
 
-/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+/* تمييز العدد من الطبقة المشتركة — نسخة واحدة لكل اللوحات */
 function arN(n,one,two,few,many){
-  n=Math.abs(+n);
-  if(n===1) return one;
-  if(n===2) return two;
-  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
-  if(n===0||(n>=3&&n<=10)) return few;
-  return many||one;
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.arN)? IX.arN(n,one,two,few,many) : (Math.abs(+n)===1?one:(Math.abs(+n)===2?two:(many||few||one)));
 }
 const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
-const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
+const nf1=numFmt({maximumFractionDigits:1});
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
 const pct1=v=>v==null?'—':(v<0?'('+(-v).toFixed(1)+'%)':v.toFixed(1)+'%');
 const sum=a=>a.reduce((s,x)=>s+(x||0),0);
@@ -6751,19 +6832,20 @@ const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181'
             s6:'#008300', s7:'#9085e9', s8:'#e66767',
             ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
             brand:'#C8A96A', brandDeep:'#8C7237' };
-const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+/* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
+   فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
+   على كل مواضع التنسيق دفعةً واحدة لا على موضع بعينه. */
+const numFmt=o=>{const f=new Intl.NumberFormat('en-US',o);
+  return {format:v=>(v==null||typeof v!=='number'||!isFinite(v))?'—':f.format(v)};};
+const nf0=numFmt({maximumFractionDigits:0});
 
-/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+/* تمييز العدد من الطبقة المشتركة — نسخة واحدة لكل اللوحات */
 function arN(n,one,two,few,many){
-  n=Math.abs(+n);
-  if(n===1) return one;
-  if(n===2) return two;
-  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
-  if(n===0||(n>=3&&n<=10)) return few;
-  return many||one;
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.arN)? IX.arN(n,one,two,few,many) : (Math.abs(+n)===1?one:(Math.abs(+n)===2?two:(many||few||one)));
 }
 const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
-const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
+const nf1=numFmt({maximumFractionDigits:1});
 const usd=v=>v==null?'—':v.toFixed(2);
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
 const pct1=v=>v==null?'—':(v<0?'('+(-v).toFixed(1)+'%)':v.toFixed(1)+'%');
@@ -7041,7 +7123,7 @@ function breakeven(){
 function renderBreak(){
   const r=breakeven(); if(!r.length) return;
   draw('cNGap',{type:'line',data:{labels:r.map(x=>ylab(x.y)),datasets:[
-      {label:'السعر المحقق (متوسط برنت)',data:r.map(x=>x.price),borderColor:C.s1,
+      {label:'متوسط برنت السنوي — متوسط المتوسطات الشهرية المحتسب في اللوحة',data:r.map(x=>x.price),borderColor:C.s1,
        backgroundColor:C.s1+'1F',borderWidth:2.6,tension:.25,pointRadius:4,fill:false},
       {label:'سعر التعادل المحتسب من بيانات وزارة المالية',data:r.map(x=>x.be),borderColor:C.s2,borderWidth:2.4,
        borderDash:[6,4],tension:.25,pointRadius:4,fill:'-1',backgroundColor:'rgba(217,89,38,.14)'},
@@ -7060,6 +7142,9 @@ function renderBreak(){
     'احتاجت سعراً أعلى مما تحقق — أي عجزاً، ومساحة الفارق هي حجمه بالدولار للبرميل. '+
     'في '+ylab(l.y)+' بلغ الفارق '+usd(Math.abs(gap))+' دولاراً '+(gap>=0?'لصالح الميزانية':'ضدّ الميزانية')+
     '، وتحقق فائض في '+arYears(surp)+' من '+arYears(r.length)+'. '+
+    '<span class="muted">وهذه السلسلة محتسبة في اللوحة: متوسط المتوسطات الشهرية من الأسعار اليومية. '+
+    'أما تبويب المقارنة الدولية فيعرض <b>المتوسط السنوي كما تنشره</b> إدارة معلومات الطاقة الأمريكية، '+
+    'والفارق بينهما لا يتجاوز 0.28 دولار في أي سنة مشتركة — فارق منهجية لا خطأ.</span> '+
     '<b>تحسين على النسخة السابقة:</b> السعر هنا هو المتوسط الفعلي المحقق لبرنت لا افتراضاً يُدخله المستخدم، '+
     'فصارت الفجوة قياساً لا تمريناً. '+
     '<br><b>مصالحة مع الرقم الرسمي المنشور:</b> '+(function(){
@@ -7199,19 +7284,20 @@ const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181'
             ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
             brand:'#C8A96A', brandDeep:'#8C7237', good:'#199e70', bad:'#e66767', warn:'#c98500' };
 
-const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+/* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
+   فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
+   على كل مواضع التنسيق دفعةً واحدة لا على موضع بعينه. */
+const numFmt=o=>{const f=new Intl.NumberFormat('en-US',o);
+  return {format:v=>(v==null||typeof v!=='number'||!isFinite(v))?'—':f.format(v)};};
+const nf0=numFmt({maximumFractionDigits:0});
 
-/* تمييز العدد في العربية: 1 مفرد · 2 مثنى · 3-10 جمع مجرور · 11 فأكثر مفرد منصوب */
+/* تمييز العدد من الطبقة المشتركة — نسخة واحدة لكل اللوحات */
 function arN(n,one,two,few,many){
-  n=Math.abs(+n);
-  if(n===1) return one;
-  if(n===2) return two;
-  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
-  if(n===0||(n>=3&&n<=10)) return few;
-  return many||one;
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.arN)? IX.arN(n,one,two,few,many) : (Math.abs(+n)===1?one:(Math.abs(+n)===2?two:(many||few||one)));
 }
-const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
-const nf2=new Intl.NumberFormat('en-US',{maximumFractionDigits:2});
+const nf1=numFmt({maximumFractionDigits:1});
+const nf2=numFmt({maximumFractionDigits:2});
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
 const pct1=v=>v==null?'—':(v<0?'('+(-v).toFixed(1)+'%)':v.toFixed(1)+'%');
 const pct2=v=>v==null?'—':v.toFixed(2)+'%';
@@ -7316,7 +7402,8 @@ function renderFin(){
   const FN=P.fin, cf=c=>c==='منقول'?' <span class="badge na">منقول</span>':'';
   /* منزلة واحدة في كل خلايا الجدول — فلا يظهر «78» بجوار «34.7» */
   const n1=v=>v==null?'—':(+v).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
-  const usd=v=>v==null?'—':n1(v/3.75);
+  /* اسم مميّز: usd في لوحة الطاقة دالة أخرى (تنسيق دولار بمنزلتين) — والاسم الواحد لمعنيين يربك */
+  const sarToUsd=v=>v==null?'—':n1(v/3.75);
   set('f-finTbl','<p class="hint">كل الصفوف بالمليار ريال — وحدة واحدة ونطاق واحد لكل صف، فالمقارنة الأفقية سليمة. '+esc(FN.fx)+'</p>'+
     '<table class="tbl"><thead><tr><th>البند</th><th>2024م</th><th>2025م</th><th>التغير</th><th>2025م بالمليار دولار</th></tr></thead><tbody>'+
     FN.rows.map(r=>{
@@ -7325,7 +7412,7 @@ function renderFin(){
         '<td>'+n1(r.v24)+cf(r.conf&&r.conf[0])+'</td>'+
         '<td>'+n1(r.v25)+cf(r.conf&&r.conf[1])+'</td>'+
         '<td class="'+(ch==null?'':(ch>=0?'pos':'neg'))+'">'+(ch==null?'—':pct1(ch))+'</td>'+
-        '<td>'+usd(r.v25)+'</td></tr>'+
+        '<td>'+sarToUsd(r.v25)+'</td></tr>'+
         (r.note?'<tr class="sub"><td colspan="5" class="dim">'+r.note+'</td></tr>':'');
     }).join('')+'</tbody></table>'+
     '<div class="note">'+FN.sourced+'</div>'+
@@ -7651,11 +7738,11 @@ function init(){
   }));
   set('f-cov','<div class="covbar">'+
     '<div><div class="cl">المصادر</div><div class="cv">رسمية منشورة</div><div class="cd">تقارير الصندوق وقوائمه المدققة · هيئة الأوراق المالية الأمريكية · تداول · رؤية 2030 · صندوق النقد</div></div>'+
-    '<div><div class="cl">حيازات تداول</div><div class="cv">'+ltr(P.tadawul.asOf)+'</div><div class="cd">تقرير كبار الملاك — يُحدَّث كل يوم تداول</div></div>'+
+    '<div><div class="cl">حيازات تداول</div><div class="cv">'+esc(P.tadawul.asOfLabel)+'</div><div class="cd">تقرير كبار الملاك — يُحدَّث كل يوم تداول</div></div>'+
     '<div><div class="cl">آخر إقرار أمريكي</div><div class="cv">'+esc(P.us13f.latest.q)+'</div><div class="cd">نموذج 13F · أُودع '+esc(P.us13f.latest.filed)+' — تحققت من مطابقته لإجمالي غلافه</div></div>'+
     '<div><div class="cl">آخر تقرير سنوي</div><div class="cv">2025م</div><div class="cd">نُشر في أغسطس 2026م ويتضمن أول بطاقة نتائج مقابل المستهدفات</div></div>'+
     '</div>');
-  window.__covPif = 'الصندوق — بيانات رسمية حتى '+P.tadawul.asOf;
+  window.__covPif = 'الصندوق — بيانات رسمية حتى '+P.tadawul.asOfLabel;
   window.__pifRender = renderAll;
   renderAll();
 }
@@ -7666,8 +7753,13 @@ init();
 (function(){
 'use strict';
 const D=window.DATA, E=window.ECON, N=(window.ENERGY||{}).brent, X2=window.EXTRA2||{};
-const nf0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
-const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
+/* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
+   فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
+   على كل مواضع التنسيق دفعةً واحدة لا على موضع بعينه. */
+const numFmt=o=>{const f=new Intl.NumberFormat('en-US',o);
+  return {format:v=>(v==null||typeof v!=='number'||!isFinite(v))?'—':f.format(v)};};
+const nf0=numFmt({maximumFractionDigits:0});
+const nf1=numFmt({maximumFractionDigits:1});
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
 const pct1=v=>v==null?'—':(v<0?'('+(-v).toFixed(1)+'%)':v.toFixed(1)+'%');
 const ylab=y=>y+'م';
