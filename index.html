@@ -367,7 +367,7 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
     </svg>
     <div>
       <h1>المرصد المالي والاقتصادي</h1>
-      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر تحديث كان في <span id="lastUpdate">30-08-2026م</span></div>
+      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر تحديث كان في <span id="lastUpdate">31-08-2026م</span></div>
     </div>
   </div>
   <div class="badges">
@@ -1521,15 +1521,20 @@ function ixHatch(color,kind){
     const cv=document.createElement('canvas'); cv.width=cv.height=8;
     const x=cv.getContext('2d'); if(!x) return color;
     x.fillStyle=color; x.fillRect(0,0,8,8);
-    x.strokeStyle='rgba(13,23,43,.55)'; x.lineWidth=1.6; x.beginPath();
-    if(kind==='diag'){ x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
-    else if(kind==='back'){ x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
-    else if(kind==='vert'){ x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
-    else if(kind==='horz'){ x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
-    else if(kind==='grid'){ x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
-    else if(kind==='wide'){ x.lineWidth=2.6; x.moveTo(-2,8);x.lineTo(8,-2); }
+    /* الخط معتم لا شفّاف: عند شفافية 0.55 يهبط تباينه على #008300 إلى 2.19:1،
+       وبالإعتام يصير 3.62:1 وهو أدنى قيمة عبر ألوان السلاسل الثمانية — فوق عتبة 3:1. */
+    x.strokeStyle='#0d172b'; x.lineWidth=1.6; x.beginPath();
+    /* القوائم والصفوف على أنصاف البكسل بعرض صحيح: خطّ حادّ بلا تنعيم، فلا تنشأ
+       بكسلات وسيطة تهبط دون العتبة. أما الأقطار فالتنعيم فيها لازم هندسياً،
+       فوُسّعت قليلاً حتى يبقى في قلبها بكسل كامل الشدّة. */
+    if(kind==='diag'){ x.lineWidth=2; x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
+    else if(kind==='back'){ x.lineWidth=2; x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
+    else if(kind==='vert'){ x.lineWidth=2; x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
+    else if(kind==='horz'){ x.lineWidth=2; x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
+    else if(kind==='grid'){ x.lineWidth=2; x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
+    else if(kind==='wide'){ x.lineWidth=3; x.moveTo(-2,8);x.lineTo(8,-2); }
     x.stroke();
-    if(kind==='dots'){ x.fillStyle='rgba(13,23,43,.6)';
+    if(kind==='dots'){ x.fillStyle='#0d172b';
       [[2,2],[6,6]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
     const c2=document.createElement('canvas').getContext('2d');
     _ixPat[key]=(c2&&c2.createPattern(cv,'repeat'))||color;
@@ -1613,9 +1618,42 @@ const axisPlugin={
     }catch(e){}
   }
 };
-if(window.Chart&&window.Chart.register) try{ window.Chart.register(axisPlugin); }catch(e){}
+/* الأنماط تُعاد أخذ عيناتها مع تنعيم الصور المفعَّل افتراضياً، فيهبط تباين خطوط
+   التهشير: قيس 2.58:1 على عمود عرضه 11 بكسل. وبإيقاف التنعيم على سياق الرسم
+   تُرسم الخطوط بلون الحبر كاملاً. التنعيم لا يمسّ المسارات ولا النصوص، والرسوم
+   لا ترسم صوراً أخرى، فأثره محصور في الأنماط. */
+const crispPlugin={
+  id:'mirsadCrispPatterns',
+  beforeDraw(chart){ try{ chart.ctx.imageSmoothingEnabled=false; }catch(e){} }
+};
+if(window.Chart&&window.Chart.register) try{ window.Chart.register(axisPlugin,crispPlugin); }catch(e){}
+
+/* ===== جدول t الحرجة — واحد لكل اللوحات =====
+   الوسيط conf هو مستوى الثقة ثنائي الطرف: 0.80 أو 0.95.
+   القيم من توزيع t بأربع منازل، والاستيفاء خطي في 1/df لا في df —
+   فأقصى خطأ نسبي بين df=1 و500 هو 0.0037% بدل 0.012% في الاستيفاء الخطي.
+   (كان الجدول مكرَّراً: tCrit في لوحة المالية وtinv95 في لوحة الطاقة، بدقتين
+   مختلفتين، ونصفه شيفرة ميتة.) */
+const T_TAB={
+  '0.80':{1:3.0777,2:1.8856,3:1.6377,4:1.5332,5:1.4759,6:1.4398,7:1.4149,8:1.3968,9:1.383,10:1.3722,11:1.3634,12:1.3562,13:1.3502,14:1.345,15:1.3406,16:1.3368,17:1.3334,18:1.3304,19:1.3277,20:1.3253,22:1.3212,24:1.3178,26:1.315,28:1.3125,30:1.3104,35:1.3062,40:1.3031,50:1.2987,60:1.2958,80:1.2922,100:1.2901,120:1.2886,200:1.2858,500:1.2832},
+  '0.95':{1:12.7062,2:4.3027,3:3.1824,4:2.7764,5:2.5706,6:2.4469,7:2.3646,8:2.306,9:2.2622,10:2.2281,11:2.201,12:2.1788,13:2.1604,14:2.1448,15:2.1314,16:2.1199,17:2.1098,18:2.1009,19:2.093,20:2.086,22:2.0739,24:2.0639,26:2.0555,28:2.0484,30:2.0423,35:2.0301,40:2.0211,50:2.0086,60:2.0003,80:1.9901,100:1.984,120:1.9799,200:1.9719,500:1.9647}
+};
+function tCritIX(df,conf){
+  const T=T_TAB[conf===0.95?'0.95':'0.80'];
+  df=Math.max(1,Math.round(df));
+  if(T[df]!=null) return T[df];
+  const ks=Object.keys(T).map(Number).sort((a,b)=>a-b);
+  if(df<=ks[0]) return T[ks[0]];
+  for(let i=0;i<ks.length-1;i++) if(df>ks[i]&&df<ks[i+1]){
+    const f=(1/df-1/ks[i])/(1/ks[i+1]-1/ks[i]);
+    return T[ks[i]]+f*(T[ks[i+1]]-T[ks[i]]);
+  }
+  return conf===0.95?1.9600:1.2816;   /* حدّ التوزيع الطبيعي */
+}
 
 window.MIRSAD_IX={
+  tCrit:tCritIX,
+  hatch:ixHatch,
   openData:openData,
   stamp:stamp,
   wrap:function(id,cfg,meta){
@@ -1669,13 +1707,13 @@ function arN(n,one,two,few,many){
   n=Math.abs(+n);
   if(n===1) return one;
   if(n===2) return two;
-  if(n>=3&&n<=10) return few;
+  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
+  if(n===0||(n>=3&&n<=10)) return few;
   return many||one;
 }
 const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
 const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
 const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
-const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1 = new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const fmt  = v => v==null? '—' : (v<0? '('+nf0.format(Math.round(-v))+')' : nf0.format(Math.round(v)));
 const fmtB = v => v==null? '—' : nf1.format(v/1000)+' مليار';
@@ -1699,27 +1737,12 @@ const SERIES = [C.s1,C.s2,C.s3,C.s4,C.s5,C.s6,C.s7,C.s8];
    كل سلسلة تحمل لوناً ونمط تعبئة معاً، فتبقى مفصولة في التدرج الرمادي
    وعند عمى الألوان. الأنماط تُرسم على لوحة 8×8 وتُعاد كـ CanvasPattern. */
 const PAT_KINDS=['solid','diag','back','dots','grid','vert','horz','wide'];
-const _patCache={};
+/* التهشير من الطبقة المشتركة: نسخة واحدة لكل اللوحات.
+   كانت ثلاث نسخ متطابقة في app و app2 و app5 إضافة إلى نسخة interact —
+   فمعالجة التباين في واحدة لا تصل الباقي. */
 function hatch(color,kind){
-  if(!kind||kind==='solid') return color;
-  const key=color+'|'+kind; if(_patCache[key]) return _patCache[key];
-  if(typeof document==='undefined') return color;
-  const s=8, cv=document.createElement('canvas'); cv.width=cv.height=s;
-  const x=cv.getContext('2d'); if(!x) return color;
-  x.fillStyle=color; x.fillRect(0,0,s,s);
-  x.strokeStyle='rgba(13,23,43,.55)'; x.lineWidth=1.6; x.beginPath();
-  if(kind==='diag'){ x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
-  else if(kind==='back'){ x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
-  else if(kind==='vert'){ x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
-  else if(kind==='horz'){ x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
-  else if(kind==='grid'){ x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
-  else if(kind==='wide'){ x.lineWidth=2.6; x.moveTo(-2,8);x.lineTo(8,-2); }
-  x.stroke();
-  if(kind==='dots'){ x.fillStyle='rgba(13,23,43,.6)';
-    [[2,2],[6,6]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
-  const ctx=document.createElement('canvas').getContext('2d');
-  const p=ctx?ctx.createPattern(cv,'repeat'):color;
-  _patCache[key]=p||color; return _patCache[key];
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.hatch)? IX.hatch(color,kind) : color;
 }
 /* أنماط تقطيع للخطوط — تمييز إضافي لا يعتمد على اللون */
 const DASH=[[],[7,4],[2,3],[10,4,2,4],[5,3,1,3],[14,5]];
@@ -1855,7 +1878,7 @@ function renderScopeBar(){
     '<b>'+scopeLabel()+'</b>'+
     '<span class="sep" aria-hidden="true">·</span>'+FREQ()+
     '<span class="sep" aria-hidden="true">·</span>'+cnt+
-    '<span class="sep">·</span>الفترة المرجعية للمؤشرات <b>'+ref+'</b>'+
+    '<span class="sep" aria-hidden="true">·</span>الفترة المرجعية للمؤشرات <b>'+ref+'</b>'+
     (b<P.length-1? '<span class="sep" aria-hidden="true">·</span><span class="muted">آخر فترة منشورة '+qlab(P[P.length-1])+'</span>':'')+
     (shown===1? '<span class="sep" aria-hidden="true">·</span><span class="muted">نقطة واحدة: رسوم الاتجاه تحتاج فترتين فأكثر، والمفيد هنا رسوم التركيبة</span>':'');
 }
@@ -2127,27 +2150,50 @@ function decompose(arr){
   const sst = sum(y.map(v=>(v-my)**2));
   const mape = sum(y.map((v,i)=>Math.abs(err[i]/v)))/n*100;
   const errAt={}; x.forEach((xi,i)=>{ errAt[xi]=err[i]; });
-  return {a,b,seas,sd,r2:1-sse/sst,mape,n,df,mx,sxx:den,errAt};
+  return {a,b,seas,sd,r2:1-sse/sst,mape,n,df,mx,sxx:den,errAt,xtxInv:xtxInv(x)};
 }
-/* الخطأ المعياري لتنبؤ مشاهدة جديدة عند الموضع x0 — الصيغة المعيارية للانحدار:
-   sd × √(1 + 1/n + (x0 − x̄)² ÷ Sxx). تتسع مع البعد عن مركز البيانات، بخلاف صيغة تقريبية. */
+/* صفّ مصفوفة التصميم للنموذج المُقدَّر فعلاً: [1، الاتجاه، ثلاث موسميات بترميز
+   مجموعه صفر] — الربع الرابع يأخذ (−1) في الثلاثة لأن مجموع الموسميات مقيَّد بصفر. */
+function designRow(xi){
+  const q=((xi%4)+4)%4, d=[0,0,0];
+  if(q<3) d[q]=1; else { d[0]=-1; d[1]=-1; d[2]=-1; }
+  return [1,xi,d[0],d[1],d[2]];
+}
+/* معكوس XᵀX بحذف غاوس-جوردان مع محور جزئي. يعيد null إذا تعذّر القلب
+   (مشاهدات أقل من المعالم، أو ربع غائب كلياً) فيرجع sePred إلى الصيغة المبسطة. */
+function xtxInv(x){
+  const p=5, M=Array.from({length:p},()=>new Array(2*p).fill(0));
+  x.forEach(xi=>{ const r=designRow(xi);
+    for(let a=0;a<p;a++) for(let b=0;b<p;b++) M[a][b]+=r[a]*r[b]; });
+  for(let a=0;a<p;a++) M[a][p+a]=1;
+  for(let c=0;c<p;c++){
+    let piv=c; for(let r=c+1;r<p;r++) if(Math.abs(M[r][c])>Math.abs(M[piv][c])) piv=r;
+    if(Math.abs(M[piv][c])<1e-9) return null;
+    const t=M[c]; M[c]=M[piv]; M[piv]=t;
+    const d=M[c][c]; for(let k=0;k<2*p;k++) M[c][k]/=d;
+    for(let r=0;r<p;r++) if(r!==c){ const f=M[r][c];
+      if(f) for(let k=0;k<2*p;k++) M[r][k]-=f*M[c][k]; }
+  }
+  return M.map(r=>r.slice(p));
+}
+/* الخطأ المعياري لتنبؤ مشاهدة جديدة عند الموضع x0: sd × √(1 + h)، حيث h رافعة
+   الموضع محسوبة من مصفوفة تصميم النموذج كاملةً — خمسة معالم لا اثنان.
+   صيغة (1 + 1/n + (x0 − x̄)²/Sxx) صحيحة للانحدار البسيط وحده، وتُعطي هنا نطاقاً
+   أضيق مما توجبه (0.15768 مقابل 0.23743 عند الأفق السادس للإيرادات = 3.4% ضيقاً). */
 function sePred(m,x0){
+  if(m.xtxInv){
+    const v=designRow(x0); let h=0;
+    for(let a=0;a<5;a++) for(let b=0;b<5;b++) h+=v[a]*m.xtxInv[a][b]*v[b];
+    if(isFinite(h)&&h>=0) return m.sd*Math.sqrt(1+h);
+  }
   return m.sd*Math.sqrt(1 + 1/m.n + (m.sxx? Math.pow(x0-m.mx,2)/m.sxx : 0));
 }
-/* قيم t الحرجة — جدول للدرجات الصغيرة ثم استيفاء خطي */
+/* قيمة t الحرجة — الجدول الوحيد في الطبقة المشتركة (MIRSAD_IX.tCrit)،
+   والوسيط مستوى الثقة ثنائي الطرف. */
 function tCrit(df,two){
-  const T90={1:3.078,2:1.886,3:1.638,4:1.533,5:1.476,6:1.440,7:1.415,8:1.397,9:1.383,10:1.372,
-    12:1.356,15:1.341,20:1.325,24:1.318,30:1.310,40:1.303,60:1.296,120:1.289};
-  const T975={1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228,
-    12:2.179,15:2.131,20:2.086,24:2.064,30:2.042,40:2.021,60:2.000,120:1.980};
-  const T = two===0.80? T90 : T975, inf = two===0.80? 1.2816 : 1.9600;
-  if(T[df]) return T[df];
-  const ks=Object.keys(T).map(Number).sort((a,b)=>a-b);
-  if(df<ks[0]) return T[ks[0]];
-  for(let i=0;i<ks.length-1;i++) if(df>ks[i]&&df<ks[i+1]){
-    const f=(df-ks[i])/(ks[i+1]-ks[i]); return T[ks[i]]+f*(T[ks[i+1]]-T[ks[i]]);
-  }
-  return inf;
+  const IX=window.MIRSAD_IX;
+  if(IX&&IX.tCrit) return IX.tCrit(df,two);
+  return two===0.95?1.9600:1.2816;
 }
 /* معامل الارتباط بين بواقي نموذجين على الفترات المشتركة */
 function residCorr(m1,m2){
@@ -3168,27 +3214,12 @@ const SERIES=[C.s1,C.s2,C.s3,C.s4,C.s5,C.s6,C.s7,C.s8];
    كل سلسلة تحمل لوناً ونمط تعبئة معاً، فتبقى مفصولة في التدرج الرمادي
    وعند عمى الألوان. الأنماط تُرسم على لوحة 8×8 وتُعاد كـ CanvasPattern. */
 const PAT_KINDS=['solid','diag','back','dots','grid','vert','horz','wide'];
-const _patCache={};
+/* التهشير من الطبقة المشتركة: نسخة واحدة لكل اللوحات.
+   كانت ثلاث نسخ متطابقة في app و app2 و app5 إضافة إلى نسخة interact —
+   فمعالجة التباين في واحدة لا تصل الباقي. */
 function hatch(color,kind){
-  if(!kind||kind==='solid') return color;
-  const key=color+'|'+kind; if(_patCache[key]) return _patCache[key];
-  if(typeof document==='undefined') return color;
-  const s=8, cv=document.createElement('canvas'); cv.width=cv.height=s;
-  const x=cv.getContext('2d'); if(!x) return color;
-  x.fillStyle=color; x.fillRect(0,0,s,s);
-  x.strokeStyle='rgba(13,23,43,.55)'; x.lineWidth=1.6; x.beginPath();
-  if(kind==='diag'){ x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
-  else if(kind==='back'){ x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
-  else if(kind==='vert'){ x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
-  else if(kind==='horz'){ x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
-  else if(kind==='grid'){ x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
-  else if(kind==='wide'){ x.lineWidth=2.6; x.moveTo(-2,8);x.lineTo(8,-2); }
-  x.stroke();
-  if(kind==='dots'){ x.fillStyle='rgba(13,23,43,.6)';
-    [[2,2],[6,6]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
-  const ctx=document.createElement('canvas').getContext('2d');
-  const p=ctx?ctx.createPattern(cv,'repeat'):color;
-  _patCache[key]=p||color; return _patCache[key];
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.hatch)? IX.hatch(color,kind) : color;
 }
 /* أنماط تقطيع للخطوط — تمييز إضافي لا يعتمد على اللون */
 const DASH=[[],[7,4],[2,3],[10,4,2,4],[5,3,1,3],[14,5]];
@@ -3201,13 +3232,11 @@ function arN(n,one,two,few,many){
   n=Math.abs(+n);
   if(n===1) return one;
   if(n===2) return two;
-  if(n>=3&&n<=10) return few;
+  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
+  if(n===0||(n>=3&&n<=10)) return few;
   return many||one;
 }
 const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
-const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
-const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
-const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
 const pct1=v=>v==null?'—':(v<0?'('+(-v).toFixed(1)+'%)':v.toFixed(1)+'%');
@@ -6729,13 +6758,11 @@ function arN(n,one,two,few,many){
   n=Math.abs(+n);
   if(n===1) return one;
   if(n===2) return two;
-  if(n>=3&&n<=10) return few;
+  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
+  if(n===0||(n>=3&&n<=10)) return few;
   return many||one;
 }
 const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
-const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
-const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
-const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const usd=v=>v==null?'—':v.toFixed(2);
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
@@ -6804,18 +6831,10 @@ function ols(xs,ys){
   return {a,b,r2: st? 1-ss/st : null, n, se, se2:s2!=null?Math.sqrt(s2):null,
           t: se? b/se : null, lo: se? b-tcrit*se : null, hi: se? b+tcrit*se : null, tcrit};
 }
-/* قيمة t الحرجة عند 95% ثنائية الطرف — جدول للدرجات الصغيرة ثم استيفاء خطي */
+/* قيمة t الحرجة عند 95% ثنائية الطرف — من الجدول الوحيد في الطبقة المشتركة */
 function tinv95(df){
-  const T={1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228,
-    11:2.201,12:2.179,13:2.160,14:2.145,15:2.131,16:2.120,17:2.110,18:2.101,19:2.093,20:2.086,
-    22:2.074,24:2.064,26:2.056,28:2.048,30:2.042,35:2.030,36:2.028,40:2.021,50:2.009,60:2.000,120:1.980};
-  if(T[df]) return T[df];
-  const ks=Object.keys(T).map(Number).sort((a,b)=>a-b);
-  if(df<ks[0]) return T[ks[0]];
-  for(let i=0;i<ks.length-1;i++) if(df>ks[i]&&df<ks[i+1]){
-    const f=(df-ks[i])/(ks[i+1]-ks[i]); return T[ks[i]]+f*(T[ks[i+1]]-T[ks[i]]);
-  }
-  return 1.96;
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.tCrit)? IX.tCrit(df,0.95) : 1.9600;
 }
 
 /* ---------- الأسعار ---------- */
@@ -7033,7 +7052,7 @@ function renderBreak(){
        pointStyle:'rectRot',fill:false,spanGaps:false}]},
     options:{interaction:{mode:'index',intersect:false},scales:{x:gridX,y:gridY(v=>nf0.format(v))},
       plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+usd(c.parsed.y)+' دولار'}}}}},
-    {unit:'دولار للبرميل',dec:1,freq:'y'});
+    {unit:'دولار للبرميل',dec:2,freq:'y'});   /* منزلتان كبقية رسوم السعر ومثل usd() في التلميح */
   ST('cNGap','سنوي',ylab(r[0].y)+' — '+ylab(r[r.length-1].y),'دولار للبرميل',
      'محتسب في اللوحة، ومقارَن بالسلسلة المنشورة من صندوق النقد');
   const l=r[r.length-1], gap=l.price-l.be, surp=r.filter(x=>x.price>=x.be).length;
@@ -7187,13 +7206,10 @@ function arN(n,one,two,few,many){
   n=Math.abs(+n);
   if(n===1) return one;
   if(n===2) return two;
-  if(n>=3&&n<=10) return few;
+  /* الصفر يُميَّز بالجمع المجرور كالثلاثة إلى العشرة، لا بصيغة الأحد عشر فأكثر */
+  if(n===0||(n>=3&&n<=10)) return few;
   return many||one;
 }
-const arYears  = n=>n+' '+arN(n,'سنة','سنتين','سنوات','سنة');
-const arQtrs   = n=>n+' '+arN(n,'ربع','ربعين','أرباع','ربعاً');
-const arAlerts = n=>n+' '+arN(n,'تنبيه','تنبيهين','تنبيهات','تنبيهاً');
-const arPos    = n=>n+' '+arN(n,'مركز','مركزين','مراكز','مركزاً');
 const nf1=new Intl.NumberFormat('en-US',{maximumFractionDigits:1});
 const nf2=new Intl.NumberFormat('en-US',{maximumFractionDigits:2});
 const fmt=v=>v==null?'—':(v<0?'('+nf0.format(Math.round(-v))+')':nf0.format(Math.round(v)));
@@ -7225,17 +7241,9 @@ const S={tab:'over', tgt:'s1', tsort:'p', tsec:'*', peerSel:['صندوق الا�
 
 /* ── بطاقات المؤشرات ─────────────────────────────────────── */
 /* تهشير خفيف لوسم القيم التقريبية بصرياً — لا يعتمد على اللون وحده */
-let _h5=null;
 function hatch5(color){
-  if(_h5) return _h5;
-  if(typeof document==='undefined') return color;
-  const cv=document.createElement('canvas'); cv.width=cv.height=8;
-  const x=cv.getContext('2d'); if(!x) return color;
-  x.fillStyle=color; x.fillRect(0,0,8,8);
-  x.strokeStyle='rgba(13,23,43,.55)'; x.lineWidth=1.6; x.beginPath();
-  x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); x.stroke();
-  const c2=document.createElement('canvas').getContext('2d');
-  _h5=(c2&&c2.createPattern(cv,'repeat'))||color; return _h5;
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.hatch)? IX.hatch(color,'diag') : color;
 }
 
 function kpi(label,val,sub,tone){
