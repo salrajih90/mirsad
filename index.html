@@ -1526,9 +1526,11 @@ function ixHatch(color,kind){
     const cv=document.createElement('canvas'); cv.width=cv.height=8;
     const x=cv.getContext('2d'); if(!x) return color;
     x.fillStyle=color; x.fillRect(0,0,8,8);
-    /* الخط معتم لا شفّاف: عند شفافية 0.55 يهبط تباينه على #008300 إلى 2.19:1،
-       وبالإعتام يصير 3.62:1 وهو أدنى قيمة عبر ألوان السلاسل الثمانية — فوق عتبة 3:1. */
-    x.strokeStyle='#0d172b'; x.lineWidth=1.6; x.beginPath();
+    /* حبر التهشير أبيض لا بلون السطح: حين كان بلون الخلفية نفسه (#0d172b) هبط تباين
+       العمود الرفيع — نصفه حبر ونصفه تعبئة — إلى 1.48:1 مقابل الخلفية، فبدا فراغاً.
+       وبالأبيض: أدنى تباين للخط مقابل التعبئة 3.07:1، وأدنى تباين للعمود المخلوط
+       مقابل الخلفية 8.38:1 — كلاهما فوق العتبة، عبر ألوان السلاسل الثمانية. */
+    x.strokeStyle='#ffffff'; x.lineWidth=1.6; x.beginPath();
     /* عرض الخطوط كما كان: توسيعه يزيد مساحة الحبر داخل العمود فيبتلع الأعمدة
        الرفيعة حتى تختفي. المكسب في التباين جاء من الإعتام وإيقاف التنعيم لا من العرض. */
     if(kind==='diag'){ x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
@@ -1538,7 +1540,7 @@ function ixHatch(color,kind){
     else if(kind==='grid'){ x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
     else if(kind==='wide'){ x.lineWidth=2.6; x.moveTo(-2,8);x.lineTo(8,-2); }
     x.stroke();
-    if(kind==='dots'){ x.fillStyle='#0d172b';
+    if(kind==='dots'){ x.fillStyle='#ffffff';
       [[2,2],[6,6]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
     const c2=document.createElement('canvas').getContext('2d');
     _ixPat[key]=(c2&&c2.createPattern(cv,'repeat'))||color;
@@ -1573,7 +1575,10 @@ function redundantEncode(cfg){
       const type=d.type||t;
       if(type==='line'||type==='radar'){
         if(d.borderColor==='transparent') return;              /* حدود نطاق الثقة */
-        if(!dashIsMeaningful && (!d.borderDash||!d.borderDash.length)){
+        /* خط عرضه صفر لا يُرسم، وإضافة تقطيع إليه تُطفئ شكل نقطته في الأسطورة
+           فيخرج المفتاح فارغاً تماماً. */
+        const w=(d.borderWidth==null?2:d.borderWidth);
+        if(!dashIsMeaningful && w>0 && (!d.borderDash||!d.borderDash.length)){
           d.borderDash=IX_DASH[k%IX_DASH.length];
           d.__ixDash=true;   /* وسم التقطيع المُضاف آلياً ليكشفه فاحص vdash */
         }
@@ -1632,6 +1637,35 @@ const crispPlugin={
   id:'mirsadCrispPatterns',
   beforeDraw(chart){ try{ chart.ctx.imageSmoothingEnabled=false; }catch(e){} }
 };
+/* دقة أوسمة المحور تُشتق من مداه: nf0 تُقرّب 54.6 إلى «55»، فعلى محور مداه 0.9
+   نقطة يصير كل وسم كذباً بالتقريب — ويضع الرسم قيمةً تحت 55% فوق خطٍّ موسوم 55%.
+   هذا الغلاف يعيد تنسيق الرقم داخل نصّ الوسم الأصلي محتفظاً بلاحقته (% أو قوسَي
+   السالب)، ويحسب الدقة من مدى المحور عند كل رسم فلا يجمد على حالة واحدة. */
+const AX_N0=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+const axisPrecision={
+  id:'mirsadAxisPrecision',
+  afterBuildTicks(chart,args){
+    try{
+      const sc=args&&args.scale; if(!sc) return;
+      if(sc.type==='category'||sc.type==='radialLinear') return;
+      const o=sc.options&&sc.options.ticks; if(!o) return;
+      const cb=o.callback; if(!cb||cb.__axPrec) return;
+      const wrapped=function(v,i,arr){
+        const orig=String(cb.call(this,v,i,arr));
+        let span=0; try{ span=Math.abs(this.max-this.min); }catch(e){}
+        const need = (span>0&&span<1)?2:((span>0&&span<5)?1:0);
+        if(!need||!isFinite(v)) return orig;
+        const a=AX_N0.format(Math.abs(v));
+        const b=new Intl.NumberFormat('en-US',
+          {minimumFractionDigits:need,maximumFractionDigits:need}).format(Math.abs(v));
+        return orig.indexOf(a)>=0? orig.replace(a,b) : orig;
+      };
+      wrapped.__axPrec=true;
+      o.callback=wrapped;
+    }catch(e){}
+  }
+};
+
 /* المحور المتدهور: حين تنحصر البيانات في نقطة واحدة يبني Chart.js عشرة أوسمة أو
    أحد عشر تنهار كلها إلى قيمتين بعد التقريب، فيرى القارئ سُلَّماً مكرَّراً لا يدلّ
    على شيء. هذا الفاحص يحذف الوسم الذي يطابق نصُّه سابقَه — لا يخترع وسماً ولا
@@ -1652,7 +1686,7 @@ const dedupeTicks={
     }catch(e){}
   }
 };
-if(window.Chart&&window.Chart.register) try{ window.Chart.register(axisPlugin,crispPlugin,dedupeTicks); }catch(e){}
+if(window.Chart&&window.Chart.register) try{ window.Chart.register(axisPlugin,crispPlugin,axisPrecision,dedupeTicks); }catch(e){}
 
 /* ===== تمييز العدد في العربية — نسخة واحدة لكل اللوحات =====
    1 مفرد · 2 مثنى · 0 و3-10 جمع مجرور · 11 فأكثر مفرد منصوب.
@@ -2192,14 +2226,22 @@ function renderDebt(){
   const sgn = v=>v==null?'—':(v<0?'('+nf1.format(-v)+'%)':nf1.format(v)+'%');
   const aR=mae(varRev), aE=mae(varExp), bR=mbe(varRev), bE=mbe(varExp);
   const nObs=varRev.filter(x=>x!=null).length;
-  const diff=Math.abs(aR-aE);
-  const cmp = diff<0.5
+  /* Math.abs(null − null) = 0 فيمرّ الفرع «الفارق أقل من نصف نقطة» بلا مشاهدة
+     واحدة، فتُنشر خلاصة مقارنة من العدم. البوابة على عدد المشاهدات لا على الرقم. */
+  const haveObs = nObs>0 && aR!=null && aE!=null;
+  const diff=haveObs?Math.abs(aR-aE):null;
+  const cmp = !haveObs
+    ? 'ولا تُحتسب دقة التقدير على المدى المعروض: لا سنة ميزانية مكتملة فيه (مقدَّر ومتحقق معاً)'
+    : diff<0.5
     ? 'والفارق بينهما أقل من نصف نقطة مئوية، فلا يُقرأ على أنه تفوّق جانب على آخر في دقة التقدير'
     : 'فالخطأ المطلق الأكبر في جانب <b>'+(aR>aE?'الإيرادات':'المصروفات')+'</b> بفارق '+nf1.format(diff)+' نقطة مئوية';
-  document.getElementById('nAcc').innerHTML='<b>دقة التقدير:</b> متوسط الخطأ المطلق في تقدير الإيرادات '+
-    nf1.format(aR)+'% مقابل '+nf1.format(aE)+'% للمصروفات على '+arYears(nObs)+' — '+cmp+'. '+
-    'ومتوسط الانحراف <em>بإشارته</em> '+sgn(bR)+' للإيرادات و'+sgn(bE)+' للمصروفات؛ '+
-    'الموجب يعني أن المتحقق فاق المقدَّر. '+
+  document.getElementById('nAcc').innerHTML='<b>دقة التقدير:</b> '+
+    (haveObs
+      ? 'متوسط الخطأ المطلق في تقدير الإيرادات '+nf1.format(aR)+'% مقابل '+nf1.format(aE)+
+        '% للمصروفات على '+arYears(nObs)+' — '+cmp+'. '+
+        'ومتوسط الانحراف <em>بإشارته</em> '+sgn(bR)+' للإيرادات و'+sgn(bE)+' للمصروفات؛ '+
+        'الموجب يعني أن المتحقق فاق المقدَّر. '
+      : cmp+' — فوسّع النطاق ليشمل سنة مكتملة. ')+
     '<span class="hint">الخطأ المطلق يقيس حجم الانحراف لا اتجاهه، ولا يدلّ وحده على فاعلية أداة سياسة. '+
     'والقيم تتغير بتغيّر النطاق الزمني المختار.</span>';
 }
