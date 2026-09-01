@@ -1,6 +1,7 @@
 # mirsad-site — الموقع المنشور لبوابة «المرصد المالي والاقتصادي»
 
-**الرابط العام:** https://almirsad.pages.dev
+**الرابط الدائم:** https://mrsdx-fo.net
+**الرابط الاحتياطي:** https://almirsad.pages.dev — يبقى عاملاً ولا يُلغى
 
 ## كيف يُنشر — تلقائياً بالكامل
 
@@ -38,3 +39,14 @@ python3 merge.py && python3 build3.py
 python3 wrap.py mirsad.html index.html
 bash deploy.sh "$(pwd)/index.html"
 ```
+
+
+## النطاق
+
+| | |
+|---|---|
+| الدائم | `mrsdx-fo.net` — مسجَّل 30-08-2026م لدى Cloudflare، خوادمه `mallory` و`marek.ns.cloudflare.com` |
+| الاحتياطي | `almirsad.pages.dev` — لا يُلغى؛ يعمل إن تعطّل النطاق أو حُجب عند مزوّد خدمة |
+| المعياري | `wrap.py` يكتب `canonical` و`og:url` على النطاق الدائم في كل بناء |
+
+**قيدٌ معروف على النطاقات حديثة التسجيل:** بعض محلِّلات مزوّدي الخدمة تحجب أي نطاق عمره أقل من ثلاثين يوماً، فيظهر للزائر `DNS_PROBE_FINISHED_NXDOMAIN` بينما النطاق سليم عالمياً. وهذا يزول بتقادم النطاق، والرابط الاحتياطي هو المخرج حتى ذلك الحين.
