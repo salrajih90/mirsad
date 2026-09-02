@@ -377,6 +377,113 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
   box-shadow:0 12px 34px rgba(0,0,0,.5);pointer-events:auto;text-align:start}
 .idot-tip b{color:var(--brand-ink,var(--brand))}
 @media (prefers-reduced-motion:reduce){.idot>span{transition:none}}
+
+/* ══════════════════════════════════════════════════════════════════════
+   طبقة الإخراج الفني — مراجعة الاتصال البصري 02-09-2026م
+   لا تُغيّر حرفاً من المحتوى ولا رقماً: تُعيد ترتيب **الرتبة البصرية** وحدها.
+   المشكلة المرصودة: ثماني بطاقات بحجمٍ واحد، وستّة أحداث لونية صارخة على
+   شاشةٍ واحدة، وعشرون رقاقة إسنادٍ بوزن العناوين — فلا مدخل للعين ولا تدرّج.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── ١) رتبتان للمؤشرات: تدفّقات ثم نِسَب ──────────────────────────────
+   شبكة من خمس عشرة وحدة: التدفّق يشغل خمساً (ثلاثٌ في الصف) والنسبة ثلاثاً
+   (خمسٌ في الصف). فيقع الصفّ الأول في الثلث العلوي حيث ترتدّ العين أولاً. */
+#kpis{grid-template-columns:repeat(15,1fr)}
+#kpis .kpi.t1{grid-column:span 5}
+#kpis .kpi.t2{grid-column:span 3}
+#kpis .kpi.t1 .v{font-size:34px}
+#kpis .kpi.t2 .v{font-size:24px}
+#kpis .kpi.t2 .l{font-size:11px}
+#kpis .kpi.t1{padding:20px 20px 18px}
+
+/* النواة البصرية: الرصيد — الرقم الذي وُجدت اللوحة لتفسّره.
+   يُرفع بالحجم وبالسطح وبخيطٍ من لون العلامة، لا بلونٍ صارخ إضافي. */
+#kpis .kpi.hero{background:var(--surface-2);border-color:var(--line);
+  box-shadow:inset 0 0 0 1px rgba(200,169,106,.10)}
+#kpis .kpi.hero .v{font-size:42px;letter-spacing:-.03em}
+#kpis .kpi.hero::before{content:"";position:absolute;inset-block:14px;inset-inline-start:0;
+  width:3px;border-radius:0 3px 3px 0;background:var(--brand)}
+#kpis .kpi.hero{position:relative;overflow:hidden}
+@media(max-width:1100px){
+  #kpis{grid-template-columns:repeat(6,1fr)}
+  #kpis .kpi.t1{grid-column:span 2}
+  #kpis .kpi.t2{grid-column:span 3}
+}
+@media(max-width:640px){
+  #kpis{grid-template-columns:1fr}
+  #kpis .kpi.t1,#kpis .kpi.t2{grid-column:span 1}
+  #kpis .kpi.hero .v{font-size:34px}
+}
+
+/* ── ٢) انضباط اللون: 10% لا أكثر ────────────────────────────────────
+   الأخضر والأحمر يبقيان دالّين — الاتجاه لا يُحمَل على اللون وحده أصلاً
+   (السهم ▲▼ يحمله) — لكن نبرتهما تخفت في الرتبة الثانية ليصفو للنواة
+   وحدها الصوتُ العالي. وهذا هو تطبيق قاعدة 60-30-10 لا إلغاء المعنى. */
+#kpis .kpi.t2 .d.up{color:#3f8f74}
+#kpis .kpi.t2 .d.down{color:#b06a6a}
+#kpis .kpi.t1 .d.up{color:var(--good)}
+#kpis .kpi.t1 .d.down{color:var(--bad)}
+
+/* ── ٣) رقاقات الإسناد تُخفَض من «أزرار» إلى «سطر إسناد» ──────────────
+   محتواها لا يُمسّ — التواتر والتغطية والوحدة والأساس تبقى كاملةً — لكنها
+   كانت تحمل خلفيةً وإطاراً فتنافس عنوان البطاقة. فتصير سطراً واحداً
+   خفيضاً تحت العنوان، يُقرأ عند الحاجة ولا يزاحم. */
+.perbar{gap:0 14px;margin:0 0 13px;row-gap:4px}
+.perbar .chip{background:transparent;border:0;border-radius:0;padding:0;
+  font-size:10.5px;color:var(--ink-3);gap:5px}
+.perbar .chip + .chip{padding-inline-start:14px;position:relative}
+.perbar .chip + .chip::before{content:"";position:absolute;inset-inline-start:0;
+  top:50%;transform:translateY(-50%);width:1px;height:11px;background:var(--line)}
+.perbar .chip i{font-size:10px;color:var(--ink-3);opacity:.72}
+.perbar .chip.axis{color:var(--brand-soft)}
+.perbar .chip.axis i{color:var(--brand-soft);opacity:.8}
+
+/* رقاقات الترويسة كذلك: بياناتٌ تعريفية لا أفعال، فلا تُعرض بهيئة الأزرار. */
+header.top .badge{background:transparent;border:0;padding:4px 0;font-size:11.5px;color:var(--ink-3)}
+header.top .badge + .badge{padding-inline-start:15px;position:relative}
+header.top .badge + .badge::before{content:"";position:absolute;inset-inline-start:1px;
+  top:50%;transform:translateY(-50%);width:1px;height:12px;background:var(--line)}
+header.top .badges{gap:0 15px;row-gap:2px}
+
+/* ── ٤) سُلَّم طباعي بخطواتٍ محسوسة ───────────────────────────────────
+   كان الفرق بين العنوان والتلميح والحاشية أقلّ من أن يُقرأ تدرّجاً. */
+.card h3{font-size:16px;font-weight:600;letter-spacing:-.01em;line-height:1.45}
+.card .hint{font-size:12px;line-height:1.65;margin-bottom:13px;max-width:82ch}
+.sechead h2{font-size:21px;letter-spacing:-.015em}
+
+/* ── ٥) الحاشية تُقرأ في ثوانٍ لا تُقتحم ──────────────────────────────
+   عرضٌ مقيَّد بمقاس القراءة، ومدخلٌ غامق يفصل الحكم عن شرحه. */
+.note{max-width:78ch;line-height:1.85;border-right-width:2px;padding-right:13px;margin-top:14px}
+.note b:first-child{display:inline-block;margin-bottom:1px}
+
+/* ── ٦) خطُّ أساسٍ واحد لكل صفّ من المؤشرات ───────────────────────────
+   العناوين تختلف أطوالها فينكسر بعضها سطرين، فتتراقص أرقام الصفّ الواحد
+   على خطوطٍ مختلفة وتضيع المقارنة البصرية بينها. فيُثبَّت ارتفاع كتلة
+   العنوان، ويُدفَع الذيل إلى القاع، فتستوي الأرقام على خطٍّ واحد. */
+#kpis .kpi{display:flex;flex-direction:column}
+#kpis .kpi .l{min-height:2.5em;display:flex;align-items:flex-start;gap:5px;line-height:1.25}
+#kpis .kpi.t1 .l{min-height:1.4em}
+/* الرقم يلي العنوان مباشرةً بارتفاعٍ ثابت — والذيل (الوحدة والتغيّر) هو الذي
+   يتمدّد إلى القاع. فتستوي الأرقام على خطٍّ واحد مهما اختلفت أطوال الذيول. */
+#kpis .kpi .v{margin-top:0;padding-top:4px}
+#kpis .kpi .d:first-of-type{margin-top:8px}
+#kpis .kpi .d + .d{margin-top:5px}
+#kpis .kpi .d:last-child{margin-bottom:0}
+#kpis .kpi > .d:nth-last-child(1){margin-top:auto;padding-top:8px}
+#kpis .kpi.t2 .d{font-size:11.5px;line-height:1.5}
+
+/* ── ٧) استرجاع الثلث العلوي ─────────────────────────────────────────
+   أربعة أشرطة تحكّم متتابعة كانت تلتهم نحو 15% من الصفحة قبل أول رقم،
+   والصفّ الفرعي بثلاثة عشر تبويباً ينكسر سطرين فيبتلع شريطاً كاملاً.
+   لا يُحذف منها شيء ولا كلمة — تُضغط رأسياً، ويُلحَق شريطُ النطاق بلوحة
+   المرشّحات فوقه فيقرآن كتلةً واحدة لا كتلتين. */
+.filters{padding-block:13px}
+nav.tabs{margin-bottom:16px;gap:5px}
+#dom-fiscal nav.tabs .tab,#dom-econ nav.tabs .tab,
+#dom-energy nav.tabs .tab,#dom-pif nav.tabs .tab{padding-inline:13px}
+.covbar > div{padding:12px 18px}
+.filters{margin-bottom:0;border-end-start-radius:0;border-end-end-radius:0;border-bottom:0}
+#scopeBar{margin:0 0 20px;border-start-start-radius:0;border-start-end-radius:0;border-top:0}
 </style>
 </head>
 <body>
@@ -18458,9 +18565,17 @@ function ixHatch(color,kind){
   if(!kind||kind==='solid'||typeof color!=='string') return color;
   const key=color+'|'+kind; if(_ixPat[key]) return _ixPat[key];
   try{
-    const cv=document.createElement('canvas'); cv.width=cv.height=8;
+    /* ── كثافة النمط، لا حِدّته ──────────────────────────────────────
+       اللوحة 8×8 بخطٍّ عرضه 1.6 تُغطّي نحو ثلث مساحة العمود حبراً، فيصير
+       النمطُ أعلى صوتاً من اللون الذي يحمل المعنى الأول، ويقرأ القارئ
+       زخرفةً قبل أن يقرأ رقماً. والعلاج **توسيع اللوحة لا إخفات الحبر**:
+       12×12 بالخط نفسه ولونه نفسه، فتنخفض المساحة المحبَّرة نحو النصف
+       ويبقى كل أثرٍ بتباينه كاملاً — فضمان WCAG 1.4.1 (تمييز السلسلة
+       بغير اللون وحده) قائمٌ كما هو، والضجيج وحده هو الذي نقص. */
+    const T=12;
+    const cv=document.createElement('canvas'); cv.width=cv.height=T;
     const x=cv.getContext('2d'); if(!x) return color;
-    x.fillStyle=color; x.fillRect(0,0,8,8);
+    x.fillStyle=color; x.fillRect(0,0,T,T);
     /* الحبر يرث شفافية التعبئة: سلسلةٌ خُفّتت عمداً (شفافية 33% مثلاً كسنة أساس
        مرجعية) كان حبرها المعتم يقلب وزنها البصري فتصير أشدّ لمعاناً من السلسلة
        التي تخدمها. فالشفافية تبقى أداة إخفات عاملة، ويبقى النمط مميِّزاً. */
@@ -18476,15 +18591,15 @@ function ixHatch(color,kind){
     x.lineWidth=1.6; x.beginPath();
     /* عرض الخطوط كما كان: توسيعه يزيد مساحة الحبر داخل العمود فيبتلع الأعمدة
        الرفيعة حتى تختفي. المكسب في التباين جاء من الإعتام وإيقاف التنعيم لا من العرض. */
-    if(kind==='diag'){ x.moveTo(-2,10);x.lineTo(10,-2); x.moveTo(-2,2);x.lineTo(2,-2); x.moveTo(6,10);x.lineTo(10,6); }
-    else if(kind==='back'){ x.moveTo(-2,-2);x.lineTo(10,10); x.moveTo(-2,6);x.lineTo(2,10); x.moveTo(6,-2);x.lineTo(10,2); }
-    else if(kind==='vert'){ x.moveTo(2,-1);x.lineTo(2,9); x.moveTo(6,-1);x.lineTo(6,9); }
-    else if(kind==='horz'){ x.moveTo(-1,2);x.lineTo(9,2); x.moveTo(-1,6);x.lineTo(9,6); }
-    else if(kind==='grid'){ x.moveTo(3,-1);x.lineTo(3,9); x.moveTo(-1,3);x.lineTo(9,3); }
-    else if(kind==='wide'){ x.lineWidth=2.6; x.moveTo(-2,8);x.lineTo(8,-2); }
+    if(kind==='diag'){ x.moveTo(-3,15);x.lineTo(15,-3); x.moveTo(-3,3);x.lineTo(3,-3); x.moveTo(9,15);x.lineTo(15,9); }
+    else if(kind==='back'){ x.moveTo(-3,-3);x.lineTo(15,15); x.moveTo(-3,9);x.lineTo(3,15); x.moveTo(9,-3);x.lineTo(15,3); }
+    else if(kind==='vert'){ x.moveTo(3,-1);x.lineTo(3,13); x.moveTo(9,-1);x.lineTo(9,13); }
+    else if(kind==='horz'){ x.moveTo(-1,3);x.lineTo(13,3); x.moveTo(-1,9);x.lineTo(13,9); }
+    else if(kind==='grid'){ x.moveTo(4.5,-1);x.lineTo(4.5,13); x.moveTo(-1,4.5);x.lineTo(13,4.5); }
+    else if(kind==='wide'){ x.lineWidth=2.4; x.moveTo(-3,12);x.lineTo(12,-3); }
     x.stroke();
     if(kind==='dots'){ x.fillStyle=x.strokeStyle;
-      [[2,2],[6,6]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
+      [[3,3],[9,9]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],1.5,0,7);x.fill();}); }
     const c2=document.createElement('canvas').getContext('2d');
     _ixPat[key]=(c2&&c2.createPattern(cv,'repeat'))||color;
   }catch(e){ _ixPat[key]=color; }
@@ -19111,12 +19226,15 @@ function renderKPI(){
      sub:dbt? (qy(dbt.r[0],dbt.r[1])+(dbt.inside?'':' — خارج النطاق المعروض')) : '',
      info:'رصيد قائم في نهاية الفترة لا تدفق خلالها، فلا يُجمع عبر الفترات — ويُعرض آخر رصيد داخل النطاق المعروض.'}
   ];
-  document.getElementById('kpis').innerHTML = items.map(it=>{
+  document.getElementById('kpis').innerHTML = items.map((it,i)=>{
     let dd='';
     if(it.d!=null){ const cls = it.good ? ((it.d>0)===(it.good>0)?'up':'down') : 'flat';
       dd='<div class="d '+cls+'">'+(it.d>0?'▲':'▼')+' '+pct(it.d)+' <span class="muted">'+B.cmp+'</span></div>'; }
     else if(it.sub) dd='<div class="d flat">'+it.sub+'</div>';
-    return '<div class="card kpi"><div class="l">'+it.l+(it.info?infoDot(it.info):'')+'</div><div class="v '+(it.cls||'')+'">'+it.v+
+    /* i<3 تدفّقات · i===2 الرصيد وهو النواة البصرية */
+    const tier = i<3 ? ' t1' : ' t2';
+    const hero = i===2 ? ' hero' : '';
+    return '<div class="card kpi'+tier+hero+'"><div class="l">'+it.l+(it.info?infoDot(it.info):'')+'</div><div class="v '+(it.cls||'')+'">'+it.v+
       '</div>'+(it.u?'<div class="d flat"><span class="muted">'+it.u+'</span></div>':'')+dd+'</div>';
   }).join('');
   const kn=document.getElementById('kpisNote');
