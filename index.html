@@ -353,6 +353,30 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
   #dom-pif .gsrgrid{grid-template-columns:repeat(2,1fr)}
   #dom-pif .tallbox{height:760px}
 }
+
+/* ── نقطة التعريف (ⓘ) وتلميحها ─────────────────────────────────────
+   خافتة حتى يُقترب منها، فلا تُشوّش السطح؛ وهدفُ لمسٍ 24px كما تقتضي
+   WCAG 2.2 SC 2.5.8 وإن كانت الدائرة المرئية 15px. */
+.idot{appearance:none;-webkit-appearance:none;border:0;background:transparent;
+  padding:0;margin:0 5px;cursor:help;position:relative;
+  width:24px;height:24px;line-height:0;vertical-align:middle;
+  display:inline-flex;align-items:center;justify-content:center;font-family:inherit}
+.idot>span{display:inline-flex;align-items:center;justify-content:center;
+  width:15px;height:15px;border-radius:50%;
+  border:1px solid var(--ink-3);color:var(--ink-3);
+  font-size:10.5px;font-weight:700;font-style:normal;line-height:1;
+  transition:color .15s,border-color .15s,background .15s}
+.idot:hover>span,.idot:focus-visible>span,.idot[aria-expanded="true"]>span{
+  color:var(--bg);border-color:var(--brand);background:var(--brand)}
+.idot:focus{outline:none}
+.idot:focus-visible>span{box-shadow:0 0 0 3px rgba(200,169,106,.35)}
+.idot-tip{position:fixed;z-index:9999;max-width:330px;
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;font-size:12.5px;line-height:1.75;
+  box-shadow:0 12px 34px rgba(0,0,0,.5);pointer-events:auto;text-align:start}
+.idot-tip b{color:var(--brand-ink,var(--brand))}
+@media (prefers-reduced-motion:reduce){.idot>span{transition:none}}
 </style>
 </head>
 <body>
@@ -370,13 +394,13 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
     </svg>
     <div>
       <h1>المرصد المالي والاقتصادي</h1>
-      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر تحديث كان في <span id="lastUpdate">01-09-2026م</span></div>
+      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر تحديث كان في <span id="lastUpdate">02-09-2026م</span></div>
     </div>
   </div>
   <div class="badges">
     <span class="badge">التغطية <b id="bCov">—</b></span>
     <span class="badge">الوحدة <b>مليون ريال</b></span>
-    <span class="badge">التبويب <b id="bStd">GFSM 2014</b></span>
+    <span class="badge">معيار التبويب <b id="bStd">GFSM 2014</b><span id="stdInfo"></span></span>
     <span class="badge">المصدر <b id="bSrc">وزارة المالية</b></span>
   </div>
 </header>
@@ -425,10 +449,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
       <button data-v="ttm">متحرك 4 أرباع</button>
     </div>
   </div>
-  <div class="f"><label>القياس</label>
+  <div class="f"><label>وحدة عرض الرسوم <span id="unitInfo"></span></label>
     <div class="seg" id="unit">
       <button data-v="abs" class="on">مليون ريال</button>
-      <button data-v="idx">مؤشر (2017م=100)</button>
+      <button data-v="idx">مؤشر النمو (أول فترة = 100)</button>
     </div>
   </div>
   <div class="f" style="margin-inline-start:auto;align-items:flex-end"><label>&nbsp;</label>
@@ -4913,6 +4937,55 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
   },
   "corrections": [
    {
+    "d": "02-09-2026م",
+    "w": "لوحة المالية — بطاقات المؤشر (كل التبويبات)",
+    "was": "القيمة قيمةُ ربعٍ واحد مهما كان التواتر المختار، ونسبة التغيّر ربعاً مقابل ربع دائماً، والعبارة «عن الربع نفسه من العام السابق» مثبَّتة نصّاً",
+    "now": "القيمة والنسبة والحصص تُحتسب على الأساس المختار (ربعي · سنوي · متحرك)، وأساس المقارنة يُكتب من التواتر",
+    "why": "عند «سنوي · 2023م» كانت البطاقة تعرض 357,984 (+12.6%) وهي إيراد ر4 وحده، بينما إيراد السنة 1,212,290 والتغير السنوي (4.4%) — أي أن الإشارة تنقلب. ملاحظة سلطان (٣) و(٤)"
+   },
+   {
+    "d": "02-09-2026م",
+    "w": "لوحة المالية — بطاقات المؤشر عند سنة غير مكتملة",
+    "was": "مقارنة الأشهر المنشورة من السنة الجارية بسنةٍ كاملة",
+    "now": "مقارنة «حتى تاريخه»: الأرباع نفسها من العام السابق",
+    "why": "مقارنة نصفٍ بكلٍّ أعطت هبوطاً وهمياً قدره (46.1%) بينما التغير الحقيقي +6.1%"
+   },
+   {
+    "d": "02-09-2026م",
+    "w": "لوحة المالية — عنوان بطاقة التغطية",
+    "was": "«تغطية المصروفات بغير النفطية»",
+    "now": "«نسبة الإيرادات غير النفطية إلى المصروفات»",
+    "why": "الصياغة القديمة تُقرأ على أن المصروفات هي التي تُغطّي، والمعنى عكسه — ملاحظة سلطان (٥)"
+   },
+   {
+    "d": "02-09-2026م",
+    "w": "لوحة المالية — حاشية «مسار الإيرادات والمصروفات»",
+    "was": "«نمو الإنفاق بلغ ذروته 2022م–2024م» · «عجز بلغ ذروته في 2025م» · «الفارق بين النمو المركّب للمصروفات وللإيرادات هو المحرّك الهيكلي»",
+    "now": "نصٌّ محتسب من البيانات: ذروة نمو الإنفاق 2018م (+16.1%) · أشدّ عجز 2020م · والنمو المركّب للإيرادات (6.1%) يفوق المصروفات (5.1%) فالعجز فارقُ مستوى ابتدائي لا فارقُ نمو",
+    "why": "ثلاث دعاوى تكذّبها البيانات، وثالثتها مقلوبة الاتجاه — ملاحظة سلطان (٦)"
+   },
+   {
+    "d": "02-09-2026م",
+    "w": "لوحة المالية — حاشية «الفائض/(العجز)» و«الاعتماد على النفط»",
+    "was": "موسمية الربع الرابع دعوى بلا عدّ؛ وهبوط حصة النفط يُنسب إلى التنويع ابتداءً",
+    "now": "الموسمية مقيسة (9 من 9 سنوات)؛ وهبوط الحصة مفكَّك إلى طرفيه مع حدّ المؤشر وتحويله إلى نسبة التغطية",
+    "why": "ادّعاء يُقاس ولا يُترك، وحصةٌ تهبط قد تهبط لسعرٍ لا لتنويع"
+   },
+   {
+    "d": "02-09-2026م",
+    "w": "لوحة المالية — مفتاح وحدة العرض",
+    "was": "«مؤشر (2017م=100)»",
+    "now": "«مؤشر النمو (أول فترة = 100)» ومعه تعريف",
+    "why": "الشيفرة تجعل الأساس أول فترة معروضة لا 2017م، فالوسم كان خاطئاً كلما بدأ النطاق من غير 2017م — ملاحظة سلطان (٨)"
+   },
+   {
+    "d": "02-09-2026م",
+    "w": "لوحة المالية — شريط نطاق العرض",
+    "was": "يظهر في التبويبات الثلاثة عشر كلها",
+    "now": "يظهر في الخمسة التي يعمل فيها ويُخفى في الثمانية الباقية مع بيان سبب الإخفاء",
+    "why": "قِيس أثره تبويباً تبويباً فلم يتحرك شيء في ثمانية — ومِقوَدٌ لا يقود يُفسد الثقة بكل مِقوَد — ملاحظة سلطان (٢)"
+   },
+   {
     "d": "01-09-2026م",
     "w": "لوحة المالية — خلاصة «جودة البيانات» (معدل الأساس)",
     "was": "معدل أساس محتسب من التوزيع الطبيعي: 28.8 متوقَّعاً بالصدفة، وصفرٌ ناجٍ بعد ضبط التعدّدية",
@@ -6889,6 +6962,74 @@ function paintStamps(card){
     '<span class="chip"><i>'+c[0]+'</i>'+c[1]+'</span>').join('');
   bar.innerHTML=chips+(card.__axisChip||'');
 }
+/* ── نقطة التعريف (ⓘ) — شرحٌ عند الطلب لا ضجيجٌ دائم ──────────────────
+   القاعدة المتبعة: المؤشر يحمل اسمه ورقمه ظاهرَين، ويبقى تعريفه مطويّاً خلف
+   أيقونة خافتة تُضيء عند الاقتراب. فلا يزدحم السطح، ويجد القارئ الجواب حيث
+   يسأل لا في صفحة منفصلة.
+   وإتاحتها ليست بالمرور وحده: الأيقونة زرٌّ حقيقي يصله مفتاح Tab، ويفتح
+   بالمرور وبالتركيز وبالنقر (للمس)، ويُغلق بـ Escape — وهو ما تقتضيه
+   WCAG 2.2 SC 1.4.13 (المحتوى الظاهر بالتحويم قابل للإغلاق وللتحويم عليه). */
+function ixEsc(t){ return String(t==null?'':t)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+let _ixTipEl=null, _ixTipOwner=null;
+function ixTipNode(){
+  if(_ixTipEl) return _ixTipEl;
+  _ixTipEl=document.createElement('div');
+  _ixTipEl.className='idot-tip'; _ixTipEl.setAttribute('role','tooltip');
+  _ixTipEl.id='ix-tip'; _ixTipEl.hidden=true;
+  document.body.appendChild(_ixTipEl);
+  return _ixTipEl;
+}
+function ixTipShow(btn){
+  const tip=ixTipNode(), txt=btn.getAttribute('data-tip')||'';
+  if(!txt) return;
+  tip.innerHTML=txt; tip.hidden=false;
+  btn.setAttribute('aria-describedby','ix-tip'); btn.setAttribute('aria-expanded','true');
+  _ixTipOwner=btn;
+  /* الموضع: تحت الأيقونة، ويُزاح ليبقى داخل الشاشة، ويُقلب فوقها إن ضاق الأسفل. */
+  tip.style.left='0px'; tip.style.top='0px';
+  const r=btn.getBoundingClientRect(), t=tip.getBoundingClientRect();
+  const pad=10;
+  let left=r.left+r.width/2-t.width/2;
+  left=Math.max(pad,Math.min(left,window.innerWidth-t.width-pad));
+  let top=r.bottom+8;
+  if(top+t.height>window.innerHeight-pad) top=Math.max(pad,r.top-t.height-8);
+  tip.style.left=Math.round(left)+'px'; tip.style.top=Math.round(top)+'px';
+}
+function ixTipHide(){
+  if(!_ixTipEl) return;
+  _ixTipEl.hidden=true;
+  if(_ixTipOwner){ _ixTipOwner.removeAttribute('aria-describedby');
+                   _ixTipOwner.setAttribute('aria-expanded','false'); }
+  _ixTipOwner=null;
+}
+function ixInfoDot(text,label){
+  if(!text) return '';
+  return '<button type="button" class="idot" aria-expanded="false" aria-label="'+
+    ixEsc(label||'تعريف هذا المؤشر')+'" data-tip="'+ixEsc(text)+'">'+
+    '<span aria-hidden="true">i</span></button>';
+}
+(function ixTipWire(){
+  if(typeof document==='undefined') return;
+  const isDot=e=>e&&e.closest&&e.closest('.idot');
+  document.addEventListener('mouseover',e=>{ const b=isDot(e.target); if(b) ixTipShow(b); });
+  document.addEventListener('mouseout',e=>{
+    const b=isDot(e.target); if(!b) return;
+    const to=e.relatedTarget;
+    if(to&&(isDot(to)===b || (_ixTipEl&&_ixTipEl.contains(to)))) return;  /* يُسمح بالتحويم على التلميح */
+    ixTipHide();
+  });
+  document.addEventListener('focusin',e=>{ const b=isDot(e.target); if(b) ixTipShow(b); else if(_ixTipOwner) ixTipHide(); });
+  document.addEventListener('click',e=>{
+    const b=isDot(e.target);
+    if(b){ e.preventDefault(); (_ixTipOwner===b)? ixTipHide() : ixTipShow(b); return; }
+    if(_ixTipEl && !_ixTipEl.contains(e.target)) ixTipHide();
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') ixTipHide(); });
+  window.addEventListener('scroll',()=>ixTipHide(),true);
+  window.addEventListener('resize',()=>ixTipHide());
+})();
+
 function stamp(canvasId, chips){
   const cv=document.getElementById(canvasId); if(!cv) return;
   const card=cv.closest('.card'); if(!card) return;
@@ -7164,6 +7305,7 @@ window.MIRSAD_IX={
   hatch:ixHatch,
   openData:openData,
   stamp:stamp,
+  infoDot:ixInfoDot,
   wrap:function(id,cfg,meta){
     if(meta) REG[id]=meta;
     cfg.options=cfg.options||{};
@@ -7350,6 +7492,12 @@ function draw(id, cfg, meta){ if(charts[id]) charts[id].destroy();
   if(window.MIRSAD_IX) cfg=window.MIRSAD_IX.wrap(id,cfg,meta);
   charts[id]=new Chart(document.getElementById(id), cfg); }
 
+/* تفويض نقطة التعريف إلى الطبقة المشتركة — نسخة واحدة لكل اللوحات. */
+function infoDot(text,label){
+  const IX=window.MIRSAD_IX;
+  return (IX&&IX.infoDot)? IX.infoDot(text,label) : '';
+}
+
 /* ---------- data shaping ---------- */
 function idxRange(){ return periodIdx(); }
 function series(kind, code){ return (kind==='rev'?D.rev:D.exp)[code] || []; }
@@ -7413,43 +7561,111 @@ function renderScopeBar(){
     (b<P.length-1? '<span class="sep" aria-hidden="true">·</span><span class="muted">آخر فترة منشورة '+qlab(P[P.length-1])+'</span>':'')+
     (shown===1? '<span class="sep" aria-hidden="true">·</span><span class="muted">نقطة واحدة: رسوم الاتجاه تحتاج فترتين فأكثر، والمفيد هنا رسوم التركيبة</span>':'');
 }
+/* ── بطاقات المؤشر — تتبع الأساس المختار ────────────────────────────────
+   كانت البطاقات تعرض قيمة **ربع واحد** مهما كان التواتر المختار: فعند ضبط
+   اللوحة على «سنوي · 2023م» كانت تعرض 357,984 (وهي إيراد ر4 وحده) بينما إيراد
+   السنة 1,212,290 — والأسوأ أن نسبة التغير كانت تُحتسب ربعاً مقابل ربع فتعطي
+   +12.6% بينما التغير السنوي الحقيقي (4.4%) سالباً. أي أن الإشارة تنقلب.
+   فصارت القيمة والنسبة والحصص كلها تُحتسب على الأساس المختار، وأساسُ المقارنة
+   يُكتب من التواتر لا يُثبَّت نصّاً. */
+function kpiBasis(){
+  const idx=periodIdx(), n=idx[idx.length-1];
+  if(S.freq==='y'){
+    const y=yOf(n), qs=P.map((p,i)=>i).filter(i=>yOf(i)===y);
+    const full=qs.length===4;
+    /* سنةٌ ناقصة لا تُقابَل بسنة كاملة — تلك مقارنةُ نصفٍ بكلّ تُخرج هبوطاً
+       وهمياً قدره النصف. فتُقابَل بالأرباع نفسها من العام السابق (مقارنة
+       «حتى تاريخه»)، وهو الأساس المتجانس الوحيد المتاح. */
+    const qn=qs.map(i=>P[i].slice(5));
+    const pv=P.map((p,i)=>i).filter(i=>yOf(i)===y-1 && (full || qn.indexOf(P[i].slice(5))>=0));
+    const ok=pv.length===qs.length;
+    const span=qn.length? ('ر'+qn[0]+'–ر'+qn[qn.length-1]+' '+ylab(y-1)) : ylab(y-1);
+    return {kind:'y', label:ylab(y)+(full?'':' (حتى '+qlab(P[qs[qs.length-1]])+')'),
+            cmp: full? 'عن العام السابق' : 'عن الفترة نفسها من العام السابق',
+            cmpLong: full? 'مقارنة بالعام السابق ('+ylab(y-1)+')'
+                         : 'مقارنة بالأرباع نفسها من العام السابق ('+span+') — أي مقارنة «حتى تاريخه»، لا بالسنة الكاملة',
+            cur:qs, prev:ok?pv:null, whole:full, nq:qs.length,
+            partial: full? null : 'السنة غير مكتملة: '+arCount(qs.length,'ربع واحد منشور','ربعان منشوران','أرباع منشورة','ربعاً منشوراً')+
+                     ' من أربعة'};
+  }
+  if(S.freq==='ttm'){
+    const cur=(n>=3)?[n-3,n-2,n-1,n]:null, pv=(n>=7)?[n-7,n-6,n-5,n-4]:null;
+    return {kind:'ttm', label:'الأربعة أرباع المنتهية في '+qlab(P[n]),
+            cmp:'عن الفترة نفسها من العام السابق',
+            cmpLong:'مقارنة بالأربعة أرباع المنتهية في '+(n>=4?qlab(P[n-4]):'—'),
+            cur:cur, prev:pv, whole:!!cur, nq:4,
+            partial:cur? null : 'يحتاج أربعة أرباع متتالية'};
+  }
+  return {kind:'q', label:qlab(P[n]), cmp:'عن الربع المماثل من العام السابق',
+          cmpLong:'مقارنة بالربع المماثل من العام السابق'+(n>=4?' ('+qlab(P[n-4])+')':''),
+          cur:[n], prev:(n>=4)?[n-4]:null, whole:true, nq:1, partial:null};
+}
 function renderKPI(){
-  const _idx=periodIdx();
-  const n = _idx[_idx.length-1], y = P[n].slice(0,4), q = P[n].slice(5);
   renderScopeBar();
+  const B=kpiBasis();
+  const agg=(kind,code,list)=>{
+    if(!list) return null;
+    const a=list.map(i=>series(kind,code)[i]);
+    return a.some(v=>v==null)? null : sum(a);
+  };
+  const cur=(kind,code)=>agg(kind,code,B.cur);
+  const chg=(kind,code)=>{ const a=cur(kind,code), b=agg(kind,code,B.prev);
+    return (a!=null&&b!=null&&b!==0)? a/b-1 : null; };
   window.__covFiscal = qlab(P[0])+' — '+qlab(P[P.length-1]);
   const _c=document.getElementById('bCov'); if(_c) _c.textContent=window.__covFiscal;
   document.getElementById('fsrc').textContent = 'آخر ربع منشور: الربع '+P[P.length-1].slice(5)+' من عام '+P[P.length-1].slice(0,4)+'م';
-  const yoy = (kind,code)=>{ const a=series(kind,code); return (a[n]!=null&&a[n-4]!=null)? a[n]/a[n-4]-1 : null; };
-  const rev=D.rev.TOTAL[n], exp=D.exp.TOTAL[n], bal=rev-exp;
-  const oilShare=D.rev.OIL[n]/rev, nonoilCov=D.rev.NONOIL[n]/exp;
-  const debt = D.debt.length? D.debt[D.debt.length-1] : null;
-  const cap = D.exp.CAPEX[n]/exp;
-  /* الوحدة تُكتب على البطاقة: أرقام هذه البطاقات بمليون ريال دائماً ولا تتبع مفتاح
-     الوحدة (المؤشر) ولا التواتر ولا النطاق — فبقاؤها بلا وحدة يجعل من ضبط اللوحة
-     على «مؤشر» يقرأ رقماً لا يعرف وحدته، بينما كل بطاقة رسم تحمل ختم وحدتها. */
+
+  const rev=cur('rev','TOTAL'), exp=cur('exp','TOTAL');
+  const bal=(rev!=null&&exp!=null)? rev-exp : null;
+  const oil=cur('rev','OIL'), nonoil=cur('rev','NONOIL'), capex=cur('exp','CAPEX');
+  const share=(a,b)=>(a!=null&&b)? a/b : null;
+  /* رصيد الدين رصيدٌ لحظي لا تدفق، فلا يُجمع: يُؤخذ آخر رصيد <b>داخل</b> النطاق
+     المعروض، وإن لم يقع فيه رصيدٌ قيل ذلك بدل عرض رصيدٍ من خارجه بلا بيان. */
+  const dbt=(function(){
+    const rows=(D.debt||[]).filter(r=>r[2]!=null||r[4]!=null);
+    const inR=rows.filter(r=>{ const i=P.indexOf(r[0]+'Q'+r[1]); return i>=0 && B.cur.indexOf(i)>=0; });
+    if(inR.length) return {r:inR[inR.length-1], inside:true};
+    const last=rows[rows.length-1];
+    return last? {r:last, inside:false} : null;
+  })();
   const MR='مليون ريال';
   const items=[
-    {l:'إجمالي الإيرادات',v:fmt(rev),u:MR,d:yoy('rev','TOTAL'),good:1},
-    {l:'إجمالي المصروفات',v:fmt(exp),u:MR,d:yoy('exp','TOTAL'),good:-1},
-    {l:bal>=0?'الفائض':'العجز',v:fmt(Math.abs(bal)),u:MR,d:null,cls:bal>=0?'up':'down'},
-    {l:'حصة الإيرادات النفطية',v:pct0(oilShare),u:'% من إجمالي الإيرادات',d:null},
-    {l:'الإيرادات غير النفطية',v:fmt(D.rev.NONOIL[n]),u:MR,d:yoy('rev','NONOIL'),good:1},
-    {l:'تغطية المصروفات بغير النفطية',v:pct0(nonoilCov),u:'% من المصروفات',d:null},
-    {l:'حصة الإنفاق الرأسمالي',v:pct0(cap),u:'% من المصروفات',d:null},
-    {l:'رصيد الدين العام',v:debt?fmt(debt[4]):'—',u:MR,d:null,sub:debt?qy(debt[0],debt[1]):''}
+    {l:'إجمالي الإيرادات',v:fmt(rev),u:MR,d:chg('rev','TOTAL'),good:1,
+     info:'مجموع الإيرادات النفطية وغير النفطية كما ينشرها تقرير أداء الميزانية، على الأساس النقدي.'},
+    {l:'إجمالي المصروفات',v:fmt(exp),u:MR,d:chg('exp','TOTAL'),good:-1,
+     info:'مجموع المصروفات الفعلية المنصرفة، شاملةً نفقات التمويل والإنفاق الرأسمالي.'},
+    {l:bal==null?'الرصيد':(bal>=0?'الفائض':'العجز'),v:bal==null?'—':fmt(Math.abs(bal)),u:MR,d:null,
+     cls:bal==null?'':(bal>=0?'up':'down'),
+     info:'الإيرادات ناقص المصروفات على الأساس المختار. الموجب فائض والسالب عجز.'},
+    {l:'حصة الإيرادات النفطية',v:pct0(share(oil,rev)),u:'% من إجمالي الإيرادات',d:null,
+     info:'الإيرادات النفطية ÷ إجمالي الإيرادات. كلما انخفضت قلّ اعتماد الميزانية على النفط.'},
+    {l:'الإيرادات غير النفطية',v:fmt(nonoil),u:MR,d:chg('rev','NONOIL'),good:1,
+     info:'الضرائب والرسوم والإيرادات الأخرى — كل ما عدا الإيراد النفطي.'},
+    /* العنوان القديم «تغطية المصروفات بغير النفطية» يقرأه القارئ على أن المصروفات
+       هي التي تُغطّي، والمعنى عكسه. والصياغة الدقيقة تُسمّي البسط والمقام. */
+    {l:'نسبة الإيرادات غير النفطية إلى المصروفات',v:pct0(share(nonoil,exp)),u:'% من المصروفات',d:null,
+     info:'الإيرادات غير النفطية ÷ إجمالي المصروفات: أي جزءٍ من الإنفاق يمكن تمويله من موارد غير نفطية. '+
+          'وبلوغها 100% يعني تغطية الإنفاق كاملاً بلا اعتماد على النفط. وهي مقياس المتانة المالية الأهم في اللوحة.'},
+    {l:'حصة الإنفاق الرأسمالي',v:pct0(share(capex,exp)),u:'% من المصروفات',d:null,
+     info:'الأصول غير المالية (الرأسمالي) ÷ إجمالي المصروفات — الجزء المُوجَّه إلى الاستثمار لا التشغيل.'},
+    {l:'رصيد الدين العام',v:dbt?fmt(dbt.r[4]):'—',u:MR,d:null,
+     sub:dbt? (qy(dbt.r[0],dbt.r[1])+(dbt.inside?'':' — خارج النطاق المعروض')) : '',
+     info:'رصيد قائم في نهاية الفترة لا تدفق خلالها، فلا يُجمع عبر الفترات — ويُعرض آخر رصيد داخل النطاق المعروض.'}
   ];
   document.getElementById('kpis').innerHTML = items.map(it=>{
     let dd='';
     if(it.d!=null){ const cls = it.good ? ((it.d>0)===(it.good>0)?'up':'down') : 'flat';
-      dd='<div class="d '+cls+'">'+(it.d>0?'▲':'▼')+' '+pct(it.d)+' <span class="muted">عن الربع نفسه من العام السابق</span></div>'; }
+      dd='<div class="d '+cls+'">'+(it.d>0?'▲':'▼')+' '+pct(it.d)+' <span class="muted">'+B.cmp+'</span></div>'; }
     else if(it.sub) dd='<div class="d flat">'+it.sub+'</div>';
-    return '<div class="card kpi"><div class="l">'+it.l+'</div><div class="v '+(it.cls||'')+'">'+it.v+
+    return '<div class="card kpi"><div class="l">'+it.l+(it.info?infoDot(it.info):'')+'</div><div class="v '+(it.cls||'')+'">'+it.v+
       '</div>'+(it.u?'<div class="d flat"><span class="muted">'+it.u+'</span></div>':'')+dd+'</div>';
   }).join('');
   const kn=document.getElementById('kpisNote');
-  if(kn) kn.innerHTML='<span class="muted">بطاقات المؤشر أعلاه بمليون ريال دائماً، للربع الأخير المنشور — '+
-    'لا تتبع مفتاح الوحدة ولا التواتر ولا النطاق المعروض، بخلاف الرسوم تحتها.</span>';
+  if(kn) kn.innerHTML='<b>أساس هذه البطاقات:</b> <b>'+B.label+'</b> — تتبع التواتر والنطاق المعروضين، '+
+    'والقيم بمليون ريال دائماً (لا تتبع مفتاح القياس). ونِسَب التغيّر '+B.cmpLong+'. '+
+    (B.partial? '<b>وتنبيه:</b> '+B.partial+' — فالمجموع يخصّ ما نُشر منها لا سنةً كاملة. ':'')+
+    (B.prev? '' : '<b>ولا تُعرض نسب التغيّر</b> لأن الفترة المقارَنة غير متاحة كاملةً في البيانات. ')+
+    '<span class="muted">ورصيد الدين رصيدٌ لحظي لا يُجمع، فيُعرض آخر رصيد داخل النطاق.</span>';
 }
 
 /* ---------- charts: overview ---------- */
@@ -7489,13 +7705,59 @@ function renderOverview(){
   // narrative
   const n=P.length-1;
   const oilNow=D.rev.OIL[n]/D.rev.TOTAL[n], oil17=sum(D.rev.OIL.slice(0,4))/sum(D.rev.TOTAL.slice(0,4));
-  document.getElementById('nMain').innerHTML =
-    '<b>لماذا تحركت الأرقام؟</b> بلغ نمو الإنفاق ذروته في الفترة 2022م–2024م بينما تذبذبت الإيرادات مع أسعار النفط، '+
-    'فتحوّل فائض عام 2022م (الأول منذ عام 2013م) إلى عجز متصاعد بلغ ذروته في عام 2025م. الفارق بين معدل النمو السنوي المركّب '+
-    'للمصروفات وللإيرادات هو المحرّك الهيكلي للعجز، لا صدمة ربع بعينه.';
-  document.getElementById('nBal').innerHTML =
-    '<b>قراءة:</b> العجز يتركّز عادةً في الربع الرابع بسبب تسارع الصرف الرأسمالي وتسوية المستحقات في نهاية السنة المالية — '+
-    'وهو نمط موسمي متكرر وليس تدهوراً هيكلياً في ذلك الربع تحديداً.';
+  /* هذه الفقرة كانت مكتوبة نصّاً وتحمل ثلاث دعاوى تكذّبها البيانات:
+     (١) «نمو الإنفاق بلغ ذروته 2022م–2024م» — وذروته الفعلية 2018م (+16.1%).
+     (٢) «عجز بلغ ذروته في 2025م» — وأشدّ عجزٍ في السلسلة 2020م.
+     (٣) «الفارق بين النمو المركّب للمصروفات وللإيرادات هو المحرّك الهيكلي» —
+         وهو مقلوب: الإيرادات نمت أسرع (6.1% مقابل 5.1%). فالعجز فارقُ
+         **مستوى** ابتدائي لا فارقُ **نمو**.
+     فصارت تُحتسب من البيانات ولا تُكتب نصّاً. */
+  document.getElementById('nMain').innerHTML=(function(){
+    const ys=[...new Set(P.map((p,i)=>yOf(i)))].sort((a,b)=>a-b);
+    const A={}, B={};
+    ys.forEach(y=>{ const ix=P.map((p,i)=>i).filter(i=>yOf(i)===y);
+      const r=ix.map(i=>D.rev.TOTAL[i]), e=ix.map(i=>D.exp.TOTAL[i]);
+      if(ix.length===4&&!r.some(v=>v==null)&&!e.some(v=>v==null)){ A[y]=sum(r); B[y]=sum(e); } });
+    const full=ys.filter(y=>A[y]!=null);
+    if(full.length<3) return '<b>القراءة:</b> السلسلة المكتملة أقصر من أن تُقرأ منها اتجاهات سنوية.';
+    const bal={}; full.forEach(y=>bal[y]=A[y]-B[y]);
+    const surp=full.filter(y=>bal[y]>0);
+    const worst=full.reduce((a,b)=>bal[b]<bal[a]?b:a);
+    const a0=full[0], a1=full[full.length-1], nY=a1-a0;
+    const cagr=(o,x,z)=>((Math.pow(o[z]/o[x],1/nY)-1)*100);
+    const cE=cagr(B,a0,a1), cR=cagr(A,a0,a1);
+    const gap0=B[a0]-A[a0];
+    const pk=full.slice(1).reduce((a,y)=>((B[y]/B[y-1])>(B[a]/B[a-1])?y:a),full[1]);
+    const pkv=(B[pk]/B[pk-1]-1)*100;
+    const f1=v=>numFmt({minimumFractionDigits:1,maximumFractionDigits:1}).format(v);
+    return '<b>لماذا تحرّكت الأرقام؟</b> على السنوات المكتملة ('+ylab(a0)+' — '+ylab(a1)+') '+
+      'لم تُسجَّل سوى '+(surp.length===1?'سنةِ فائضٍ واحدة':arCount(surp.length,'سنة فائض','سنتا فائض','سنوات فائض','سنة فائض'))+
+      (surp.length? ' ('+surp.map(ylab).join(' · ')+')':'')+
+      '، وأشدّ سنةٍ عجزاً <b>'+ylab(worst)+'</b> بعجزٍ قدره '+fmt(Math.abs(bal[worst]))+' مليون ريال. '+
+      'وبلغ نمو المصروفات ذروته في <b>'+ylab(pk)+'</b> (+'+f1(pkv)+'%). '+
+      '<b>والمحرّك الهيكلي يُقال على وجهه:</b> النمو المركّب للمصروفات '+f1(cE)+'% مقابل '+f1(cR)+'% للإيرادات — '+
+      (cR>cE
+        ? 'أي أن <b>الإيرادات نمت أسرع</b>، فالعجز ليس فارقَ نموٍّ بل فارقُ <b>مستوى</b>: '+
+          'بدأت السلسلة في '+ylab(a0)+' وإنفاقُها يفوق إيرادها بـ'+fmt(gap0)+' مليون ريال، '+
+          'وتقليصُ فجوةٍ ابتدائية بهذا الحجم يحتاج تفوّقاً في النمو أكبر وأطول مما تحقق.'
+        : 'أي أن المصروفات نمت أسرع بـ'+f1(cE-cR)+' نقطة سنوياً، وهو فارقٌ تراكمي يوسّع الفجوة عاماً بعد عام.')+
+      ' <span class="muted">محتسب من السنوات المكتملة في اللوحة، بغضّ النظر عن النطاق المعروض.</span>';
+  })();
+  /* الادّعاء الموسمي يُقاس ولا يُترك دعوى: كم سنةً كان الربع الرابع فيها أشدّ الأرباع عجزاً؟ */
+  document.getElementById('nBal').innerHTML=(function(){
+    const ys=[...new Set(P.map((p,i)=>yOf(i)))].sort((a,b)=>a-b);
+    let tot=0, q4=0;
+    ys.forEach(y=>{ const ix=P.map((p,i)=>i).filter(i=>yOf(i)===y)
+        .filter(i=>D.rev.TOTAL[i]!=null&&D.exp.TOTAL[i]!=null);
+      if(ix.length<4) return; tot++;
+      const w=ix.reduce((a,i)=>((D.rev.TOTAL[i]-D.exp.TOTAL[i])<(D.rev.TOTAL[a]-D.exp.TOTAL[a])?i:a),ix[0]);
+      if(P[w].slice(5)==='4') q4++; });
+    return '<b>القراءة — والموسمية مقيسة لا مُدّعاة:</b> كان الربع الرابع أشدّ أرباع سنته عجزاً في '+
+      '<b>'+q4+'</b> من '+arCount(tot,'سنة مكتملة واحدة','سنتين مكتملتين','سنوات مكتملة','سنة مكتملة')+(q4===tot?' — أي في كلّ سنة بلا استثناء':'')+'. '+
+      'وسببُه تسارع الصرف الرأسمالي وتسوية المستحقات في ختام السنة المالية. '+
+      '<b>فهو نمطٌ موسمي متكرر لا تدهورٌ هيكلي في ذلك الربع</b> — ولهذا تُقارَن الأرباع '+
+      'بالربع المماثل من العام السابق لا بالربع الذي يسبقها مباشرةً.';
+  })();
   /* الجملة تروي السلسلة كاملة والرسم قد يعرض نقطتين حين يُضيَّق النطاق — فيُقال
      صراحةً على أي مدىً احتُسب الطرفان، وتُضاف قراءةٌ للمدى المعروض نفسه. */
   (function(){
@@ -7505,8 +7767,31 @@ function renderOverview(){
     document.getElementById('nOil').innerHTML=
       '<b>الاتجاه على السلسلة كاملةً</b> <span class="muted">(2017م — '+qlab(P[P.length-1])+
       '، بغضّ النظر عن النطاق المعروض)</span><b>:</b> تراجعت حصة الإيرادات النفطية من نحو '+
-      pct0(oil17)+' في عام 2017م إلى '+pct0(oilNow)+
-      ' في آخر ربع، وهو المؤشر الأهم على تقدّم تنويع مصادر الدخل ضمن رؤية 2030.'+
+      pct0(oil17)+' في عام 2017م إلى '+pct0(oilNow)+' في آخر ربع. '+
+      /* حصةٌ تهبط لا تعني تنويعاً بالضرورة: قد يهبط البسط لهبوط السعر لا لنمو
+         المقام. فيُفكَّك الهبوط إلى طرفيه بدل أن يُنسب إلى التنويع ابتداءً. */
+      (function(){
+        const yy=[...new Set(P.map((p,i)=>yOf(i)))].sort((a,b)=>a-b);
+        const an=(c,y)=>{ const ix=P.map((p,i)=>i).filter(i=>yOf(i)===y).map(i=>D.rev[c][i]);
+          return (ix.length===4&&!ix.some(v=>v==null))? sum(ix):null; };
+        const full=yy.filter(y=>an('TOTAL',y)!=null); if(full.length<2) return '';
+        const a=full[0], z=full[full.length-1];
+        const mo=an('OIL',z)/an('OIL',a), mn=an('NONOIL',z)/an('NONOIL',a);
+        const f2=v=>numFmt({minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
+        return '<b>وهبوط الحصة يُفكَّك قبل أن يُفسَّر:</b> بين '+ylab(a)+' و'+ylab(z)+' '+
+          (mn>mo && mo>=1
+            ? 'نما الإيراد غير النفطي <b>'+f2(mn)+' مرّة</b> بينما نما النفطي '+f2(mo)+' مرّة — '+
+              'فكلاهما ارتفع، وهبوط الحصة أثرُ <b>تفوّقٍ في نمو غير النفطي</b> لا أثرُ انكماشٍ نفطي. '+
+              'وهذا هو الشكل الذي يدلّ على تنويعٍ حقيقي.'
+            : mo<1
+              ? 'انكمش الإيراد النفطي إلى '+f2(mo)+' من مستواه بينما بلغ غير النفطي '+f2(mn)+' مرّة — '+
+                'فجزءٌ من هبوط الحصة أثرُ تراجعٍ في البسط لا نموٍّ في المقام.'
+              : 'نما النفطي '+f2(mo)+' مرّة وغير النفطي '+f2(mn)+' مرّة.')+
+          ' <b>وحدُّ المؤشر:</b> الحصة تتحرك مع <b>سعر البرميل</b> سنةً بسنة، '+
+          'فهبوطها في سنةٍ بعينها قد يكون هبوط سعرٍ لا تقدّم تنويع — ولا تُقرأ إلا على مدى طويل. '+
+          'و<b>نسبة الإيرادات غير النفطية إلى المصروفات</b> (الرسم المجاور) أمتنُ منها لهذا الغرض، '+
+          'لأن مقامها الإنفاق لا الإيراد النفطي المتقلّب.';
+      })()+
       (narrow&&sa!=null&&sb!=null
         ? ' <b>وعلى المدى المعروض في الرسم أعلاه ('+qlab(P[a])+' — '+qlab(P[b])+'):</b> '+
           (idx.length<2
@@ -9113,8 +9398,49 @@ function renderFormulas(elId, groups, q){
 const TABS=[['overview','الصورة الكلية'],['rev','الإيرادات'],['exp','المصروفات'],
   ['debt','العجز والدين'],['ratios','النسب إلى الناتج'],['intl','المؤشرات الدولية'],['var','تحليل الانحراف'],['rate','التصنيف الائتماني'],
   ['fc','التوقعات'],['sim','السيناريوهات'],['quality','جودة البيانات'],['data','البيانات'],['kb','القاعدة المعرفية']];
+/* ── أين يعمل «نطاق العرض» فعلاً ─────────────────────────────────────
+   قِيس أثره تبويباً تبويباً بمقارنة بصمة المحتوى قبل تغيير النطاق وبعده:
+   فوجدنا أربعة تبويبات تتغيّر رسومها ونصوصها به (الصورة الكلية · الإيرادات ·
+   المصروفات · العجز والدين) وخامساً يتغيّر جدوله (البيانات)، وثمانيةً لا
+   يتحرك فيها شيء — لأن لكلٍّ منها محدِّده الخاص (سنة تحليل الانحراف · مؤشر
+   المقارنة الدولية · سعر البرميل في النسب) أو لأنها تُحتسب على السلسلة كاملةً
+   بطبيعتها (التوقعات · جودة البيانات · التصنيف · السيناريوهات · القاعدة).
+   وعرضُ مِقوَدٍ لا يقود شيئاً يُفسد ثقة القارئ بكل مِقوَد في اللوحة — فيُخفى
+   حيث لا يعمل، ويبقى حيث يعمل. */
+const RANGE_TABS=['overview','rev','exp','debt','data'];
+/* ولمَن أُخفي عنه: سببُ الإخفاء يُقال في التبويب نفسه لا يُترك للتخمين. */
+const SCOPE_WHY={
+  ratios:'هذا التبويب سنويٌّ بطبيعته ويُحتسب على السلسلة كاملةً — ومحدِّده الخاص هو سعر البرميل المفترض أعلاه.',
+  intl:'المقارنة هنا بين الدول في سنةٍ يختارها المصدر، لا بين فترات — ومحدِّدها هو المؤشر والمجموعة.',
+  var:'يقارن هذا التبويب المعتمد بالفعلي لسنةٍ واحدة — ومحدِّده هو قائمة السنة أعلاه.',
+  rate:'تاريخ التصنيف يُعرض بمداه الكامل كما تنشره الوكالات.',
+  fc:'التوقع يُقدَّر من السلسلة كاملةً — فتضييق النطاق يُضعف التقدير ولا يُحسّنه.',
+  sim:'السيناريو يبدأ من آخر سنة مكتملة ويمتدّ إلى الأمام — ومحدِّداته هي المنزلقات.',
+  quality:'فحوص الجودة تُجرى على السلسلة كاملةً عمداً، فالخلل قد يقع خارج أي نطاق تختاره.',
+  kb:'مسرد المصطلحات لا يتعلق بفترة.'
+};
+function applyScopeVisibility(){
+  const on=RANGE_TABS.indexOf(S.tab)>=0;
+  const f=document.querySelector('#dom-fiscal .filters'), bar=document.getElementById('scopeBar');
+  if(f) f.hidden=!on;
+  if(bar) bar.hidden=!on;
+  const k=document.getElementById('kpis'), kn=document.getElementById('kpisNote');
+  if(k) k.hidden=!on;
+  if(kn) kn.hidden=!on;
+  let why=document.getElementById('scopeWhy');
+  if(!why){
+    const host=document.getElementById('dom-fiscal');
+    why=document.createElement('div'); why.id='scopeWhy'; why.className='scopebar';
+    if(bar&&bar.parentNode) bar.parentNode.insertBefore(why,bar.nextSibling); else host.insertBefore(why,host.firstChild);
+  }
+  const txt=SCOPE_WHY[S.tab];
+  why.hidden=on||!txt;
+  if(!why.hidden) why.innerHTML='<span class="tag">نطاق هذا التبويب</span><span class="muted">'+txt+'</span>';
+}
 function renderAll(){
-  renderKPI();
+  wireHeaderInfo();
+  applyScopeVisibility();
+  if(RANGE_TABS.indexOf(S.tab)>=0) renderKPI(); else renderScopeBar();
   if(S.tab==='overview') renderOverview();
   if(S.tab==='rev') renderRev();
   if(S.tab==='exp') renderExp();
@@ -9129,6 +9455,29 @@ function renderAll(){
   if(S.tab==='data'){ renderTable(); renderFormulas('fBody',FRM,document.getElementById('fSearch').value); renderCorrections(); }
   if(S.tab==='kb') renderKB();
 }
+/* شرحُ المفتاحين اللذين تعذّر فهمهما بلا تعريف: «وحدة العرض» و«معيار التبويب».
+   كلاهما مصطلحٌ تقنيّ صحيح، وعرضُه بلا تعريف يجعل القارئ يتخطّاه أو يُسيء فهمه. */
+function wireHeaderInfo(){
+  const u=document.getElementById('unitInfo');
+  if(u) u.innerHTML=infoDot(
+    '<b>مليون ريال</b> — القيم كما تنشرها وزارة المالية.<br>'+
+    '<b>مؤشر النمو</b> — تُحوَّل كل سلسلة إلى مقياسٍ نسبيّ تكون فيه <b>أول فترة معروضة = 100</b>، '+
+    'فتقرأ 130 على أنها «ارتفعت 30% عن بدايتها».<br>'+
+    'وفائدته أن يضع سلاسل متباعدة الأحجام على مقياس واحد فيُقارَن <em>معدل</em> نموّها لا حجمها — '+
+    'كأن يُقارن نمو بندٍ قدره 5 مليارات بنمو بندٍ قدره 500 ملياراً. '+
+    '<b>وحدّه:</b> يُخفي الحجم المطلق، فلا يصلح لقراءة المقادير.',
+    'ما معنى وحدة العرض؟');
+  const t=document.getElementById('stdInfo');
+  if(t) t.innerHTML=infoDot(
+    '<b>GFSM 2014</b> هو <em>دليل إحصاءات مالية الحكومة</em> الصادر عن صندوق النقد الدولي — '+
+    'المعيار الدولي الذي يحدّد <b>كيف تُصنَّف بنود الإيرادات والمصروفات</b> وماذا يدخل في كل بند. '+
+    'وهو الذي يجعل «تعويضات العاملين» في الميزانية السعودية قابلةً للمقارنة بنظيرتها في أي دولة أخرى تتبعه.<br>'+
+    '<b>ولا يعني</b> أن الأرقام من صندوق النقد — مصدرها وزارة المالية، والمعيار تبويبٌ لا مصدر.<br>'+
+    'ويظهر في اللوحات الأخرى معياران آخران: <b>SNA 2008</b> لنظام الحسابات القومية (الناتج المحلي)، '+
+    'و<b>EIA</b> لسلسلة أسعار برنت.',
+    'ما معنى معيار التبويب؟');
+}
+
 function init(){
   document.getElementById('tabs').innerHTML=TABS.map(t=>
     '<button class="tab'+(t[0]===S.tab?' on':'')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('');
