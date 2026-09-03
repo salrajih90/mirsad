@@ -19,6 +19,401 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap">
+<!-- طبقة النضج (٣): فهرسٌ آليٌّ بمفردات DCAT 3 — البوابة تُقرأ بالآلة
+     كما تُقرأ بالعين، فتُدرَج في مجمِّعات البيانات المفتوحة ويُستدلّ عليها.
+     يُبنى من data.json نفسه في كل بناء فلا يتقادم عن اللوحة. -->
+</head>
+<body>
+<script type="application/ld+json">{
+ "@context": {
+  "dcat": "http://www.w3.org/ns/dcat#",
+  "dcterms": "http://purl.org/dc/terms/",
+  "foaf": "http://xmlns.com/foaf/0.1/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "owl": "http://www.w3.org/2002/07/owl#"
+ },
+ "@type": "dcat:Catalog",
+ "@id": "https://mrsdx-fo.net/",
+ "dcterms:title": {
+  "@value": "المرصد المالي والاقتصادي — المملكة العربية السعودية",
+  "@language": "ar"
+ },
+ "dcterms:description": {
+  "@value": "لوحة تحليلية مستقلة غير رسمية تعرض المالية العامة والحسابات القومية وأسعار الطاقة وصندوق الاستثمارات العامة، مبنيّةً على مصادر رسمية منشورة.",
+  "@language": "ar"
+ },
+ "dcterms:language": {
+  "@id": "http://publications.europa.eu/resource/authority/language/ARA"
+ },
+ "dcterms:license": {
+  "@id": "http://creativecommons.org/licenses/by/4.0/"
+ },
+ "dcterms:modified": {
+  "@value": "03-09-2026م",
+  "@type": "xsd:string"
+ },
+ "owl:versionInfo": "2.124",
+ "dcat:dataset": [
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "أداء الميزانية العامة",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها وزارة المالية (تقارير أداء الميزانية الربعية والسنوية).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "وزارة المالية",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/QUARTERLY"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2026-06-30",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ],
+   "dcterms:source": {
+    "@id": "https://www.mof.gov.sa/financialreport/Pages/default.aspx"
+   }
+  },
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "الدين الحكومي",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها المركز الوطني لإدارة الدين (التقارير الربعية وخطة الاقتراض السنوية).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "المركز الوطني لإدارة الدين",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/QUARTERLY"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2026-06-30",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ],
+   "dcterms:source": {
+    "@id": "https://www.ndmc.gov.sa/"
+   }
+  },
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "الناتج المحلي — ربعي",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها الهيئة العامة للإحصاء (نشرات الناتج المحلي الربعية).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "الهيئة العامة للإحصاء",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/QUARTERLY"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2026-06-30",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ]
+  },
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "الحسابات القومية — سنوي",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها الهيئة العامة للإحصاء (نشرة الحسابات القومية السنوية).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "الهيئة العامة للإحصاء",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/ANNUAL"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2024-12-31",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ]
+  },
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "سعر برنت",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها إدارة معلومات الطاقة الأمريكية (سلسلة RBRTE).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "إدارة معلومات الطاقة الأمريكية",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/DAILY"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2026-08-25",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ]
+  },
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "حيازات تداول",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها السوق المالية السعودية (تداول) (تقرير كبار المُلاك).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "السوق المالية السعودية (تداول)",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/QUARTERLY"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2026-08-27",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ]
+  },
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "إقرارات 13F",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها هيئة الأوراق المالية والبورصات الأمريكية (النموذج 13F).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "هيئة الأوراق المالية والبورصات الأمريكية",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/QUARTERLY"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2026-06-30",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ]
+  },
+  {
+   "@type": "dcat:Dataset",
+   "dcterms:title": {
+    "@value": "صندوق الاستثمارات العامة — سنوي",
+    "@language": "ar"
+   },
+   "dcterms:description": {
+    "@value": "سلسلة معروضة في المرصد المالي والاقتصادي، مصدرها صندوق الاستثمارات العامة (التقرير السنوي).",
+    "@language": "ar"
+   },
+   "dcterms:publisher": {
+    "@type": "foaf:Organization",
+    "foaf:name": {
+     "@value": "صندوق الاستثمارات العامة",
+     "@language": "ar"
+    }
+   },
+   "dcterms:accrualPeriodicity": {
+    "@id": "http://publications.europa.eu/resource/authority/frequency/ANNUAL"
+   },
+   "dcterms:temporal": {
+    "@type": "dcterms:PeriodOfTime",
+    "dcat:endDate": {
+     "@value": "2025-12-31",
+     "@type": "xsd:date"
+    }
+   },
+   "dcterms:license": {
+    "@id": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   "dcat:distribution": [
+    {
+     "@type": "dcat:Distribution",
+     "dcterms:title": {
+      "@value": "جدول قابل للتنزيل بصيغة CSV من داخل اللوحة",
+      "@language": "ar"
+     },
+     "dcat:mediaType": "text/csv",
+     "dcat:accessURL": {
+      "@id": "https://mrsdx-fo.net/"
+     }
+    }
+   ]
+  }
+ ]
+}</script>
 <style>
 :root{
   /* — هوية مرصد الميزانية: أرضية زرقاء غامقة + لون العلامة الرملي — */
@@ -29,7 +424,12 @@
   /* نسخة نصّية من brand-deep تحقق WCAG 2.2 AA (5.05:1 على surface-1) — تُستعمل للنصوص الصغيرة
      ويبقى brand-deep نفسه للحدود والأيقونات حيث تكفي 3:1 */
   --brand-deep-txt:#A08541;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+  /* طبقة النضج (٣): كان s7 (#9085e9) أقربَ لونٍ إلى s1 عند عمى اللون
+     الأحمر (بروتانوبيا) — مسافة 0.033 وهي أدنى مسافةٍ في اللوحة كلها —
+     وثانيَ أقربها عند عمى اللون الأخضر. فأُبدل بلونٍ من العائلة نفسها
+     أبعدَ في القناة الزرقاء: المسافة الدنيا ارتفعت إلى 0.204 (ستةُ أضعاف)
+     والتباين على الأرضية بقي 4.54:1 فوق عتبة 3:1. */
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9074b2; --s8:#e66767;
   --good:#199e70; --bad:#e66767; --warn:#c98500;
   --r:14px;
   --font-ui:"IBM Plex Sans Arabic","IBM Plex Sans","SF Arabic","Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;
@@ -43,6 +443,16 @@
 /* نصٌّ لقارئ الشاشة وحده: يبقى في شجرة الإتاحة ولا يُرسم. */
 .sronly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+/* شريطُ تنزيل الجدول — طبقة النضج (٢): كل جدولٍ يُؤخذ لا يُقرأ فقط. */
+.a11ylist{margin:8px 0 0;padding-inline-start:20px;color:var(--ink-2);font-size:13px;line-height:2}
+.a11ylist li{margin-bottom:4px}
+.tblbar{display:flex;justify-content:flex-start;margin:0 0 8px}
+.tblbar .tbldl{background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink-2);
+  border-radius:9px;padding:6px 13px;font-family:inherit;font-size:12px;cursor:pointer;
+  min-height:28px;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.tblbar .tbldl::before{content:"\2913";font-size:12px;opacity:.75}
+.tblbar .tbldl:hover{background:var(--surface-3);color:var(--ink);border-color:var(--brand-deep)}
+@media print{.tblbar{display:none}}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;overflow-x:clip}
 body{
@@ -585,8 +995,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
 .filters{margin-bottom:0;border-end-start-radius:0;border-end-end-radius:0;border-bottom:0}
 #scopeBar{margin:0 0 20px;border-start-start-radius:0;border-start-end-radius:0;border-top:0}
 </style>
-</head>
-<body>
+
 <a href="#mainContent" class="skiplink">تخطَّ إلى المحتوى</a>
 <div class="wrap">
 <header class="top">
@@ -1067,6 +1476,21 @@ nav.tabs{margin-bottom:16px;gap:5px}
   <div class="blockhead" style="margin-top:34px"><span>سجل الفحوص</span> ما فُحص ولم يتغيّر</div>
   <div class="card"><div id="fGates"></div></div>
 
+  <div class="blockhead" style="margin-top:34px"><span>سياسة المراجعات</span> متى يتغيّر الرقم وكيف يُقيَّد</div>
+  <div class="card"><div id="fRevPol"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>تقويم الإصدار والتوقيت</span> متى نُشر كل رقم وكم تقادَم</div>
+  <div class="card"><div id="fRel"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>أرشيف النسخ</span> كيف تُسترجَع نسخةٌ استُشهد بها</div>
+  <div class="card"><div id="fArch"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>الفهرس الآلي</span> وصفٌ معياريٌّ تقرؤه الآلة</div>
+  <div class="card"><div id="fCat"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>بيان الإتاحة</span> ما تحقّق وما لم يُختبر</div>
+  <div class="card"><div id="fA11y"></div></div>
+
   <div class="blockhead" style="margin-top:34px"><span>الاعتماد الخارجي</span> ما تطلبه الصفحة من الشبكة</div>
   <div class="card">
     <h3>طلب شبكي واحد، ولا أثر لسقوطه على أي رقم</h3>
@@ -1506,6 +1930,9 @@ nav.tabs{margin-bottom:16px;gap:5px}
     <div class="card"><h3>الأثر في الاقتصاد الوطني</h3><div id="f-impTbl"></div></div>
     <div class="card"><h3>قراءة صندوق النقد الدولي</h3><div id="f-imf"></div></div>
     <div class="card"><h3>الوظائف</h3><div id="f-jobs"></div></div>
+    <!-- طبقة النضج (٢): بطاقة انكشاف الميزانية على الصندوق — نِسبٌ تُقاس
+         وتصريحٌ بما لا يُقاس من المنشور. -->
+    <div class="card"><div id="f-expo"></div></div>
   </section>
 
   <section id="f-s-data">
@@ -1529,7 +1956,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
     <div style="font-weight:600;color:var(--ink-2);margin-bottom:8px">عن هذه اللوحة</div>
     <div style="margin-bottom:7px"><b>ليست جهة رسمية.</b> «المرصد المالي والاقتصادي» عملٌ تحليليّ مستقل يعرض بياناتٍ منشورة من جهاتٍ رسمية ويشتقّ منها مؤشرات. <b>لا تُصدره ولا تعتمده ولا تراجعه</b> وزارة المالية ولا الهيئة العامة للإحصاء ولا المركز الوطني لإدارة الدين ولا صندوق الاستثمارات العامة. وعند أي اختلاف بين رقمٍ هنا ورقمٍ في مصدره الرسمي، <b>فالمصدر الرسمي هو المُعتمَد</b>.</div>
     <div style="margin-bottom:7px"><b>طبقتان لا طبقة:</b> <span style="color:var(--ink-2)">أرقام الناشرين</span> منقولةٌ كما نُشرت وحقوقها لأصحابها وشروط استعمالها شروطهم؛ و<span style="color:var(--ink-2)">الطبقة المشتقّة</span> — المؤشرات المحتسبة والتوقعات والمحاكاة وسعر التعادل والنصوص التحليلية والشيفرة — تُتاح بموجب رخصة <b>المشاع الإبداعي — النسب إلى المُصنَّف 4.0 دولي</b> <span dir="ltr">(CC BY 4.0)</span>: لك نسخُها وتعديلها وإعادة نشرها تجارياً وغير تجارياً بشرط الإسناد.</div>
-    <div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.116 · 03-09-2026م</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُرسل إلى مُعِدّ اللوحة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> داخل تبويب البيانات في كل لوحة.</div>
+    <div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.124 · 03-09-2026م</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُرسل إلى مُعِدّ اللوحة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> داخل تبويب البيانات في كل لوحة.</div>
     <div class="muted"><b>حدّ المسؤولية:</b> تُقدَّم اللوحة كما هي، بلا ضمانٍ من أي نوع. والتوقعات والسيناريوهات نتائج شرطية لا تنبؤات، ولا شيء فيها نصيحةً استثمارية أو مالية أو قانونية.</div>
   </div>
 </footer>
@@ -6037,6 +6464,62 @@ nav.tabs{margin-bottom:16px;gap:5px}
     "was": "سنةُ الناتج الأولية تُميَّز بلونٍ مختلف في رسمٍ بلا أسطورة، وكذلك سنواتُ الطواعية التي لا تُقرأ لانقلاب مقامها — فلا يصل المعنى في التدرّج الرمادي ولا عند عمى الألوان",
     "now": "علامةُ الاستثناء (٭) على وسم السنة وتهشيرٌ على العمود في الموضعين، وحاشيةٌ تشرح العلامة — WCAG 2.2 معيار 1.4.1",
     "why": "ec-18"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "تصدير البيانات",
+    "was": "زرُّ تنزيلٍ واحد على جدولٍ واحد في لوحة المالية، وخمسةٌ وعشرون جدولاً غيره — وهي التي تحمل كل رقمٍ مرسوم — لا يخرج منها شيء",
+    "now": "كلُّ جدولٍ في اللوحات الخمس (26 جدولاً) له زرُّ تنزيل CSV يُلبَس بنيوياً في الطبقة المشتركة، والملفُّ يخرج حاملاً موضوعَه ولوحتَه وتبويبَه وختمَ رسمِه ونسخةَ اللوحة ورخصتَها ومعنى الخلية الفارغة",
+    "why": "طبقة النضج (٢) — البيان الذي يُعرض ولا يُؤخذ صورةٌ عن بيان"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "تقويم الإصدار ومؤشر التوقيت",
+    "was": "تقول اللوحة «آخر تحديث» ولا تقول متى يُنتظر الرقم التالي ولا كم تقادَم كلُّ رقمٍ فيها — والتوقيت بُعدٌ من أبعاد الجودة في إطار صندوق النقد (DQAF)",
+    "now": "جدولٌ يعرض لكل سلسلة ناشرَها وتواترَ نشره المعلَن ونهايةَ آخر فترةٍ مرجعية والتقادمَ المقيس حتى بناء النسخة، ويسمّي أقدمَ رقمٍ في اللوحة بوصفه حدَّ تقادُمها",
+    "why": "طبقة النضج (٢)"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "سياسة المراجعات",
+    "was": "سجل التصحيحات يقول ما تغيّر ولا شيء يقول متى يتغيّر وكيف يُقيَّد ولا كيف يُفرَّق بين مراجعة الناشر وتصحيح اللوحة",
+    "now": "سياسةٌ منشورة في خمسة أبواب: متى تُراجَع، وما الذي يُقيَّد وما لا يُقيَّد، والفرق بين مراجعة الناشر وتصحيح اللوحة، وكيف يعرف القارئ أن رقماً تغيّر، وما لا تفعله اللوحة",
+    "why": "طبقة النضج (٢)"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "الصندوق والميزانية",
+    "was": "لوحتان متجاورتان بلا سطرٍ واحد يربط حجم أحدهما بالآخر، والسؤال الأول عند كل قارئ: ما نسبة هذا إلى ذاك",
+    "now": "بطاقةٌ تعرض أربع نسبٍ محتسبةٍ من أرقامٍ منشورةٍ في اللوحتين، وتُصرِّح بأن انكشاف الميزانية على الصندوق <b>غير قابل للقياس من المنشور</b> لأن الميزانية لا تنشر بنداً للضخّ — وتسمّي ما يفصل المسألة",
+    "why": "طبقة النضج (٢)"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "الفهرس الآلي",
+    "was": "بوابةٌ تُنشر بلا وصفٍ معياريّ: يقرؤها الإنسان ولا تقرؤها آلة، فلا تُدرَج في مجمِّعات البيانات المفتوحة",
+    "now": "فهرسٌ بمفردات DCAT 3 بصيغة JSON-LD في ترويسة الصفحة، يُبنى من ملف البيانات نفسه في كل بناء — ثماني مجموعات بناشرها وتواترها وفترتها ورخصتها ورابط مصدرها",
+    "why": "طبقة النضج (٣) — النجمتان الرابعة والخامسة في مقياس البيانات المفتوحة"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "بيان الإتاحة",
+    "was": "تُفحص الإتاحة آلياً في كل بناء ولا يُنشر بيانٌ يقول ما المعيار المستهدف وما حالة المطابقة وما لم يُختبر",
+    "now": "بيانُ إتاحةٍ منشور: المعيار WCAG 2.2 مستوى AA، وحالةُ مطابقةٍ <b>جزئية</b> معلَنة، ومنهجيةُ التقييم (WCAG-EM على اللوحات الخمس وتبويباتها كلها)، وعشرةُ بنودٍ تحقّقت وأربعةٌ لم تُختبر مذكورةٌ بأعيانها",
+    "why": "طبقة النضج (٣)"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "أرشيف النسخ",
+    "was": "رقم الإصدار يتغيّر مع كل تصحيح ولا شيء يقول كيف تُسترجَع نسخةٌ استُشهد بها، وقيودُ النشر مؤرَّخةٌ لا مرقَّمة",
+    "now": "رسالةُ كل قيدٍ تحمل رقم الإصدار، ويُوضع وسمٌ باسمه في المستودع، وبطاقةٌ تشرح كيف تُسترجَع نسخةٌ برقم إصدارها — وتصرّح بأن لا عنوانَ ثابتاً لكل نسخة على الشبكة",
+    "why": "طبقة النضج (٣)"
+   },
+   {
+    "d": "03-09-2026م",
+    "w": "لون السلسلة السابعة",
+    "was": "s7 (#9085e9) أقربُ لونٍ إلى s1 عند عمى اللون الأحمر — مسافة 0.033 وهي أدنى مسافةٍ في اللوحة كلها — وثاني أقربها عند عمى اللون الأخضر",
+    "now": "أُبدل بـ#9074b2: المسافة الدنيا ارتفعت إلى 0.204 (ستةُ أضعاف) والتباين على الأرضية بقي 4.54:1 فوق العتبة",
+    "why": "طبقة النضج (٣) · معيار 1.4.1"
    }
   ],
   "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في تبويب «البيانات والمصادر» الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
@@ -6150,7 +6633,130 @@ nav.tabs{margin-bottom:16px;gap:5px}
     "n": "vplant",
     "g": "تزرع خمس عشرة مخالفةً متعمَّدة وتتحقق أن كل بوابةٍ تلتقط مخالفتها، وأن السلسلة تنجح على النسخة السليمة — فحصُ الفاحص."
    }
-  ]
+  ],
+  "release": {
+   "note": "<b>ما يقيسه هذا الجدول:</b> الفارقُ بين <b>نهاية الفترة المرجعية</b> لآخر رقمٍ في كل سلسلة و<b>تاريخ بناء هذه النسخة</b> من اللوحة. وهو مقياسُ توقيتٍ <b>مقيسٌ لا مُدَّعى</b>، ويجمع زمنين لا يفصلهما: تأخُّرَ الناشر في النشر، وتأخُّرَ اللوحة في التقاط ما نُشر. فيُقرأ حدّاً أعلى لتقادُم الرقم لا قياساً لأداء الناشر.",
+   "cadence": "وتواترُ النشر المعلَن لكل مصدرٍ مذكورٌ في عموده، وهو ما يحدّد متى يُنتظر الرقم التالي.",
+   "rows": [
+    {
+     "k": "أداء الميزانية العامة",
+     "o": "وزارة المالية",
+     "f": "ربعي · وتقريرٌ سنوي",
+     "end": "2026-06-30",
+     "s": "تقارير أداء الميزانية الربعية والسنوية"
+    },
+    {
+     "k": "الدين الحكومي",
+     "o": "المركز الوطني لإدارة الدين",
+     "f": "ربعي",
+     "end": "2026-06-30",
+     "s": "التقارير الربعية وخطة الاقتراض السنوية"
+    },
+    {
+     "k": "الناتج المحلي — ربعي",
+     "o": "الهيئة العامة للإحصاء",
+     "f": "ربعي · تقديرٌ أوّليّ ثم نشرةٌ مفصَّلة",
+     "end": "2026-06-30",
+     "s": "نشرات الناتج المحلي الربعية"
+    },
+    {
+     "k": "الحسابات القومية — سنوي",
+     "o": "الهيئة العامة للإحصاء",
+     "f": "سنوي",
+     "end": "2024-12-31",
+     "s": "نشرة الحسابات القومية السنوية"
+    },
+    {
+     "k": "سعر برنت",
+     "o": "إدارة معلومات الطاقة الأمريكية",
+     "f": "يومي",
+     "end": "2026-08-25",
+     "s": "سلسلة RBRTE"
+    },
+    {
+     "k": "حيازات تداول",
+     "o": "السوق المالية السعودية (تداول)",
+     "f": "كل يوم تداول",
+     "end": "2026-08-27",
+     "s": "تقرير كبار المُلاك"
+    },
+    {
+     "k": "إقرارات 13F",
+     "o": "هيئة الأوراق المالية والبورصات الأمريكية",
+     "f": "ربعي",
+     "end": "2026-06-30",
+     "s": "النموذج 13F"
+    },
+    {
+     "k": "صندوق الاستثمارات العامة — سنوي",
+     "o": "صندوق الاستثمارات العامة",
+     "f": "سنوي",
+     "end": "2025-12-31",
+     "s": "التقرير السنوي"
+    }
+   ]
+  },
+  "revPolicy": {
+   "title": "سياسة المراجعات",
+   "body": [
+    [
+     "متى تُراجَع اللوحة",
+     "تُراجَع في ثلاث حالات لا رابع لها: (١) أن ينشر المصدرُ رقماً جديداً أو يراجع رقماً منشوراً؛ (٢) أن يُكتشف خطأٌ في احتساب اللوحة أو في عرضها؛ (٣) أن تُضاف سلسلةٌ أو بطاقةٌ جديدة. ولا يُغيَّر رقمٌ لغير هذه الأسباب."
+    ],
+    [
+     "ما الذي يُقيَّد وما الذي لا يُقيَّد",
+     "يُقيَّد في <b>سجل التصحيحات</b> كلُّ تغييرٍ يمسّ رقماً معروضاً أو معنىً مُعلَناً: ما كان، وما صار، وسببه، وتاريخه. ولا تُقيَّد التغييرات التي لا يراها القارئ (تنظيمُ شيفرةٍ أو تسريعُ تصيير)، ولا يُقيَّد تحديثٌ دوريٌّ يضيف فترةً جديدة دون أن يمسّ فترةً منشورة."
+    ],
+    [
+     "مراجعات الناشر مقابل تصحيحات اللوحة",
+     "يُفرَّق بينهما في السجل: <b>مراجعةُ الناشر</b> تغييرٌ في الرقم الأصلي (كالمراجعة الشاملة للحسابات القومية) تنقله اللوحة كما هو وتذكر أنه منه؛ و<b>تصحيحُ اللوحة</b> خطأٌ وقع فيها هي. والخلط بينهما ينسب خطأ اللوحة إلى الناشر أو العكس."
+    ],
+    [
+     "كيف يعرف القارئ أن رقماً تغيّر",
+     "برقم الإصدار في التذييل: يرتفع مع كل تصحيحٍ مُقيَّد، فاختلافُ الإصدار بين نسختين يعني أن بينهما تصحيحاً واحداً على الأقل، وسجلُّ التصحيحات يقول أيَّها. ولذلك يُذكر رقم الإصدار في أي استشهاد."
+    ],
+    [
+     "ما لا تفعله اللوحة",
+     "لا تُصحِّح رقم ناشرٍ باجتهادها، ولا تُوفّق بين مصدرين متعارضين بترجيحٍ من عندها — تعرض التعارض بطرفيه وتنسب كلَّ رقمٍ إلى ناشره. ولا تحذف رقماً منشوراً سابقاً من السجل."
+    ]
+   ]
+  },
+  "a11y": {
+   "title": "بيان الإتاحة",
+   "std": "إرشادات إتاحة محتوى الويب (WCAG) الإصدار 2.2 — مستوى AA",
+   "state": "مطابقةٌ جزئية",
+   "method": "قُيِّمت اللوحة بمنهجية <span dir=\"ltr\">WCAG-EM</span> على عيّنةٍ هي <b>اللوحات الخمس وتبويباتها الأربعة والثلاثون كلُّها</b> — لا عيّنةٌ منها — بفحصٍ آليٍّ يعمل على الصفحة المبنيّة في كل بناء (البوابة <span dir=\"ltr\">va11y</span>)، مسنودٍ بفحصٍ يدويّ للتنقّل بلوحة المفاتيح وترتيب التركيز.",
+   "covered": [
+    "اسمٌ برمجيٌّ لكل حقل إدخال وزرّ (معيار 4.1.2)",
+    "بديلٌ نصّيٌّ لكل رسمٍ بيانيّ مبنيٌّ من عنوان بطاقته وختمه (معيار 1.1.1)",
+    "هدفُ لمسٍ لا يقلّ عن 24×24 نقطة لكل عنصرٍ تفاعليّ (معيار 2.5.8)",
+    "تباينُ النصّ فوق 4.5:1 وحدودُ العناصر غير النصّية فوق 3:1 (معياري 1.4.3 و1.4.11)",
+    "لا معنى يحمله اللونُ وحده: علاماتٌ نصّية وتهشيرٌ وتقطيع (معيار 1.4.1)",
+    "استرجاعٌ عند عرض 320 نقطة بلا فقد محتوى (معيار 1.4.10)",
+    "إطفاءُ حركة الرسوم عند تفضيل «حركة أقل» في النظام (معيار 2.3.3)",
+    "تشغيلٌ كاملٌ بلوحة المفاتيح: فتحُ درج التفصيل من الرسم، ومصيدةُ تركيزٍ داخل الدرج، وإعادةُ التركيز عند إغلاقه (معايير 2.1.1 و2.4.3 و2.4.11)",
+    "لغةُ الصفحة واتجاهُها مُعلَنان، وعناوينُ متسلسلةٌ بلا قفز (معياري 3.1.1 و1.3.1)",
+    "إعلانٌ مسموع عند تبديل اللوحة (معيار 4.1.3)"
+   ],
+   "gaps": [
+    "لم تُختبر اللوحة على قارئ شاشةٍ حقيقيّ (VoiceOver أو NVDA) اختباراً موثَّقاً — الفحص يقيس ما في شجرة الإتاحة لا ما يُنطق فعلاً.",
+    "لم يُجرَ اختبارٌ مع مستخدمين من ذوي الإعاقة.",
+    "الرسوم البيانية تُقدَّم بديلاً نصّياً موجزاً وجدولاً كاملاً في تبويب «البيانات»، ولا يُقدَّم وصفٌ سرديٌّ مطوَّل لكل رسم.",
+    "أنماطُ التهشير تُميّز السلاسل، ولم تُختبر على محاكيات عمى الألوان اختباراً موثَّقاً."
+   ],
+   "contact": "تُرسل ملاحظات الإتاحة إلى مُعِدّ اللوحة، وتُقيَّد كل معالجة في سجل التصحيحات.",
+   "asOf": "03-09-2026م"
+  },
+  "catalog": {
+   "title": "فهرس البيانات — قابلٌ للقراءة آلياً",
+   "body": "تحمل الصفحة في ترويستها <b>فهرساً بمفردات <span dir=\"ltr\">DCAT 3</span></b> (معيار W3C لوصف مجموعات البيانات) بصيغة <span dir=\"ltr\">JSON-LD</span>. ولكلِّ سلسلةٍ فيه عنوانُها وناشرُها وتواترُ نشره ونهايةُ فترتها المرجعية ورخصتُها ورابطُ مصدرها. <b>ولماذا هذا مهم:</b> بوابةٌ بلا فهرسٍ آليّ يقرؤها الإنسان ولا تقرؤها آلة — فلا تُدرَج في مجمِّعات البيانات المفتوحة ولا يُستدلّ عليها بحثاً. وهذا هو ما يفصل <b>النجمة الثالثة</b> عن <b>الرابعة والخامسة</b> في مقياس البيانات المفتوحة ذي النجوم الخمس: أن يكون للبيان وصفٌ معياريٌّ ومعرّفٌ يُشار إليه. <b>وكيف يُقرأ:</b> يُفتح مصدر الصفحة ويُبحث فيه عن <span dir=\"ltr\">application/ld+json</span>، أو تُقرأ الصفحة بأي أداةٍ تفهم <span dir=\"ltr\">JSON-LD</span>. <b>ويُبنى من ملف البيانات نفسه في كل بناء</b>، فلا يفترق عمّا تعرضه اللوحة ولا يتقادم عنه."
+  },
+  "archive": {
+   "title": "أرشيف النسخ",
+   "body": "كلُّ نسخةٍ نُشرت من هذه اللوحة <b>محفوظةٌ ومُستدَلٌّ عليها</b>، لا تُستبدل بالتي بعدها. فالنشرُ يمرّ بمستودعٍ عامّ على <span dir=\"ltr\">GitHub</span>، وكلُّ نشرةٍ قيدٌ فيه رسالتُه <b>رقمُ الإصدار وتاريخه</b>، ويُوضع معها <b>وسمٌ باسم الإصدار</b> (<span dir=\"ltr\">v2.116</span> مثلاً). فمن أراد النسخة التي استشهد بها قبل شهور استدلّ عليها <b>برقم إصدارها</b> لا بتاريخٍ يقارِبه. <b>ولماذا هذا لازم:</b> رقمٌ يتغيّر بعد النشر يجعل الاستشهادَ القديم غيرَ قابلٍ للتحقق ما لم تُحفظ النسخةُ التي استُشهد بها — والحفظُ وحده لا يكفي، لا بدّ من <b>معرّفٍ يُشار به إليها</b>، وهو رقم الإصدار. <b>وما لا تعد به اللوحة:</b> ليس لكل نسخةٍ عنوانٌ ثابتٌ خاصٌّ بها على الشبكة — العنوان واحدٌ يحمل الأحدث دائماً، والنسخُ السابقة تُستخرج من المستودع لا من رابطٍ مباشر.",
+   "repo": "https://github.com/salrajih90/mirsad",
+   "how": "يُفتح المستودع، ثم قائمة الوسوم (Tags)، ويُختار الوسم الذي يحمل رقم الإصدار المطلوب."
+  }
  }
 };window.EXTRA={"gdpYears":[2018,2019,2020,2021,2022,2023,2024,2025],"gdp":[3324619.0,3333338.0,2879817.0,3684979.0,4646532.0,4569693.0,4703029.0,4789000.0],"ratings":{"scale":{"21":"AAA/Aaa","20":"AA+/Aa1","19":"AA/Aa2","18":"AA-/Aa3","17":"A+/A1","16":"A/A2","15":"A-/A3","14":"BBB+/Baa1"},"agencies":[{"name":"Moody's","cur":"Aa3","rank":18,"outlook":"مستقرة","date":"23-05-2026","hist":[["2015-04",18,"Aa3"],["2016-05",17,"A1"],["2018-04",17,"A1"],["2020-05",17,"A1"],["2021-11",17,"A1"],["2023-03",17,"A1"],["2024-11",18,"Aa3"],["2026-05",18,"Aa3"]]},{"name":"S&P","cur":"A+","rank":17,"outlook":"مستقرة","date":"14-03-2026","hist":[["2015-10",17,"A+"],["2016-02",15,"A-"],["2022-03",15,"A-"],["2023-03",16,"A"],["2024-09",16,"A"],["2025-03",17,"A+"],["2026-03",17,"A+"]]},{"name":"Fitch","cur":"A+","rank":17,"outlook":"مستقرة","date":"17-01-2026","hist":[["2015-02",19,"AA"],["2016-04",18,"AA-"],["2017-03",17,"A+"],["2019-09",16,"A"],["2020-04",16,"A"],["2023-04",17,"A+"],["2026-01",17,"A+"]]}]}};window.EXTRA2={"ndmc": {"asOf": "نهاية يونيو 2026م", "debtTotalBn": 1685.0, "debtTotalUsdBn": 449.3, "domesticBn": 1060.1, "externalBn": 624.9, "domesticPct": 62.9, "externalPct": 37.1, "gdpBn": 4965.0, "debtToGdpPct": 33.9, "borrowedBn": 188.7, "repaidBn": 22.8, "changePct": 10.9, "fixedPct": 87, "floatPct": 13, "atmYears": 9.0, "costPct": 3.79, "needBn": 217, "needDeficitBn": 165, "needPrincipalBn": 52, "src": "المركز الوطني لإدارة الدين — صفحة التقارير والإحصاءات (تم التحقق مباشرةً من المصدر)", "planSrc": "المركز الوطني لإدارة الدين — خطة الاقتراض السنوية 2026م", "gdpNote": "نسبة الدين إلى الناتج محسوبة لدى المركز على تقدير الناتج لعام 2026م الوارد في بيان الميزانية (4,965 مليار ريال)، وهو تقدير للسنة كاملة لا رقم محقق — ولذلك تختلف عن نسبة نهاية 2025م المحسوبة على الناتج المحقق.", "maturityNote": "ينشر المركز جدول استحقاقات الدين في خطة الاقتراض على هيئة رسم بياني لا جدول رقمي. وقد تعذّر استخراج قيمه سنةً بسنة استخراجاً يُطابق: مجموع القراءتين المستقلتين تجاوز رصيد الدين القائم نفسه، وهو مستحيل حسابياً. ولذلك لا يُعرض التوزيع السنوي هنا، ويُكتفى ببنية المحفظة المنشورة رقمياً. المادة الثالثة من دستور العمل: الاستخراج الذي لا يُطابق لا يُنشر.", "planAsOf": "نهاية 2025م"}, "intl": {"year": 2025, "names": {"SAU": "السعودية", "ARE": "الإمارات", "KWT": "الكويت", "QAT": "قطر", "BHR": "البحرين", "OMN": "عُمان", "USA": "الولايات المتحدة", "CHN": "الصين", "JPN": "اليابان", "DEU": "ألمانيا", "IND": "الهند", "GBR": "المملكة المتحدة", "FRA": "فرنسا", "ITA": "إيطاليا", "CAN": "كندا", "KOR": "كوريا الجنوبية", "BRA": "البرازيل", "RUS": "روسيا", "AUS": "أستراليا", "MEX": "المكسيك", "IDN": "إندونيسيا", "TUR": "تركيا", "ZAF": "جنوب أفريقيا", "ARG": "الأرجنتين"}, "debt": {"SAU": 31.7, "ARE": 34.3, "KWT": 14.6, "QAT": 41.4, "BHR": 147.6, "OMN": 35.8, "USA": 123.9, "CHN": 99.2, "JPN": 206.5, "DEU": 62.9, "IND": 84.1, "GBR": 102.3, "FRA": 116.0, "ITA": 137.1, "CAN": 113.5, "KOR": 52.3, "BRA": 93.3, "RUS": 17.2, "AUS": 51.0, "MEX": 61.8, "IDN": 41.0, "TUR": 23.5, "ZAF": 78.6, "ARG": 80.3}, "bal": {"SAU": -5.8, "ARE": 5.2, "KWT": 28.4, "QAT": -1.0, "BHR": -13.0, "OMN": 1.0, "USA": -6.8, "CHN": -7.9, "JPN": -1.1, "DEU": -2.7, "IND": -7.4, "GBR": -5.4, "FRA": -5.1, "ITA": -3.1, "CAN": -1.8, "KOR": -1.4, "BRA": -8.1, "RUS": -3.9, "AUS": -2.8, "MEX": -4.9, "IDN": -2.9, "TUR": -2.8, "ZAF": -5.8, "ARG": -0.4}, "pb": {"SAU": -5.5, "ARE": 5.9, "KWT": -2.3, "QAT": 0.3, "BHR": -6.1, "OMN": 1.3, "USA": -3.2, "CHN": -6.9, "JPN": -0.9, "DEU": -1.8, "IND": -2.1, "GBR": -2.8, "FRA": -3.1, "ITA": 0.5, "CAN": -2.1, "KOR": -1.5, "BRA": -0.4, "RUS": -3.1, "AUS": -1.7, "MEX": 1.2, "IDN": -0.8, "TUR": -0.1, "ZAF": -0.3, "ARG": 0.9}, "rev": {"SAU": 23.2, "ARE": 27.7, "KWT": 78.5, "QAT": 26.1, "BHR": 16.4, "OMN": 29.9, "USA": 30.9, "CHN": 25.0, "JPN": 35.8, "DEU": 47.9, "IND": 21.0, "GBR": 38.3, "FRA": 52.4, "ITA": 47.9, "CAN": 42.2, "KOR": 22.6, "BRA": 39.3, "RUS": 35.2, "AUS": 36.7, "MEX": 25.0, "IDN": 13.3, "TUR": 29.6, "ZAF": 28.4, "ARG": 31.3}, "exp": {"SAU": 29.0, "ARE": 22.6, "KWT": 50.1, "QAT": 27.1, "BHR": 29.4, "OMN": 28.9, "USA": 37.7, "CHN": 32.9, "JPN": 36.9, "DEU": 50.5, "IND": 28.5, "GBR": 43.6, "FRA": 57.5, "ITA": 51.1, "CAN": 44.0, "KOR": 24.0, "BRA": 47.4, "RUS": 39.1, "AUS": 39.5, "MEX": 29.8, "IDN": 16.2, "TUR": 32.4, "ZAF": 34.2, "ARG": 31.6}, "src": "صندوق النقد الدولي — قاعدة DataMapper (تم التحقق مباشرةً من المصدر)", "missing": [], "sauNote": "قيم المملكة الواردة من صندوق النقد طابقت ما تحتسبه هذه اللوحة من المصادر السعودية الرسمية في <b>أربعة</b> من خمسة مؤشرات: الإيرادات 23.2% والمصروفات 29.0% والرصيد (5.8%) والدين 31.7% من الناتج — تطابقٌ حتى العشر. <b>وخالف الخامس:</b> الرصيد الأولي يعرضه الصندوق (5.5%) بينما تحتسبه اللوحة (4.6%) — فارقٌ قدره 0.86 نقطة مئوية، مرجَّحُ سببه اختلافُ التغطية المؤسسية («الحكومة العامة» لدى الصندوق مقابل «الحكومة المركزية الميزانية» في تقرير أداء الميزانية)، لا خطأً في أحد الطرفين. <b>وحدُّ هذا التحقّق:</b> المصدران قد لا يكونان مستقلَّين — فصندوق النقد يبني تقديراته للمملكة على المنشور السعودي نفسه — فالتطابق شاهدُ <em>اتساق</em> لا شاهدَ <em>صحّة</em>، ولا يُقرأ تأكيداً مستقلاً."}, "revisions": {"coverage": [{"year": 2022, "q": 1, "sources": 4}, {"year": 2022, "q": 2, "sources": 3}, {"year": 2022, "q": 3, "sources": 2}, {"year": 2022, "q": 4, "sources": 1}, {"year": 2023, "q": 1, "sources": 4}, {"year": 2023, "q": 2, "sources": 3}, {"year": 2023, "q": 3, "sources": 2}, {"year": 2023, "q": 4, "sources": 1}, {"year": 2024, "q": 1, "sources": 3}, {"year": 2024, "q": 2, "sources": 3}, {"year": 2024, "q": 3, "sources": 2}, {"year": 2024, "q": 4, "sources": 1}, {"year": 2025, "q": 1, "sources": 4}, {"year": 2025, "q": 2, "sources": 3}, {"year": 2025, "q": 3, "sources": 2}, {"year": 2025, "q": 4, "sources": 1}, {"year": 2026, "q": 1, "sources": 2}, {"year": 2026, "q": 2, "sources": 1}], "diffs": [{"kind": "الإيرادات", "year": 2022, "q": 2, "item": "Taxes on Income, Profit and Capital Gains", "values": [10235, 10235.3], "n": 3}, {"kind": "الإيرادات", "year": 2022, "q": 2, "item": "Taxes on International Trade and Transactions", "values": [5424, 5424.47], "n": 3}, {"kind": "الإيرادات", "year": 2022, "q": 2, "item": "Other Taxes", "values": [19846.8, 19847], "n": 3}, {"kind": "الإيرادات", "year": 2022, "q": 2, "item": "Other Revenues", "values": [20273.7, 20274], "n": 3}, {"kind": "الإيرادات", "year": 2022, "q": 2, "item": "Non-oil Revenues", "values": [120000.5, 120001], "n": 3}, {"kind": "الإيرادات", "year": 2022, "q": 3, "item": "Taxes on Income, Profit and Capital Gains", "values": [3316, 3316.1], "n": 2}, {"kind": "الإيرادات", "year": 2022, "q": 3, "item": "Other Revenues", "values": [18617.9, 18618], "n": 2}, {"kind": "المصروفات", "year": 2022, "q": 1, "item": "Financing Expenses", "values": [6605.56, 6606], "n": 4}, {"kind": "المصروفات", "year": 2022, "q": 1, "item": "Subsidies", "values": [4876, 4876.17], "n": 4}, {"kind": "المصروفات", "year": 2022, "q": 1, "item": "Other Expenses", "values": [24154.88, 24155], "n": 4}, {"kind": "المصروفات", "year": 2022, "q": 1, "item": "Non-financial Assets (CAPEX)", "values": [14836, 14836.44], "n": 4}, {"kind": "المصروفات", "year": 2022, "q": 1, "item": "Total", "values": [220467, 220467.22], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Compensation of Employees", "values": [131880.79, 131881], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Compensation of Employees", "values": [134066, 134066.47], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Use of Goods and Services", "values": [62061, 62061.11], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Use of Goods and Services", "values": [54102, 54102.34], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Financing Expenses", "values": [8705, 8705.44], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Financing Expenses", "values": [9927.63, 9928], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Subsidies", "values": [7714, 7714.19], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Subsidies", "values": [6062, 6062.49], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Grants", "values": [2733.76, 2734], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Grants", "values": [504.6, 505], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Social Benefits", "values": [39031, 39031.47], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Social Benefits", "values": [19204.81, 19205], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Other Expenses", "values": [24483.94, 24484], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Other Expenses", "values": [34007, 34007.21], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Non-financial Assets (CAPEX)", "values": [43480.57, 43481], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Non-financial Assets (CAPEX)", "values": [25979, 25979.06], "n": 4}, {"kind": "المصروفات", "year": 2023, "q": 2, "item": "Total", "values": [320091, 320091.27], "n": 3}, {"kind": "المصروفات", "year": 2023, "q": 1, "item": "Total", "values": [283854.6, 283855], "n": 4}], "note": "excel-based periods only (2022-2026); earlier periods come from a single PDF each"}};window.ECON={
  "years": [
@@ -19288,9 +19894,104 @@ function ixReap(){
   });
   return n;
 }
+/* ── طبقة النضج (٢): تنزيلُ أيِّ جدول ────────────────────────────────────
+   كان التصدير موقوفاً على جدولٍ واحد في لوحة المالية، وسائرُ الجداول —
+   وهي التي تحمل كلَّ رقمٍ مرسوم — لا يخرج منها شيء. والبيان الذي يُعرض ولا
+   يُؤخذ يبقى صورةً عن بيان. فيُلبَس كلُّ جدولٍ زرَّ تنزيلٍ بنيوياً هنا، ويخرج
+   الملفُّ حاملاً ما يجعله مقروءاً وحده: موضوعَه ولوحتَه وتبويبَه وختمَ رسمِه
+   إن وُجد، ونسخةَ اللوحة، ورخصةَ الطبقة المشتقّة، ومعنى الخلية الفارغة. */
+function ixCsvCell(t){
+  const x=String(t==null?'':t).replace(/\u2066|\u2069/g,'').replace(/\s+/g,' ').trim();
+  return /[",\n]/.test(x) ? '"'+x.replace(/"/g,'""')+'"' : x;
+}
+function ixTableCsv(tbl){
+  const rows=[];
+  tbl.querySelectorAll('tr').forEach(tr=>{
+    const cs=[...tr.children].filter(c=>c.tagName==='TD'||c.tagName==='TH');
+    if(!cs.length) return;
+    rows.push(cs.map(c=>ixCsvCell(c.innerText)));
+  });
+  return rows;
+}
+function ixCsvName(base){
+  return 'mirsad_'+String(base||'table').replace(/[^A-Za-z0-9_-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,48)+'.csv';
+}
+function ixDownloadCsv(csv,fname,btn){
+  const local=()=>{ try{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download=fname; document.body.appendChild(a); a.click(); a.remove();
+  }catch(e){} };
+  if(!window.claude||!window.claude.use){ local(); return; }
+  (async()=>{
+    let dl=null; try{ dl=await window.claude.use('downloads'); }catch(e){}
+    if(!dl){ local(); return; }
+    const o=btn?btn.textContent:'';
+    const msg=t=>{ if(!btn) return; btn.textContent=t; setTimeout(()=>{btn.textContent=o;},2400); };
+    try{ await dl.save({filename:fname,data:csv}); msg('تم الحفظ ✓'); }
+    catch(err){
+      if(err&&err.code==='declined') return;
+      if(err&&err.code==='rate_limited'){ msg('انتظر لحظة ثم أعد المحاولة'); return; }
+      local();
+    }
+  })();
+}
+function ixWireTableExport(){
+  const board=()=>{ const d=document.querySelector('.domain.on'); if(!d) return '';
+    const b=document.querySelector('#domswitch button[data-d="'+String(d.id).replace('dom-','')+'"] b');
+    return (b&&b.textContent||'').trim(); };
+  const tabOf=()=>{ const t=document.querySelector('.domain.on .tab.on'); return (t&&t.textContent||'').trim(); };
+  document.querySelectorAll('.tblwrap').forEach(w=>{
+    /* غلافٌ واحد قد يضمّ أكثر من جدول (كتلة المعادلات مثلاً)، فيُصدَّر ما فيه
+       كلُّه لا أوّلُه — وإلا خرج ملفٌّ ينقص ما يراه القارئ فوقه. */
+    const tables=[...w.querySelectorAll('table')];
+    const tbl=tables[0]; if(!tbl) return;
+    if(w.previousElementSibling && w.previousElementSibling.classList &&
+       w.previousElementSibling.classList.contains('tblbar')) return;
+    const card=w.closest('.card');
+    const h=card&&card.querySelector('h3');
+    const title=((h&&h.textContent)||(tbl.querySelector('caption')&&tbl.querySelector('caption').textContent)||'جدول').trim();
+    const bar=document.createElement('div'); bar.className='tblbar';
+    const btn=document.createElement('button');
+    btn.type='button'; btn.className='btn tbldl';
+    btn.textContent='تنزيل CSV';
+    btn.setAttribute('aria-label','تنزيل بيانات الجدول: '+title+' — ملف CSV');
+    btn.addEventListener('click',function(){
+      const chips=[...(card?card.querySelectorAll('.perbar .chip'):[])]
+        .map(c=>c.innerText.replace(/\s+/g,' ').trim()).filter(Boolean);
+      const ver=(document.getElementById('fVer')||{}).textContent||'—';
+      const pre=[
+        ['# المرصد المالي والاقتصادي — المملكة العربية السعودية'],
+        ['# الجدول: '+title],
+        ['# اللوحة: '+board()+(tabOf()?' · التبويب: '+tabOf():'')]
+      ];
+      chips.forEach(c=>pre.push(['# '+c]));
+      pre.push(['# الخلية الفارغة تعني «غير منشور» لا «صفر»']);
+      pre.push(['# إصدار اللوحة: '+ver]);
+      pre.push(['# الطبقة المشتقّة (المؤشرات المحتسبة) بموجب رخصة CC BY 4.0 · وأرقام الناشرين حقوقها لأصحابها']);
+      pre.push(['# هذه اللوحة عمل تحليلي مستقل، وليست جهة رسمية ولا تعتمدها أي جهة حكومية']);
+      pre.push(['#']);
+      let body=[];
+      tables.forEach((t,i)=>{
+        if(i){ body.push(['']); }
+        const cap=t.querySelector('caption');
+        const grp=(cap&&cap.textContent||'').trim() ||
+          (t.previousElementSibling&&/fgrp|blockhead/.test(t.previousElementSibling.className||'')
+            ? (t.previousElementSibling.textContent||'').trim() : '');
+        if(tables.length>1) body.push(['# '+(grp||('جدول '+(i+1)))]);
+        body=body.concat(ixTableCsv(t));
+      });
+      const csv='\ufeff'+pre.concat(body).map(r=>r.map(ixCsvCell).join(',')).join('\n');
+      ixDownloadCsv(csv, ixCsvName(title), btn);
+    });
+    bar.appendChild(btn);
+    w.parentNode.insertBefore(bar,w);
+  });
+}
 function ixWireTabs(){
   ixReap();
   ixWireScrollables();
+  ixWireTableExport();
   document.querySelectorAll('nav.tabs').forEach(nav=>{
     if(!nav.getAttribute('role')){ nav.setAttribute('role','tablist');
       const dom=nav.closest('.domain');
@@ -19952,7 +20653,7 @@ const D = window.DATA;
 const P = D.periods;                       // "2017Q1"
 const YEARS = [...new Set(P.map(p=>+p.slice(0,4)))];
 const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9085e9', s8:'#e66767',
+            s6:'#008300', s7:'#9074b2', s8:'#e66767',
             ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
             brand:'#C8A96A', brandDeep:'#8C7237' };
 
@@ -21364,6 +22065,11 @@ function renderCorrections(){
       '<td class="dim">'+esc2(c.was)+'</td><td><b>'+esc2(c.now)+'</b></td>'+
       '<td class="dim">'+esc2(c.why)+'</td></tr>').join('')+'</tbody></table></div>';
   renderGates();
+  renderRelease();
+  renderRevPolicy();
+  renderCatalog();
+  renderArchive();
+  renderA11yStmt();
 }
 
 /* ── cx-35: سجلُّ ما فُحص فوجِد سليماً ────────────────────────────────
@@ -21372,6 +22078,84 @@ function renderCorrections(){
    حصيلةُ ما تصادف أن انتُبه له؟ والإفصاح عن نطاق الفحص شرطٌ في مدوّنة
    الممارسات الإحصائية الأوروبية وإطار صندوق النقد لجودة البيانات، وهو ما
    يفصل «لم نجد خطأً» عن «لم نبحث». */
+/* ── طبقة النضج (٢): تقويمُ الإصدار ومؤشرُ التوقيت ───────────────────────
+   كانت اللوحة تقول «آخر تحديث» ولا تقول متى يُنتظر التالي ولا كم تقادم كلُّ
+   رقمٍ فيها. والتوقيتُ بُعدٌ من أبعاد الجودة في إطار صندوق النقد لتقييم جودة
+   البيانات (DQAF) وفي مدوّنة الممارسات الإحصائية الأوروبية، ويُقاس ولا يُدَّعى. */
+function renderRelease(){
+  const el=document.getElementById('fRel'); if(!el) return;
+  const R=(D.src||{}).release; if(!R||!R.rows||!R.rows.length){ el.innerHTML=''; return; }
+  const e=t=>String(t==null?'':t);
+  /* تاريخ البناء يُقرأ من التذييل نفسه لا يُكتب مرتين. */
+  const bd=(function(){ const t=(document.getElementById('fVer')||{}).textContent||'';
+    const m=/(\d{2})-(\d{2})-(\d{4})/.exec(t);
+    return m? new Date(+m[3],+m[2]-1,+m[1]) : null; })();
+  const days=end=>{ if(!bd) return null;
+    const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(end)); if(!m) return null;
+    return Math.round((bd-new Date(+m[1],+m[2]-1,+m[3]))/86400000); };
+  const arD=n=>n==null?'—':(n===1?'يومٌ واحد':n===2?'يومان':n+' '+arN(n,'يوم','يومين','أيام','يوماً'));
+  const fmtEnd=x=>{ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(x));
+    return m? (m[3]+'-'+m[2]+'-'+m[1]+'م') : e(x); };
+  const rows=R.rows.map(r=>({r:r,d:days(r.end)}));
+  const worst=rows.reduce((a,b)=>(b.d!=null&&(a==null||b.d>a.d))?b:a,null);
+  el.innerHTML='<h3>متى نُشر كلُّ رقم، وكم تقادَم</h3>'+
+    '<div class="hint">'+e(R.note)+'</div>'+
+    '<table class="tbl"><caption class="sronly">تقويم إصدار المصادر ومؤشر توقيتها</caption>'+
+    '<thead><tr><th>السلسلة</th><th>الناشر</th><th>تواتر النشر المعلَن</th>'+
+    '<th>نهاية آخر فترة مرجعية</th><th>التقادم حتى بناء هذه النسخة</th></tr></thead><tbody>'+
+    rows.map(o=>'<tr><td>'+e(o.r.k)+'</td><td class="dim">'+e(o.r.o)+'</td><td>'+e(o.r.f)+'</td>'+
+      '<td>'+fmtEnd(o.r.end)+'</td><td class="num">'+arD(o.d)+'</td></tr>').join('')+
+    '</tbody></table>'+
+    '<div class="note">'+e(R.cadence)+
+      (worst&&worst.d!=null? ' <b>وأقدمُ رقمٍ في اللوحة</b> هو «'+e(worst.r.k)+'»: نهايةُ فترته '+
+        fmtEnd(worst.r.end)+'، أي '+arD(worst.d)+' قبل بناء هذه النسخة — '+
+        'وهو حدُّ تقادُم اللوحة كلها.':'')+'</div>';
+}
+
+/* ── طبقة النضج (٢): سياسةُ المراجعات ─────────────────────────────────── */
+function renderRevPolicy(){
+  const el=document.getElementById('fRevPol'); if(!el) return;
+  const R=(D.src||{}).revPolicy; if(!R||!R.body){ el.innerHTML=''; return; }
+  el.innerHTML='<h3>'+String(R.title||'')+'</h3>'+
+    '<div class="hint">سجل التصحيحات يقول <b>ما</b> تغيّر؛ وهذه السياسة تقول <b>متى</b> يتغيّر و<b>كيف</b> يُقيَّد.</div>'+
+    R.body.map(x=>'<div class="note"><b>'+x[0]+':</b> '+x[1]+'</div>').join('');
+}
+
+/* ── طبقة النضج (٣): أرشيفُ النسخ ────────────────────────────────────── */
+function renderArchive(){
+  const el=document.getElementById('fArch'); if(!el) return;
+  const A=(D.src||{}).archive; if(!A){ el.innerHTML=''; return; }
+  const e=t=>String(t==null?'':t);
+  el.innerHTML='<h3>'+e(A.title)+'</h3><div class="note">'+A.body+'</div>'+
+    '<div class="note"><b>كيف تُسترجَع نسخةٌ سابقة:</b> '+e(A.how)+'</div>'+
+    (A.repo? '<div class="srclinks"><a href="'+e(A.repo)+'" target="_blank" rel="noopener">'+
+      'مستودع النشر — تاريخُ النسخ ووسومُها</a></div>':'');
+}
+
+/* ── طبقة النضج (٣): الإفصاح عن الفهرس الآليّ ─────────────────────────── */
+function renderCatalog(){
+  const el=document.getElementById('fCat'); if(!el) return;
+  const C=(D.src||{}).catalog; if(!C){ el.innerHTML=''; return; }
+  el.innerHTML='<h3>'+String(C.title||'')+'</h3><div class="note">'+C.body+'</div>';
+}
+
+/* ── طبقة النضج (٣): بيانُ الإتاحة ───────────────────────────────────── */
+function renderA11yStmt(){
+  const el=document.getElementById('fA11y'); if(!el) return;
+  const A=(D.src||{}).a11y; if(!A){ el.innerHTML=''; return; }
+  const e=t=>String(t==null?'':t);
+  el.innerHTML='<h3>'+e(A.title)+'</h3>'+
+    '<div class="note"><b>المعيار المستهدف:</b> '+e(A.std)+'. '+
+      '<b>وحالةُ المطابقة المُعلَنة:</b> <b>'+e(A.state)+'</b> — '+
+      'وهي تُعلَن جزئيةً لأن ثمة ما لم يُختبر، وهو مذكورٌ أدناه بأعيانه لا مطويّ.</div>'+
+    '<div class="note"><b>كيف قُيِّمت:</b> '+A.method+'</div>'+
+    '<div class="blockhead" style="margin-top:18px">ما تحقّق ويُفحص في كل بناء</div>'+
+    '<ul class="a11ylist">'+A.covered.map(x=>'<li>'+e(x)+'</li>').join('')+'</ul>'+
+    '<div class="blockhead" style="margin-top:18px">وما لم يُختبر بعد</div>'+
+    '<ul class="a11ylist">'+A.gaps.map(x=>'<li>'+e(x)+'</li>').join('')+'</ul>'+
+    '<div class="note"><b>الملاحظات:</b> '+e(A.contact)+' <span class="muted">تاريخ هذا البيان: '+e(A.asOf)+'</span></div>';
+}
+
 function renderGates(){
   const el=document.getElementById('fGates'); if(!el) return;
   const S2=D.src||{}, g=S2.gates||[];
@@ -22712,7 +23496,7 @@ const E = window.ECON;
 const Y = E.years;                    // 2018..2025 (gdp has 2025, details to 2024)
 const YD = Y.slice(0,7);              // detail years 2018..2024
 const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9085e9', s8:'#e66767',
+            s6:'#008300', s7:'#9074b2', s8:'#e66767',
             ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
             brand:'#C8A96A', brandDeep:'#8C7237' };
 const SERIES=[C.s1,C.s2,C.s3,C.s4,C.s5,C.s6,C.s7,C.s8];
@@ -26926,7 +27710,7 @@ const D = window.DATA, X = window.EXTRA||{};
 if(!E) return;
 
 const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9085e9', s8:'#e66767',
+            s6:'#008300', s7:'#9074b2', s8:'#e66767',
             ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
             brand:'#C8A96A', brandDeep:'#8C7237' };
 /* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
@@ -27575,7 +28359,7 @@ const P = window.PIF;
 if(!P) return;
 
 const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9085e9', s8:'#e66767',
+            s6:'#008300', s7:'#9074b2', s8:'#e66767',
             ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
             brand:'#C8A96A', brandDeep:'#8C7237', good:'#199e70', bad:'#e66767', warn:'#c98500' };
 
@@ -28219,6 +29003,55 @@ function renderImpact(){
     'تنتج نسبةً لسنةٍ لا وجود لها.</div>');
 }
 
+/* ── طبقة النضج (٢): الصندوق والميزانية — انكشافٌ يُقاس وما لا يُقاس ──────
+   كانت اللوحتان تعرضان الصندوق والميزانية متجاورتين بلا سطرٍ واحد يربط
+   حجمَ أحدهما بالآخر، والسؤالُ الأول عند كل قارئ: ما نسبة هذا إلى ذاك؟
+   وتُبنى هذه البطاقة من أرقامٍ منشورةٍ في اللوحتين نفسيهما، وتُصرِّح بما
+   <b>لا</b> يمكن قياسه — فالميزانية لا تنشر بنداً باسم الضخّ في الصندوق،
+   ولا يُستخرج من تبويب GFSM المنشور. */
+function renderExposure(){
+  const el=document.getElementById('f-expo'); if(!el) return;
+  const A=P.aum, DT=window.DATA, EC=window.ECON;
+  if(!A||!DT||!EC){ el.innerHTML=''; return; }
+  const yr=A.years[A.years.length-1], aum=A.sar[A.sar.length-1];      /* مليار ريال */
+  const gi=EC.years.indexOf(yr), gdp=gi>=0? EC.gdp[gi] : null;        /* مليون ريال */
+  const bud=(DT.budget||[]).filter(b=>b[0]===yr)[0];                  /* [سنة, معتمد إيراد, معتمد مصروف, معتمد رصيد, فعلي إيراد, فعلي مصروف, فعلي رصيد] */
+  const dRows=(DT.debt||[]).filter(r=>r[0]===yr);
+  const debt=dRows.length? dRows[dRows.length-1][4] : null;           /* مليون ريال */
+  const bal=bud? bud[6] : null, exp=bud? bud[5] : null;
+  const aumM=aum*1000;                                               /* إلى المليون */
+  const dAum=(A.sar.length>1)? (A.sar[A.sar.length-1]-A.sar[A.sar.length-2])*1000 : null;
+  const row=(k,v,note)=>'<tr><td>'+esc(k)+'</td><td class="num"><b>'+v+'</b></td><td class="dim">'+note+'</td></tr>';
+  const R=[];
+  if(gdp)  R.push(row('أصول الصندوق ÷ الناتج المحلي الإجمالي الاسمي', pct1(aumM/gdp*100),
+    'كلا الطرفين منشورٌ لسنة '+yl(yr)+' — رصيدٌ إلى تدفّقٍ سنويّ، لا رصيدٌ إلى رصيد'));
+  if(debt) R.push(row('أصول الصندوق ÷ رصيد الدين الحكومي القائم', nf2.format(aumM/debt)+'×',
+    'رصيدٌ إلى رصيد — وهي نسبةُ حجمٍ لا صافي مركزٍ ماليّ للدولة'));
+  if(exp)  R.push(row('أصول الصندوق ÷ إجمالي مصروفات السنة', nf2.format(aumM/exp)+'×',
+    'كم سنةً من الإنفاق الحكومي تعادلها أصولُ الصندوق — مقياسُ حجمٍ لا مقياسُ سيولة'));
+  if(bal!=null&&dAum!=null) R.push(row('تغيّرُ أصول الصندوق مقابل رصيد الميزانية',
+    fmt(dAum)+' مقابل '+fmt(bal),
+    'مليون ريال — <b>مقارنةُ حجمٍ لا هويةٌ محاسبية</b>: لا يُطرح أحدهما من الآخر'));
+  el.innerHTML='<h3>الصندوق والميزانية — ما يُقاس</h3>'+
+    '<div class="hint">نِسبٌ محتسبةٌ من أرقامٍ منشورةٍ في اللوحتين، لسنة '+yl(yr)+'.</div>'+
+    '<div class="tblwrap"><table class="tbl">'+
+    '<caption class="sronly">نسب حجم أصول الصندوق إلى مؤشرات المالية العامة</caption>'+
+    '<thead><tr><th>النسبة</th><th>القيمة</th><th>كيف تُقرأ</th></tr></thead><tbody>'+
+    R.join('')+'</tbody></table></div>'+
+    '<div class="warnbox"><b>وما لا يُقاس — وهذا هو الأهم:</b> '+
+    '<b>لا تنشر الميزانية بنداً باسم «الضخّ في صندوق الاستثمارات العامة»</b>، ولا يُستخرج ذلك '+
+    'من تبويب دليل إحصاءات مالية الحكومة (GFSM 2014) المنشور: عملياتُ رأس المال مع كيانٍ مملوك '+
+    'للدولة قد تُبوَّب معاملةً في أصولٍ مالية لا مصروفاً، وهذه ليست مفصَّلةً في التقرير الربعي. '+
+    'فـ<b>انكشافُ الميزانية على الصندوق — وانكشافُ الصندوق على الميزانية — غيرُ قابلٍ للقياس '+
+    'من المنشور</b>، وما في الجدول أعلاه نِسبُ <b>حجمٍ</b> لا نِسبُ <b>تدفّق</b>. '+
+    '<br><b>وما يفصل المسألة:</b> أن يُنشر في تقرير أداء الميزانية بندٌ صريحٌ للتحويلات '+
+    'الرأسمالية إلى الكيانات المملوكة للدولة، أو أن يُفصح الصندوق عن مصادر تمويله سنةً بسنة. '+
+    'ولم يُنشر أيٌّ منهما حتى تاريخ هذه النسخة.</div>'+
+    '<div class="note muted">ولا يُقرأ ارتفاعُ أصول الصندوق فائضاً للدولة ولا انخفاضُه عجزاً: '+
+    'الأصول تتحرك بعائد الاستثمار وبالضخّ وبتغيّر نطاق ما يُحتسب، والرصيد المالي يتحرك '+
+    'بالإيراد والمصروف — ولكلٍّ منهما محرّكاته.</div>';
+}
+
 /* ── 8) البيانات والمصادر ───────────────────────────────── */
 function renderData(){
   set('f-src','<table class="tbl"><thead><tr><th>المصدر</th><th>الموضع</th></tr></thead><tbody>'+
@@ -28270,7 +29103,7 @@ function renderAll(){
   else if(S.tab==='tad') renderTad();
   else if(S.tab==='us') renderUS();
   else if(S.tab==='peers') renderPeers();
-  else if(S.tab==='impact') renderImpact();
+  else if(S.tab==='impact'){ renderImpact(); renderExposure(); }
   else if(S.tab==='data') renderData();
   /* cx-12: كان النداء في أول renderAll فيسبق مُصيِّرات التبويبات، فيفحص
      الطبقةُ المشتركة بنيةً لم تُبنَ بعد — فجدولٌ يُكتب في هذه الدورة لا
