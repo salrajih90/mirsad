@@ -6,3 +6,10 @@
 
 /index.html
   Cache-Control: public, max-age=300, must-revalidate
+
+# ap-12: الصفحةُ مستندٌ واحدٌ حجمُه الخام 2.6 ميغابايت ويضغط إلى نحو 0.72.
+#   وCloudflare Pages تضغط text/html تلقائياً (Brotli ثم gzip)، وهذه السطورُ
+#   تُثبت النيّةَ وتمنع تعطيلَ الضغط بالمحوّلات الوسيطة.
+/index.html
+  Content-Type: text/html; charset=utf-8
+  Vary: Accept-Encoding
