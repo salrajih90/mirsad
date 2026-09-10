@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#060D1B">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F7FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#060D1B" media="(prefers-color-scheme: dark)">
 <meta name="description" content="بوابة تفاعلية للمالية العامة والاقتصاد الكلي وأسعار الطاقة في المملكة العربية السعودية، مبنية على المصادر الرسمية المنشورة.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23060D1B'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23C8A96A' stroke-width='5'/%3E%3Cpath d='M32 15 A17 17 0 0 1 49 32 L32 32 Z' fill='%23C8A96A'/%3E%3C/svg%3E">
 <link rel="canonical" href="https://mrsdx-fo.net/">
@@ -1631,6 +1632,15 @@ try{
     --good:#6ED889;--warn:#FEA753;--bad:#FEA097}
 }
 }
+
+/* ‎color-scheme‎ يُعلَن خارج الطبقات عمداً: بعضُ المضيفات تلفّ الصفحة
+   بورقةِ أنماطٍ خاصّةٍ بها تحمل ‎:root{color-scheme:light}‎ غيرَ مطبَّقة،
+   وغيرُ المطبَّق يغلب المطبَّق مهما تأخّر — فيُقفل الوضعُ على الفاتح.
+   فيُكرَّر الإعلانُ هنا بلا طبقة، فيغلب بترتيب المصدر لا بالطبقة. */
+:root{color-scheme:light dark}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+@supports not (color:light-dark(#000,#fff)){:root{color-scheme:dark}}
 
 @layer components{
 /* اللوحة تُركَّز برمجياً عند التبديل (cx-33) فلا يُرسم لها إطارُ تركيز. */
@@ -3565,7 +3575,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <!-- gx-19: ثلاثُ دعاوى كانت تحيل إلى «مُعِدّ اللوحة» ولا قناةَ اتصالٍ
          واحدة في الصفحة كلِّها — لا بريد ولا نموذج. وبيانُ إتاحةٍ بلا قناةٍ
          فعليّة ليس بياناً. وgx-22: «في كل لوحة» تكذّبها لوحتان من خمس. -->
-    <div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+c2cd02d7 · 09-09-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">c2cd02d7</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+59eee80b · 09-09-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">59eee80b</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
     <!-- ax-16: محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية RTL،
          وأثاثُ الرسم (الأسطورة والتلميح) مضبوطٌ على RTL — فالاختيارُ مشروعٌ
          والصمتُ عنه هو المشكلة. -->
@@ -3577,7 +3587,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). -->
     <div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> الستّة من الرخصة:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:1.9;margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">c2cd02d7</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">59eee80b</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span>
