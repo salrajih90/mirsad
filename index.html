@@ -104,7 +104,7 @@ try{
   "@type": "xsd:date"
  },
  "dcterms:modified": {
-  "@value": "2026-09-06",
+  "@value": "2026-09-09",
   "@type": "xsd:date"
  },
  "dcat:landingPage": {
@@ -1510,46 +1510,142 @@ try{
  ]
 }</script>
 <style>
-/* ap-07: اللوحةُ داكنةٌ دائماً ولم تُعلن ذلك، فيرسم المتصفّحُ عناصرَه
-   الأصلية بافتراضٍ فاتح: إحدى عشرة قائمةً منسدلة، وأشرطةُ التمرير، ومسارُ
-   المنزلق، وحلقةُ التركيز الافتراضية. سطرٌ واحد يُصلحها دفعةً واحدة. */
-:root{color-scheme:dark}
+/* ══════════════════════════════════════════════════════════════════════
+   الأساس — إعادة بناء 09-09-2026م بأدوات منصّة الويب لعام 2026م.
+
+   ثلاثةُ أعطابٍ مقيسةٍ تُعالَج هنا دفعةً واحدة:
+   (1) ثلاثون رمزاً لونياً بصيغة hex في فضاء sRGB، وثلاثةٌ منها تؤدّي دورَ
+       السلسلة ودورَ الحكم معاً — ففُصلت الأدوار وأُعيد بناءُ اللوحة في
+       فضاء أوكلاب المتساوي الإدراك.
+   (2) وضعٌ داكنٌ مفروض بلا بديل — فصار وضعين عبر ‎light-dark()‎ مع
+       احترام تفضيل النظام وإتاحةِ تجاوزه بـ ‎data-theme‎.
+   (3) سبعون مقاسَ خطٍّ ثابتاً بالبكسل لا يحترم إعداد القارئ — فصارت
+       سُلَّماً نسبياً بـ ‎rem‎ و‎clamp()‎.
+
+   القياسُ المنشور للوحة السلسلة الجديدة (مسافة أوكلاب، ومحاكاة ماتشادو
+   لعمى الألوان، أدنى زوجٍ تحت أربع رؤى: عادية وبروتان وديوتان وتريتان):
+     القائمة سابقاً 0.0154  ·  Okabe-Ito 0.0197  ·  Tol Bright 0.0327
+     الجديدة        0.0398   ← 2.6 ضعفَ القائمة، وفوق المرجعين المنشورين.
+   وأدنى تباينٍ لألوان السلسلة على الأرضية: 3.42:1 داكناً و4.50:1 فاتحاً،
+   وكلُّها رسومٌ لا نصوص فعتبتُها 3:1 (SC 1.4.11).
+   وألوانُ الحكم تبعد عن أقرب لونِ سلسلةٍ إليها 0.0749 فأكثر، أي ما لا
+   يقلّ عن ضعفَي أدنى مسافةٍ داخل السلسلة نفسها — فلا يُقرأ لونُ حكمٍ
+   لونَ سلسلة.
+   ══════════════════════════════════════════════════════════════════ */
+@layer tokens, components, enhance;
+
+@layer tokens{
 :root{
-  /* — هوية مرصد الميزانية: أرضية زرقاء غامقة + لون العلامة الرملي — */
-  --bg:#060D1B; --surface-1:#0D172B; --surface-2:#132039; --surface-3:#1B2C4C;
-  --line:#22314E; --line-soft:#17223C;
-  --ink:#EEF3FB; --ink-2:#A6B7D2; --ink-3:#8294B2;
-  --brand:#C8A96A; --brand-deep:#8C7237; --brand-soft:#E0CB9C;
-  /* نسخة نصّية من brand-deep تحقق WCAG 2.2 AA (5.05:1 على surface-1) — تُستعمل للنصوص الصغيرة
-     ويبقى brand-deep نفسه للحدود والأيقونات حيث تكفي 3:1 */
-  --brand-deep-txt:#A08541;
-  /* طبقة النضج (٣): كان s7 (#9085e9) أقربَ لونٍ إلى s1 عند عمى اللون
-     الأحمر (بروتانوبيا) — مسافة 0.033 وهي أدنى مسافةٍ في اللوحة كلها —
-     وثانيَ أقربها عند عمى اللون الأخضر. فأُبدل بلونٍ من العائلة نفسها
-     أبعدَ في القناة الزرقاء: المسافة الدنيا ارتفعت إلى 0.204 (ستةُ أضعاف)
-     والتباين على الأرضية بقي 4.54:1 فوق عتبة 3:1. */
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9074b2; --s8:#e66767;
-  --good:#199e70; --bad:#e66767; --warn:#c98500;
-  --r:14px;
+  /* الوضعان: التفضيل من النظام، والتجاوز من ‎data-theme‎ على الجذر. */
+  color-scheme:light dark;
+
+  /* ── سُلَّمٌ محايدٌ واحد على الصبغة 262، الوضعان مرآةُ أحدهما الآخر ── */
+  --bg:light-dark(#F4F7FB,#060D1B);
+  --surface-1:light-dark(#FDFDFF,#0C172B);
+  --surface-2:light-dark(#EFF3F9,#132039);
+  --surface-3:light-dark(#E3E8F1,#1B2C4C);
+  --line:light-dark(#DCE3EE,#3B5183);
+  --line-soft:light-dark(#E9EDF5,#2A3A5E);
+  /* حدُّ الضوابط وحده يلزمه 3:1 (SC 1.4.11) — مقيسٌ 3.18:1 فاتحاً و3.69:1 داكناً. */
+  /* حدُّ الضوابط وحده يلزمه 3:1 على كلِّ سطحٍ يقع عليه (SC 1.4.11).
+     كان الداكنُ ‎#5A729E‎ يهبط إلى 2.87:1 على السطح الثالث — عطبٌ قائمٌ
+     قبل إعادة البناء لم يُمسَك لأنَّ مُحلِّلَ ألوان البوّابة كان يعجز عن
+     صيغِ اللون الحديثة. المقيسُ الآن أدنى 3.78:1 داكناً و3.48:1 فاتحاً
+     على السطوح الأربعة جميعها. */
+  --ctl-border:light-dark(#6C7B96,#6D86B4);
+  --ink:light-dark(#141C2A,#EEF3FB);
+  --ink-2:light-dark(#3B475B,#A7B7D2);
+  --ink-3:light-dark(#58657C,#8394B2);
+
+  /* ── العلامة ── */
+  --brand:light-dark(#906F23,#C8A96A);
+  --brand-deep:light-dark(#745504,#8D7237);
+  --brand-soft:light-dark(#5D4300,#E2CA9C);
+  --brand-deep-txt:light-dark(#745504,#A38442);
+  /* النصُّ فوق أرضيةِ العلامة — كان ‎#060D1B‎ مثبَّتاً في أربعة مواضع،
+     فينقلب غيرَ مقروءٍ في الوضع الفاتح. */
+  --on-brand:light-dark(#FFFFFF,#060D1B);
+
+  /* ── السلسلة: ثمانيةُ ألوانٍ للفئات، لا تحمل حكماً ── */
+  --s1:light-dark(#2474D0,#3987E5);
+  --s2:light-dark(#CA4B13,#D95926);
+  --s3:light-dark(#06855D,#199E70);
+  --s4:light-dark(#A06900,#C98500);
+  --s5:light-dark(#007388,#007388);
+  --s6:light-dark(#984D7E,#984D7E);
+  --s7:light-dark(#8468A5,#9074B2);
+  --s8:light-dark(#C74B4D,#E66767);
+
+  /* ── الحكم: مستقلٌّ عن السلسلة، ويُقرأ نصّاً فعتبتُه 4.5:1 ──
+     المقيس: جيّد 8.33 فاتحاً و10.96 داكناً · تحذير 7.86 و10.05 ·
+     سيّئ 8.56 و9.89. */
+  --good:light-dark(#005925,#6ED889);
+  --warn:light-dark(#784300,#FEA753);
+  --bad:light-dark(#980A15,#FEA097);
+
+  /* ── طبقاتٌ شفّافة مشتقّة، لا أرقامَ ثابتة ── */
+  --tint-brand:color-mix(in oklab,var(--brand) 12%,transparent);
+  --tint-brand-2:color-mix(in oklab,var(--brand) 22%,transparent);
+  --tint-good:color-mix(in oklab,var(--good) 16%,transparent);
+  --tint-warn:color-mix(in oklab,var(--warn) 14%,transparent);
+  --tint-bad:color-mix(in oklab,var(--bad) 16%,transparent);
+  --scrim:light-dark(rgb(20 28 42 / .48),rgb(3 7 16 / .62));
+  --shadow-1:light-dark(0 10px 26px rgb(20 28 42 / .10),0 12px 34px rgb(0 0 0 / .50));
+  --shadow-2:light-dark(0 18px 42px rgb(20 28 42 / .14),0 18px 42px rgb(0 0 0 / .42));
+
+  /* ── سُلَّمٌ طباعيّ نسبيّ: يتبع إعداد القارئ، ولا يُثبَّت بالبكسل ──
+     الأرضيةُ ارتفعت من 13 إلى 15 بكسل عند الإعداد الافتراضي. */
+  --fs-3xs:.75rem;     /* 12 — الأرضية، كانت 10.5 */
+  --fs-2xs:.8125rem;   /* 13 */
+  --fs-xs:.875rem;     /* 14 — المتنُ الشائع، كان 12.5/13 */
+  --fs-sm:.9375rem;    /* 15 */
+  --fs-base:1rem;      /* 16 */
+  --fs-md:1.0625rem;   /* 17 */
+  --fs-lg:1.1875rem;   /* 19 */
+  --fs-xl:1.3125rem;   /* 21 */
+  --fs-2xl:clamp(1.375rem,1.2rem + .7vw,1.5625rem);   /* 22 → 25 */
+  --fs-3xl:clamp(1.5625rem,1.3rem + 1.1vw,1.9375rem); /* 25 → 31 */
+  --fs-4xl:clamp(1.8125rem,1.45rem + 1.7vw,2.3125rem);/* 29 → 37 */
+
+  /* ── إيقاعٌ رأسيّ محسوب من ارتفاع السطر، لا مُقدَّرٌ بالبكسل ── */
+  --lh-tight:1.35; --lh:1.7; --lh-loose:1.9;
+  --sp-1:.25rlh; --sp-2:.5rlh; --sp-3:.75rlh; --sp-4:1rlh; --sp-6:1.5rlh; --sp-8:2rlh;
+
+  --r:14px; --r-sm:9px; --r-lg:18px;
   --font-ui:"IBM Plex Sans Arabic","IBM Plex Sans","SF Arabic","Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;
   --font-display:"Readex Pro","IBM Plex Sans Arabic","SF Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
   /* جهةُ خروج الدرج: في العربية بداية السطر هي اليمين الفيزيائي فيخرج موجباً. */
   --drawer-dir:1;
 }
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
 [dir="ltr"]{--drawer-dir:-1}
+/* الاحتياطُ لمتصفّحٍ لا يعرف ‎light-dark()‎: يبقى داكناً كما كان. */
+@supports not (color:light-dark(#000,#fff)){
+  :root{color-scheme:dark;
+    --bg:#060D1B;--surface-1:#0C172B;--surface-2:#132039;--surface-3:#1B2C4C;
+    --line:#3B5183;--line-soft:#2A3A5E;--ctl-border:#5A729E;
+    --ink:#EEF3FB;--ink-2:#A7B7D2;--ink-3:#8394B2;
+    --brand:#C8A96A;--brand-deep:#8D7237;--brand-soft:#E2CA9C;--brand-deep-txt:#A38442;--on-brand:#060D1B;
+    --s1:#3987E5;--s2:#D95926;--s3:#199E70;--s4:#C98500;--s5:#007388;--s6:#984D7E;--s7:#9074B2;--s8:#E66767;
+    --good:#6ED889;--warn:#FEA753;--bad:#FEA097}
+}
+}
+
+@layer components{
 /* اللوحة تُركَّز برمجياً عند التبديل (cx-33) فلا يُرسم لها إطارُ تركيز. */
 .domain:focus{outline:none}
 /* نصٌّ لقارئ الشاشة وحده: يبقى في شجرة الإتاحة ولا يُرسم. */
 .sronly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 /* شريطُ تنزيل الجدول — طبقة النضج (٢): كل جدولٍ يُؤخذ لا يُقرأ فقط. */
-.a11ylist{margin:8px 0 0;padding-inline-start:20px;color:var(--ink-2);font-size:13px;line-height:2}
+.a11ylist{margin:8px 0 0;padding-inline-start:20px;color:var(--ink-2);font-size:var(--fs-xs);line-height:2}
 .a11ylist li{margin-bottom:4px}
 .tblbar{display:flex;justify-content:flex-start;margin:0 0 8px}
 .tblbar .tbldl{background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink-2);
-  border-radius:9px;padding:6px 13px;font-family:inherit;font-size:12px;cursor:pointer;
+  border-radius:9px;padding:6px 13px;font-family:inherit;font-size:var(--fs-2xs);cursor:pointer;
   min-height:28px;display:inline-flex;align-items:center;gap:6px;transition:.15s}
-.tblbar .tbldl::before{content:"\2913";font-size:12px;opacity:.75}
+.tblbar .tbldl::before{content:"\2913";font-size:var(--fs-2xs);opacity:.75}
 .tblbar .tbldl:hover{background:var(--surface-3);color:var(--ink);border-color:var(--brand-deep)}
 @media print{.tblbar{display:none}}
 *{box-sizing:border-box}
@@ -1574,44 +1670,44 @@ header.top{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-con
   padding-bottom:22px;border-bottom:1px solid var(--line-soft);margin-bottom:24px}
 .brand{display:flex;align-items:center;gap:14px}
 .mark{width:48px;height:48px;flex:0 0 auto;display:block}
-h1{font-size:27px;font-weight:600}
-.tagline{font-size:13.5px;color:var(--ink-3);margin-top:3px}
+h1{font-size:var(--fs-3xl);font-weight:600}
+.tagline{font-size:var(--fs-sm);color:var(--ink-3);margin-top:3px}
 .badges{display:flex;gap:8px;flex-wrap:wrap}
-.badge{font-size:12px;padding:5px 11px;border-radius:999px;background:var(--surface-2);
+.badge{font-size:var(--fs-2xs);padding:5px 11px;border-radius:999px;background:var(--surface-2);
   border:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
 .badge b{color:var(--brand-soft);font-weight:600}
 
 /* tabs */
 nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
 .tab{padding:9px 16px;border-radius:10px;background:transparent;border:1px solid var(--line);
-  color:var(--ink-2);font-size:14px;cursor:pointer;font-family:inherit;transition:.15s}
+  color:var(--ink-2);font-size:var(--fs-sm);cursor:pointer;font-family:inherit;transition:.15s}
 .tab:hover{background:var(--surface-2);color:var(--ink)}
-.tab.on{background:var(--brand);border-color:var(--brand);color:#060D1B;font-weight:600}
+.tab.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 /* ux-sub-01: سطرُ وصفٍ تحت اسم كلِّ تبويبٍ فرعيّ — كما في اللوحات الخمس
    في الشريط الأعلى تماماً. */
 .tab{text-align:start;line-height:1.5}
-.tab .tdesc{display:block;font-size:12px;opacity:.72;font-weight:400;margin-top:2px}
+.tab .tdesc{display:block;font-size:var(--fs-2xs);opacity:.72;font-weight:400;margin-top:2px}
 .tab.on .tdesc{opacity:.85}
 /* ux-open-01: رأسُ التبويب — عنوانٌ وجملةُ توجيهٍ قبل أدوات الضبط. */
 .tablead{margin:0 0 16px}
-.tablead .tlead-h{font-size:20px;margin:0 0 6px;font-weight:700;color:var(--ink)}
-.tablead .tlead-p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.9;max-width:78ch}
+.tablead .tlead-h{font-size:var(--fs-xl);margin:0 0 6px;font-weight:700;color:var(--ink)}
+.tablead .tlead-p{margin:0;color:var(--ink-2);font-size:var(--fs-sm);line-height:1.9;max-width:78ch}
 /* ux-scope-02: كتلةُ الحدود — مطويّةٌ فلا تزاحم الجواب، ومتاحةٌ في كل تبويب. */
 .tablead .tlim{margin-top:10px;border:1px solid var(--line-soft);border-radius:10px;
   background:var(--surface-1);padding:0 12px}
-.tablead .tlim>summary{cursor:pointer;padding:9px 0;font-size:13px;color:var(--ink-2);min-height:24px}
+.tablead .tlim>summary{cursor:pointer;padding:9px 0;font-size:var(--fs-xs);color:var(--ink-2);min-height:24px}
 .tablead .tlim>summary:hover{color:var(--ink)}
-.tablead .tlim p{margin:0 0 10px;font-size:13px;line-height:1.9;color:var(--ink-2)}
+.tablead .tlim p{margin:0 0 10px;font-size:var(--fs-xs);line-height:1.9;color:var(--ink-2)}
 /* ux-open-01: طيُّ أدوات الضبط */
 details.tfold{margin-bottom:18px;border:1px solid var(--line-soft);border-radius:var(--r);
   background:var(--surface-1)}
-details.tfold>summary{cursor:pointer;padding:11px 16px;font-size:13.5px;color:var(--ink-2);min-height:24px}
+details.tfold>summary{cursor:pointer;padding:11px 16px;font-size:var(--fs-sm);color:var(--ink-2);min-height:24px}
 details.tfold>summary:hover{color:var(--ink)}
 details.tfold .filters{margin:0;border:0;border-top:1px solid var(--line-soft);border-radius:0;background:transparent}
 /* ux-load-02: فهرسُ التبويب الطويل */
 nav.tabidx{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;margin:0 0 18px;
   padding:11px 14px;border:1px solid var(--line-soft);border-radius:var(--r);background:var(--surface-1);
-  font-size:12.5px;line-height:1.9}
+  font-size:var(--fs-xs);line-height:1.9}
 nav.tabidx b{color:var(--ink-2);font-weight:600}
 nav.tabidx a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--line);
   padding:4px 2px;min-height:24px;display:inline-block}
@@ -1619,17 +1715,17 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand);border-bottom-c
 /* ux-search-01: مربّعُ البحث الجامع في الترويسة */
 .gsearchbox{position:relative;margin-top:12px;max-width:520px}
 .gsearchbox input{width:100%;padding:10px 13px;border-radius:11px;border:1px solid var(--ctl-border);
-  background:var(--surface-1);color:var(--ink);font-family:inherit;font-size:13.5px;min-height:44px}
+  background:var(--surface-1);color:var(--ink);font-family:inherit;font-size:var(--fs-sm);min-height:44px}
 .gsearchbox input:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
 .gsearchout{position:absolute;inset-block-start:calc(100% + 6px);inset-inline-start:0;inset-inline-end:0;
   z-index:9000;max-height:min(58vh,460px);overflow:auto;background:var(--surface);
-  border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 42px rgba(0,0,0,.42);padding:6px}
-.gsearchout .gs-g{font-size:11.5px;color:var(--ink-3);padding:8px 10px 4px}
+  border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-2);padding:6px}
+.gsearchout .gs-g{font-size:var(--fs-2xs);color:var(--ink-3);padding:8px 10px 4px}
 .gsearchout a{display:block;padding:9px 10px;border-radius:9px;color:var(--ink-2);
-  text-decoration:none;font-size:13px;line-height:1.7;min-height:24px}
+  text-decoration:none;font-size:var(--fs-xs);line-height:1.7;min-height:24px}
 .gsearchout a:hover,.gsearchout a:focus-visible,.gsearchout a.sel{background:var(--surface-2);color:var(--ink)}
-.gsearchout a small{display:block;color:var(--ink-3);font-size:11.5px}
-.gsearchout .gs-none{padding:12px;color:var(--ink-3);font-size:13px}
+.gsearchout a small{display:block;color:var(--ink-3);font-size:var(--fs-2xs)}
+.gsearchout .gs-none{padding:12px;color:var(--ink-3);font-size:var(--fs-xs)}
 /* ap-14: تخطّي تخطيطِ ما هو خارج الشاشة — يُلبَس بالصنف من الشيفرة على
    البطاقات التي لا رسمَ فيها وحدَها (الرسمُ يحتاج قياساً حقيقياً عند إنشائه).
    ‎contain-intrinsic-size‎ يحفظ ارتفاعاً تقديرياً فلا يقفز شريطُ التمرير. */
@@ -1637,14 +1733,14 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand);border-bottom-c
 @media print{.card.cv{content-visibility:visible}}
 /* ux-why-01: قائمةُ الأحداث تحت الرسم */
 .evtnote{margin-top:10px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface-1);padding:0 12px}
-.evtnote>summary{cursor:pointer;padding:9px 0;font-size:12.5px;color:var(--ink-2);min-height:24px}
+.evtnote>summary{cursor:pointer;padding:9px 0;font-size:var(--fs-xs);color:var(--ink-2);min-height:24px}
 .evtnote>summary:hover{color:var(--ink)}
-.evtnote ol{font-size:12.5px;line-height:1.9;color:var(--ink-2)}
+.evtnote ol{font-size:var(--fs-xs);line-height:1.9;color:var(--ink-2)}
 .evtnote li{margin-bottom:8px}
-.evtnote .ck{font-size:12.5px;color:var(--ink-2);align-items:center;gap:7px;min-height:24px;margin-bottom:10px}
+.evtnote .ck{font-size:var(--fs-xs);color:var(--ink-2);align-items:center;gap:7px;min-height:24px;margin-bottom:10px}
 /* ux-src-02: سطرُ الإسناد تحت كلّ بطاقةٍ ومجموعةِ مؤشّرات */
 .attrib{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line-soft);
-  font-size:12px;line-height:1.9;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+  font-size:var(--fs-2xs);line-height:1.9;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
 .attrib b{color:var(--ink-2);font-weight:600}
 .grid>.attrib,.g4>.attrib,.g3>.attrib,.g2>.attrib{grid-column:1/-1}
 /* ux-mob-02: الشريطُ الوصفيّ — مفتوحٌ دائماً على الواسع، مطويٌّ على الضيّق */
@@ -1671,13 +1767,13 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand);border-bottom-c
   .f .seg::-webkit-scrollbar{height:4px}
 }
 [hidden]{display:none!important}
-.f label{font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
+.f label{font-size:var(--fs-2xs);color:var(--ink-3);letter-spacing:.02em}
 select,input[type=number],input.inp,input[type=search]{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
-  border-radius:9px;padding:8px 11px;font-family:inherit;font-size:13.5px;min-width:110px}
+  border-radius:9px;padding:8px 11px;font-family:inherit;font-size:var(--fs-sm);min-width:110px}
 .seg{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;overflow:hidden}
 .seg button{background:transparent;border:0;color:var(--ink-2);padding:8px 14px;font-family:inherit;
-  font-size:13.5px;cursor:pointer}
-.seg button.on{background:var(--brand);color:#060D1B;font-weight:600}
+  font-size:var(--fs-sm);cursor:pointer}
+.seg button.on{background:var(--brand);color:var(--on-brand);font-weight:600}
 
 /* grid + cards */
 /* cx-12: مسار الشبكة يتّسع افتراضياً إلى أضيق عرضٍ ممكن لمحتواه (min-width:auto)،
@@ -1690,27 +1786,27 @@ select,input[type=number],input.inp,input[type=search]{background:var(--surface-
 .g3{grid-template-columns:repeat(3,1fr)}
 .g2{grid-template-columns:repeat(2,1fr)}
 .card{background:var(--surface-1);border:1px solid var(--line-soft);border-radius:var(--r);padding:18px}
-.card h3{font-size:15px;margin-bottom:2px}
-.card .hint{font-size:12.5px;color:var(--ink-3);margin-bottom:14px}
-.kpi .v{font-size:28px;font-weight:600;letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums;font-family:var(--font-display)}
-.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.03em;text-transform:none}
-.kpi .d{font-size:12.5px;margin-top:6px;display:flex;align-items:center;gap:6px}
+.card h3{font-size:var(--fs-base);margin-bottom:2px}
+.card .hint{font-size:var(--fs-xs);color:var(--ink-3);margin-bottom:14px}
+.kpi .v{font-size:var(--fs-3xl);font-weight:600;letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums;font-family:var(--font-display)}
+.kpi .l{font-size:var(--fs-2xs);color:var(--ink-3);letter-spacing:.03em;text-transform:none}
+.kpi .d{font-size:var(--fs-xs);margin-top:6px;display:flex;align-items:center;gap:6px}
 .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--ink-3)}
 .chartbox{position:relative;height:330px}
 .chartbox.sm{height:250px}
 .chartbox.lg{height:420px}
-.note{font-size:12.5px;color:var(--ink-3);margin-top:12px;border-right:2px solid var(--brand-deep);padding-right:11px}
+.note{font-size:var(--fs-xs);color:var(--ink-3);margin-top:12px;border-right:2px solid var(--brand-deep);padding-right:11px}
 .note b{color:var(--ink-2);font-weight:600}
 section{display:none}
 section.on{display:block}
 .sechead{margin:6px 0 18px}
-.sechead h2{font-size:19px}
-.sechead p{margin:6px 0 0;font-size:13.5px;color:var(--ink-3);max-width:78ch}
+.sechead h2{font-size:var(--fs-xl)}
+.sechead p{margin:6px 0 0;font-size:var(--fs-sm);color:var(--ink-3);max-width:78ch}
 
 /* table */
-table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-xs);font-variant-numeric:tabular-nums}
 th,td{padding:9px 10px;border-bottom:1px solid var(--line-soft);text-align:right}
-th{color:var(--ink-3);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--surface-1)}
+th{color:var(--ink-3);font-weight:600;font-size:var(--fs-2xs);position:sticky;top:0;background:var(--surface-1)}
 tbody tr:hover{background:var(--surface-2)}
 .tblwrap{max-height:460px;overflow:auto;border-radius:10px}
 .num{font-variant-numeric:tabular-nums}
@@ -1718,23 +1814,23 @@ tbody tr:hover{background:var(--surface-2)}
 
 /* sliders */
 .sl{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;margin-bottom:16px}
-.sl .nm{font-size:13.5px;color:var(--ink-2)}
-.sl .val{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;min-width:64px;text-align:left}
+.sl .nm{font-size:var(--fs-sm);color:var(--ink-2)}
+.sl .val{font-size:var(--fs-sm);font-weight:700;font-variant-numeric:tabular-nums;min-width:64px;text-align:left}
 .sl input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--brand)}
 .btn{background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);border-radius:9px;
-  padding:8px 14px;font-family:inherit;font-size:13px;cursor:pointer}
+  padding:8px 14px;font-family:inherit;font-size:var(--fs-xs);cursor:pointer}
 .btn:hover{background:var(--surface-3);color:var(--ink)}
-.btn.pri{background:var(--brand);border-color:var(--brand);color:#060D1B;font-weight:600}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 
 /* glossary */
 .gitem{border-bottom:1px solid var(--line-soft);padding:13px 0}
-.gitem .t{font-size:14.5px;font-weight:700}
-.gitem .te{font-size:12.5px;color:var(--brand-soft);direction:ltr;text-align:left}
-.gitem .d{font-size:13px;color:var(--ink-2);margin-top:5px}
-.gitem .de{font-size:12px;color:var(--ink-3);direction:ltr;text-align:left;margin-top:4px}
+.gitem .t{font-size:var(--fs-base);font-weight:700}
+.gitem .te{font-size:var(--fs-xs);color:var(--brand-soft);direction:ltr;text-align:left}
+.gitem .d{font-size:var(--fs-xs);color:var(--ink-2);margin-top:5px}
+.gitem .de{font-size:var(--fs-2xs);color:var(--ink-3);direction:ltr;text-align:left;margin-top:4px}
 #gsearch,input.inp{width:100%;min-width:0}
 /* ===== لوحة التفصيل التفاعلية ===== */
-#scrim{position:fixed;inset:0;background:rgba(3,7,16,.62);opacity:0;pointer-events:none;
+#scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;pointer-events:none;
   transition:opacity .22s ease;z-index:60;backdrop-filter:blur(2px)}
 #scrim.on{opacity:1;pointer-events:auto}
 /* ── cx-27: الدرج كان مثبَّتاً بخصائص فيزيائية (right/border-left/translateX
@@ -1749,28 +1845,28 @@ tbody tr:hover{background:var(--surface-2)}
      ‎.26s‎ من فتحه — وعنصرٌ مخفيٌّ بها لا يقبل التركيز، فيسقط نقلُ
      التركيز صامتاً. فتظهر فوراً عند الفتح وتُؤجَّل عند الإغلاق وحده. */
   transition:transform .26s cubic-bezier(.4,0,.2,1),visibility 0s linear .26s;
-  display:flex;flex-direction:column;box-shadow:calc(-8px * var(--drawer-dir,1)) 0 40px rgba(0,0,0,.45)}
+  display:flex;flex-direction:column;box-shadow:calc(-8px * var(--drawer-dir,1)) 0 40px light-dark(rgb(20 28 42 / .14),rgb(0 0 0 / .45))}
 #detail.on{transform:translateX(0);visibility:visible;
   transition:transform .26s cubic-bezier(.4,0,.2,1),visibility 0s linear 0s}
 #detail .dhead{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);flex:0 0 auto}
-#detail .dhead .eyebrow{font-size:11px;letter-spacing:.12em;color:var(--brand);margin-bottom:8px}
-#detail .dhead h2{font-family:var(--font-display);font-size:18px;font-weight:600;margin:0;line-height:1.35}
-#detail .dhead .sub{font-size:12.5px;color:var(--ink-3);margin-top:6px}
+#detail .dhead .eyebrow{font-size:var(--fs-3xs);letter-spacing:.12em;color:var(--brand);margin-bottom:8px}
+#detail .dhead h2{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:0;line-height:1.35}
+#detail .dhead .sub{font-size:var(--fs-xs);color:var(--ink-3);margin-top:6px}
 #detail .dbody{padding:18px 22px 26px;overflow:auto;flex:1 1 auto}
 #detail .dclose{position:absolute;inset-block-start:16px;inset-inline-end:16px;background:var(--surface-2);
   border:1px solid var(--line);color:var(--ink-2);border-radius:8px;width:30px;height:30px;
-  font-size:15px;cursor:pointer;line-height:1;font-family:inherit}
+  font-size:var(--fs-base);cursor:pointer;line-height:1;font-family:inherit}
 #detail .dclose:hover{background:var(--surface-3);color:var(--ink)}
-#detail .big{font-family:var(--font-display);font-size:34px;font-weight:600;letter-spacing:-.02em;
+#detail .big{font-family:var(--font-display);font-size:var(--fs-4xl);font-weight:600;letter-spacing:-.02em;
   font-variant-numeric:tabular-nums;margin:2px 0 2px}
-#detail .bigu{font-size:12.5px;color:var(--ink-3);margin-bottom:18px}
+#detail .bigu{font-size:var(--fs-xs);color:var(--ink-3);margin-bottom:18px}
 .drow{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-block-end:1px solid var(--line-soft);
-  font-size:13px;align-items:baseline}
+  font-size:var(--fs-xs);align-items:baseline}
 .drow:last-child{border-block-end:0}
 .drow .k{color:var(--ink-3);flex:0 0 auto}
 .drow .v{color:var(--ink);font-variant-numeric:tabular-nums;text-align:start;font-weight:500}
-.dsec{font-size:11px;letter-spacing:.1em;color:var(--brand-deep-txt);margin:22px 0 4px;font-weight:600}
-.dnote{font-size:12.5px;color:var(--ink-3);line-height:1.75;margin-top:14px;
+.dsec{font-size:var(--fs-3xs);letter-spacing:.1em;color:var(--brand-deep-txt);margin:22px 0 4px;font-weight:600}
+.dnote{font-size:var(--fs-xs);color:var(--ink-3);line-height:1.75;margin-top:14px;
   border-inline-start:2px solid var(--brand-deep);padding-inline-start:11px}
 .dnote b{color:var(--ink-2)}
 .dspark{height:78px;margin:12px 0 6px;position:relative;width:100%}
@@ -1780,60 +1876,60 @@ tbody tr:hover{background:var(--surface-2)}
 canvas{cursor:pointer}
 .verdict{margin-top:18px;background:var(--surface-1);border:1px solid var(--line);
   border-inline-start:3px solid var(--brand);border-radius:14px;padding:18px 20px;
-  font-size:14.5px;color:var(--ink-2);line-height:1.85;max-width:82ch}
+  font-size:var(--fs-base);color:var(--ink-2);line-height:1.85;max-width:82ch}
 .verdict b{color:var(--ink)}
-.verdict .vh{display:block;font-family:var(--font-display);font-size:15px;color:var(--brand-soft);
+.verdict .vh{display:block;font-family:var(--font-display);font-size:var(--fs-base);color:var(--brand-soft);
   margin-bottom:8px;font-weight:600}
 /* ===== شريط البيانات الوصفية: التواتر والتغطية والوحدة والأساس ===== */
 .blockhead{display:flex;align-items:baseline;gap:11px;margin:30px 0 14px;
-  font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--ink)}
+  font-family:var(--font-display);font-size:var(--fs-md);font-weight:600;color:var(--ink)}
 .blockhead:first-of-type{margin-top:22px}
-.blockhead span{font-size:10.5px;letter-spacing:.12em;color:var(--brand);
+.blockhead span{font-size:var(--fs-3xs);letter-spacing:.12em;color:var(--brand);
   border:1px solid var(--line);background:var(--surface-2);border-radius:6px;padding:2px 9px;font-weight:500}
 .scopebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:-4px 0 20px;
   padding:11px 16px;background:var(--surface-1);border:1px solid var(--line-soft);
-  border-inline-start:3px solid var(--brand);border-radius:11px;font-size:13px;color:var(--ink-2)}
+  border-inline-start:3px solid var(--brand);border-radius:11px;font-size:var(--fs-xs);color:var(--ink-2)}
 .scopebar b{color:var(--ink);font-weight:600}
 .scopebar .sep{color:var(--ink-3)}   /* فاصل زخرفي — رُفع تباينه ومع ذلك يُخفى عن قارئات الشاشة */
-.scopebar .tag{font-size:11px;color:var(--brand);border:1px solid var(--line);
+.scopebar .tag{font-size:var(--fs-3xs);color:var(--brand);border:1px solid var(--line);
   background:var(--surface-2);border-radius:6px;padding:2px 9px;letter-spacing:.04em}
 /* ===== الشاشة الرئيسة ===== */
 .hero{padding:6px 0 22px}
-.hero h2{font-family:var(--font-display);font-size:clamp(22px,3.2vw,30px);font-weight:600;
+.hero h2{font-family:var(--font-display);font-size:var(--fs-3xl);font-weight:600;
   letter-spacing:-.02em;margin:0 0 10px}
-.hero p{max-width:70ch;color:var(--ink-2);font-size:15.5px;line-height:1.8;margin:0}
-.hero .asof{margin-top:14px;font-size:12px;color:var(--ink-3)}
+.hero p{max-width:70ch;color:var(--ink-2);font-size:var(--fs-base);line-height:1.8;margin:0}
+.hero .asof{margin-top:14px;font-size:var(--fs-2xs);color:var(--ink-3)}
 .hero .asof b{color:var(--ink-2);font-weight:500}
 .homecard{background:var(--surface-1);border:1px solid var(--line-soft);border-radius:var(--r);
   padding:20px;display:flex;flex-direction:column;gap:10px;cursor:pointer;
   transition:border-color .16s,transform .16s}
 .homecard:hover{border-color:var(--brand-deep);transform:translateY(-2px)}
 .homecard:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-.homecard .hl{font-size:11px;letter-spacing:.12em;color:var(--brand)}
-.homecard h3{font-family:var(--font-display);font-size:17px;font-weight:600;margin:0}
-.homecard .q{font-size:13.5px;color:var(--ink-3);line-height:1.75}
-.homecard .a{font-size:14.5px;color:var(--ink-2);line-height:1.8;border-inline-start:2px solid var(--brand-deep);
+.homecard .hl{font-size:var(--fs-3xs);letter-spacing:.12em;color:var(--brand)}
+.homecard h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:0}
+.homecard .q{font-size:var(--fs-sm);color:var(--ink-3);line-height:1.75}
+.homecard .a{font-size:var(--fs-base);color:var(--ink-2);line-height:1.8;border-inline-start:2px solid var(--brand-deep);
   padding-inline-start:11px}
 .homecard .a b{color:var(--ink)}
-.homecard .go{margin-top:auto;font-size:12.5px;color:var(--brand);padding-top:4px}
+.homecard .go{margin-top:auto;font-size:var(--fs-xs);color:var(--brand);padding-top:4px}
 /* ===== سلسلة السببية ===== */
 .chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin-top:14px}
 .chain .lk{flex:1 1 150px;min-width:140px;background:var(--surface-2);border:1px solid var(--line-soft);
   border-radius:12px;padding:14px 15px;position:relative}
 .chain .ar{display:flex;align-items:center;justify-content:center;width:34px;color:var(--brand-deep-txt);
-  font-size:18px;flex:0 0 34px}
-.chain .lk .n{font-size:11px;letter-spacing:.06em;color:var(--ink-3);margin-bottom:7px}
-.chain .lk .v{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--ink);
+  font-size:var(--fs-lg);flex:0 0 34px}
+.chain .lk .n{font-size:var(--fs-3xs);letter-spacing:.06em;color:var(--ink-3);margin-bottom:7px}
+.chain .lk .v{font-family:var(--font-display);font-size:var(--fs-xl);font-weight:600;color:var(--ink);
   font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.chain .lk .u{font-size:11.5px;color:var(--ink-3);margin-top:4px}
+.chain .lk .u{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:4px}
 /* cx-18: دورانٌ سالب — مع محور y نحو الأسفل يقلب الدورانُ الموجبُ السهمَ
    اليساريَّ إلى علويٍّ بينما تنساب السلسلة إلى أسفل. */
 @media(max-width:820px){.chain .ar{transform:rotate(-90deg);width:100%;flex:1 1 100%;height:22px}}
 .perbar{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 15px}
-.perbar .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.7;
+.perbar .chip{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-3xs);line-height:1.7;
   color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line-soft);
   border-radius:7px;padding:2px 9px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.perbar .chip i{font-style:normal;color:var(--ink-3);font-size:10px;letter-spacing:.04em}
+.perbar .chip i{font-style:normal;color:var(--ink-3);font-size:var(--fs-3xs);letter-spacing:.04em}
 .perbar .chip.axis{border-color:var(--brand-deep);color:var(--brand-soft)}
 .perbar .chip.axis i{color:var(--brand-deep-txt)}
 .card.has-per .hint{margin-bottom:9px}
@@ -1842,29 +1938,29 @@ canvas{cursor:pointer}
   border-radius:14px;overflow:hidden;margin-bottom:18px}
 .covbar > div{flex:1 1 200px;padding:14px 18px;border-inline-start:1px solid var(--line-soft)}
 .covbar > div:first-child{border-inline-start:0}
-.covbar .cl{font-size:10.5px;letter-spacing:.09em;color:var(--brand-deep-txt);margin-bottom:5px}
-.covbar .cv{font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:500}
-.covbar .cd{font-size:11.5px;color:var(--ink-3);margin-top:3px;line-height:1.6}
+.covbar .cl{font-size:var(--fs-3xs);letter-spacing:.09em;color:var(--brand-deep-txt);margin-bottom:5px}
+.covbar .cv{font-size:var(--fs-sm);color:var(--ink);font-variant-numeric:tabular-nums;font-weight:500}
+.covbar .cd{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:3px;line-height:1.6}
 /* ===== جدول معادلات الاحتساب ===== */
-.fgrp{font-size:11px;letter-spacing:.1em;color:var(--brand);margin:26px 0 10px;font-weight:600}
+.fgrp{font-size:var(--fs-3xs);letter-spacing:.1em;color:var(--brand);margin:26px 0 10px;font-weight:600}
 .fgrp:first-of-type{margin-top:4px}
-table.frm{font-size:13.5px}
+table.frm{font-size:var(--fs-sm)}
 table.frm td:first-child{color:var(--ink);font-weight:500;width:27%;min-width:180px}
 table.frm td.fml{color:var(--ink-2);line-height:1.9;display:table-cell}
 table.frm .op{display:inline}
-table.frm td.u{color:var(--ink-3);font-size:12px;white-space:nowrap;width:16%}
+table.frm td.u{color:var(--ink-3);font-size:var(--fs-2xs);white-space:nowrap;width:16%}
 table.frm .op{color:var(--brand-soft);padding:0 2px;font-variant-numeric:tabular-nums}
 table.clickable tbody tr{cursor:pointer;transition:background .13s}
 table.clickable tbody tr:hover{background:var(--surface-3)}
 table.clickable tbody tr:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
-.tiphint{font-size:11.5px;color:var(--ink-3);display:inline-flex;align-items:center;gap:6px;
+.tiphint{font-size:var(--fs-2xs);color:var(--ink-3);display:inline-flex;align-items:center;gap:6px;
   background:var(--surface-2);border:1px solid var(--line-soft);border-radius:999px;padding:4px 11px}
-.pill{display:inline-block;font-size:11.5px;padding:3px 9px;border-radius:999px;
+.pill{display:inline-block;font-size:var(--fs-2xs);padding:3px 9px;border-radius:999px;
   background:var(--surface-2);border:1px solid var(--line);color:var(--ink-3);margin-inline-start:6px}
 
-.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--ink-2)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:var(--fs-xs);color:var(--ink-2)}
 .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-inline-end:6px;vertical-align:-1px}
-footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);font-size:12.5px;color:var(--ink-3)}
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);font-size:var(--fs-xs);color:var(--ink-3)}
 @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}}
 @media(max-width:640px){.g4{grid-template-columns:1fr}.chartbox{height:290px}}
 
@@ -1883,8 +1979,8 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
   color:var(--ink-2);font-family:inherit;cursor:pointer;transition:.15s;text-align:right;min-width:210px}
 .domswitch button:hover{background:var(--surface-2);color:var(--ink)}
 .domswitch button.on{background:var(--surface-2);border-color:var(--brand);color:var(--ink)}
-.domswitch b{font-family:var(--font-display);font-weight:600;font-size:15px}
-.domswitch span{font-size:11.5px;color:var(--ink-3)}
+.domswitch b{font-family:var(--font-display);font-weight:600;font-size:var(--fs-base)}
+.domswitch span{font-size:var(--fs-2xs);color:var(--ink-3)}
 .domswitch button.on span{color:var(--brand-soft)}
 @media(max-width:700px){.domswitch{flex-direction:column}.domswitch button{min-width:0;width:100%}}
 /* بين 701 و1279 يلتفّ الشريطُ سطرين بدل أن يُخرج لوحةً عن الشاشة. */
@@ -1907,19 +2003,19 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
   .domswitch button{width:auto;min-width:0;padding:10px 12px;min-height:44px;
     align-items:center;justify-content:center;text-align:center}
   .domswitch button span{display:none}
-  .domswitch b{font-size:13.5px}
+  .domswitch b{font-size:var(--fs-sm)}
 
   /* الترويسة أهدأ وأصغر ارتفاعاً */
-  h1{font-size:21px}
+  h1{font-size:var(--fs-2xl)}
   .mark{width:38px;height:38px}
   header.top{gap:12px;padding-bottom:16px;margin-bottom:18px}
   .wrap{padding:18px var(--wrapx) 64px}
 
   /* أهداف لمس لا تقل عن 44px ونصوص لا تقل عن 11px */
   select,button,.chip{min-height:38px}
-  .perbar .chip{min-height:0;font-size:11.5px}
-  .perbar .chip i{font-size:10.5px}
-  .covbar .cl{font-size:11px}
+  .perbar .chip{min-height:0;font-size:var(--fs-2xs)}
+  .perbar .chip i{font-size:var(--fs-3xs)}
+  .covbar .cl{font-size:var(--fs-3xs)}
 
   /* رسوم أطول قليلاً: الشاشة الضيقة تحتاج ارتفاعاً لتُقرأ المحاور */
   .chartbox{height:300px}
@@ -1931,43 +2027,43 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
 
 /* ===== لوحة صندوق الاستثمارات العامة ===== */
 #dom-pif .kpi{background:var(--surface-1);border:1px solid var(--line);border-radius:14px;padding:15px 17px}
-#dom-pif .kpi .kl{font-size:11.5px;color:var(--ink-3);margin-bottom:7px}
-#dom-pif .kpi .kv{font-size:25px;font-weight:600;font-family:var(--font-display);
+#dom-pif .kpi .kl{font-size:var(--fs-2xs);color:var(--ink-3);margin-bottom:7px}
+#dom-pif .kpi .kv{font-size:var(--fs-3xl);font-weight:600;font-family:var(--font-display);
   font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.25}
-#dom-pif .kpi .ks{font-size:11.5px;color:var(--ink-3);margin-top:5px;line-height:1.6}
+#dom-pif .kpi .ks{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:5px;line-height:1.6}
 #dom-pif .kpi.good .kv{color:var(--good)} #dom-pif .kpi.bad .kv{color:var(--bad)}
 #dom-pif .chipbtn{background:var(--surface-1);border:1px solid var(--line);color:var(--ink-2);
-  border-radius:10px;padding:9px 18px;font-family:inherit;font-size:13.5px;cursor:pointer;transition:.15s}
+  border-radius:10px;padding:9px 18px;font-family:inherit;font-size:var(--fs-sm);cursor:pointer;transition:.15s}
 #dom-pif .chipbtn:hover{background:var(--surface-2);color:var(--ink)}
-#dom-pif .chipbtn.on{background:var(--brand);border-color:var(--brand);color:#060D1B;font-weight:600}
-#dom-pif .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11.5px;font-weight:500}
-#dom-pif .badge.ok{background:rgba(25,158,112,.16);color:#4bd6a4}
-#dom-pif .badge.no{background:rgba(230,103,103,.16);color:#f09a9a}
-#dom-pif .badge.na{background:rgba(130,148,178,.16);color:var(--ink-3)}
-#dom-pif .warnbox{background:rgba(201,133,0,.10);border:1px solid rgba(201,133,0,.34);
-  border-radius:11px;padding:13px 16px;margin:13px 0;font-size:13px;line-height:1.85;color:var(--ink-2)}
+#dom-pif .chipbtn.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
+#dom-pif .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:var(--fs-2xs);font-weight:500}
+#dom-pif .badge.ok{background:var(--tint-good);color:var(--good)}
+#dom-pif .badge.no{background:var(--tint-bad);color:var(--bad)}
+#dom-pif .badge.na{background:color-mix(in oklab,var(--ink-3) 16%,transparent);color:var(--ink-3)}
+#dom-pif .warnbox{background:var(--tint-warn);border:1px solid color-mix(in oklab,var(--warn) 34%,transparent);
+  border-radius:11px;padding:13px 16px;margin:13px 0;font-size:var(--fs-xs);line-height:1.85;color:var(--ink-2)}
 #dom-pif .note{background:var(--surface-1);border:1px solid var(--line-soft);border-radius:11px;
-  padding:12px 16px;margin:10px 0;font-size:13px;line-height:1.85;color:var(--ink-2)}
+  padding:12px 16px;margin:10px 0;font-size:var(--fs-xs);line-height:1.85;color:var(--ink-2)}
 #dom-pif .quote{border-inline-start:3px solid var(--brand);background:var(--surface-1);
-  padding:13px 17px;margin:14px 0;font-size:13.5px;line-height:1.95;color:var(--ink-2);border-radius:0 11px 11px 0}
+  padding:13px 17px;margin:14px 0;font-size:var(--fs-sm);line-height:1.95;color:var(--ink-2);border-radius:0 11px 11px 0}
 #dom-pif .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
 #dom-pif .pcard,#homeScope .pcard{background:var(--surface-1);border:1px solid var(--line);border-radius:13px;padding:15px}
-#dom-pif .pcard b,#homeScope .pcard b{display:block;color:var(--brand-soft);font-size:14px;margin-bottom:8px}
-#dom-pif .pcard p,#homeScope .pcard p{margin:0;font-size:12.5px;line-height:1.9;color:var(--ink-3)}
+#dom-pif .pcard b,#homeScope .pcard b{display:block;color:var(--brand-soft);font-size:var(--fs-sm);margin-bottom:8px}
+#dom-pif .pcard p,#homeScope .pcard p{margin:0;font-size:var(--fs-xs);line-height:1.9;color:var(--ink-3)}
 #dom-pif .gsrgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:14px 0}
 #dom-pif .gs{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
-#dom-pif .gs .gsv{font-size:24px;font-weight:600;color:var(--brand);font-family:var(--font-display);
+#dom-pif .gs .gsv{font-size:var(--fs-3xl);font-weight:600;color:var(--brand);font-family:var(--font-display);
   font-variant-numeric:tabular-nums}
-#dom-pif .gs .gsl{font-size:11.5px;color:var(--ink-3);margin-top:5px}
-#dom-pif .ck{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2);
+#dom-pif .gs .gsl{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:5px}
+#dom-pif .ck{display:flex;align-items:center;gap:7px;font-size:var(--fs-xs);color:var(--ink-2);
   background:var(--surface-1);border:1px solid var(--line-soft);border-radius:9px;padding:7px 11px;cursor:pointer}
 #dom-pif .ck input{accent-color:var(--brand);cursor:pointer}
 #dom-pif .ck input:disabled{opacity:.55;cursor:not-allowed}
 #dom-pif .fbar{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin:0 0 16px}
 #dom-pif .cks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}
 #dom-pif td.nd{color:var(--ink-3);font-style:italic}
-#dom-pif tr.hl{background:rgba(200,169,106,.09)}
-#dom-pif tr.hl td{border-color:rgba(200,169,106,.22)}
+#dom-pif tr.hl{background:var(--tint-brand)}
+#dom-pif tr.hl td{border-color:var(--tint-brand-2)}
 #dom-pif tr.tot td{border-top:2px solid var(--line);font-variant-numeric:tabular-nums}
 #dom-pif .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 #dom-pif .tallbox{position:relative;height:620px}
@@ -1987,17 +2083,17 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line-soft);fo
 .idot>span{display:inline-flex;align-items:center;justify-content:center;
   width:15px;height:15px;border-radius:50%;
   border:1px solid var(--ink-3);color:var(--ink-3);
-  font-size:10.5px;font-weight:700;font-style:normal;line-height:1;
+  font-size:var(--fs-3xs);font-weight:700;font-style:normal;line-height:1;
   transition:color .15s,border-color .15s,background .15s}
 .idot:hover>span,.idot:focus-visible>span,.idot[aria-expanded="true"]>span{
   color:var(--bg);border-color:var(--brand);background:var(--brand)}
 .idot:focus{outline:none}
-.idot:focus-visible>span{box-shadow:0 0 0 3px rgba(200,169,106,.35)}
+.idot:focus-visible>span{box-shadow:0 0 0 3px color-mix(in oklab,var(--brand) 35%,transparent)}
 .idot-tip{position:fixed;z-index:9999;max-width:330px;
   background:var(--surface-2);color:var(--ink);
   border:1px solid var(--line);border-radius:10px;
-  padding:11px 13px;font-size:12.5px;line-height:1.75;
-  box-shadow:0 12px 34px rgba(0,0,0,.5);pointer-events:auto;text-align:start}
+  padding:11px 13px;font-size:var(--fs-xs);line-height:1.75;
+  box-shadow:var(--shadow-1);pointer-events:auto;text-align:start}
 .idot-tip b{color:var(--brand-ink,var(--brand))}
 @media (prefers-reduced-motion:reduce){.idot>span{transition:none}}
 
@@ -2031,7 +2127,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
    وشُملت الأصنافُ المُصابة، والقياسُ المرجعيّ: ‎#5A729E‎ على ‎#0D172B‎ =
    3.69:1 وعلى ‎#060D1B‎ = 4.03:1. و‎va11y‎ تقيس الحدَّ الآن فلا يعود
    الانحدارُ صامتاً. */
-:root{--line:#3B5183;--line-soft:#2A3A5E;--ctl-border:#5A729E}
 select,input,textarea,.tab,.seg button,#domswitch button,
 select[class],input[type=number],input[type=search],input.inp,textarea[class],
 .btn,.tblbar .tbldl,#dom-pif .chipbtn,.chipbtn{border-color:var(--ctl-border)}
@@ -2055,8 +2150,8 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 /* نمط الطباعة: كانت الصفحة تُطبع بأرضيةٍ داكنة (94% تغطية حبرية) وتبويبٍ
    واحد من ثلاثة عشر، بلا بيانٍ بذلك. */
 @media print{
-  :root{--bg:#fff;--surface-1:#fff;--surface-2:#fff;--surface-3:#f4f4f4;
-        --ink:#111;--ink-2:#333;--ink-3:#555;--line:#bbb;--line-soft:#ddd}
+  :root{color-scheme:light;--bg:#fff;--surface-1:#fff;--surface-2:#fff;--surface-3:#F4F4F4;
+        --ink:#111;--ink-2:#333;--ink-3:#555;--line:#BBB;--line-soft:#DDD;--ctl-border:#888}
   body{background:#fff;color:#111}
   nav.tabs,#domswitch,.filters,#scopeBar,.btn,.idot,#detail,#scrim{display:none!important}
   .card{break-inside:avoid;border:1px solid #bbb}
@@ -2097,7 +2192,7 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
   .tab{padding-block:12px}
   .btn,.tbldl{min-height:44px}
   #dom-pif .cks label{display:inline-flex;align-items:center;min-height:44px}
-  .dim,.muted,.asof,small{font-size:12px}
+  .dim,.muted,.asof,small{font-size:var(--fs-2xs)}
 }
 /* روابط المصادر: عنصر <a> ظاهر ومميَّز، بتباينٍ كافٍ وهدف لمسٍ سليم. */
 /* مربّعات اختيار المقارنة وأزرار التعريف: هدف اللمس 24×24 على الأقل. */
@@ -2109,10 +2204,10 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 .skiplink:focus{inset-inline-start:12px}
 .srclinks{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:4px}
 .srclinks a{color:var(--brand-soft);text-decoration:underline;text-underline-offset:3px;
-  display:inline-flex;align-items:center;min-height:24px;font-size:12px}
+  display:inline-flex;align-items:center;min-height:24px;font-size:var(--fs-2xs)}
 .srclinks a:hover{color:var(--ink)}
 .srclinks a .o{color:var(--ink-3);margin-inline-start:5px;text-decoration:none}
-.srclinks a::after{content:"\2197";font-size:10px;margin-inline-start:3px;opacity:.7}
+.srclinks a::after{content:"\2197";font-size:var(--fs-3xs);margin-inline-start:3px;opacity:.7}
 
 /* ══════════════════════════════════════════════════════════════════════
    طبقة الإخراج الفني — مراجعة الاتصال البصري 02-09-2026م
@@ -2127,16 +2222,16 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 #kpis{grid-template-columns:repeat(15,1fr)}
 #kpis .kpi.t1{grid-column:span 5}
 #kpis .kpi.t2{grid-column:span 3}
-#kpis .kpi.t1 .v{font-size:34px}
-#kpis .kpi.t2 .v{font-size:24px}
-#kpis .kpi.t2 .l{font-size:11px}
+#kpis .kpi.t1 .v{font-size:var(--fs-4xl)}
+#kpis .kpi.t2 .v{font-size:var(--fs-3xl)}
+#kpis .kpi.t2 .l{font-size:var(--fs-3xs)}
 #kpis .kpi.t1{padding:20px 20px 18px}
 
 /* النواة البصرية: الرصيد — الرقم الذي وُجدت اللوحة لتفسّره.
    يُرفع بالحجم وبالسطح وبخيطٍ من لون العلامة، لا بلونٍ صارخ إضافي. */
 #kpis .kpi.hero{background:var(--surface-2);border-color:var(--line);
-  box-shadow:inset 0 0 0 1px rgba(200,169,106,.10)}
-#kpis .kpi.hero .v{font-size:42px;letter-spacing:-.03em}
+  box-shadow:inset 0 0 0 1px var(--tint-brand)}
+#kpis .kpi.hero .v{font-size:clamp(2.125rem,1.7rem + 2vw,2.75rem);letter-spacing:-.03em}
 #kpis .kpi.hero::before{content:"";position:absolute;inset-block:14px;inset-inline-start:0;
   width:3px;border-radius:0 3px 3px 0;background:var(--brand)}
 #kpis .kpi.hero{position:relative;overflow:hidden}
@@ -2148,15 +2243,22 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 @media(max-width:640px){
   #kpis{grid-template-columns:1fr}
   #kpis .kpi.t1,#kpis .kpi.t2{grid-column:span 1}
-  #kpis .kpi.hero .v{font-size:34px}
+  #kpis .kpi.hero .v{font-size:var(--fs-4xl)}
 }
 
 /* ── ٢) انضباط اللون: 10% لا أكثر ────────────────────────────────────
    الأخضر والأحمر يبقيان دالّين — الاتجاه لا يُحمَل على اللون وحده أصلاً
    (السهم ▲▼ يحمله) — لكن نبرتهما تخفت في الرتبة الثانية ليصفو للنواة
    وحدها الصوتُ العالي. وهذا هو تطبيق قاعدة 60-30-10 لا إلغاء المعنى. */
-#kpis .kpi.t2 .d.up{color:#3f8f74}
-#kpis .kpi.t2 .d.down{color:#b06a6a}
+/* كانت نبرةُ الرتبة الثانية لونين مثبَّتين مضبوطين للأرضية الداكنة وحدها،
+   فيهبط الأخضرُ إلى 3.83:1 في الوضع الفاتح (SC 1.4.3). فتُشتقّ من رمز
+   الحكم نفسِه بمزجٍ نحو المحايد: تخفت النبرةُ ويبقى التباين 7.4:1 فأكثر
+   في الوضعين. */
+#kpis .kpi.t2 .d.up{color:color-mix(in oklab,var(--good) 70%,var(--ink-3))}
+#kpis .kpi.t2 .d.down{color:color-mix(in oklab,var(--bad) 70%,var(--ink-3))}
+@supports not (color:color-mix(in oklab,red 50%,blue)){
+  #kpis .kpi.t2 .d.up{color:var(--good)} #kpis .kpi.t2 .d.down{color:var(--bad)}
+}
 #kpis .kpi.t1 .d.up{color:var(--good)}
 #kpis .kpi.t1 .d.down{color:var(--bad)}
 
@@ -2166,7 +2268,7 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
    خفيضاً تحت العنوان، يُقرأ عند الحاجة ولا يزاحم. */
 .perbar{gap:0 14px;margin:0 0 13px;row-gap:4px}
 .perbar .chip{background:transparent;border:0;border-radius:0;padding:0;
-  font-size:10.5px;color:var(--ink-3);gap:5px}
+  font-size:var(--fs-3xs);color:var(--ink-3);gap:5px}
 .perbar .chip + .chip{padding-inline-start:14px;position:relative}
 .perbar .chip + .chip::before{content:"";position:absolute;inset-inline-start:0;
   top:50%;transform:translateY(-50%);width:1px;height:11px;background:var(--line)}
@@ -2175,12 +2277,12 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
    اللوحة وأكثرُها تكراراً وهي التي تحمل شروطَ قراءة الرقم. والشفافيةُ
    تعمل خارج ميزانية التباين فتُفلت من كل فحصٍ يقرأ ‎color‎ وحده.
    فيُصرَّح باللون بدلاً منها. SC 1.4.3. */
-.perbar .chip i{font-size:10px;color:#94A6C2}
+.perbar .chip i{font-size:var(--fs-3xs);color:var(--ink-3)}
 .perbar .chip.axis{color:var(--brand-soft)}
 .perbar .chip.axis i{color:var(--brand-soft);opacity:.8}
 
 /* رقاقات الترويسة كذلك: بياناتٌ تعريفية لا أفعال، فلا تُعرض بهيئة الأزرار. */
-header.top .badge{background:transparent;border:0;padding:4px 0;font-size:11.5px;color:var(--ink-3)}
+header.top .badge{background:transparent;border:0;padding:4px 0;font-size:var(--fs-2xs);color:var(--ink-3)}
 header.top .badge + .badge{padding-inline-start:15px;position:relative}
 header.top .badge + .badge::before{content:"";position:absolute;inset-inline-start:1px;
   top:50%;transform:translateY(-50%);width:1px;height:12px;background:var(--line)}
@@ -2188,9 +2290,9 @@ header.top .badges{gap:0 15px;row-gap:2px}
 
 /* ── ٤) سُلَّم طباعي بخطواتٍ محسوسة ───────────────────────────────────
    كان الفرق بين العنوان والتلميح والحاشية أقلّ من أن يُقرأ تدرّجاً. */
-.card h3{font-size:16px;font-weight:600;letter-spacing:-.01em;line-height:1.45}
-.card .hint{font-size:12px;line-height:1.65;margin-bottom:13px;max-width:82ch}
-.sechead h2{font-size:21px;letter-spacing:-.015em}
+.card h3{font-size:var(--fs-md);font-weight:600;letter-spacing:-.01em;line-height:1.45}
+.card .hint{font-size:var(--fs-2xs);line-height:1.65;margin-bottom:13px;max-width:82ch}
+.sechead h2{font-size:var(--fs-2xl);letter-spacing:-.015em}
 
 /* ── ٥) الحاشية تُقرأ في ثوانٍ لا تُقتحم ──────────────────────────────
    عرضٌ مقيَّد بمقاس القراءة، ومدخلٌ غامق يفصل الحكم عن شرحه. */
@@ -2211,7 +2313,7 @@ header.top .badges{gap:0 15px;row-gap:2px}
 #kpis .kpi .d + .d{margin-top:5px}
 #kpis .kpi .d:last-child{margin-bottom:0}
 #kpis .kpi > .d:nth-last-child(1){margin-top:auto;padding-top:8px}
-#kpis .kpi.t2 .d{font-size:11.5px;line-height:1.5}
+#kpis .kpi.t2 .d{font-size:var(--fs-2xs);line-height:1.5}
 
 /* ── ٧) استرجاع الثلث العلوي ─────────────────────────────────────────
    أربعة أشرطة تحكّم متتابعة كانت تلتهم نحو 15% من الصفحة قبل أول رقم،
@@ -2237,10 +2339,10 @@ nav.tabs{margin-bottom:16px;gap:5px}
   header.top .badge,#kpis .kpi.t2 .d,
   .blockhead span,.covbar .cl,.perbar .chip i,.idot>span,
   .homecard .hl,.homecard .q,.homecard .go,#homeCards .hl,
-  .chain .lk .n,.lk .n,div.n{font-size:12px}
+  .chain .lk .n,.lk .n,div.n{font-size:var(--fs-2xs)}
   /* ux-mob-02: على الضيّق يُطوى الشريطُ الوصفيّ في زرٍّ واحد فيرتفع أولُ رقم
      فوق الطيّة — والبيانُ كلُّه باقٍ خلف الزرّ لا محذوف. */
-  .badgefold>summary{display:block;cursor:pointer;list-style:none;font-size:12.5px;
+  .badgefold>summary{display:block;cursor:pointer;list-style:none;font-size:var(--fs-xs);
     color:var(--ink-2);padding:9px 12px;min-height:24px;border:1px solid var(--ctl-border);
     border-radius:10px;background:var(--surface-1);margin-top:10px}
   .badgefold>summary::-webkit-details-marker{display:none}
@@ -2249,11 +2351,86 @@ nav.tabs{margin-bottom:16px;gap:5px}
   .badgefold:not([open]) .badges{display:none}
   .badgefold[open] .badges{margin-top:10px}
   .herofold>summary{display:block;cursor:pointer;list-style:none;min-height:24px;
-    color:var(--ink-2);font-size:13.5px;line-height:1.85}
+    color:var(--ink-2);font-size:var(--fs-sm);line-height:1.85}
   .herofold>summary::-webkit-details-marker{display:none}
-  .herofold>summary::after{content:' — المزيد ▾';opacity:.7;font-size:12px}
+  .herofold>summary::after{content:' — المزيد ▾';opacity:.7;font-size:var(--fs-2xs)}
   .herofold[open]>summary::after{content:' — أقل ▴'}
   .herofold[open] p{margin-top:8px}
+}
+}  /* @layer components */
+@layer enhance{
+/* ════ طبقةُ القدرات — إعادةُ بناء 09-09-2026م ════════════════════════
+   ما يلي كلُّه تحسينٌ تدريجيّ: إن لم يُدعَم بقيت الصفحةُ كما هي كاملةَ
+   المعنى، ولا يتوقّف عليه عرضُ رقمٍ ولا وصولٌ إلى محتوى. */
+
+/* ── 1) البطاقةُ تستجيب لعرض موضعها لا لعرض الشاشة ──────────────────
+   198 بطاقةً تظهر في مسارات 1fr و2fr و3fr و4fr، وكانت كلُّها تُقاس
+   باستعلامِ وسائطٍ يقيس النافذة — فبطاقةٌ في عمودٍ عرضُه 280 بكسل داخل
+   شاشةٍ عرضُها 1440 تُعامَل معاملةَ بطاقةٍ عرضُها 1400. */
+.card,.homecard,#dom-pif .kpi{container-type:inline-size;container-name:card}
+@container card (max-width:300px){
+  .kpi .v{font-size:var(--fs-2xl)}
+  .card h3{font-size:var(--fs-sm)}
+  .perbar{gap:5px}
+  .attrib{font-size:var(--fs-3xs)}
+}
+@container card (min-width:560px){
+  .kpi .v{font-size:var(--fs-4xl)}
+  .card .hint{max-width:74ch}
+}
+
+/* ── 2) انضباطُ المحاذاة بنيويّاً لا يدوياً ─────────────────────────
+   حافّةُ العنوان وحافّةُ الرقم وحافّةُ الإسناد كانت تُضبط بحشوٍ متساوٍ
+   في كلِّ بطاقةٍ على حدة، فتنكسر متى اختلف طولُ عنوانٍ عن آخر.
+   ‎subgrid‎ يجعل البطاقاتِ تتقاسم صفوفَ الشبكة نفسَها، فتقع الأرقامُ
+   على خطٍّ واحدٍ مهما اختلفت عناوينُها. */
+@supports (grid-template-rows:subgrid){
+  .grid.g4>.card.kpi,.grid.g3>.card.kpi,.grid.g2>.card.kpi{
+    grid-row:span 3;display:grid;grid-template-rows:subgrid;align-content:start}
+  .grid.g4>.card.kpi>*,.grid.g3>.card.kpi>*,.grid.g2>.card.kpi>*{min-width:0}
+  .g4:has(>.card.kpi),.g3:has(>.card.kpi),.g2:has(>.card.kpi){grid-auto-rows:auto}
+}
+
+/* ── 3) الطيّاتُ تُعلن حالتَها بـ ‎:open‎ لا بمحدِّدٍ يدويّ ──────────── */
+details.tfold:open>summary,.tablead .tlim:open>summary,.evtnote:open>summary{
+  color:var(--ink);border-bottom:1px solid var(--line-soft)}
+details:open>summary::marker{color:var(--brand)}
+
+/* ── 4) وحداتُ المنفذ الديناميّة: شريطُ متصفّح الجوال كان يقتطع
+       أسفلَ الدرج، فيُخفي زرَّ الإغلاق على بعض الأجهزة. ───────────── */
+@supports (height:100dvh){
+  #detail{block-size:100dvh}
+  .gsearchout{max-height:min(58dvh,460px)}
+}
+
+/* ── 5) لفُّ النصّ: العنوانُ لا يترك كلمةً وحيدةً في سطر، والفقرةُ لا
+       تنتهي بيتيمة. عربيٌّ ولاتينيّ سواء. ─────────────────────────── */
+h1,h2,h3,.tablead .tlead-h,.homecard h3,.blockhead{text-wrap:balance}
+p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:pretty}
+
+/* ── 6) انتقالُ العرض بين التبويبات: كان التبديلُ قطعاً حادّاً يفقد
+       القارئُ فيه موضعَه بين 33 تبويباً. ويُلغى كلياً متى طلب القارئُ
+       تقليلَ الحركة — لا يُخفَّف بل يُلغى. ─────────────────────────── */
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-old(root){animation:mrsdOut .16s ease both}
+  ::view-transition-new(root){animation:mrsdIn .20s ease both}
+  @keyframes mrsdOut{to{opacity:0}}
+  @keyframes mrsdIn{from{opacity:0;transform:translateY(6px)}}
+}
+@media (prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+
+/* مبدّلُ الوضع — هدفُ لمسٍ 44 وتباينُ حدٍّ 3:1 كبقيّة الضوابط. */
+.themebtn{display:inline-flex;align-items:center;gap:7px;background:var(--surface-1);
+  border:1px solid var(--ctl-border);color:var(--ink-2);border-radius:999px;
+  padding:7px 14px;font-family:inherit;font-size:var(--fs-2xs);cursor:pointer;
+  min-height:36px;margin-top:12px;transition:background .15s,color .15s,border-color .15s}
+.themebtn:hover{background:var(--surface-2);color:var(--ink);border-color:var(--brand)}
+.themebtn .tico{width:14px;height:14px;border-radius:50%;flex:0 0 auto;
+  background:linear-gradient(90deg,var(--ink) 0 50%,var(--surface-3) 50% 100%);
+  border:1px solid var(--ctl-border)}
+@media print{.themebtn{display:none}}
 }
 </style>
 
@@ -2276,7 +2453,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
            واحداً (إعادةُ نشرٍ بعد تعديلِ نصّ فاحص، أو مهمّةٌ مجدولة) يُعلن على
            القارئ تحديثاً لم يقع. فصار الحقلان اثنين: «آخر بيان منشور» يُشتقّ
            من آخر فترةٍ في البيان، و«تاريخ البناء» باسمه الصحيح. -->
-      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">06-09-2026م</span></div>
+      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">09-09-2026م</span></div>
     </div>
   </div>
   <!-- ux-mob-02: على 390 نقطةً كانت الشاشةُ الأولى كلُّها ترويسةً وشريطَ
@@ -2292,6 +2469,12 @@ nav.tabs{margin-bottom:16px;gap:5px}
            role="combobox" aria-expanded="false" aria-controls="navSearchOut" aria-autocomplete="list">
     <div id="navSearchOut" class="gsearchout" role="listbox" aria-label="نتائج البحث" hidden></div>
   </div>
+  <!-- إعادةُ بناء 09-09-2026م: مبدّلُ الوضع. كانت اللوحةُ داكنةً مفروضةً
+       بلا بديل؛ فصار الافتراضُ تفضيلَ نظام القارئ، وهذا الزرُّ يتجاوزه
+       ويحفظ اختيارَه. النصُّ مكتوبٌ لا أيقونةً وحدَها فيُنطَق ويُقرأ. -->
+  <button id="themeBtn" class="themebtn" type="button" aria-label="تبديل وضع العرض">
+    <span aria-hidden="true" class="tico"></span><span class="tlbl">داكن</span>
+  </button>
   <details class="badgefold" id="badgeFold">
   <summary>عن هذه الأرقام — مستقلّة · غير رسمية</summary>
   <div class="badges">
@@ -2907,7 +3090,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
   <p>تعريفات بنود الإيرادات والمصروفات كما تنشرها وزارة المالية وفق دليل إحصاءات مالية الحكومة (GFSM 2014)، ومهام القطاعات الحكومية التسعة.</p></div>
   <div class="filters" style="margin-bottom:16px">
     <div class="f" style="flex:1"><label>بحث في المصطلحات</label>
-      <input id="gsearch" aria-label="بحث في القاعدة المعرفية والمعجم" placeholder="اكتب مصطلحاً بالعربية أو الإنجليزية…" style="background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:14px"></div>
+      <input id="gsearch" aria-label="بحث في القاعدة المعرفية والمعجم" placeholder="اكتب مصطلحاً بالعربية أو الإنجليزية…" style="background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:var(--fs-sm)"></div>
   </div>
   <div class="grid g2">
     <div class="card"><h3>بنود الإيرادات والمصروفات</h3><div class="hint">التعريف الرسمي ومكوّنات كل بند</div><div id="gItems"></div></div>
@@ -3382,7 +3565,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
     <!-- gx-19: ثلاثُ دعاوى كانت تحيل إلى «مُعِدّ اللوحة» ولا قناةَ اتصالٍ
          واحدة في الصفحة كلِّها — لا بريد ولا نموذج. وبيانُ إتاحةٍ بلا قناةٍ
          فعليّة ليس بياناً. وgx-22: «في كل لوحة» تكذّبها لوحتان من خمس. -->
-    <div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+c317e311 · 06-09-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">c317e311</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+c2cd02d7 · 09-09-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">c2cd02d7</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
     <!-- ax-16: محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية RTL،
          وأثاثُ الرسم (الأسطورة والتلميح) مضبوطٌ على RTL — فالاختيارُ مشروعٌ
          والصمتُ عنه هو المشكلة. -->
@@ -3393,8 +3576,8 @@ nav.tabs{margin-bottom:16px;gap:5px}
          الضمانات، وبيانَ التعديل — ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). -->
     <div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> الستّة من الرخصة:
-      <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:12px;line-height:1.9;margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">c317e311</span>) &mdash; https://mrsdx-fo.net<br>
+      <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:1.9;margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">c2cd02d7</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span>
@@ -14733,7 +14916,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
   "def_ar": "أي يوم في السنة لا يختص بأيام العمل فقط."
  }
 ]</script>
-<script>window.MIRSAD_GATES={"plants": {"vtabs": 4, "vcsv": 5, "vaxis": 2, "vtext": 13, "va11y": 5, "vall": 1, "vstamps": 2, "vleak": 1, "vdcat": 2, "vlegal": 1, "vsr": 5, "vdash": 3, "vcov": 2, "vpart": 2, "vneg": 1, "vscope": 1}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["home", "fiscal", "econ", "energy", "pif"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["home", "fiscal", "econ", "energy", "pif"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vleak", "vlegal", "vneg", "vpart", "vplant", "vscope", "vsr", "vstamps", "vtabs", "vtext"]};window.DATA={
+<script>window.MIRSAD_GATES={"plants": {"vtabs": 4, "vcsv": 5, "vaxis": 2, "vtext": 13, "va11y": 6, "vall": 1, "vstamps": 2, "vleak": 1, "vdcat": 2, "vlegal": 1, "vsr": 5, "vdash": 3, "vcov": 2, "vpart": 2, "vneg": 1, "vscope": 1}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["home", "fiscal", "econ", "energy", "pif"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["home", "fiscal", "econ", "energy", "pif"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vleak", "vlegal", "vneg", "vpart", "vplant", "vscope", "vsr", "vstamps", "vtabs", "vtext"]};window.DATA={
  "periods": [
   "2017Q1",
   "2017Q2",
@@ -22851,7 +23034,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
    ],
    "contact": "تُرسل ملاحظات الإتاحة بفتح مسألةٍ في مستودع اللوحة على <span dir=\"ltr\">GitHub</span>: <span dir=\"ltr\">github.com/salrajih90/mirsad/issues</span>، وتُقيَّد كل معالجة في سجل التصحيحات.",
    "asOf": "05-09-2026م",
-   "autoAsOf": "06-09-2026م",
+   "autoAsOf": "09-09-2026م",
    "sc": [
     [
      "1.1.1",
@@ -24106,7 +24289,7 @@ nav.tabs{margin-bottom:16px;gap:5px}
 </aside>
 
 </main>
-<div id="printNote" style="margin-top:14px;font-size:11px;color:#555">
+<div id="printNote" style="margin-top:14px;font-size:var(--fs-3xs);color:#555">
   طُبعت هذه الصفحة من «المرصد المالي والاقتصادي». والمطبوع يعرض <b>التبويب المفتوح وقت الطباعة فقط</b> —
   ولكل لوحة تبويبات أخرى لا تظهر هنا. والنسخة الكاملة والتفاعلية على النطاق المذكور في التذييل.
 </div>
@@ -29252,6 +29435,57 @@ try{
   if(window.Chart&&_ff){ Chart.defaults.font.family=_ff; Chart.defaults.font.size=12; }
 }catch(e){}
 
+/* ── إعادةُ بناء 09-09-2026م: ألوانُ الرسوم تُقرأ من رموز CSS لا تُثبَّت في
+   الشيفرة. كانت مثبَّتةً في أربعة ملفّاتٍ نسخاً متطابقة، فأيُّ تغييرٍ في
+   اللوحة يلزمه أربعُ تعديلات، ولا تتبع الوضعَ الفاتح أصلاً. */
+function ixPal(){
+  /* لا تُقرأ الخاصّيةُ المخصَّصة مباشرةً: قيمتُها المحسوبة نصُّ الرمز نفسه
+     ‎light-dark(#…,#…)‎ لا لونٌ محلول، فيتلقّاه Chart.js نصّاً لا يفهمه
+     ويرتدّ إلى الأسود. فيُقاس اللونُ من عنصرِ جسٍّ تُحلّ عليه القيمة فعلاً. */
+  let probe=document.getElementById('_ixprobe');
+  if(!probe){ probe=document.createElement('span'); probe.id='_ixprobe';
+    probe.setAttribute('aria-hidden','true');
+    probe.style.cssText='position:absolute;width:0;height:0;overflow:hidden;clip-path:inset(50%)';
+    (document.body||document.documentElement).appendChild(probe); }
+  const cs=getComputedStyle(document.documentElement);
+  const g=n=>{ probe.style.color=''; probe.style.color='var(--'+n+')';
+    const v=getComputedStyle(probe).color;
+    return (v&&v!=='rgba(0, 0, 0, 0)')? v : cs.getPropertyValue('--'+n).trim(); };
+  return {s1:g('s1'),s2:g('s2'),s3:g('s3'),s4:g('s4'),s5:g('s5'),s6:g('s6'),s7:g('s7'),s8:g('s8'),
+          ink:g('ink'),ink2:g('ink-2'),ink3:g('ink-3'),line:g('line'),surf:g('surface-1'),
+          brand:g('brand'),brandDeep:g('brand-deep'),
+          good:g('good'),bad:g('bad'),warn:g('warn')};
+}
+/* سجلُّ ما يُعاد تصييرُه عند تبديل الوضع — كلُّ لوحةٍ تُسجِّل دالّتَها. */
+const _themeSubs=[];
+function ixOnTheme(fn){ if(typeof fn==='function') _themeSubs.push(fn); }
+function ixTheme(mode){
+  const r=document.documentElement;
+  if(mode==='auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme',mode);
+  try{ mode==='auto'? localStorage.removeItem('mirsad-theme') : localStorage.setItem('mirsad-theme',mode); }catch(e){}
+  _themeSubs.forEach(f=>{ try{ f(ixPal()); }catch(e){} });
+  const btn=document.getElementById('themeBtn');
+  if(btn){ const cur=ixThemeNow(); btn.setAttribute('aria-label',ixThemeLabel(cur));
+           btn.querySelector('.tlbl').textContent=ixThemeText(cur); }
+}
+function ixThemeNow(){
+  const a=document.documentElement.getAttribute('data-theme');
+  if(a) return a;
+  try{ return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; }catch(e){ return 'dark'; }
+}
+function ixThemeText(m){ return m==='dark'?'داكن':'فاتح'; }
+function ixThemeLabel(m){ return 'الوضع الحالي '+ixThemeText(m)+' — اضغط للتبديل إلى '+ixThemeText(m==='dark'?'light':'dark'); }
+function ixWireTheme(){
+  try{ const st=localStorage.getItem('mirsad-theme'); if(st==='dark'||st==='light') document.documentElement.setAttribute('data-theme',st); }catch(e){}
+  const btn=document.getElementById('themeBtn'); if(!btn) return;
+  const cur=ixThemeNow();
+  btn.setAttribute('aria-label',ixThemeLabel(cur));
+  const l=btn.querySelector('.tlbl'); if(l) l.textContent=ixThemeText(cur);
+  btn.addEventListener('click',()=>{ ixTheme(ixThemeNow()==='dark'?'light':'dark'); });
+  try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{
+        if(!document.documentElement.getAttribute('data-theme')) ixTheme('auto'); }); }catch(e){}
+}
+
 const REG={};                                  // canvasId -> {unit, dec, freq, note, pct}
 let spark=null;
 
@@ -30031,6 +30265,29 @@ function ixDefer(fn){
   const go=()=>{ try{ fn(); }catch(e){} };
   if(typeof window.requestIdleCallback==='function') window.requestIdleCallback(go,{timeout:900});
   else setTimeout(go,32);
+}
+/* انتقالُ العرض — غلافٌ واحدٌ لكلّ اللوحات. يعمل إن دُعم، وإلا نُفِّذ
+   التبديلُ مباشرةً كما كان، ويُلغى عند طلب تقليل الحركة. */
+function ixVT(fn){
+  let reduce=false;
+  try{ reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  if(reduce||typeof document.startViewTransition!=='function'){ fn(); return; }
+  /* الخطأُ داخل ردّ نداء الانتقال يبتلعه المتصفّح ويردّ به وعدَ الانتقال،
+     فلا تُطلق النافذةُ حدثَ ‎error‎ — أي أنَّ تغليفَ التبديل بالانتقال كان
+     يُخفي أخطاءَ التشغيل عن كلِّ من يرصدها، وقد أمسك ذلك زرعُ ‎vtabs‎.
+     فيُعاد إلقاؤه في مهمّةٍ مستقلّة ليصل إلى معالج الأخطاء العامّ. */
+  const rethrow=e=>{ setTimeout(()=>{ throw e; },0); };
+  /* عَلَمٌ معلَن على الجذر طوال الانتقال: لقطاتُ الانتقال شجرةٌ إضافية
+     يعدّها عدّادُ العقد، فقياسُ التسرّب أثناءها يقرأ زيادةً ليست تسرّباً.
+     فيُعلَن العَلَمُ ليعرف كلُّ قائسٍ متى استقرّت الشجرة — وهو معلومةٌ عن
+     الصفحة لا حيلةٌ للفحص. */
+  try{
+    document.documentElement.setAttribute('data-vt','1');
+    const t=document.startViewTransition(()=>{ try{ fn(); }catch(e){ rethrow(e); throw e; } });
+    const clear=()=>{ try{ document.documentElement.removeAttribute('data-vt'); }catch(e){} };
+    if(t&&t.updateCallbackDone&&t.updateCallbackDone.catch) t.updateCallbackDone.catch(()=>{});
+    if(t&&t.finished&&t.finished.then) t.finished.then(clear,clear); else clear();
+  }catch(e){ try{ document.documentElement.removeAttribute('data-vt'); }catch(_e){} fn(); }
 }
 function ixWireTabs(){
   ixCV();
@@ -31389,6 +31646,7 @@ function ixWireSearch(){
 }
 
 window.MIRSAD_IX={
+  pal:ixPal, vt:ixVT, onTheme:ixOnTheme, setTheme:ixTheme, themeNow:ixThemeNow, wireTheme:ixWireTheme,
   tCrit:tCritIX,
   wireSearch:ixWireSearch,
   tabDesc:ixTabDesc,
@@ -31469,6 +31727,7 @@ window.MIRSAD_IX={
   close:close
 };
 document.addEventListener('DOMContentLoaded',function(){
+  try{ ixWireTheme(); }catch(e){}
   const c=document.getElementById('dClose'), s=document.getElementById('scrim');
   if(c) c.onclick=close; if(s) s.onclick=close;
   /* كان ‎close()‎ يُنفَّذ على كل Escape ولو كان الدرجُ مغلقاً، فينزع ‎inert‎
@@ -31487,10 +31746,16 @@ document.addEventListener('DOMContentLoaded',function(){
 const D = window.DATA;
 const P = D.periods;                       // "2017Q1"
 const YEARS = [...new Set(P.map(p=>+p.slice(0,4)))];
-const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9074b2', s8:'#e66767',
-            ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
-            brand:'#C8A96A', brandDeep:'#8C7237' };
+/* إعادةُ بناء 09-09-2026م: اللوحةُ تُقرأ من رموز CSS فتتبع الوضعَ الفاتحَ
+   والداكن، ولا تُنسخ أربع مرّات. الكائنُ نفسُه يُحدَّث في مكانه عند التبديل
+   فتبقى كلُّ الإحالات إليه صالحة. */
+const C = {};
+(function(){ const P=(window.MIRSAD_IX&&window.MIRSAD_IX.pal)?window.MIRSAD_IX.pal():null;
+  Object.assign(C, P || { s1:'#3987E5',s2:'#D95926',s3:'#199E70',s4:'#C98500',s5:'#007388',
+    s6:'#984D7E',s7:'#9074B2',s8:'#E66767',ink:'#EEF3FB',ink2:'#A7B7D2',ink3:'#8394B2',
+    line:'#2A3A5E',surf:'#0C172B',brand:'#C8A96A',brandDeep:'#8D7237',
+    good:'#6ED889',bad:'#FEA097',warn:'#FEA753'});
+})();
 
 /* ---------- helpers ---------- */
 /* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
@@ -35426,10 +35691,13 @@ function init(){
   document.getElementById('tabs').innerHTML=TABS.map(t=>
     '<button class="tab'+(t[0]===S.tab?' on':'')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('');
   document.querySelectorAll('#dom-fiscal .tab').forEach(b=>b.addEventListener('click',()=>{
+    const _go=()=>{
     S.tab=b.dataset.t;
     document.querySelectorAll('#dom-fiscal .tab').forEach(x=>x.classList.toggle('on',x===b));
     document.querySelectorAll('#dom-fiscal section').forEach(s=>s.classList.toggle('on',s.id==='s-'+S.tab));
     renderAll();
+    };
+    (window.MIRSAD_IX&&window.MIRSAD_IX.vt)? window.MIRSAD_IX.vt(_go) : _go();
   }));
   /* ---------- عناصر نطاق العرض ---------- */
   const one=document.getElementById('pOne'), pf=document.getElementById('pFrom'), pt=document.getElementById('pTo');
@@ -35547,6 +35815,10 @@ function init(){
      الاقتصاد أولاً كان يجدها فارغة. */
   try{ ixOnce('fCorr',renderCorrections); }catch(e){}
   window.__fiscalRender=renderAll;
+  /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير — الرسومُ
+     تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
+  try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
+         Object.assign(C,P); renderAll(); }); }catch(e){}
   renderAll();
 }
 init();
@@ -35557,10 +35829,16 @@ init();
 const E = window.ECON;
 const Y = E.years;                    // 2018..2025 (gdp has 2025, details to 2024)
 const YD = Y.slice(0,7);              // detail years 2018..2024
-const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9074b2', s8:'#e66767',
-            ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
-            brand:'#C8A96A', brandDeep:'#8C7237' };
+/* إعادةُ بناء 09-09-2026م: اللوحةُ تُقرأ من رموز CSS فتتبع الوضعَ الفاتحَ
+   والداكن، ولا تُنسخ أربع مرّات. الكائنُ نفسُه يُحدَّث في مكانه عند التبديل
+   فتبقى كلُّ الإحالات إليه صالحة. */
+const C = {};
+(function(){ const P=(window.MIRSAD_IX&&window.MIRSAD_IX.pal)?window.MIRSAD_IX.pal():null;
+  Object.assign(C, P || { s1:'#3987E5',s2:'#D95926',s3:'#199E70',s4:'#C98500',s5:'#007388',
+    s6:'#984D7E',s7:'#9074B2',s8:'#E66767',ink:'#EEF3FB',ink2:'#A7B7D2',ink3:'#8394B2',
+    line:'#2A3A5E',surf:'#0C172B',brand:'#C8A96A',brandDeep:'#8D7237',
+    good:'#6ED889',bad:'#FEA097',warn:'#FEA753'});
+})();
 const SERIES=[C.s1,C.s2,C.s3,C.s4,C.s5,C.s6,C.s7,C.s8];
 
 /* ── تمييز السلاسل بغير اللون وحده — WCAG 2.2 SC 1.4.1 ─────────────
@@ -36886,10 +37164,13 @@ function init(){
   document.getElementById('e-tabs').innerHTML=TABS.map(t=>
     '<button class="tab'+(t[0]===S.tab?' on':'')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('');
   document.querySelectorAll('#dom-econ .tab').forEach(b=>b.addEventListener('click',()=>{
+    const _go=()=>{
     S.tab=b.dataset.t;
     document.querySelectorAll('#dom-econ .tab').forEach(x=>x.classList.toggle('on',x===b));
     document.querySelectorAll('#dom-econ section').forEach(s=>s.classList.toggle('on',s.id==='e-s-'+S.tab));
     renderAll();
+    };
+    (window.MIRSAD_IX&&window.MIRSAD_IX.vt)? window.MIRSAD_IX.vt(_go) : _go();
   }));
   const cy=document.getElementById('e-compYear');
   YD.forEach((y,i)=>cy.add(new Option(ylab(y),i)));
@@ -36899,6 +37180,10 @@ function init(){
   document.getElementById('e-tsel').onchange=renderTable;
   document.getElementById('e-fSearch').oninput=e=>renderFormulasE(e.target.value);
   window.__econRender=renderAll;
+  /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير — الرسومُ
+     تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
+  try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
+         Object.assign(C,P); renderAll(); }); }catch(e){}
   renderAll();
 }
 init();
@@ -36911,10 +37196,16 @@ const E = window.ENERGY && window.ENERGY.brent;
 const D = window.DATA, X = window.EXTRA||{};
 if(!E) return;
 
-const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9074b2', s8:'#e66767',
-            ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
-            brand:'#C8A96A', brandDeep:'#8C7237' };
+/* إعادةُ بناء 09-09-2026م: اللوحةُ تُقرأ من رموز CSS فتتبع الوضعَ الفاتحَ
+   والداكن، ولا تُنسخ أربع مرّات. الكائنُ نفسُه يُحدَّث في مكانه عند التبديل
+   فتبقى كلُّ الإحالات إليه صالحة. */
+const C = {};
+(function(){ const P=(window.MIRSAD_IX&&window.MIRSAD_IX.pal)?window.MIRSAD_IX.pal():null;
+  Object.assign(C, P || { s1:'#3987E5',s2:'#D95926',s3:'#199E70',s4:'#C98500',s5:'#007388',
+    s6:'#984D7E',s7:'#9074B2',s8:'#E66767',ink:'#EEF3FB',ink2:'#A7B7D2',ink3:'#8394B2',
+    line:'#2A3A5E',surf:'#0C172B',brand:'#C8A96A',brandDeep:'#8D7237',
+    good:'#6ED889',bad:'#FEA097',warn:'#FEA753'});
+})();
 /* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
    فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
    على كل مواضع التنسيق دفعةً واحدة لا على موضع بعينه. */
@@ -37884,10 +38175,13 @@ function init(){
   document.getElementById('n-tabs').innerHTML=TABS.map(t=>
     '<button class="tab'+(t[0]===S.tab?' on':'')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('');
   document.querySelectorAll('#dom-energy .tab').forEach(b=>b.addEventListener('click',()=>{
+    const _go=()=>{
     S.tab=b.dataset.t;
     document.querySelectorAll('#dom-energy .tab').forEach(x=>x.classList.toggle('on',x===b));
     document.querySelectorAll('#dom-energy section').forEach(s=>s.classList.toggle('on',s.id==='n-s-'+S.tab));
     renderAll();
+    };
+    (window.MIRSAD_IX&&window.MIRSAD_IX.vt)? window.MIRSAD_IX.vt(_go) : _go();
   }));
   document.querySelectorAll('#n-win button').forEach(b=>b.onclick=()=>{
     S.win=+b.dataset.v; document.querySelectorAll('#n-win button').forEach(x=>x.classList.toggle('on',x===b));
@@ -37899,6 +38193,10 @@ function init(){
   document.getElementById('n-tsel').onchange=renderNData;
   window.__covEnergy = dlab(dly[0][0])+' — '+dlab(lastD[0]);
   window.__energyRender = renderAll;
+  /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير — الرسومُ
+     تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
+  try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
+         Object.assign(C,P); renderAll(); }); }catch(e){}
   window.__energyFacts = {last:lastD, ann:ann, breakeven:breakeven(), pairs:pairs, ols:ols};
   renderAll();
 }
@@ -37911,10 +38209,16 @@ init();
 const P = window.PIF;
 if(!P) return;
 
-const C = { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500', s5:'#d55181',
-            s6:'#008300', s7:'#9074b2', s8:'#e66767',
-            ink:'#EEF3FB', ink2:'#A6B7D2', ink3:'#8294B2', line:'#1F2E49', surf:'#0D172B',
-            brand:'#C8A96A', brandDeep:'#8C7237', good:'#199e70', bad:'#e66767', warn:'#c98500' };
+/* إعادةُ بناء 09-09-2026م: اللوحةُ تُقرأ من رموز CSS فتتبع الوضعَ الفاتحَ
+   والداكن، ولا تُنسخ أربع مرّات. الكائنُ نفسُه يُحدَّث في مكانه عند التبديل
+   فتبقى كلُّ الإحالات إليه صالحة. */
+const C = {};
+(function(){ const P=(window.MIRSAD_IX&&window.MIRSAD_IX.pal)?window.MIRSAD_IX.pal():null;
+  Object.assign(C, P || { s1:'#3987E5',s2:'#D95926',s3:'#199E70',s4:'#C98500',s5:'#007388',
+    s6:'#984D7E',s7:'#9074B2',s8:'#E66767',ink:'#EEF3FB',ink2:'#A7B7D2',ink3:'#8394B2',
+    line:'#2A3A5E',surf:'#0C172B',brand:'#C8A96A',brandDeep:'#8D7237',
+    good:'#6ED889',bad:'#FEA097',warn:'#FEA753'});
+})();
 
 /* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
    فيقرأ القارئ صفراً على أنه نتيجة. هذا الغلاف يعيد «—» بدلاً من ذلك، ويُطبَّق
@@ -39054,10 +39358,13 @@ function init(){
     d.appendChild(h); sec.insertBefore(d,sec.firstChild);
   });
   document.querySelectorAll('#dom-pif .tab').forEach(b=>b.addEventListener('click',()=>{
+    const _go=()=>{
     S.tab=b.dataset.t;
     document.querySelectorAll('#dom-pif .tab').forEach(x=>x.classList.toggle('on',x===b));
     document.querySelectorAll('#dom-pif section').forEach(s=>s.classList.toggle('on',s.id==='f-s-'+S.tab));
     renderAll();
+    };
+    (window.MIRSAD_IX&&window.MIRSAD_IX.vt)? window.MIRSAD_IX.vt(_go) : _go();
   }));
   set('f-cov','<div class="covbar">'+
     '<div><div class="cl">المصادر</div><div class="cv">رسمية منشورة</div><div class="cd">تقارير الصندوق وقوائمه المدققة · هيئة الأوراق المالية الأمريكية · تداول · رؤية 2030 · صندوق النقد</div></div>'+
@@ -39067,6 +39374,10 @@ function init(){
     '</div>');
   window.__covPif = 'الصندوق — بيانات رسمية حتى '+P.tadawul.asOfLabel;
   window.__pifRender = renderAll;
+  /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير — الرسومُ
+     تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
+  try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
+         Object.assign(C,P); renderAll(); }); }catch(e){}
   renderAll();
 }
 init();
