@@ -1725,6 +1725,12 @@ nav.tabidx{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;margin:
   padding:11px 14px;border:1px solid var(--line-soft);border-radius:var(--r);background:var(--surface-1);
   font-size:var(--fs-xs);line-height:var(--lh-loose)}
 nav.tabidx b{color:var(--ink-2);font-weight:600}
+/* UXB-09: عمقُ التمرير يبلغ 13,940 بكسلاً في أعمق تبويب (16.5 شاشة)، وسبعةُ
+   تبويباتٍ تتجاوز 6,000. فالفهرسُ الذي يُبنى في رأس التبويب يغيب عن القارئ
+   بعد أوّل شاشة. فيبقى لاصقاً: هو المرساةُ الوحيدة في صفحةٍ بهذا الطول. */
+nav.tabidx{position:sticky;top:0;z-index:var(--z-sticky);background:var(--bg);
+  padding-block:8px;margin-inline:-2px}
+@media (max-width:720px){ nav.tabidx{position:static} }
 nav.tabidx a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--line);
   padding:4px 2px;min-height:24px;display:inline-block}
 nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bottom-color:var(--brand)}
@@ -1843,6 +1849,9 @@ tbody tr:hover{background:var(--surface-2)}
 .tblwrap table th:first-child{z-index:3}
 .tblwrap tbody tr:hover td:first-child{background:var(--surface-2)}
 /* UXB-06: الفرزُ يُعلَن قبل أن يُجرَّب — مؤشّرٌ دائمٌ على كل رأسٍ قابلٍ للفرز */
+/* UXB-10: مبدِّلُ «قيمة / حصّة %» فوق الرسم المكدَّس — بمكوّن .seg القائم */
+.shrtog{display:flex;justify-content:flex-start;margin:0 0 10px}
+.shrtog .seg{border-color:var(--ctl-border)}
 .tblwrap th[data-sortable]{cursor:pointer;user-select:none;white-space:nowrap;
   height:28px;padding-block:8px}   /* هدفُ ضغطٍ لا ينزل عن 24 بكسلاً (WCAG 2.5.8) */
 .tblwrap th[data-sortable]::after{content:"⇅";margin-inline-start:6px;color:var(--ink-2);
@@ -2790,13 +2799,13 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
 
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>مسار الإيرادات والمصروفات</h3>
+      <h3>كيف تحرّك الإيرادُ والمصروف، وأين اتّسعت الفجوةُ بينهما؟</h3>
       <div class="hint">الفجوة بين الخطين هي الفائض أو العجز في كل فترة</div>
       <div class="chartbox"><canvas id="cMain"></canvas></div>
       <div class="note" id="nMain"></div>
     </div>
     <div class="card">
-      <h3>الفائض / (العجز)</h3>
+      <h3>كم بلغ الفائضُ أو العجزُ في كل فترة؟</h3>
       <div class="hint">القيم الموجبة فائض والسالبة عجز</div>
       <div class="chartbox"><canvas id="cBal"></canvas></div>
       <div class="note" id="nBal"></div>
@@ -2805,13 +2814,13 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
 
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>الاعتماد على النفط</h3>
+      <h3>كم يعتمد الإيرادُ على النفط، وهل تراجع الاعتماد؟</h3>
       <div class="hint">حصة الإيرادات النفطية من إجمالي الإيرادات</div>
       <div class="chartbox"><canvas id="cOil"></canvas></div>
       <div class="note" id="nOil"></div>
     </div>
     <div class="card">
-      <h3>تغطية المصروفات بالإيرادات غير النفطية</h3>
+      <h3>أيُّ قدرٍ من المصروفات يغطّيه الإيرادُ غير النفطي؟</h3>
       <div class="hint">نسبة الإيرادات غير النفطية إلى إجمالي المصروفات — مقياس المتانة المالية</div>
       <div class="chartbox"><canvas id="cCov"></canvas></div>
       <div class="note" id="nCov"></div>
@@ -2825,12 +2834,12 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <p>تنقسم الإيرادات إلى نفطية وغير نفطية. الأخيرة تضم أربعة بنود ضريبية وبنداً للإيرادات الأخرى (دخل الملكية، الرسوم الإدارية، الغرامات، ومبيعات المنشآت السوقية).</p></div>
   <div class="grid g2">
     <div class="card">
-      <h3>تكوين الإيرادات</h3>
+      <h3>ممّ يتكوّن الإيراد، وكيف تغيّر تكوينُه؟</h3>
       <div class="hint">نفطية مقابل غير نفطية</div>
       <div class="chartbox"><canvas id="cRevMix"></canvas></div>
     </div>
     <div class="card">
-      <h3>مكونات الإيرادات غير النفطية</h3>
+      <h3>ممّ يتكوّن الإيرادُ غير النفطي؟</h3>
       <div class="hint">اضغط على عنصر في وسيلة الإيضاح لإخفائه أو إظهاره</div>
       <div class="chartbox"><canvas id="cNonoil"></canvas></div>
     </div>
@@ -2838,7 +2847,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <!-- sb-12: محورا تصنيفٍ في جدولٍ واحد — يُبيَّن حيث يُقرأ الرقم -->
   <div class="note" id="nRevBasis"></div>
   <div class="card" style="margin-top:16px">
-    <h3>معدلات النمو السنوية لبنود الإيرادات</h3>
+    <h3>أيُّ بنود الإيراد ينمو وأيُّها يتراجع؟</h3>
     <div class="hint">التغير عن الفترة المماثلة من العام السابق (%)</div>
     <div class="chartbox"><canvas id="cRevG"></canvas></div>
     <div class="note" id="nRev"></div>
@@ -2851,19 +2860,19 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <p>التصنيف الاقتصادي يوضّح <b>طبيعة</b> الإنفاق (أجور، سلع وخدمات، إعانات، رأسمالي…)، بينما التصنيف القطاعي يوضّح <b>وجهته</b> (تعليم، صحة، عسكري…). الاثنان معاً يجيبان عن سؤالين مختلفين.</p></div>
   <div class="grid g2">
     <div class="card">
-      <h3>المصروفات حسب التصنيف الاقتصادي</h3>
+      <h3>على أيِّ البنود يُنفَق المالُ العام؟</h3>
       <div class="hint">مليون ريال</div>
       <div class="chartbox"><canvas id="cExpMix"></canvas></div>
       <div class="note" id="nExpMix"></div>
     </div>
     <div class="card">
-      <h3>حصة الإنفاق الرأسمالي وتعويضات العاملين</h3>
+      <h3>كم يأخذ الإنفاقُ الرأسمالي وتعويضاتُ العاملين من المصروف؟</h3>
       <div class="hint">نسبة كلٍّ منهما من إجمالي المصروفات. وتعويضات العاملين <b>جزءٌ</b> من الإنفاق التشغيلي لا هو كلّه — والتشغيلي كاملاً معروضٌ بالسلسلة الثالثة</div>
       <div class="chartbox"><canvas id="cCapex"></canvas></div>
     </div>
   </div>
   <div class="card" style="margin-top:16px">
-    <h3>الإنفاق حسب القطاعات — المعتمد مقابل الفعلي</h3>
+    <h3>أيُّ القطاعات أنفقت ما اعتُمد لها؟</h3>
     <div class="hint">اختر السنة لعرض نسبة التنفيذ لكل قطاع</div>
     <div class="f" style="margin-bottom:12px"><label for="secYear">السنة المالية</label><select id="secYear"></select></div>
     <!-- ux-gap-03: السنواتُ الغائبةُ من القائمة كانت تُفسَّر على بُعد تبويبين -->
@@ -2879,20 +2888,20 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <p>يُموّل العجز من مصدرين: السحب من الاحتياطيات الحكومية والحساب الجاري، أو الاقتراض (داخلي وخارجي). تركيبة التمويل مؤشر على السياسة المالية أكثر من كونها تفصيلاً محاسبياً.</p></div>
   <div class="grid g2">
     <div class="card">
-      <h3>رصيد الدين العام</h3>
+      <h3>كيف تطوّر رصيدُ الدين، وأين يقع الداخليُّ من الخارجي؟</h3>
       <div class="hint">داخلي وخارجي — نهاية الفترة</div>
       <div class="chartbox"><canvas id="cDebt"></canvas></div>
       <div class="note" id="nDebtGap"></div>
     </div>
     <div class="card">
-      <h3>الاحتياطي العام والحساب الجاري</h3>
+      <h3>كيف تحرّك الاحتياطيُّ العام والحسابُ الجاري؟</h3>
       <div class="hint">الرصيد في نهاية الفترة</div>
       <div class="chartbox"><canvas id="cRes"></canvas></div>
       <div class="note" id="nResGap"></div>
     </div>
   </div>
   <div class="card" style="margin-top:16px">
-    <h3>دقة تقدير الميزانية — المعتمد مقابل الفعلي</h3>
+    <h3>كم يبتعد الفعليُّ عن المعتمد؟</h3>
     <div class="hint">الانحراف الموجب يعني تجاوز الفعلي للمعتمد</div>
     <div class="chartbox"><canvas id="cAcc"></canvas></div>
     <div class="note" id="nAcc"></div>
@@ -2902,7 +2911,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <p>لا يكفي معرفة حجم الدين؛ فالمخاطرة الحقيقية في تركيبته. مصدر التمويل يحدد التعرّض لمخاطر الصرف، ونوع السعر يحدد التعرّض لتغيّر الفائدة، ومتوسط الأجل يحدد حجم إعادة التمويل المطلوبة سنوياً بمعزل عن العجز الجديد. الأرقام أدناه من المركز الوطني لإدارة الدين مباشرةً.</p></div>
   <div class="grid g4" id="ndmcKpis"></div>
   <div class="card" style="margin-top:16px">
-    <h3>تركيبة الدين حسب المصدر ونوع السعر</h3>
+    <h3>ممّ يتركّب الدين: أيُّ مصدرٍ وأيُّ نوعِ سعر؟</h3>
     <div class="hint">النسبة المئوية من إجمالي الدين القائم</div>
     <div class="chartbox sm"><canvas id="cMaturity"></canvas></div>
     <div class="note" id="nMaturity"></div>
@@ -2914,7 +2923,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="sechead"><h2>التوقعات والاتجاهات</h2>
   <p>نموذج انحدار خطي على الاتجاه العام مع مكوّن موسمي ربعي (Trend + Seasonal decomposition)، ونطاق ثقة 80% مبني على الانحراف المعياري للبواقي. هذا نموذج إحصائي بحت ولا يمثل تقديراً رسمياً.</p></div>
   <div class="card">
-    <h3>توقع الإيرادات والمصروفات — 6 أرباع قادمة</h3>
+    <h3>إلى أين يتّجه الإيرادُ والمصروف في ستّة أرباعٍ قادمة؟</h3>
     <div class="hint">الخطوط المتقطعة توقعات، والمنطقة المظللة نطاق الثقة 80%</div>
     <div class="chartbox lg"><canvas id="cFc"></canvas></div>
     <div id="nFcBench"></div>
@@ -2922,7 +2931,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>الموسمية الربعية</h3>
+      <h3>أيُّ الأرباع يرتفع عن الاتجاه وأيُّها ينخفض؟</h3>
       <div class="hint">متوسط انحراف كل ربع عن الاتجاه العام</div>
       <div class="chartbox sm"><canvas id="cSeas"></canvas></div>
       <div class="note" id="nSeas"></div>
@@ -2947,7 +2956,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
       <button class="btn pri" id="reset">إعادة الضبط</button>
     </div>
     <div class="card" style="grid-column:span 2">
-      <h3>أثر السيناريو</h3>
+      <h3>ماذا يقع بالرصيد إن تغيّرت المتغيّرات؟</h3>
       <div class="hint">النتائج المتوقعة مقابل خط الأساس</div>
       <div class="grid g3" id="simKpi" style="margin-bottom:14px"></div>
       <div class="chartbox"><canvas id="cSim"></canvas></div>
@@ -2955,12 +2964,12 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>مسار الدين العام تحت السيناريو</h3>
+      <h3>إلى أين يتّجه الدينُ تحت هذا السيناريو؟</h3>
       <div class="hint">الدين يتراكم بالعجز السنوي المتوقع</div>
       <div class="chartbox sm"><canvas id="cSimDebt"></canvas></div>
     </div>
     <div class="card">
-      <h3>تحليل الحساسية</h3>
+      <h3>أيُّ متغيّرٍ أشدُّ أثراً في الرصيد؟</h3>
       <div class="hint">أثر تغيّر كل متغيّر بمقدار ±10 نقاط مئوية (لا ±10% منه) على الرصيد في السنة الأولى</div>
       <div class="chartbox sm"><canvas id="cTornado"></canvas></div>
       <div class="note" id="nTor"></div>
@@ -2976,13 +2985,13 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="grid g4" id="ratioKpis"></div>
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>النسب المالية إلى الناتج المحلي</h3>
+      <h3>أين تقف النسبُ المالية من الناتج؟</h3>
       <div class="hint">جميع القيم بالنسبة المئوية من الناتج المحلي الإجمالي الاسمي</div>
       <div class="chartbox"><canvas id="cRatio"></canvas></div>
       <div class="note" id="nRatio"></div>
     </div>
     <div class="card">
-      <h3>العجز الكلي مقابل العجز الأولي</h3>
+      <h3>كم من العجز سببُه خدمةُ الدين؟</h3>
       <div class="hint">العجز الأولي = العجز الكلي مضافاً إليه نفقات التمويل (خدمة الدين)</div>
       <div class="chartbox"><canvas id="cPrimary"></canvas></div>
       <div class="note" id="nGdpProv"></div>
@@ -2991,7 +3000,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>معامل التعادل النفطي وسعر التعادل</h3>
+      <h3>عند أيِّ سعرٍ للبرميل تتوازن الميزانية؟</h3>
       <div class="hint">كم يجب أن ترتفع الإيرادات النفطية لتتوازن الميزانية</div>
       <div class="sl" style="margin-bottom:18px">
         <label class="nm" for="oilP">متوسط سعر البرميل المفترض للسنة (دولار) — افتراض تُدخله أنت</label>
@@ -3002,7 +3011,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
       <div class="note" id="nBreak"></div>
     </div>
     <div class="card">
-      <h3>صلابة الإنفاق</h3>
+      <h3>أيُّ قدرٍ من الإنفاق يصعب خفضُه سريعاً؟</h3>
       <div class="hint">حصة البنود التي يصعب خفضها سريعاً: تعويضات العاملين والمنافع الاجتماعية ونفقات التمويل</div>
       <div class="chartbox sm"><canvas id="cRigid"></canvas></div>
       <div class="note" id="nRigid"></div>
@@ -3013,7 +3022,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <p>النسبة وحدها لا تكفي للحكم؛ المرجع هو أين تقف المملكة بين اقتصادات مماثلة. القيم المقارنة من قاعدة بيانات صندوق النقد الدولي، وقيمة المملكة محسوبة من المصادر السعودية الرسمية.</p></div>
   <div class="card">
     <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:6px">
-      <div><h3 id="fmTitle">الدين العام إلى الناتج المحلي</h3>
+      <div><h3 id="fmTitle">أين تقع المملكةُ بين الدول في: الدين العام إلى الناتج المحلي؟</h3>
         <div class="hint" id="fmHint" style="margin-bottom:0">النسبة المئوية من الناتج المحلي الإجمالي، 2025م</div></div>
       <div class="f"><label>المؤشر</label>
         <select id="fmSel" aria-label="المؤشر المالي المعروض">
@@ -3028,7 +3037,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <div class="note" id="nIntl"></div>
   </div>
   <div class="card" style="margin-top:16px">
-    <h3>الدين مقابل الرصيد المالي</h3>
+    <h3>هل ترتبط نسبةُ الدين بالرصيد المالي بين الدول؟</h3>
     <div class="hint">كل نقطة دولة: المحور الأفقي الدين إلى الناتج، والمحور الرأسي الرصيد المالي إلى الناتج</div>
     <div class="chartbox"><canvas id="cIntlSc"></canvas></div>
     <div class="note" id="nIntlSc"></div>
@@ -3063,13 +3072,13 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
 
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>مسار المملكة مقابل وسيط المجموعة</h3>
+      <h3>كيف تحرّكت المملكةُ مقابل وسيط المجموعة؟</h3>
       <div class="hint">الوسيط أصدق من المتوسط هنا لأن المجموعة تضم قيماً متطرفة تُزيح المتوسط</div>
       <div class="chartbox"><canvas id="cItrend"></canvas></div>
       <div class="note" id="nItrend"></div>
     </div>
     <div class="card">
-      <h3>مؤشرات الحوكمة العالمية</h3>
+      <h3>أين تقف درجاتُ الحوكمة، ومتى تغيّرت؟</h3>
       <div class="hint">درجات معيارية من (2.5) إلى +2.5، الأعلى أفضل — 2024م</div>
       <div class="chartbox"><canvas id="cWgi"></canvas></div>
       <div class="note" id="nWgi"></div>
@@ -3077,7 +3086,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
 
   <div class="card" style="margin-top:16px">
-    <h3>سعر النفط الفعلي مقابل سعر التعادل المالي</h3>
+    <h3>هل يكفي السعرُ المحقَّق لتعادل الميزانية؟</h3>
     <div class="hint">الفجوة بين الخطين هي الفائض أو العجز مُترجَماً إلى دولارات للبرميل</div>
     <div class="chartbox"><canvas id="cBrent"></canvas></div>
     <div class="note" id="nBrent"></div>
@@ -3100,7 +3109,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="filters" style="margin-bottom:16px">
     <div class="f"><label for="varYear">السنة المالية</label><select id="varYear"></select></div>
   </div>
-  <div class="card"><h3>من الرصيد المعتمد إلى الرصيد الفعلي</h3>
+  <div class="card"><h3>ما الذي نقل الرصيدَ من المعتمد إلى الفعلي؟</h3>
     <div class="chartbox lg"><canvas id="cWaterfall"></canvas></div>
     <div class="note" id="nVar"></div>
   </div>
@@ -3116,7 +3125,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <div class="card" id="adv-rate"><h3>حدودُ هذه الصفحة</h3><div class="muted"><b>ولا شيء في هذه الصفحة مشورةً استثمارية.</b> ما يُعرض هنا <b>بياناتٌ منشورةٌ من مصدرها</b> ونِسبٌ محتسبةٌ منها، بلا رأيٍ في مزايا التعامل في أي ورقةٍ مالية ولا مخاطره، ولا توصيةَ شراءٍ ولا بيعٍ ولا احتفاظ، ولا تقييمَ جدارةٍ ائتمانية من هذه اللوحة. و<b>هذه اللوحة ليست جهةً مرخَّصة</b> من هيئة السوق المالية ولا تمارس نشاطاً مرخَّصاً، و<b>لا يُبنى على غياب صفٍّ من الجداول استنتاج</b>.</div></div>
 
   <div class="card" style="margin-top:16px">
-    <h3>مسار التصنيف على سُلَّم موحّد</h3>
+    <h3>كيف تحرّك التصنيفُ الائتماني عبر الوكالات الثلاث؟</h3>
     <div class="hint">خط متدرّج: كل قفزة هي قرار رفع أو خفض من الوكالة</div>
     <div class="chartbox lg"><canvas id="cRate"></canvas></div>
     <div class="note" id="nRate"></div>
@@ -3139,7 +3148,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="grid g2" style="margin-top:16px">
     <div class="card">
-      <h3>تغطية المصادر لكل فترة</h3>
+      <h3>كم مصدراً مستقلاً يسند أرقامَ كلِّ فترة؟</h3>
       <div class="hint">عدد التقارير المستقلة التي وردت فيها أرقام الفترة نفسها</div>
       <div class="chartbox sm"><canvas id="cCoverage"></canvas></div>
       <div class="note" id="nCoverage"></div>
@@ -3307,19 +3316,19 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="blockhead"><span>أولاً</span> المؤشرات السنوية</div>
   <div class="grid g4" id="e-kpis"></div>
   <div class="grid g2" style="margin-top:16px">
-    <div class="card"><h3>الناتج المحلي الإجمالي بالأسعار الجارية</h3>
+    <div class="card"><h3>كيف تحرّك الناتجُ بالأسعار الجارية؟</h3>
       <div class="hint">إجمالي القيمة المضافة لجميع الأنشطة مضافاً إليها صافي الضرائب على المنتجات</div>
       <div class="chartbox"><canvas id="cGdp"></canvas></div>
       <div class="note" id="nGdpPrel"></div>
       <div class="note" id="nGdp"></div>
       <div class="note" id="nShareRec"></div></div>
-    <div class="card"><h3>النمو الحقيقي السنوي</h3>
+    <div class="card"><h3>كم نما الاقتصادُ حقيقةً بعد استبعاد الأسعار؟</h3>
       <div class="hint">التغير عن السنة السابقة بالأسعار الثابتة — المقابل الحقيقي للمستوى الاسمي المجاور</div>
       <div class="chartbox"><canvas id="cRealY"></canvas></div>
       <div class="note" id="nRealY"></div></div>
   </div>
   <div class="card" style="margin-top:16px">
-    <h3>النفطي مقابل غير النفطي</h3>
+    <h3>كم يزن النفطُ في الناتج مقابل بقيّة الاقتصاد؟</h3>
     <div class="hint">استخراج النفط الخام والغاز الطبيعي مقابل بقية الاقتصاد</div>
     <div class="chartbox"><canvas id="cOilShare"></canvas></div>
     <div class="note" id="nOilShare"></div>
@@ -3330,7 +3339,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="grid g4" id="e-qkpis"></div>
   <p class="hint" id="e-qkpisNote"></p>
   <div class="card" style="margin-top:16px">
-    <h3>النمو الحقيقي حسب مجموعة الأنشطة</h3>
+    <h3>أيُّ مجموعاتِ الأنشطة تنمو وأيُّها يتراجع؟</h3>
     <div class="hint">التغير عن الربع المماثل من العام السابق — بالأسعار الثابتة</div>
     <div class="chartbox"><canvas id="cReal"></canvas></div>
     <div class="note" id="nReal"></div>
@@ -3345,11 +3354,11 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <div class="f"><label>الترتيب</label>
       <div class="seg" id="e-compMode"><button data-v="size" class="on">حسب الحجم</button><button data-v="growth">حسب النمو</button></div></div>
   </div>
-  <div class="card"><h3>الأنشطة الاقتصادية</h3>
+  <div class="card"><h3>أيُّ الأنشطة يصنع القيمةَ المضافة؟</h3>
     <div class="hint">القيمة المضافة بالأسعار الجارية، مليون ريال</div>
     <div class="chartbox lg"><canvas id="cSections"></canvas></div>
     <div class="note" id="nSections"></div></div>
-  <div class="card" style="margin-top:16px"><h3>تطور وزن أكبر ستة أنشطة</h3>
+  <div class="card" style="margin-top:16px"><h3>هل تغيّر وزنُ أكبر ستّة أنشطة؟</h3>
     <div class="hint">الحصة من إجمالي الناتج (%)</div>
     <div class="chartbox"><canvas id="cWeights"></canvas></div>
       <div class="note" id="nWeights"></div></div>
@@ -3359,22 +3368,22 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="sechead"><h2>الاستهلاك والاستثمار</h2>
   <p>جانب الطلب: إنفاق الأسر حسب الغرض، وتكوين رأس المال الثابت الإجمالي مقسّماً بين حكومي وغير حكومي وبين نفطي وغير نفطي — وهو المؤشر الأدق على أين يتشكل النمو المستقبلي.</p></div>
   <div class="grid g2">
-    <div class="card"><h3>الاستهلاك النهائي للأسر حسب الغرض</h3>
+    <div class="card"><h3>على أيِّ الأغراض تُنفق الأسر؟</h3>
       <div class="hint">مليون ريال</div>
       <div class="chartbox lg"><canvas id="cHH"></canvas></div>
       <div class="note" id="nHH"></div></div>
-    <div class="card"><h3>تكوين رأس المال الثابت</h3>
+    <div class="card"><h3>في أيِّ الأصول يقع الاستثمارُ الثابت؟</h3>
       <div class="hint">حسب نوع الأصل، مليون ريال</div>
       <div class="chartbox lg"><canvas id="cGfcf"></canvas></div>
       <div class="note" id="nGfcfAssets"></div></div>
   </div>
-  <div class="card" style="margin-top:16px"><h3>الاستثمار الحكومي مقابل غير الحكومي</h3>
+  <div class="card" style="margin-top:16px"><h3>من يستثمر: الحكومةُ أم غيرُها؟</h3>
     <div class="hint">إجمالي تكوين رأس المال الثابت حسب القطاع</div>
     <div class="chartbox"><canvas id="cGfcfSec"></canvas></div>
     <div class="note" id="nGfcf"></div></div>
   <!-- ec-8: التقسيم النفطي/غير النفطي كان موعوداً في النصّ وغير معروض،
        وبيانُه في الجدول المنشور — وهو تقسيمٌ للجزء غير الحكومي وحده. -->
-  <div class="card" style="margin-top:16px"><h3>الاستثمار النفطي مقابل غير النفطي</h3>
+  <div class="card" style="margin-top:16px"><h3>أين يقع الاستثمارُ غير الحكومي: نفطيٌّ أم غيرُه؟</h3>
     <div class="hint">تكوين رأس المال الثابت غير الحكومي، مليون ريال</div>
     <div class="chartbox"><canvas id="cGfcfOil"></canvas></div>
     <div class="note" id="nGfcfOil"></div></div>
@@ -3398,10 +3407,10 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="sechead"><h2>القطاع الخارجي</h2>
   <p>صادرات وواردات السلع والخدمات، وفائض أو عجز المعاملات الجارية كما تسجّله الحسابات القومية. تحوّل الفائض إلى عجز مؤشر مبكر على ضغط تمويلي خارجي.</p></div>
   <div class="grid g2">
-    <div class="card"><h3>الصادرات والواردات</h3><div class="hint">سلع وخدمات، مليون ريال</div>
+    <div class="card"><h3>كيف تحرّكت الصادراتُ والواردات؟</h3><div class="hint">سلع وخدمات، مليون ريال</div>
       <div class="chartbox"><canvas id="cTrade"></canvas></div>
       <div class="note" id="nTrade"></div></div>
-    <div class="card"><h3>فائض/(عجز) المعاملات الجارية</h3><div class="hint">مليون ريال</div>
+    <div class="card"><h3>هل الحسابُ الجاري في فائضٍ أم عجز؟</h3><div class="hint">مليون ريال</div>
       <div class="chartbox"><canvas id="cCA"></canvas></div>
       <div class="note" id="nCA"></div></div>
   </div>
@@ -3411,10 +3420,10 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="sechead"><h2>الدخل والادخار</h2>
   <p>من الناتج إلى الدخل القومي إلى الادخار: كل خطوة تكشف ما يُضاف إلى الناتج أو يُطرح منه قبل أن يصير دخلاً متاحاً — صافي دخل عوامل الإنتاج مع الخارج، ثم استهلاك رأس المال الثابت وصافي التحويلات الجارية — وكم يُدَّخر منه بدل أن يُستهلك.</p></div>
   <div class="grid g2">
-    <div class="card"><h3>الناتج والدخل القومي والادخار</h3><div class="hint">مليون ريال</div>
+    <div class="card"><h3>كيف يفترق الدخلُ القومي عن الناتج، وكم يُدَّخر؟</h3><div class="hint">مليون ريال</div>
       <div class="chartbox"><canvas id="cIncome"></canvas></div>
       <div class="note" id="nIncome"></div></div>
-    <div class="card"><h3>توزيع الناتج حسب نهج الدخل</h3><div class="hint">تعويضات العاملين وفائض التشغيل والضرائب</div>
+    <div class="card"><h3>كيف يتوزّع الناتجُ بين العمل ورأس المال والضرائب؟</h3><div class="hint">تعويضات العاملين وفائض التشغيل والضرائب</div>
       <div class="chartbox"><canvas id="cIncMix"></canvas></div>
       <div class="note" id="nIncMix"></div></div>
   </div>
@@ -3424,17 +3433,17 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="sechead"><h2>الجسر بين الاقتصاد والميزانية</h2>
   <p>هذا القسم هو سبب وجود اللوحتين معاً: الميزانية ليست معزولة عن الاقتصاد، والانفصال بين المؤشرين — حين يحدث — هو أهم إشارة تحليلية في اللوحة كلها.</p></div>
   <div class="grid g2">
-    <div class="card"><h3>الإيرادات النفطية مقابل الناتج النفطي</h3>
+    <div class="card"><h3>هل يتحرّك الإيرادُ النفطي مع الناتج النفطي؟</h3>
       <div class="hint">رقم قياسي، سنة الأساس 2018م = 100</div>
       <div class="chartbox"><canvas id="cLinkOil"></canvas></div>
       <div class="note" id="nLinkOil"></div></div>
-    <div class="card"><h3>الحجم المالي للحكومة نسبةً إلى الناتج</h3>
+    <div class="card"><h3>كم يزن النشاطُ المالي للحكومة في الاقتصاد؟</h3>
       <div class="hint">الإيرادات والمصروفات الحكومية كنسبة من الناتج المحلي (%) — وهو مقياس <b>حجمٍ مالي</b> لا وزنٍ إنتاجي في الاقتصاد</div>
       <div class="chartbox"><canvas id="cLinkGov"></canvas></div>
       <div class="note" id="nLinkGov"></div></div>
   </div>
   <div class="card" style="margin-top:16px">
-    <h3>طواعية الإيرادات غير النفطية تجاه الناتج غير النفطي</h3>
+    <h3>هل ينمو الإيرادُ غير النفطي أسرعَ من ناتجه؟</h3>
     <div class="hint">نسبة نمو الإيرادات غير النفطية إلى نمو الناتج غير النفطي — أعلى من 1 يعني نمو الإيراد أسرع من وعائه في تلك السنة. وهي الطواعية <span dir="ltr">(buoyancy)</span> لا المرونة <span dir="ltr">(elasticity)</span>، لأنها تشمل أثر التغيرات الضريبية التقديرية</div>
     <div class="chartbox sm"><canvas id="cElast"></canvas></div>
     <div class="note" id="nElast"></div>
@@ -3501,17 +3510,17 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <p>خام برنت هو المرجع السعري الذي تُسعَّر عليه معظم الخامات، ومنه تُقرأ حركة الإيراد النفطي السعودي. هذه اللوحة تعرض السعر بثلاثة تواترات — يومي للحركة، وشهري للاتجاه، وسنوي للمقارنة المالية — وكلٌّ لغرضه.</p></div>
   <div class="grid g4" id="n-kpis"></div>
   <div class="card" style="margin-top:16px">
-    <h3>المسار اليومي</h3>
+    <h3>كيف تحرّك سعرُ البرميل يوماً بيوم؟</h3>
     <div class="hint">السعر الفوري لكل يوم تداول</div>
     <div class="chartbox"><canvas id="cNDaily"></canvas></div>
     <div class="note" id="nNDaily"></div>
   </div>
   <div class="grid g2" style="margin-top:16px">
-    <div class="card"><h3>المتوسط الشهري</h3>
+    <div class="card"><h3>كيف تحرّك المتوسطُ الشهري للسعر؟</h3>
       <div class="hint">متوسط أسعار الإقفال اليومية لكل شهر</div>
       <div class="chartbox"><canvas id="cNMon"></canvas></div>
       <div class="note" id="nNMon"></div></div>
-    <div class="card"><h3>التقلّب</h3>
+    <div class="card"><h3>متى اشتدّ تقلّبُ السعر؟</h3>
       <div class="hint">الانحراف المعياري المتحرك لثلاثين يوماً من العوائد اليومية، سنوياً</div>
       <div class="chartbox"><canvas id="cNVol"></canvas></div>
       <div class="note" id="nNVol"></div></div>
@@ -3523,17 +3532,17 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <p>العلاقة بين سعر البرميل والإيراد النفطي في الميزانية ليست تناسباً مباشراً: بينهما الكمية المنتَجة، والنظام المالي، وتوقيت التحويلات وأرباح أرامكو. هذا القسم يقيس الجزء الذي يفسّره السعر، ويعزل ما تبقّى بدل أن ينسبه للسعر خطأً.</p></div>
   <div class="grid g4" id="n-lkpis"></div>
   <div class="card" style="margin-top:16px">
-    <h3>الإيراد النفطي الفعلي مقابل ما يفسّره السعر</h3>
+    <h3>كم من الإيراد النفطي يفسّره السعرُ وحده؟</h3>
     <div class="hint">انحدار الإيراد النفطي الربعي على متوسط برنت للربع نفسه — والفارق هو ما لا يفسّره السعر</div>
     <div class="chartbox"><canvas id="cNFit"></canvas></div>
     <div class="note" id="nNFit"></div>
   </div>
   <div class="grid g2" style="margin-top:16px">
-    <div class="card"><h3>الأثر السعري مقابل الأثر المتبقي</h3>
+    <div class="card"><h3>ما نصيبُ السعر من تغيّر الإيراد النفطي؟</h3>
       <div class="hint">تفكيك التغير السنوي في الإيراد النفطي، مليون ريال</div>
       <div class="chartbox"><canvas id="cNDecomp"></canvas></div>
       <div class="note" id="nNDecomp"></div></div>
-    <div class="card"><h3>الإيراد النفطي لكل دولار من سعر برنت</h3>
+    <div class="card"><h3>كم ريالاً يجلب كلُّ دولارٍ في سعر البرميل؟</h3>
       <div class="hint">مليون ريال لكل دولار — يرتفع بزيادة الكمية أو بتشديد النظام المالي، وينخفض بعكسهما</div>
       <div class="chartbox"><canvas id="cNPerUsd"></canvas></div>
       <div class="note" id="nNPerUsd"></div></div>
@@ -3544,13 +3553,13 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="sechead"><h2>فجوة التعادل</h2>
   <p>سعر التعادل المالي هو السعر الذي تتوازن عنده الميزانية. الفجوة بينه وبين السعر المحقق فعلاً هي الفائض أو العجز مُترجَماً إلى دولارات للبرميل — وهي أوضح صياغة لسؤال «هل السعر كافٍ؟».</p></div>
   <div class="card">
-    <h3>السعر المحقق مقابل سعر التعادل</h3>
+    <h3>كم يفصل السعرَ المحقَّق عن سعر التعادل سنوياً؟</h3>
     <div class="hint">كلاهما بالدولار للبرميل، سنوياً</div>
     <div class="chartbox"><canvas id="cNGap"></canvas></div>
     <div class="note" id="nNGap"></div>
   </div>
   <div class="card" style="margin-top:16px">
-    <h3>حساسية الميزانية لتغير السعر</h3>
+    <h3>كم يتغيّر الرصيدُ إن تحرّك السعرُ دولاراً؟</h3>
     <div class="hint">أثر تحرك السعر على الإيراد النفطي والرصيد، مقدَّراً من العلاقة التاريخية لا من افتراض</div>
     <div class="chartbox sm"><canvas id="cNSens"></canvas></div>
     <div class="note" id="nNSens"></div>
@@ -3589,17 +3598,17 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <div id="f-cov"></div>
     <div class="grid g4" id="f-kpis"></div>
     <div class="grid g2">
-      <div class="card"><h3>الأصول تحت الإدارة مقابل المستهدف</h3>
+      <div class="card"><h3>هل بلغت الأصولُ تحت الإدارة مستهدفَها؟</h3>
         <p class="hint">العمود الأزرق هو المتحقق، والمعيّن الذهبي هو مستهدف استراتيجية 2021-2025م.</p>
         <div class="chartbox"><canvas id="f-cAum"></canvas></div>
         <div id="f-aumNote"></div></div>
-      <div class="card"><h3>توزيع الأصول 2025م</h3>
+      <div class="card"><h3>كيف تتوزّع أصولُ الصندوق؟</h3>
         <p class="hint">كما نشره التقرير السنوي للصندوق.</p>
         <div class="chartbox"><canvas id="f-cAlloc"></canvas></div>
         <div id="f-allocNote"></div></div>
     </div>
     <div class="grid g2">
-      <div class="card"><h3>عدد شركات المحفظة</h3>
+      <div class="card"><h3>كم شركةً في المحفظة، وإلى أين يتّجه العدد؟</h3>
         <p class="hint">العدد يتناقص منذ 2023م.</p>
         <div class="chartbox"><canvas id="f-cCo"></canvas></div>
         <div id="f-coNote"></div></div>
@@ -3622,7 +3631,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <section id="f-s-targets">
     <div class="perbar" id="f-tgtBar"></div>
     <div id="f-t1">
-      <div class="card"><h3>نسبة التحقق من مستهدفات 2021-2025م</h3>
+      <div class="card"><h3>أيُّ مستهدفاتِ الاستراتيجية تحقّقت؟</h3>
         <!-- pf-5: كان هنا نصٌّ ثابت يقول «مستهدفان مستبعدان» والرسم يستبعد
              أربعة — عددٌ مكتوبٌ في نصّ ومصدرُه مُرشِّحٌ في الشيفرة. فيُشتقّ
              من المُرشِّح نفسه عند التصيير. -->
@@ -3644,7 +3653,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
      الاقتران ممكن. فنُقلت البطاقةُ إلى **صدر** القسم قبل أوّل رقم. -->
     <div class="card" id="adv-tad"><h3>حدودُ هذه الصفحة</h3><div class="muted"><b>ولا شيء في هذه الصفحة مشورةً استثمارية.</b> ما يُعرض هنا <b>بياناتٌ منشورةٌ من مصدرها</b> ونِسبٌ محتسبةٌ منها، بلا رأيٍ في مزايا التعامل في أي ورقةٍ مالية ولا مخاطره، ولا توصيةَ شراءٍ ولا بيعٍ ولا احتفاظ، ولا تقييمَ جدارةٍ ائتمانية من هذه اللوحة. و<b>هذه اللوحة ليست جهةً مرخَّصة</b> من هيئة السوق المالية ولا تمارس نشاطاً مرخَّصاً، و<b>لا يُبنى على غياب صفٍّ من الجداول استنتاج</b>.</div></div>
     <div class="grid g4" id="f-tadKpis"></div>
-    <div class="card"><h3>ملكية الصندوق في الشركات المدرجة</h3>
+    <div class="card"><h3>أين يملك الصندوقُ في السوق المدرَجة؟</h3>
       <p class="hint">كل نسبة هنا معلنة من المالك نفسه وفق نظام الإفصاح، ومصدرها تقرير كبار الملاك لدى تداول.</p>
       <div class="fbar" id="f-tadCtl"></div>
       <div class="tallbox"><canvas id="f-cTad"></canvas></div></div>
@@ -3661,7 +3670,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
      الاقتران ممكن. فنُقلت البطاقةُ إلى **صدر** القسم قبل أوّل رقم. -->
     <div class="card" id="adv-us"><h3>حدودُ هذه الصفحة</h3><div class="muted"><b>ولا شيء في هذه الصفحة مشورةً استثمارية.</b> ما يُعرض هنا <b>بياناتٌ منشورةٌ من مصدرها</b> ونِسبٌ محتسبةٌ منها، بلا رأيٍ في مزايا التعامل في أي ورقةٍ مالية ولا مخاطره، ولا توصيةَ شراءٍ ولا بيعٍ ولا احتفاظ، ولا تقييمَ جدارةٍ ائتمانية من هذه اللوحة. و<b>هذه اللوحة ليست جهةً مرخَّصة</b> من هيئة السوق المالية ولا تمارس نشاطاً مرخَّصاً، و<b>لا يُبنى على غياب صفٍّ من الجداول استنتاج</b>.</div></div>
     <div class="grid g4" id="f-usKpis"></div>
-    <div class="card"><h3>محفظة الأسهم الأمريكية المُقرّة</h3>
+    <div class="card"><h3>كيف تحرّكت المحفظةُ الأمريكية المُقرّة؟</h3>
       <p class="hint">القيمة السوقية في نهاية كل ربع، وعدد المراكز على المحور المقابل.</p>
       <div class="chartbox"><canvas id="f-cUs"></canvas></div></div>
     <div class="card"><h3>آخر إقرار</h3><div id="f-usTbl"></div></div>
@@ -3685,10 +3694,11 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          أختام. وبوابةُ vstamps تعدّ البطاقات لا لوحاتِ الرسم فلا تراه.
          فصار لكلِّ رسمٍ بطاقتُه. -->
     <div class="grid g2">
-      <div class="card"><h3>حجم الأصول تحت الإدارة</h3>
+      <div class="card"><h3>أين يقع الصندوقُ بين نظرائه في حجم الأصول؟</h3>
         <div class="chartbox"><canvas id="f-cPeerV"></canvas></div>
         <div id="f-peerVNote"></div></div>
-      <div class="card"><h3>مؤشر إفصاحٍ مُركَّب — من صنع هذه اللوحة</h3>
+      <div class="card"><h3>كم يُفصح الصندوقُ مقابل نظرائه؟</h3>
+        <div class="hint">مؤشرُ إفصاحٍ <b>مُركَّبٌ من صنع هذه اللوحة</b>، لا مؤشرٌ منشورٌ من جهةٍ أخرى: بنودُه وأوزانُه مُعلَنةٌ تحت الرسم.</div>
         <div class="chartbox"><canvas id="f-cPeerD"></canvas></div>
         <div id="f-peerDNote"></div></div>
     </div>
@@ -3699,7 +3709,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <div class="card"><h3>مبادئ سانتياغو — المعيار الدولي لحوكمة الصناديق السيادية</h3>
       <div id="f-santiago"></div></div>
     <div class="grid g2">
-      <div class="card"><h3>مسار الصندوق في مؤشر الحوكمة والاستدامة</h3>
+      <div class="card"><h3>كيف تحرّك ترتيبُ الصندوق في مؤشر الحوكمة والاستدامة؟</h3>
         <div class="chartbox"><canvas id="f-cGsr"></canvas></div></div>
       <div class="card"><h3>الدرجة التفصيلية 2025م</h3><div id="f-gsrBox"></div></div>
     </div>
@@ -3757,7 +3767,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> <b>السبعة</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد في 19-09-2026م:</b> كان منشوراً «ستّة»، والشقُّ الثاني من <span dir="ltr">(B)</span> لم يكن مفحوصاً:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">069301ee</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">584e2a33</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -3772,16 +3782,21 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <!-- gx-19: ثلاثُ دعاوى كانت تحيل إلى «مُعِدّ اللوحة» ولا قناةَ اتصالٍ
          واحدة في الصفحة كلِّها — لا بريد ولا نموذج. وبيانُ إتاحةٍ بلا قناةٍ
          فعليّة ليس بياناً. وgx-22: «في كل لوحة» تكذّبها لوحتان من خمس. -->
-<div style="margin-bottom:7px"><b>اتجاه محاور الرسوم:</b> الصفحة تُقرأ من اليمين إلى اليسار، أما <b>محاور الرسوم البيانية فتسير من اليسار إلى اليمين</b> — وهو العرف الدولي في عرض السلاسل الزمنية: أقدمُ فترةٍ عند اليسار وأحدثُها عند اليمين، وقيمةُ الشريط الأفقي تنمو يميناً. وأثاثُ الرسم (مفتاح السلاسل والتلميح) بالعربية ومن اليمين. فإن بدأتَ القراءة من يمين الرسم فأنت عند <b>أحدث</b> فترةٍ لا أقدمها.</div>
+<div style="margin-bottom:7px"><b>اتجاه محاور الرسوم (عُدِّل في 05-10-2026م):</b> كان المنشور هنا أن محاور الرسوم تسير من اليسار إلى اليمين، <b>وصار الاتجاه تابعاً للغة المحتوى</b>: المحتوى عربيٌّ فكلُّ شيءٍ فيه من اليمين إلى اليسار. <b>أقدمُ فترةٍ عند اليمين وأحدثُها عند اليسار</b>، ومحورُ القيم على اليمين، والتلميحاتُ والمفاتيح كذلك. والاستثناءُ الوحيد: الرسمُ المبعثر بمحورَي قيمٍ كمّيَّين، فقلبُ محورٍ كمّيٍّ يعكس اتجاهَ العلاقة بصرياً. ويُشتقّ الاتجاهُ في ممرٍّ واحدٍ لكلِّ رسم، وتقيسه بوابةُ <span dir="ltr">vdir</span> على كلِّ رسمٍ ظاهر.</div>
+    <div style="margin-bottom:7px"><b>دلالةُ اللون ومداها:</b> ثلاثةُ ألوانٍ محجوزةٌ لمعانٍ ثابتةٍ في اللوحة كلِّها: <b>الإيرادات</b> و<b>المصروفات</b> و<b>النفط</b>. وما عداها في <b>رسوم التفكيك</b> (تكوين الإيرادات والمصروفات ومكوّنات الناتج) ألوانٌ <b>موضعيّةٌ لا دلاليّة</b>: ترتيبُها ترتيبُ البنود بحجمها، ومعناها في مفتاح الرسم وفي تلميحه لا في اللون نفسه. وسببُ الحدّ مقيس: اللوحة تحمل اثني عشر لوناً و132 تسميةَ سلسلة، فلا تكفي لونيّةٌ دلاليّةٌ واحدةٌ لكلِّ تسمية، وتكثيرُ الألوان ينزل بتباينها دون العتبة. ويحرس هذا الحدَّ أمران: الوسمُ المباشر عند طرف كلِّ سلسلةٍ خطّية، وتعدديةُ الترميز (تقطيعٌ وشكلُ نقطةٍ ونقشٌ) فلا يُحمَّل اللونُ وحدَه معنىً.</div>
     <!-- lg-2 · od-13: البند 3(a)(1) من النصّ القانوني لـCC BY 4.0 يشترط ستّة
          أشياء، وكانت الصيغةُ المنشورة تحمل اثنين: رابطَ المادة واسمَ الرخصة.
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل — ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+069301ee · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">069301ee</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
-    <!-- ax-16: محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية RTL،
-         وأثاثُ الرسم (الأسطورة والتلميح) مضبوطٌ على RTL — فالاختيارُ مشروعٌ
-         والصمتُ عنه هو المشكلة. --></div></div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+584e2a33 · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">584e2a33</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
+         RTL، وأثاثُ الرسم مضبوطٌ على RTL — فالاختيارُ مشروعٌ والصمتُ عنه هو
+         المشكلة.
+         UXB/vdir (05-10-2026م): سقط هذا التعليلُ بالقياس. الاتجاهُ تابعٌ للغة
+         المحتوى، فصار يُشتقّ من لغة المستند في ممرٍّ واحد، وتقيسه بوابةُ vdir
+         على كلِّ رسمٍ ظاهر. والنصُّ المنشور في «اصطلاحات العرض» عُدِّل معه،
+         فلا يبقى في الصفحة بيانٌ يصف ما لم يعد يقع. --></div></div>
   </div>
   <div class="card" id="ab-src" style="margin-top:16px">
     <h3>المصادر الرسمية للسلاسل المعروضة</h3>
@@ -3798,7 +3813,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+069301ee · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">069301ee</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+584e2a33 · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">584e2a33</span></div>
 </footer>
 </div>
 
@@ -15129,7 +15144,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   "def_ar": "أي يوم في السنة لا يختص بأيام العمل فقط."
  }
 ]</script>
-<script>window.MIRSAD_GATES={"plants": {"vtabs": 4, "vcsv": 5, "vaxis": 2, "vtext": 13, "va11y": 8, "vall": 1, "vstamps": 2, "vleak": 1, "vdcat": 2, "vlegal": 1, "vsr": 5, "vfresh": 1, "vdash": 3, "vcov": 2, "vpart": 2, "vneg": 1, "vscope": 1, "vfade": 1, "vdir": 2, "vpaint": 3}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vneg", "vpaint", "vpart", "vplant", "vscope", "vsr", "vstamps", "vtabs", "vtext"]};window.DATA={
+<script>window.MIRSAD_GATES={"plants": {"vtabs": 4, "vcsv": 5, "vaxis": 2, "vtext": 13, "va11y": 8, "vall": 1, "vstamps": 2, "vleak": 1, "vdcat": 2, "vlegal": 1, "vsr": 5, "vfresh": 1, "vdash": 3, "vcov": 2, "vpart": 2, "vneg": 1, "vscope": 1, "vfade": 1, "vdir": 3, "vpaint": 8}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"]}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vneg", "vpaint", "vpart", "vplant", "vscope", "vsr", "vstamps", "vtabs", "vtext"]};window.DATA={
  "periods": [
   "2017Q1",
   "2017Q2",
@@ -28394,7 +28409,96 @@ function ixSortKey(td){
      · 6 بطاقاتٍ بلا اسمٍ البتّة (خمسُ بطاقاتٍ استشارية وبطاقةُ جسر
        الانحراف): كُتبت لها عناوينُ صريحةٌ في القالب.
    فما كان له اسمٌ أُعلن، وما لم يكن له اسمٌ كُتب له. */
+/* ── UXB-10 (05-10-2026م): الشكلُ يُجيب السؤالَ الذي يطرحه العنوان ────
+   قِيس أنّ 9 من 10 رسومٍ مكدَّسةٍ تَعرِض مستوياتٍ مطلقة، وعناوينُها تطرح
+   سؤالَ تركيبٍ أو حصّة («تكوين الإيرادات»، «النفطي مقابل غير النفطي»).
+   والمكدَّسُ بالمستويات يجيب «كم المجموع» لا «كم حصّةُ الجزء»: ارتفاعُ قطعةٍ
+   يكبر بكِبَر المجموع وإن نقصت حصّتُها. فيُعطى الرسمُ مبدِّلاً بين الاثنين،
+   ويتبعه ختمُ الوحدة وعنوانُ المحور فلا يفترق المعروضُ عن المُعلَن. */
+function ixShareCapable(ch){
+  if(!ch||!ch.canvas||!ch.canvas.offsetParent) return false;
+  const o=ch.options||{}, sc=o.scales||{};
+  if(!((sc.y&&sc.y.stacked)||(sc.x&&sc.x.stacked))) return false;
+  const ds=(ch.config&&ch.config.data&&ch.config.data.datasets)||[];
+  if(ds.length<3) return false;
+  /* ما وحدتُه نسبةٌ أصلاً لا يُحوَّل. */
+  const card=ch.canvas.closest('.card');
+  const u=ixCardUnit(card);
+  if(!u||u==='%'||u==='٪'||/%/.test(u)) return false;
+  return true;
+}
+function ixCardUnit(card){
+  const ch=(card&&card.__chips)||[];
+  const u=(ch.filter(Boolean).find(c=>Array.isArray(c)&&/الوحدة/.test(String(c[0])))||[])[1];
+  return u? String(u).replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim() : '';
+}
+function ixApplyShare(ch,on){
+  const cfg=ch.config, ds=cfg.data.datasets||[];
+  if(!ch.$rawData) ch.$rawData=ds.map(d=>(d.data||[]).slice());
+  const co=cfg.options||{}, key=(co.indexAxis==='y')?'x':'y';
+  const ax=(co.scales||{})[key]; if(!ax) return;
+  if(!ch.$axSaved) ch.$axSaved={max:ax.max, cb:(ax.ticks&&ax.ticks.callback)||null, title:ax.title};
+  if(on){
+    const n=ch.$rawData[0].length;
+    const tot=[]; for(let i=0;i<n;i++){ let t=0,any=false;
+      ch.$rawData.forEach(a=>{ const v=Number(a[i]); if(a[i]!=null&&!isNaN(v)){ t+=v; any=true; } });
+      tot.push(any?t:null); }
+    ds.forEach((d,j)=>{ d.data=ch.$rawData[j].map((v,i)=>{
+      const t=tot[i]; if(v==null||t==null||!t) return null;
+      return Math.round(Number(v)/t*1000)/10; }); });
+    ax.max=100; ax.ticks=Object.assign({},ax.ticks,{callback:v=>ixIso(String(v)+'%')});
+  }else{
+    ds.forEach((d,j)=>{ d.data=ch.$rawData[j].slice(); });
+    ax.max=ch.$axSaved.max;
+    ax.ticks=Object.assign({},ax.ticks,{callback:ch.$axSaved.cb||undefined});
+  }
+  ch.$share=!!on;
+  /* الختمُ يتبع المعروض: الوحدةُ تُبدَّل، ومنها يُشتقّ عنوانُ المحور. */
+  const card=ch.canvas.closest('.card');
+  if(card&&card.__chips){
+    if(!card.__unitRaw) card.__unitRaw=ixCardUnit(card);
+    card.__chips=card.__chips.map(c=>(Array.isArray(c)&&/الوحدة/.test(String(c[0])))
+      ? [c[0], on? '% من مجموع الفترة' : card.__unitRaw] : c);
+    try{ ixRepaintStamps(card); }catch(e){}
+  }
+  ch.update('none');
+}
+function ixShareToggle(){
+  const insts=(window.Chart&&Chart.instances)? Object.values(Chart.instances) : [];
+  insts.forEach(ch=>{
+    if(!ixShareCapable(ch)) return;
+    const card=ch.canvas.closest('.card'); if(!card) return;
+    if(card.querySelector(':scope > .shrtog')) return;
+    const id=ch.canvas.id||('c'+Math.random().toString(36).slice(2));
+    const nm=((card.querySelector('h3')||{}).textContent||'الرسم').replace(/\s+/g,' ').trim();
+    const box=document.createElement('div');
+    box.className='shrtog'; box.setAttribute('role','group');
+    box.setAttribute('aria-label','طريقةُ عرض «'+nm+'»');
+    /* يُبنى بمكوّن اللوحة القائم (‎.seg‎ حاوياً وأزرارُه بداخله) لا بصنفٍ
+       جديد: صنفٌ موازٍ يرث حدَّ الحاوية فينزل تباينُه دون 3:1 — وهو ما
+       التقطته va11y عند أوّل تشغيل. */
+    box.innerHTML='<div class="seg"><button type="button" class="on" data-v="abs">قيمة</button>'+
+                  '<button type="button" data-v="pct">حصّة %</button></div>';
+    [...box.querySelectorAll('button')].forEach(btn=>{
+      btn.setAttribute('aria-pressed', btn.dataset.v==='abs'?'true':'false');
+      btn.setAttribute('aria-label',(btn.dataset.v==='abs'?'عرضُ القيم المطلقة':'عرضُ حصّة كل مكوّن من مجموع الفترة')+'، '+nm);
+      btn.addEventListener('click',()=>{
+        const on=btn.dataset.v==='pct';
+        [...box.querySelectorAll('button')].forEach(b=>{
+          const a=(b.dataset.v==='pct')===on;
+          b.classList.toggle('on',a); b.setAttribute('aria-pressed',a?'true':'false'); });
+        try{ ixApplyShare(ch,on); }catch(e){}
+        try{ ixSay(on? 'عُرضت حصّةُ كل مكوّن من مجموع الفترة في «'+nm+'»'
+                    : 'عُرضت القيمُ المطلقة في «'+nm+'»'); }catch(e){}
+      });
+    });
+    const cv=ch.canvas, host=cv.closest('.chart')||cv.parentElement;
+    card.insertBefore(box, host||cv);
+  });
+}
+
 function ixNameCards(root){
+
   const sc=root||document;
   sc.querySelectorAll('.card.kpi > .l').forEach(el=>{
     if(el.getAttribute('role')==='heading') return;
@@ -29426,6 +29530,7 @@ function ixWireTabs(){
   ixWireTableExport();
   ixMarkSortable();
   ixNameCards();
+  try{ ixShareToggle(); }catch(e){}
   try{ ixScopeNote(); }catch(e){}
   /* ── نمطُ التبويبات كاملاً لا نصفَه ────────────────────────
      كان في الصفحة سبعةٌ وثلاثون ‎role="tab"‎ ولا ‎tabpanel‎ واحد ولا
@@ -29910,6 +30015,36 @@ const ixEvtPlugin={id:'ixEvt',
         c.fillStyle=_EVP.surf; c.font='600 '+ixChartFs(0.75)+'px '+((window.Chart&&Chart.defaults.font.family)||'system-ui,sans-serif');
         c.textAlign='center'; c.textBaseline='middle';
         c.fillText(String(ri+1),px,a.top+7);
+        /* ── UXB-16 (05-10-2026م): الرقمُ وحدَه شفرةٌ ثانيةٌ تُفَكّ من قائمةٍ
+           أسفل البطاقة، كالمفتاح في UXB-02. فيُكتب اسمُ الحدث مختصراً عند
+           العلامة نفسِها متى اتّسع له المكان، ويبقى الرقمُ مرجعاً للقائمة
+           لا بديلاً عن الاسم. والشرطُ مقيسٌ لا مُقدَّر: مسافةٌ كافيةٌ إلى
+           العلامة المجاورة، وبقاءٌ داخل منطقة الرسم. */
+        try{
+          const _nm=String(r.t||r.n||r.name||'').replace(/\s+/g,' ').trim();
+          if(_nm){
+            const _fs=ixChartFs(0.68);
+            c.font='600 '+_fs+'px '+((window.Chart&&Chart.defaults.font.family)||'system-ui,sans-serif');
+            const _sh=_nm.length>26? _nm.slice(0,25)+'…' : _nm;
+            const _w=c.measureText(_sh).width;
+            /* أقربُ علامةٍ أخرى على المحور نفسِه */
+            let _gap=1e9;
+            Object.keys(seen).forEach(k=>{ if(+k===ri) return;
+              const _o=xs.getPixelForValue(labs.findIndex(L=>{ const q=ixLabelKey(L);
+                return rows[+k].q? (rows[+k].q===q.q) : (rows[+k].y===q.y); }));
+              if(isFinite(_o)) _gap=Math.min(_gap,Math.abs(_o-px)); });
+            const _dir = (px-_w-18>a.left)? -1 : 1;
+            const _x = _dir<0? px-11 : px+11;
+            const _fits = (_dir<0? (_x-_w>a.left) : (_x+_w<a.right)) && _gap> (_w+26);
+            if(_fits){
+              c.textAlign = _dir<0? 'right':'left'; c.textBaseline='middle';
+              c.fillStyle=_EVP.surf; c.globalAlpha=0.9;
+              c.fillRect(_dir<0? _x-_w-3 : _x-3, a.top-1, _w+6, _fs*1.5);
+              c.globalAlpha=1; c.fillStyle=_EVP.ink2||_EVP.ink3;
+              c.fillText(_sh,_x,a.top+7);
+            }
+          }
+        }catch(e){}
         c.restore();
       });
     });
@@ -32148,7 +32283,20 @@ function renderExp(){
 
   (function(){const e=document.getElementById('nExpMix');
     if(e) e.innerHTML = AE&&AE.partial.length? alignedNote(AE)
-      : '<b>القراءة:</b> البنود مرتّبة بحجمها، والتصنيف وفق دليل إحصاءات مالية الحكومة (GFSM 2014).';})();
+      : '<b>القراءة:</b> البنود مرتّبة بحجمها، والتصنيف وفق دليل إحصاءات مالية الحكومة (GFSM 2014).'
+        /* ── UXB-01 (05-10-2026م) · حدٌّ مُعلَنٌ لا عطبٌ مستور ──────────────
+           قِيس: ثماني فئاتٍ مكدَّسةٍ على 38 ربعاً = 296 قطعةً في منطقةِ رسمٍ
+           ارتفاعُها 240 بكسلاً، منها 61 دون 3 بكسل. والعلاجُ الذي يقترحه
+           الدمجُ (إبقاءُ الأربع الكبرى وجمعُ الباقي) **يخالف قاعدةَ اللوحة
+           نفسِها**: الفئاتُ هنا فئاتُ GFSM 2014 كما ينشرها المصدر، ودمجُها
+           في بندٍ مخترَعٍ يُنشئ تصنيفاً لا وجودَ له في البيان، وهو العطبُ
+           الذي تحرس منه بطاقةُ «مطابقة التسميات». فيُعلَن الحدُّ ومعه
+           مخرجاه القائمان بدل أن يُستر. */
+        + ' <b>حدُّ هذا الشكل:</b> ثماني فئاتٍ على ثمانيةٍ وثلاثين ربعاً تجعل أصغرَ'
+        + ' الفئات شريطاً دون ثلاثة بكسلات. والفئاتُ فئاتُ (GFSM 2014) كما ينشرها'
+        + ' المصدر فلا تُدمج في بندٍ مخترَع. ولقراءتها: <b>بدِّل إلى «حصّة %»</b> أعلى'
+        + ' الرسم، أو انتقل إلى التواتر السنوي فيتّسع الشريط أربعة أضعاف، وكلُّ قيمةٍ'
+        + ' مفردةٍ معروضةٌ في تبويب البيانات.';})();
   const shr=k=>v.agg('exp',k).map((x,i)=>{const t=v.agg('exp','TOTAL')[i];return x==null||!t?null:x/t*100;});
   draw('cCapex',{type:'line',data:{labels:v.labels,datasets:[
       {label:'رأسمالي %',data:shr('CAPEX'),borderColor:C.s7,borderWidth:2,tension:.28,pointRadius:0,pointHoverRadius:5},
@@ -33791,7 +33939,7 @@ function renderIntl(){
            exp:['المصروفات الحكومية','النسبة المئوية من الناتج المحلي الإجمالي','n']};
   const key=(document.getElementById('fmSel')||{value:'debt'}).value;
   const meta=M[key], data=I[key]||{};
-  document.getElementById('fmTitle').textContent=meta[0];
+  document.getElementById('fmTitle').textContent='أين تقع المملكةُ بين الدول في: '+meta[0]+'؟';
   document.getElementById('fmHint').textContent=meta[1]+'، '+ylab(I.year);
   /* fx-11: قاعدة DataMapper تخلط المحقَّق بالمتوقَّع في سلسلةٍ واحدة، وسنةُ
      العرض هنا سنةٌ لم تنقضِ — فأرقامُها <b>توقعاتُ</b> الصندوق لا بياناتٍ
@@ -34669,7 +34817,10 @@ function renderIntl2(){
     ST('cBrent','سنوي',cv,'دولار للبرميل','سعر برنت الفعلي مقابل سعر التعادل المحسوب');
   })();
   const grp=iGroup(), ys=iYears(sr), yr=iLatest(sr,grp);
-  document.getElementById('iTitle').textContent=sr.ar;
+  /* UXB-04: عنوانُ البطاقة يطرح السؤالَ الذي يجيب عنه الرسم. وهذان
+     الرسمان عنوانُهما اسمُ المؤشّر المنتقى، فيُؤطَّر الاسمُ في السؤال بدل
+     أن يُترك وصفاً مجرَّداً. */
+  document.getElementById('iTitle').textContent='أين تقع المملكةُ بين الدول في: '+sr.ar+'؟';
   document.getElementById('iHint').textContent=sr.unit+' — '+ylab(yr)+' · المصدر: '+sr.src;
   ST('cIrank','سنوي',ylab(yr),sr.unit,'المصدر: '+sr.src);
   ST('cItrend','سنوي',span2(ys),sr.unit,'المملكة مقابل وسيط بقية المجموعة — مستثنياً المملكة');
