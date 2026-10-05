@@ -105,7 +105,7 @@ try{
   "@type": "xsd:date"
  },
  "dcterms:modified": {
-  "@value": "2026-10-04",
+  "@value": "2026-10-05",
   "@type": "xsd:date"
  },
  "dcat:landingPage": {
@@ -1828,7 +1828,32 @@ table{width:100%;border-collapse:collapse;font-size:var(--fs-xs);font-variant-nu
 th,td{padding:9px 10px;border-bottom:1px solid var(--line-soft);text-align:right}
 th{color:var(--ink-3);font-weight:600;font-size:var(--fs-2xs);position:sticky;top:0;background:var(--surface-1)}
 tbody tr:hover{background:var(--surface-2)}
-.tblwrap{max-height:460px;overflow:auto;border-radius:10px}
+/* UXB-13 (05-10-2026م): كان القيدُ 460 بكسلاً فيضع تمريراً رأسياً متداخلاً
+   داخل صفحةٍ عمقُها عشرةُ آلاف، و37 جدولاً يتجاوز عرضَ حاويته عند 390 بكسلاً
+   بلا أيِّ إشارةٍ إلى وجود بقيّة. والمعالجةُ هي نفسُها التي عولج بها شريطُ
+   التبويبات: عمودٌ أوّلُ لاصقٌ يبقى مرساةَ الصفّ، وتدرُّجُ إخفاءٍ عند الحافّة
+   يقول إنّ وراءه بقيّة، وقيدٌ رأسيٌّ يتبع النافذة لا رقماً ثابتاً. */
+.tblwrap{max-height:min(70vh,760px);overflow:auto;border-radius:10px;position:relative;
+  background:linear-gradient(to left,var(--surface-1) 30%,transparent),
+             linear-gradient(to left,rgba(0,0,0,.10),transparent 30%);
+  background-repeat:no-repeat;background-size:40px 100%,18px 100%;
+  background-position:left center,left center;background-attachment:local,scroll}
+.tblwrap table th:first-child,.tblwrap table td:first-child{
+  position:sticky;inset-inline-start:0;background:var(--surface-1);z-index:2}
+.tblwrap table th:first-child{z-index:3}
+.tblwrap tbody tr:hover td:first-child{background:var(--surface-2)}
+/* UXB-06: الفرزُ يُعلَن قبل أن يُجرَّب — مؤشّرٌ دائمٌ على كل رأسٍ قابلٍ للفرز */
+.tblwrap th[data-sortable]{cursor:pointer;user-select:none;white-space:nowrap;
+  height:28px;padding-block:8px}   /* هدفُ ضغطٍ لا ينزل عن 24 بكسلاً (WCAG 2.5.8) */
+.tblwrap th[data-sortable]::after{content:"⇅";margin-inline-start:6px;color:var(--ink-2);
+  font-size:.92em;opacity:.95}
+.tblwrap th[aria-sort="ascending"]::after{content:"↑";color:var(--brand-text)}
+.tblwrap th[aria-sort="descending"]::after{content:"↓";color:var(--brand-text)}
+.tblwrap th[data-sortable]:hover{color:var(--ink)}
+.tblwrap th[data-sortable]:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+/* UXB-19: الرابطُ داخل النصّ لا يُميَّز باللون وحدَه (تقنية WCAG رقم G183) */
+.note a,.hint a,.card p a,.card li a,.sechead p a,.gitem a{
+  text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
 .num{font-variant-numeric:tabular-nums}
 .pos{color:var(--good)} .neg{color:var(--bad)}
 
@@ -2594,7 +2619,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
            واحداً (إعادةُ نشرٍ بعد تعديلِ نصّ فاحص، أو مهمّةٌ مجدولة) يُعلن على
            القارئ تحديثاً لم يقع. فصار الحقلان اثنين: «آخر بيان منشور» يُشتقّ
            من آخر فترةٍ في البيان، و«تاريخ البناء» باسمه الصحيح. -->
-      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">04-10-2026م</span></div>
+      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">05-10-2026م</span></div>
     </div>
   </div>
   <!-- ux-mob-02: على 390 نقطةً كانت الشاشةُ الأولى كلُّها ترويسةً وشريطَ
@@ -3732,7 +3757,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> <b>السبعة</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد في 19-09-2026م:</b> كان منشوراً «ستّة»، والشقُّ الثاني من <span dir="ltr">(B)</span> لم يكن مفحوصاً:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">e46615fe</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">a654c4b5</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -3753,7 +3778,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل — ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+e46615fe · 04-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">e46615fe</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+a654c4b5 · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">a654c4b5</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
     <!-- ax-16: محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية RTL،
          وأثاثُ الرسم (الأسطورة والتلميح) مضبوطٌ على RTL — فالاختيارُ مشروعٌ
          والصمتُ عنه هو المشكلة. --></div></div>
@@ -3773,7 +3798,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+e46615fe · 04-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">e46615fe</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+a654c4b5 · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">a654c4b5</span></div>
 </footer>
 </div>
 
@@ -23319,7 +23344,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    ],
    "contact": "تُرسل ملاحظات الإتاحة بفتح مسألةٍ في مستودع اللوحة على <span dir=\"ltr\">GitHub</span>: <span dir=\"ltr\">github.com/salrajih90/mirsad/issues</span>، وتُقيَّد كل معالجة في سجل التصحيحات.",
    "asOf": "05-09-2026م",
-   "autoAsOf": "04-10-2026م",
+   "autoAsOf": "05-10-2026م",
    "sc": [
     [
      "1.1.1",
@@ -28137,7 +28162,223 @@ function ixFade(col,a){
    فلا يُضبط الاتجاهُ رسماً برسم ولا يُنسى في رسمٍ جديد.
    والاستثناءُ الوحيد بنيوياً: المبعثرُ بمحورَي قيمٍ كمّيَّين — قلبُ محورٍ كمّيٍّ
    يعكس اتجاهَ العلاقة بصرياً. وما عداه يحتاج ‎meta.dirOk‎ مُعلَناً في البطاقة. */
+/* ── UXB-02 · UXB-20 (05-10-2026م): الوسمُ عند السلسلة لا في مفتاحٍ بعيد ──
+   قِيست 120 مسافةً بين عنصر المفتاح وطرفِ سلسلته في 42 رسماً ذا سلسلتين
+   فأكثر: الوسيطُ 413 بكسلاً والأقصى 1065، و86 منها فوق 300. والمفتاحُ شفرةٌ
+   تُفَكّ: يحمل اللونَ ويُترك للقارئ أن يعيد مطابقتَه بالعين. وفي رسمٍ واحد
+   (cBreak) أكل المفتاحُ 62 بكسلاً من 250، أي ربعَ اللوحة.
+   فيُكتب الاسمُ عند طرف السلسلة داخل منطقة الرسم. ولونُ النصّ **حبرٌ** لا
+   لونُ السلسلة: ألوانُ السلسلة مُعايَرةٌ على 3.4:1 وهي عتبةُ العناصر غير
+   النصّية، ونصٌّ بها يقع دون 4.5:1. فالتمييزُ بمربّعٍ صغيرٍ بلون السلسلة
+   يسبق الاسمَ، والمعنى يصل ولا تنزل العتبة.
+   ويُطفأ المفتاحُ حين تكون السلاسلُ كلُّها خطّيةً وعددُها أربعٌ فأقلّ، فما
+   عاد يحمل شيئاً لا يحمله الوسم. */
+const ixDirectLabels={
+  id:'ixDirectLabels',
+  defaults:{on:true},
+  afterDatasetsDraw(chart,args,opts){
+    if(opts&&opts.on===false) return;
+    const ctx=chart.ctx, area=chart.chartArea; if(!area) return;
+    const P=(window.MIRSAD_IX&&window.MIRSAD_IX.pal)? window.MIRSAD_IX.pal() : null;
+    const ink=(P&&P.ink)||'#000', surf=(P&&P.surf)||'#fff';
+    const fs=(window.MIRSAD_IX&&window.MIRSAD_IX.chartFs)? window.MIRSAD_IX.chartFs(0.72) : 11;
+    const rtl=ixDirRtl();
+    const items=[];
+    chart.data.datasets.forEach((d,i)=>{
+      const meta=chart.getDatasetMeta(i);
+      if(meta.hidden) return;
+      const type=d.type||chart.config.type;
+      if(type!=='line') return;
+      const pts=meta.data||[];
+      /* طرفُ السلسلة: آخرُ نقطةٍ لها قيمة، وهي في العربية إلى اليسار لأن
+         المحورَ مقلوب. وتُقرأ من موضع النقطة نفسِه لا من افتراضِ جهة. */
+      let last=null;
+      for(let k=pts.length-1;k>=0;k--){
+        const v=chart.data.datasets[i].data[k];
+        const y=(v&&typeof v==='object')? v.y : v;
+        if(y!=null && !isNaN(y) && pts[k] && isFinite(pts[k].x) && isFinite(pts[k].y)){ last=pts[k]; break; }
+      }
+      if(!last) return;
+      const name=String(d.label||'').trim(); if(!name) return;
+      const col=(typeof d.borderColor==='string')? d.borderColor
+              : (typeof d.backgroundColor==='string'? d.backgroundColor : ink);
+      items.push({name:name,col:col,x:last.x,y:last.y});
+    });
+    if(items.length<2 || items.length>6) return;
+    /* تفريقُ الوسوم رأسياً حتى لا تتراكب: ترتيبٌ ثم دفعٌ بمقدار السطر. */
+    const lh=Math.round(fs*1.35);
+    items.sort((a,b)=>a.y-b.y);
+    for(let k=1;k<items.length;k++)
+      if(items[k].y-items[k-1].y<lh) items[k].y=items[k-1].y+lh;
+    const over=items.length? items[items.length-1].y-(area.bottom-2) : 0;
+    if(over>0) items.forEach(it=>it.y-=over);
+    if(items[0] && items[0].y<area.top+fs) {
+      const d0=area.top+fs-items[0].y; items.forEach(it=>it.y+=d0);
+    }
+    ctx.save();
+    ctx.font='600 '+fs+'px '+(Chart.defaults.font.family||'sans-serif');
+    ctx.textBaseline='middle';
+    items.forEach(it=>{
+      const w=ctx.measureText(it.name).width;
+      const sw=Math.round(fs*0.72);              /* مربّعُ اللون */
+      const pad=5, gap=5;
+      /* يُكتب في الجهة التي تقع فيها نهايةُ السلسلة، ويُقلب إن ضاق المكان. */
+      let dir = rtl? -1 : 1;                      /* -1: إلى اليسار من النقطة */
+      let x0 = it.x + dir*(gap);
+      let boxW = w+sw+gap+pad*2;
+      if(dir<0 && x0-boxW<area.left){ dir=1; x0=it.x+gap; }
+      if(dir>0 && x0+boxW>area.right){ dir=-1; x0=it.x-gap; }
+      const left = dir<0? x0-boxW : x0;
+      ctx.globalAlpha=0.88; ctx.fillStyle=surf;
+      ctx.fillRect(left,it.y-lh/2,boxW,lh);
+      ctx.globalAlpha=1;
+      ctx.fillStyle=it.col;
+      ctx.fillRect(left+pad,it.y-sw/2,sw,sw);
+      ctx.fillStyle=ink; ctx.textAlign='left';
+      ctx.fillText(it.name,left+pad+sw+gap,it.y);
+    });
+    ctx.restore();
+  }
+};
+try{ if(window.Chart&&Chart.register) Chart.register(ixDirectLabels); }catch(e){}
+
+/* ── UXB-15: وحدةُ القياس عند المحور لا في نصّ البطاقة وحدَه ──────────
+   قِيس أنّ رسماً واحداً من 66 يحمل عنوانَ محور، والوحدةُ مذكورةٌ في نصّ
+   البطاقة في 65 منها، فيُقرأ الوسمُ «50,000» مجرَّداً داخل الرسم ويُلزَم
+   القارئُ بمغادرة منطقة الرسم ليعرف ما يَعُدّ. والوحدةُ موجودةٌ أصلاً في
+   ‎meta.unit‎ المُمرَّر إلى ‎wrap‎، فتُكتب من مصدرها لا تُنسخ رسماً برسم. */
+/* الوحدةُ تُقرأ من ختم البطاقة لأنه المصدرُ الوحيد الذي يحمله **كلُّ** رسم:
+   ‎meta.unit‎ اختياريٌّ ولا يُمرَّر إلا في بعض الرسوم، والختمُ مفروضٌ على 66
+   من 66 وتحرسه بوابةُ vstamps. فيُطبَّق بعد التصيير على الرسم القائم. */
+function ixAxisUnitFromCard(card){
+  try{
+    const cv=card&&card.querySelector('canvas'); if(!cv) return;
+    const ch=(window.Chart&&Chart.getChart)? Chart.getChart(cv):null; if(!ch) return;
+    const t=ch.config&&ch.config.type;
+    if(t==='pie'||t==='doughnut'||t==='polarArea'||t==='radar') return;
+    /* يُكتب في **الإعداد** لا في الخيارات المحلولة: ‎chart.options‎ ناتجُ حلٍّ
+       يُعاد بناؤه عند كل تحديث، فالإسنادُ إليه يضيع عند أوّل update. */
+    const co=(ch.config&&ch.config.options)||null; if(!co||!co.scales) return;
+    const ro=ch.options||{};
+    const key=(ro.indexAxis==='y'||co.indexAxis==='y')? 'x':'y';
+    const ax=co.scales[key]; if(!ax||typeof ax!=='object') return;
+    const ch2=(card.__chips||[]).filter(Boolean);
+    const u=(ch2.find(c=>Array.isArray(c)&&/الوحدة/.test(String(c[0])))||[])[1];
+    const unit=u? String(u).replace(/<[^>]*>/g,'').trim() : '';
+    if(!unit||unit==='%'||unit==='٪') return;
+    const cur=ax.title&&ax.title.text;
+    if(cur===unit) return;
+    ax.title=Object.assign({},ax.title,{display:true,text:unit,
+      color:(ixPal&&ixPal().ink2)||undefined,
+      font:{size:ixChartFs(0.72),weight:'600'}});
+    ch.update('none');
+  }catch(e){}
+}
+function ixAxisUnit(cfg,meta){
+  const u=meta&&meta.unit? String(meta.unit).replace(/<[^>]*>/g,'').trim() : '';
+  if(!u || u==='%') return cfg;                 /* «%» يظهر في الوسم نفسِه */
+  const o=cfg.options||{}, sc=o.scales; if(!sc) return cfg;
+  const t=cfg.type;
+  if(t==='pie'||t==='doughnut'||t==='polarArea'||t==='radar') return cfg;
+  const key=(o.indexAxis==='y')? 'x' : 'y';
+  const ax=sc[key]; if(!ax||typeof ax!=='object') return cfg;
+  if(ax.title && ax.title.text) return cfg;
+  ax.title={display:true,text:u,
+    color:(window.MIRSAD_IX&&window.MIRSAD_IX.pal)? MIRSAD_IX.pal().ink2 : undefined,
+    font:{size:(window.MIRSAD_IX&&window.MIRSAD_IX.chartFs)? MIRSAD_IX.chartFs(0.72):11,weight:'600'}};
+  return cfg;
+}
+
+/* ── UXB-06: الجدولُ يُفرز، والفرزُ يُعلَن ────────────────────────────
+   قِيس أنّ 73 جدولاً ظاهراً ليس فيها جدولٌ واحدٌ قابلٌ للفرز، ولا سمةَ
+   ‎aria-sort‎ واحدة. وجدولٌ بثمانيةٍ وثلاثين صفّاً لا يُستخرج منه الأكبرُ
+   ولا الأصغرُ بغير فرز.
+   والتوصيلُ بالتفويض من المستند: مستمعان اثنان للصفحة كلِّها مهما بلغ عددُ
+   الجداول، فلا ينمو عددُ المستمعين مع إعادة التصيير (وهو ما تقيسه vleak). */
+function ixSortKey(td){
+  if(!td) return {n:null,t:''};
+  const raw=(td.getAttribute('data-sort')!=null)? td.getAttribute('data-sort')
+          : (td.textContent||'');
+  const t=String(raw).replace(/\s+/g,' ').trim();
+  /* الأرقامُ في اللوحة بفواصل آلاف، والسالبُ بقوسين محاسبيّين. */
+  let z=t.replace(/[٬,،]/g,'').replace(/[٪%]/g,'').trim();
+  let neg=false;
+  if(/^\(.*\)$/.test(z)){ neg=true; z=z.slice(1,-1).trim(); }
+  z=z.replace(/[^\d.\-]/g,'');
+  const n=(z===''||z==='-'||z==='.')? null : parseFloat(z);
+  return {n:(n==null||isNaN(n))?null:(neg?-n:n), t:t};
+}
+function ixMarkSortable(root){
+  const scope=root||document;
+  scope.querySelectorAll('.tblwrap table').forEach(tb=>{
+    const head=tb.tHead; if(!head||!head.rows.length) return;
+    const body=tb.tBodies&&tb.tBodies[0]; if(!body||body.rows.length<3) return;
+    if(head.rows.length>1) return;              /* رؤوسٌ مركّبة: لا يُفرز */
+    [...head.rows[0].cells].forEach((th,i)=>{
+      if(th.hasAttribute('data-sortable')) return;
+      if(th.colSpan>1) return;
+      /* رأسٌ بلا نصّ ليس هدفَ ضغطٍ يُعلَن: تُركت أعمدةُ الترقيم والفواصل
+         (قِيس منها رأسٌ 1×1 بكسل) خارج الفرز، فلا يُنشأ هدفٌ دون العتبة. */
+      if(!(th.textContent||'').replace(/\s+/g,' ').trim()) return;
+      /* رأسٌ مخصَّصٌ لقارئ الشاشة وحدَه (‎.sronly‎، عرضُه بكسلٌ واحد) ليس هدفَ
+         ضغطٍ مرئياً: جعلُه قابلاً للفرز يُنشئ هدفاً 1×28 دون عتبة 24 بكسل. */
+      if(th.classList.contains('sronly')||th.closest('.sronly')) return;
+      th.setAttribute('data-sortable','1');
+      th.setAttribute('data-col',String(i));
+      th.setAttribute('aria-sort','none');
+      th.setAttribute('tabindex','0');
+      th.setAttribute('role','columnheader');
+      const nm=(th.textContent||'').replace(/\s+/g,' ').trim();
+      th.setAttribute('title','اضغط للفرز بعمود «'+nm+'»');
+      /* الانحدارُ المعروف (UX-11 في جولة 20-09-2026م): عناصرُ متماثلةُ الاسم
+         في سياقٍ واحد لا تُميَّز بالسمع. وفي تبويبٍ واحدٍ أربعةٌ وعشرون جدولاً
+         قد يتكرّر فيها رأسٌ باسمٍ واحد. فيُلحَق باسم الرأس عنوانُ بطاقته،
+         ويبقى النصُّ المرئيُّ أوّلَ الاسم (معيار WCAG رقم 2.5.3). */
+      const _card=th.closest('.card');
+      const _h=_card&&(_card.querySelector('h3')||_card.querySelector('h2'));
+      const _ttl=_h? (_h.textContent||'').replace(/\s+/g,' ').trim() : '';
+      if(nm) th.setAttribute('aria-label', _ttl? nm+'، '+_ttl : nm);
+    });
+  });
+}
+function ixSortBy(th){
+  const tb=th.closest('table'); if(!tb) return;
+  const head=tb.tHead, body=tb.tBodies&&tb.tBodies[0]; if(!head||!body) return;
+  const i=+(th.getAttribute('data-col')||0);
+  const cur=th.getAttribute('aria-sort');
+  const dir=(cur==='ascending')? 'descending' : 'ascending';
+  [...head.rows[0].cells].forEach(c=>{ if(c.hasAttribute('data-sortable')) c.setAttribute('aria-sort','none'); });
+  th.setAttribute('aria-sort',dir);
+  const sign=(dir==='ascending')? 1 : -1;
+  const rows=[...body.rows];
+  const keyed=rows.map((r,k)=>({r:r,k:k,v:ixSortKey(r.cells[i])}));
+  keyed.sort((a,b)=>{
+    const an=a.v.n, bn=b.v.n;
+    if(an!=null&&bn!=null){ if(an!==bn) return sign*(an-bn); }
+    else if(an!=null) return -1;                /* الفارغُ آخراً دائماً */
+    else if(bn!=null) return 1;
+    else { const c=a.v.t.localeCompare(b.v.t,'ar'); if(c) return sign*c; }
+    return a.k-b.k;                             /* فرزٌ ثابت: يحفظ الترتيبَ الأصليّ */
+  });
+  const frag=document.createDocumentFragment();
+  keyed.forEach(x=>frag.appendChild(x.r));
+  body.appendChild(frag);
+  const nm=(th.textContent||'').replace(/\s+/g,' ').trim();
+  try{ ixSay('فُرز الجدولُ بعمود «'+nm+'» '+(dir==='ascending'?'تصاعدياً':'تنازلياً')); }catch(e){}
+}
+document.addEventListener('click',function(e){
+  const th=e.target&&e.target.closest? e.target.closest('.tblwrap th[data-sortable]') : null;
+  if(th) ixSortBy(th);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ') return;
+  const th=e.target&&e.target.closest? e.target.closest('.tblwrap th[data-sortable]') : null;
+  if(!th) return;
+  e.preventDefault(); ixSortBy(th);
+});
+
 function ixDirRtl(){
+
   const de=document.documentElement;
   return String(de.getAttribute('dir')||'').toLowerCase()==='rtl' ||
          /^(ar|fa|he|ur)\b/.test(String(de.getAttribute('lang')||'').toLowerCase());
@@ -29060,6 +29301,7 @@ function ixWireTabs(){
   document.querySelectorAll('canvas').forEach(ixChartAlt);
   ixWireScrollables();
   ixWireTableExport();
+  ixMarkSortable();
   /* ── نمطُ التبويبات كاملاً لا نصفَه ────────────────────────
      كان في الصفحة سبعةٌ وثلاثون ‎role="tab"‎ ولا ‎tabpanel‎ واحد ولا
      ‎aria-controls‎ واحد: يُعلن قارئُ الشاشة «تبويب ٣ من ١٣، محدَّد» ثم
@@ -29487,6 +29729,7 @@ function ixDrawnCov(card){
 }
 function paintStamps(card){
   const bar=perbar(card);
+  try{ ixAxisUnitFromCard(card); }catch(e){}
   const cov=ixDrawnCov(card);
   const chips=(card.__chips||[]).filter(Boolean).map(c=>{
     const v=(cov && String(c[0]).indexOf('التغطية')>=0) ? cov : c[1];
@@ -29694,7 +29937,14 @@ function ixAttribGroup(id,name){ const el=document.getElementById(id); if(!el) r
 
 /* الرسمُ قد يُنشأ بعد ختمه، فيُعاد الطلاءُ بعد التصيير. */
 function ixRepaintStamps(root){
-  (root||document).querySelectorAll('.card.has-per').forEach(c=>{ if(c.__chips) paintStamps(c); });
+  /* عطبٌ كامنٌ ظهر في 05-10-2026م: المستدعي الوحيد لهذه الدالّة يمرّر
+     **البطاقةَ نفسَها** جذراً (في ‎draw‎ بعد إنشاء الرسم)، و‎querySelectorAll‎
+     لا يشمل الجذر، فما كان يُعاد طلاءُ ختمٍ واحدٍ قطّ من ذلك المسار. فالتعليقُ
+     المكتوب هناك («بعد التصيير يُعاد طلاءُ الختم فتُشتقّ التغطيةُ من الفئات
+     المرسومة») يصف ما لا يقع. فصار الجذرُ نفسُه محكوماً. */
+  const r=root||document;
+  if(r!==document && r.classList && r.classList.contains('card') && r.__chips) paintStamps(r);
+  r.querySelectorAll('.card.has-per').forEach(c=>{ if(c.__chips) paintStamps(c); });
 }
 /* ── نقطة التعريف (ⓘ) — شرحٌ عند الطلب لا ضجيجٌ دائم ──────────────────
    القاعدة المتبعة: المؤشر يحمل اسمه ورقمه ظاهرَين، ويبقى تعريفه مطويّاً خلف
@@ -30597,7 +30847,8 @@ function ixWireSearch(){
   setInterval(tick, 2000);
 })();
 window.MIRSAD_IX={
-  pal:ixPal, fade:ixFade, applyDir:ixApplyDir, dirRtl:ixDirRtl, chartFs:ixChartFs, rootPx:ixRootPx,   /* VIS-13 */ vt:ixVT, chartTheme:ixChartTheme, onTheme:ixOnTheme, setTheme:ixTheme, themeNow:ixThemeNow, wireTheme:ixWireTheme,
+  pal:ixPal, fade:ixFade, applyDir:ixApplyDir, dirRtl:ixDirRtl,
+  markSortable:ixMarkSortable, chartFs:ixChartFs, rootPx:ixRootPx,   /* VIS-13 */ vt:ixVT, chartTheme:ixChartTheme, onTheme:ixOnTheme, setTheme:ixTheme, themeNow:ixThemeNow, wireTheme:ixWireTheme,
   tCrit:tCritIX,
   wireSearch:ixWireSearch,
   tabDesc:ixTabDesc,
@@ -30632,6 +30883,9 @@ window.MIRSAD_IX={
   wrap:function(id,cfg,meta){
     if(meta) REG[id]=meta;
     cfg.options=cfg.options||{};
+    /* هل ضبط المستدعي ظهورَ المفتاح بنفسه؟ يُقرأ قبل أن تُنشئ applyDir الكائن. */
+    const _lgSet = !!(cfg.options.plugins && cfg.options.plugins.legend &&
+      Object.prototype.hasOwnProperty.call(cfg.options.plugins.legend,'display'));
     /* الحركة: قاعدة CSS لا تصل رسوم Chart.js لأنها تُرسم على canvas بمؤقّتٍ
        خاص — فبقيت أربعة عشر رسماً تتحرك 420 ملّي ثانية رغم تفضيل النظام.
        تُطفأ من الإعداد نفسه — WCAG 2.2 معيار النجاح 2.3.3. */
@@ -30642,8 +30896,21 @@ window.MIRSAD_IX={
     if(meta&&meta.zeroOk) cfg.options.__zeroOk=true;
     if(meta&&meta.dashMeans) cfg.options.__dashMeans=true;
     if(meta&&meta.dirOk) cfg.options.__dirOk=true;
+    ixAxisUnit(cfg,meta);
     /* الاتجاه: يُشتقّ هنا لأن wrap هو الممرُّ الوحيد لكل رسم. */
     ixApplyDir(cfg);
+    /* UXB-20: المفتاحُ يُطفأ حيث يحلّ الوسمُ المباشر محلَّه ولا يزيد عليه:
+       سلاسلُ خطّيةٌ كلُّها، وعددُها بين اثنتين وأربع. وفي cBreak كان المفتاحُ
+       يأكل 62 بكسلاً من 250 هي ارتفاعُ اللوحة. ولا يُمسّ رسمٌ ضبط المستدعي
+       ظهورَ مفتاحه بنفسه. */
+    try{
+      if(!_lgSet){
+        const _ds=(cfg.data&&cfg.data.datasets)||[];
+        const _allLine=_ds.length>=2&&_ds.length<=4&&
+          _ds.every(d=>d&&((d.type||cfg.type)==='line'));
+        if(_allLine) cfg.options.plugins.legend.display=false;
+      }
+    }catch(e){}
     if(!(meta&&meta.colorOk)) redundantEncode(cfg);
     /* الأسطورة يجب أن تحمل ما يحمله الرسم: مع usePointStyle تبني Chart.js المفتاح
        من شكل النقطة وحده فلا يصل التقطيع إليه، فيتطابق مفتاحا «فعلي» و«متوقع»
@@ -36887,10 +37154,18 @@ function renderPrice(){
     'ولذلك تُقرأ الحركة اليومية سياقاً لا نتيجة — الميزانية تستجيب للمتوسط المحقق لا لإقفال يوم. '+
     '<span class="muted">'+E.note+'</span>';
 
-  draw('cNMon',{type:'bar',data:{labels:mly.map(x=>mlab(x[0])),datasets:[
+  /* UXB-11 (05-10-2026م): كانت 117 عموداً في منطقةِ رسمٍ عرضُها 598 بكسلاً،
+     أي 3.7 بكسل للعمود الواحد، وهو أيضاً هدفُ التمرير الوحيد لقراءة القيمة.
+     وسؤالُ سلسلةٍ شهريةٍ بهذا الطول «ما المسار» لا «قارِن بين شهرين»، فالخطُّ
+     شكلُها. وترميزُ النطاق السعريّ الذي كان في لون العمود لم يسقط: انتقل إلى
+     لون القطعة بين كل نقطتين، فبقي المعنى وزال الازدحام. */
+  const _band=y=>(y>=90?C.s3:(y<=50?C.s2:C.s1));
+  draw('cNMon',{type:'line',data:{labels:mly.map(x=>mlab(x[0])),datasets:[
       {label:'المتوسط الشهري',data:mly.map(x=>x[1]),
-       backgroundColor:mly.map(x=>x[1]>=90?C.s3:(x[1]<=50?C.s2:C.s1)),borderRadius:3,borderSkipped:false}]},
-    options:{scales:{x:gridX,y:gridY(v=>nf0.format(v))},plugins:{legend:{display:false},
+       borderColor:C.s1,borderWidth:2,tension:.2,pointRadius:0,pointHoverRadius:5,
+       segment:{borderColor:c=>_band(c.p1.parsed.y)}}]},
+    options:{interaction:{mode:'index',intersect:false},
+      scales:{x:gridX,y:gridY(v=>nf0.format(v))},plugins:{legend:{display:false},
       tooltip:{callbacks:{label:c=>usd(c.parsed.y)+' دولار'}}}}},
     {unit:'دولار للبرميل',dec:2,freq:'m'});
   ST('cNMon','شهري',mlab(mly[0][0])+' — '+mlab(mly[mly.length-1][0])+(PART?' (آخر شهر جزئي)':''),
