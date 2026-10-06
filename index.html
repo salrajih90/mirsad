@@ -105,7 +105,7 @@ try{
   "@type": "xsd:date"
  },
  "dcterms:modified": {
-  "@value": "2026-10-05",
+  "@value": "2026-10-06",
   "@type": "xsd:date"
  },
  "dcat:landingPage": {
@@ -1849,6 +1849,17 @@ tbody tr:hover{background:var(--surface-2)}
 .tblwrap table th:first-child{z-index:3}
 .tblwrap tbody tr:hover td:first-child{background:var(--surface-2)}
 /* UXB-06: الفرزُ يُعلَن قبل أن يُجرَّب — مؤشّرٌ دائمٌ على كل رأسٍ قابلٍ للفرز */
+/* UXB-07: صفُّ المؤشّرات مطويٌّ على الشاشات الضيّقة، مفتوحٌ على الواسعة */
+details.kpifold{margin:0}
+details.kpifold > summary{cursor:pointer;list-style:none;padding:10px 12px;min-height:28px;
+  border:1px solid var(--ctl-border);border-radius:9px;background:var(--surface-2);
+  color:var(--ink-2);font-size:var(--fs-xs);margin-bottom:12px}
+details.kpifold > summary::-webkit-details-marker{display:none}
+details.kpifold > summary::after{content:"▾";margin-inline-start:8px;color:var(--ink-2)}
+details.kpifold[open] > summary::after{content:"▴"}
+details.kpifold > summary:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+details.kpifold > summary .kf-h{color:var(--ink-3)}
+@media (min-width:821px){ details.kpifold > summary{display:none} }
 /* UXB-10: مبدِّلُ «قيمة / حصّة %» فوق الرسم المكدَّس — بمكوّن .seg القائم */
 .shrtog{display:flex;justify-content:flex-start;margin:0 0 10px}
 .shrtog .seg{border-color:var(--ctl-border)}
@@ -2628,7 +2639,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
            واحداً (إعادةُ نشرٍ بعد تعديلِ نصّ فاحص، أو مهمّةٌ مجدولة) يُعلن على
            القارئ تحديثاً لم يقع. فصار الحقلان اثنين: «آخر بيان منشور» يُشتقّ
            من آخر فترةٍ في البيان، و«تاريخ البناء» باسمه الصحيح. -->
-      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">05-10-2026م</span></div>
+      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">06-10-2026م</span></div>
     </div>
   </div>
   <!-- ux-mob-02: على 390 نقطةً كانت الشاشةُ الأولى كلُّها ترويسةً وشريطَ
@@ -2709,6 +2720,16 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     <div class="asof" id="homeAsOf"></div>
   </div>
   <div class="grid g4" id="homeKpis"></div>
+  <!-- UXB-22 (06-10-2026م): كانت لوحةُ البداية بلا رسمٍ واحد وهي المدخل:
+       تسعُ بطاقاتٍ و642 كلمةً وعمقُ تمريرٍ 3,343 بكسلاً، فيُطلب من القارئ أن
+       يقرأ الدعوى قبل أن يرى شيئاً. فأُضيف رسمٌ واحدٌ جامع: الرصيدُ المالي
+       السنوي، وهو مفصلُ السلسلة السببية المعروضة تحته (السعرُ يحدّد الإيرادَ
+       النفطي، والإيرادُ مع المصروف يحدّد الرصيد، والرصيدُ المتراكم يحدّد
+       الدين). ووحدةٌ واحدةٌ له فلا يحتاج محورين. -->
+  <div class="card" style="margin-top:18px"><h3>كيف تحرّك الرصيدُ المالي عبر السنوات المكتملة؟</h3>
+    <div class="hint">الإيرادات ناقصَ المصروفات في كلِّ سنةٍ مالية مكتملة. الموجبُ فائضٌ والسالبُ عجز، وهو مفصلُ السلسلة المعروضة تحته.</div>
+    <div class="chartbox"><canvas id="hBal"></canvas></div>
+    <div class="note" id="hBalNote"></div></div>
   <div class="grid g4" id="homeCards" style="margin-top:18px"></div>
   <div class="card" style="margin-top:18px">
     <h3>سلسلة السببية التي تربط اللوحات</h3>
@@ -3767,7 +3788,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> <b>السبعة</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد في 19-09-2026م:</b> كان منشوراً «ستّة»، والشقُّ الثاني من <span dir="ltr">(B)</span> لم يكن مفحوصاً:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">584e2a33</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.427</span>+<span id="fHashAttr">7ee8de5f</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -3789,7 +3810,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل — ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+584e2a33 · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">584e2a33</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+7ee8de5f · 06-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">7ee8de5f</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span> — <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span> — وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL — فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -3813,7 +3834,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+584e2a33 · 05-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">584e2a33</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.427+7ee8de5f · 06-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">7ee8de5f</span></div>
 </footer>
 </div>
 
@@ -23359,7 +23380,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    ],
    "contact": "تُرسل ملاحظات الإتاحة بفتح مسألةٍ في مستودع اللوحة على <span dir=\"ltr\">GitHub</span>: <span dir=\"ltr\">github.com/salrajih90/mirsad/issues</span>، وتُقيَّد كل معالجة في سجل التصحيحات.",
    "asOf": "05-09-2026م",
-   "autoAsOf": "05-10-2026م",
+   "autoAsOf": "06-10-2026م",
    "sc": [
     [
      "1.1.1",
@@ -28415,7 +28436,51 @@ function ixSortKey(td){
    والمكدَّسُ بالمستويات يجيب «كم المجموع» لا «كم حصّةُ الجزء»: ارتفاعُ قطعةٍ
    يكبر بكِبَر المجموع وإن نقصت حصّتُها. فيُعطى الرسمُ مبدِّلاً بين الاثنين،
    ويتبعه ختمُ الوحدة وعنوانُ المحور فلا يفترق المعروضُ عن المُعلَن. */
+/* ── UXB-08 (06-10-2026م): رقمٌ بلا مرساةٍ لا يُحكم عليه ─────────────────
+   قِيس أنّ 32 بطاقةَ مؤشّرٍ من 40 لا تحمل مقارنةً: لا تغيُّراً ولا خطَّ
+   شرارةٍ ولا مرجعاً. و«1,685 مليار ريال» وحدَه لا يقول أكثيرٌ هو أم قليل،
+   ولا إلى أين يتّجه. وكان خطُّ الشرارة مكتوباً في ملفٍّ واحدٍ (لوحة المالية
+   العامة) فلم يبلغ البقيّة. فنُقل إلى الطبقة المشتركة: نسخةٌ واحدة تُستدعى
+   من اللوحات الخمس، ولا يُكتب بعدها مولّدٌ سادس. */
+function ixSparkSvg(vals,cls){
+  if(!vals) return '';
+  const ok=vals.map(v=>(v==null||!isFinite(v))?null:v);
+  const fin=ok.filter(v=>v!=null);
+  if(fin.length<2) return '';
+  const lo=Math.min.apply(null,fin), hi=Math.max.apply(null,fin);
+  const rng=(hi-lo)||1, W=100, H=26, n=ok.length;
+  let d='', started=false;
+  ok.forEach((v,i)=>{
+    if(v==null){ started=false; return; }
+    const x=(n===1?0:(i/(n-1))*W), y=H-2-((v-lo)/rng)*(H-4);
+    d+=(started?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' '; started=true;
+  });
+  if(!d) return '';
+  const last=ok.slice().reverse().find(v=>v!=null);
+  const li=ok.lastIndexOf(last);
+  const lx=(n===1?0:(li/(n-1))*W), ly=H-2-((last-lo)/rng)*(H-4);
+  return '<svg class="spark '+(cls||'')+'" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" '+
+    'aria-hidden="true" focusable="false">'+
+    '<path d="'+d.trim()+'" fill="none" stroke="currentColor" stroke-width="1.6" '+
+    'vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" r="2.1" fill="currentColor"/></svg>';
+}
+/* غلافُ الشرارة مع وصفٍ منطوق: الرسمُ نفسُه ‎aria-hidden‎، والمدى يُقال نصّاً
+   لقارئ الشاشة فلا يضيع عليه ما يراه المبصر. */
+function ixSparkWrap(vals,label,fmt){
+  const svg=ixSparkSvg(vals); if(!svg) return '';
+  const fin=(vals||[]).filter(v=>v!=null&&isFinite(v));
+  if(fin.length<2) return '';
+  const f=fmt||(v=>String(Math.round(v*10)/10));
+  const txt='مسارُ '+(label||'المؤشر')+' في '+fin.length+' فترة: من '+f(fin[0])+
+            ' إلى '+f(fin[fin.length-1])+'، وأدناه '+f(Math.min.apply(null,fin))+
+            ' وأعلاه '+f(Math.max.apply(null,fin))+'.';
+  return '<div class="sparkwrap">'+svg+'<span class="sronly">'+
+    String(txt).replace(/</g,'&lt;')+'</span></div>';
+}
+
 function ixShareCapable(ch){
+
   if(!ch||!ch.canvas||!ch.canvas.offsetParent) return false;
   const o=ch.options||{}, sc=o.scales||{};
   if(!((sc.y&&sc.y.stacked)||(sc.x&&sc.x.stacked))) return false;
@@ -28497,7 +28562,96 @@ function ixShareToggle(){
   });
 }
 
+/* ── UXB-07 (06-10-2026م): الشاشةُ الأولى ──────────────────────────────
+   قِيس: أوّلُ رسمٍ ‎<canvas>‎ يبدأ عند 1,906 بكسلاً عند 1440، و3,214 عند 768،
+   و4,789 عند 390، والنافذةُ 844.
+   وفُرِّق الادّعاءُ بالقياس: عند 1440 الهيكلُ قبل المحتوى 490 بكسلاً وصفُّ
+   المؤشّرات 588، فالشاشةُ الأولى تحمل أربعَ بطاقاتِ مؤشّرٍ **كلٌّ منها بخطِّ
+   شرارة** (وهي ثمانٍ من ثمانٍ منذ UX-09)، فليست خاليةً من تمثيلٍ بصريّ
+   للسلسلة؛ خلوُّها من ‎<canvas>‎ وحدَه هو الواقع. وأمّا عند 390 فصفُّ
+   المؤشّرات وحدَه 3,033 بكسلاً: ثماني بطاقاتٍ فوق بعضها، وهو العطبُ الحقيقيّ.
+   والعلاجُ قاعدةُ اللوحة نفسِها المعلنة في UX-02: «مفتوحٌ على ما يتّسع له،
+   مطويٌّ على الضيّق». تُطبَّق على صفّ المؤشّرات كما طُبّقت على ضبط العرض،
+   وتبقى للقارئ فتحُه، ويُحفظ اختيارُه. */
+/* ── مولّدٌ واحدٌ لبطاقة المؤشّر (06-10-2026م) ───────────────────────────
+   كانت خمسةُ مولّداتٍ متشابهةٍ في أربعة ملفّات، وواحدٌ منها وحدَه يعرف خطَّ
+   الشرارة. فكلُّ تحسينٍ في البطاقة كان يلزمه خمسُ تعديلات، وقد نُسي أربعٌ
+   منها في UX-09 فبقيت 32 بطاقةً بلا مرساةِ مقارنة. فصار المولّدُ واحداً. */
+function ixKpiCard(x,dot){
+  const lbl=String(x.l==null?'':x.l);
+  const plain=lbl.replace(/<[^>]*>/g,'');
+  const info=(x.i||x.info);
+  const id=(dot&&info)? dot(info,'تعريف: '+plain) : '';
+  const spk=(x.spark)? ixSparkWrap(x.spark,plain,x.sparkFmt) : '';
+  const tail=(x.d!=null&&x.d!=='')? '<div class="d flat">'+x.d+'</div>' : '';
+  /* مرساةُ المقارنة تُعلَن في البطاقة نفسِها لا تُستنتج من نصِّها: الاستنتاجُ
+     من الكلمات يقبل «نهاية يونيو 2026م» مرساةً وهي تاريخٌ لا مقارنة. فيصرّح
+     المستدعي بنوعها، وتقرؤه بوابةُ vpaint. */
+  const anc = spk? 'spark' : (x.ref? 'ref' : (x.d? 'none' : 'none'));
+  return '<div class="card kpi'+(x.kcls?' '+x.kcls:'')+'" data-anchor="'+anc+'">'+
+    '<div class="l">'+lbl+id+'</div>'+
+    '<div class="v '+(x.cls||'')+'">'+x.v+'</div>'+spk+tail+'</div>';
+}
+
+function ixKpiFold(){
+
+  const NARROW=820;
+  document.querySelectorAll('.domain').forEach(dm=>{
+    const secs=[...dm.querySelectorAll('section')].filter(x=>x.offsetParent&&x.offsetHeight>0);
+    const hosts=[];
+    (secs.length?secs:[dm]).forEach(sec=>{
+      sec.querySelectorAll(':scope > .grid').forEach(g=>{
+        const k=[...g.children].filter(c=>c.classList&&c.classList.contains('kpi'));
+        /* الشبكةُ تُعدّ صفَّ مؤشّراتٍ متى كان جُلُّها بطاقاتِ مؤشّر: بعضُها
+           يحمل بطاقةَ شرحٍ واحدةً إلى جانبها. */
+        if(k.length>=4 && k.length>=g.children.length-1) hosts.push(g);
+      });
+    });
+    hosts.forEach(g=>{
+      if(g.parentElement&&g.parentElement.classList.contains('kpifold')) return;
+      const d=document.createElement('details');
+      d.className='kpifold';
+      /* الاسمُ من زرِّ اللوحة النشطة، فهو موجودٌ في كلِّ لوحة. والعددُ عددُ
+         بطاقات المؤشّر لا عددُ أبناء الشبكة. وتحمل الخلاصةُ أوّلَ مؤشّرٍ
+         بقيمته فلا يبقى المطويُّ صامتاً. */
+      const bk=dm.id.replace('dom-','');
+      const bb=document.querySelector('#domswitch button[data-d="'+bk+'"] b');
+      const nm=((bb&&bb.textContent)||'اللوحة').replace(/\s+/g,' ').trim();
+      const kc=[...g.children].filter(c=>c.classList&&c.classList.contains('kpi'));
+      const n=kc.length;
+      const f0=kc[0];
+      const fl=(function(){
+        const e=f0&&f0.querySelector('.l'); if(!e) return '';
+        /* نقطةُ التعريف زرٌّ داخل التسمية، ونصُّها حرفٌ واحد — تُنزع هنا. */
+        const c=e.cloneNode(true);
+        c.querySelectorAll('button,.idot,[aria-haspopup]').forEach(x=>x.remove());
+        return (c.textContent||'').replace(/\s+/g,' ').trim();
+      })();
+      const fv=f0? ((f0.querySelector('.v')||{}).textContent||'').replace(/\s+/g,' ').trim() : '';
+      const head=(fl&&fv)? (fl+': '+fv) : '';
+      const sm=document.createElement('summary');
+      sm.innerHTML='<b>مؤشّراتُ هذا التبويب ('+n+')</b>'+
+        '<span class="kf-h"> — '+ixEsc(head||nm)+'</span>';
+      sm.setAttribute('aria-label','مؤشّراتُ هذا التبويب، '+n+' بطاقة، '+nm+
+        (head? '، أوّلُها '+head : ''));
+      g.parentElement.insertBefore(d,g);
+      d.appendChild(sm); d.appendChild(g);
+      const narrow=()=> (window.innerWidth||1440)<=NARROW;
+      if(!d.dataset.userset) d.open=!narrow();
+      d.addEventListener('toggle',()=>{ d.dataset.userset='1'; });
+    });
+  });
+}
+let _ixKfT=null;
+addEventListener('resize',function(){ clearTimeout(_ixKfT); _ixKfT=setTimeout(function(){
+  document.querySelectorAll('details.kpifold').forEach(d=>{
+    if(d.dataset.userset) return;
+    d.open=(window.innerWidth||1440)>820;
+  });
+},200); });
+
 function ixNameCards(root){
+
 
   const sc=root||document;
   sc.querySelectorAll('.card.kpi > .l').forEach(el=>{
@@ -29529,6 +29683,7 @@ function ixWireTabs(){
   ixWireScrollables();
   ixWireTableExport();
   ixMarkSortable();
+  try{ ixKpiFold(); }catch(e){}
   ixNameCards();
   try{ ixShareToggle(); }catch(e){}
   try{ ixScopeNote(); }catch(e){}
@@ -31108,7 +31263,9 @@ function ixWireSearch(){
 })();
 window.MIRSAD_IX={
   pal:ixPal, fade:ixFade, applyDir:ixApplyDir, dirRtl:ixDirRtl,
-  markSortable:ixMarkSortable, nameCards:ixNameCards, chartFs:ixChartFs, rootPx:ixRootPx,   /* VIS-13 */ vt:ixVT, chartTheme:ixChartTheme, onTheme:ixOnTheme, setTheme:ixTheme, themeNow:ixThemeNow, wireTheme:ixWireTheme,
+  markSortable:ixMarkSortable, nameCards:ixNameCards,
+  sparkSvg:ixSparkSvg, sparkWrap:ixSparkWrap,
+  kpiCard:ixKpiCard, chartFs:ixChartFs, rootPx:ixRootPx,   /* VIS-13 */ vt:ixVT, chartTheme:ixChartTheme, onTheme:ixOnTheme, setTheme:ixTheme, themeNow:ixThemeNow, wireTheme:ixWireTheme,
   tCrit:tCritIX,
   wireSearch:ixWireSearch,
   tabDesc:ixTabDesc,
@@ -31491,6 +31648,10 @@ function infoDot(text,label){
   const IX=window.MIRSAD_IX;
   return (IX&&IX.infoDot)? IX.infoDot(text,label) : '';
 }
+/* المولّدُ المشترك لبطاقة المؤشّر — نسخةٌ واحدةٌ لكلّ اللوحات (UXB-08). */
+const IXKPI=x=>{ const f=window.MIRSAD_IX&&window.MIRSAD_IX.kpiCard;
+  if(!f) throw new Error('MIRSAD: مولّدُ بطاقة المؤشّر غير متاح (MIRSAD_IX.kpiCard).');
+  return f(x,infoDot); };
 
 /* ---------- data shaping ---------- */
 function idxRange(){ return periodIdx(); }
@@ -33147,25 +33308,28 @@ function renderRatios(){
   const denomNote='<b>والمقام هنا ناتجُ '+ylab(last.y)+'</b>'+
     (gEst? ' — و<b>هو تقديرٌ أوّليٌّ قابلٌ للمراجعة</b> لا رقمٌ نهائيّ، فالنسبةُ ترث ذلك وتتغيّر عند نشر الناتج الفعليّ.'
          : ' — وهو رقمٌ منشورٌ في نشرة الحسابات القومية.');
+  /* UXB-08: لكلِّ نسبةٍ هنا سلسلتُها السنوية في ‎rows‎، فتُرسم شرارتُها. */
+  const _rs=(f)=>{ try{ const a=rows.map(f).filter(v=>v!=null&&isFinite(v));
+    return a.length>=2? a : null; }catch(e){ return null; } };
+  const _p1=v=>(Math.round(v*10)/10)+'%';
   const kp=[
     /* العنوان يتبع الإشارة: سنةٌ ذات فائض كانت تُعرض تحت عنوان «العجز». */
     {l:(last.bal>=0?'الفائض':'العجز')+' إلى الناتج المحلي '+ylab(last.y)+estTag,
      v:pct0(Math.abs(last.bal)/last.g), cls:last.bal<0?'down':'up',
+     spark:_rs(r=>r.g? r.bal/r.g*100 : null), sparkFmt:_p1,
      i:'الإيرادات ناقصَ المصروفات في السنة المالية، منسوبةً إلى الناتج المحلي الإجمالي الاسمي. '+
        'الرصيدُ على <b>الأساس النقديّ</b> كما ينشره تقرير أداء الميزانية — لا على أساس الاستحقاق. '+denomNote},
-    {l:'الدين العام إلى الناتج المحلي '+ylab(last.y)+estTag, v:last.debt? pct0(last.debt/last.g):'—',
+    {l:'الدين العام إلى الناتج المحلي '+ylab(last.y)+estTag, v:last.debt? pct0(last.debt/last.g):'—', spark:_rs(r=>(r.g&&r.debt!=null)? r.debt/r.g*100 : null), sparkFmt:_p1,
      i:'رصيدُ الدين الحكومي القائم آخرَ السنة، منسوباً إلى الناتج. '+
        '<b>ونسبةُ رصيدٍ إلى تدفّقٍ سنويّ</b> لا رصيدٍ إلى رصيد، فلا تُقرأ «كم يملك مقابل ما عليه». '+
        'ولا يشمل ضماناتِ الدولة ولا دينَ الشركات المملوكة ولا الدينَ الموحَّد بمعيار PSDS. '+denomNote},
-    {l:'الإيرادات إلى الناتج المحلي '+ylab(last.y)+estTag, v:pct0(last.r/last.g),
+    {l:'الإيرادات إلى الناتج المحلي '+ylab(last.y)+estTag, v:pct0(last.r/last.g), spark:_rs(r=>r.g? r.r/r.g*100 : null), sparkFmt:_p1,
      i:'إجماليُّ الإيرادات (النفطيّ وغيرُ النفطيّ) منسوباً إلى الناتج — مقياسُ حجم الموارد الحكومية في الاقتصاد. '+denomNote},
-    {l:'المصروفات إلى الناتج المحلي '+ylab(last.y)+estTag, v:pct0(last.e/last.g),
+    {l:'المصروفات إلى الناتج المحلي '+ylab(last.y)+estTag, v:pct0(last.e/last.g), spark:_rs(r=>r.g? r.e/r.g*100 : null), sparkFmt:_p1,
      i:'إجماليُّ المصروفات منسوباً إلى الناتج — مقياسُ حجم الإنفاق الحكوميّ في الاقتصاد، '+
        'ولا يشمل إنفاقَ الجهات خارج الميزانية ولا الصناديق. '+denomNote}
   ];
-  document.getElementById('ratioKpis').innerHTML=kp.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+String(x.l).replace(/<[^>]*>/g,'')):'')+
-    '</div><div class="v '+(x.cls||'')+'">'+x.v+'</div></div>').join('');
+  document.getElementById('ratioKpis').innerHTML=kp.map(IXKPI).join('');
 
   const L=rows.map(x=>ylab(x.y));
   draw('cRatio',{type:'line',data:{labels:L,datasets:[
@@ -33808,13 +33972,25 @@ function renderRate(){
     '<b>و«النظرة» ليست توقُّعَ تغيير</b>: هي بيانُ الوكالة عن الاتجاه المرجَّح لمراجعتها القادمة، ولا تلزمها. '+
     '<b>والسُّلَّم رتبيٌّ لا كمّيّ</b>: الفرقُ بين درجتين ليس مسافةً تُقاس، فلا يُجمع ولا يُتوسَّط ولا يُقارَن بفرقٍ آخر. '+
     '<b>والرأيُ رأيُ الوكالة</b> — تنشره وتتقاضى عليه، ولا تعتمده هذه اللوحة ولا تُقيّمه.';
+  const years=[]; for(let y=2015;y<=2026;y++) years.push(y);
+  /* UXB-08: مرساةُ بطاقة الوكالة مسارُها هي على السُلَّم الموحَّد. والسُلَّمُ
+     **رتبيٌّ لا مسافيّ** (STAT-14)، فالشرارةُ تُقرأ اتجاهاً وعددَ درجاتٍ لا
+     فرقاً ولا متوسّطاً، وهذا مكتوبٌ في وصفها المنطوق وفي ذيل البطاقة. */
+  const _rankSpark=a=>{
+    const out=[]; let cur=null;
+    years.forEach(y=>{ (a.hist||[]).forEach(h=>{ if(+String(h[0]).slice(0,4)<=y) cur=h[1]; }); out.push(cur); });
+    return out.filter(v=>v!=null).length>=2? out : null;
+  };
   document.getElementById('rateCards').innerHTML=ag.map((a,i)=>
     '<div class="card kpi"><div class="l" dir="ltr" style="text-align:right">'+a.name+
       '<span dir="rtl">'+infoDot(rateDef(a),'تعريف: تصنيف '+a.name)+'</span></div>'+
     '<div class="v" dir="ltr" style="text-align:right">'+a.cur+'</div>'+
+    ((window.MIRSAD_IX&&window.MIRSAD_IX.sparkWrap)?
+      window.MIRSAD_IX.sparkWrap(_rankSpark(a),'رتبة '+a.name+' على السُلَّم الموحَّد',
+        v=>'الرتبة '+v) : '')+
     '<div class="d"><span class="pill" style="margin:0">النظرة: '+a.outlook+'</span></div>'+
-    '<div class="d flat">آخر إجراء: <b>'+actOf(a)+'</b> · <span dir="ltr">'+a.date+'</span> · ما يعادل <span dir="ltr">'+RANK[a.rank]+'</span></div></div>').join('');
-  const years=[]; for(let y=2015;y<=2026;y++) years.push(y);
+    '<div class="d flat">آخر إجراء: <b>'+actOf(a)+'</b> · <span dir="ltr">'+a.date+'</span> · ما يعادل <span dir="ltr">'+RANK[a.rank]+'</span> · '+
+      'والمسارُ أعلاه رتبيٌّ: يُقرأ اتجاهاً وعددَ درجات، لا فرقاً ولا متوسّطاً</div></div>').join('');
   const stepSeries=a=>{
     const out=[]; let cur=null;
     years.forEach(y=>{
@@ -33875,34 +34051,46 @@ function renderMaturity(){
   ST('cMaturity','لحظي',
      n.asOf+(n.planAsOf&&n.planAsOf!==n.asOf? ' (مصدر التمويل) · '+n.planAsOf+' (نوع سعر الفائدة)':''),
      '% من إجمالي الدين','بنية المحفظة كما ينشرها المركز الوطني لإدارة الدين');
+  /* ── UXB-08 (06-10-2026م): مرساةُ المقارنة في كلِّ بطاقة ───────────────
+     سلسلةُ رصيد الدين الربعية موجودةٌ في ‎D.debt‎، فتُرسم شرارةً للبطاقة التي
+     تعرض الرصيد. وما لا سلسلةَ له في المنشور (أجلُ الاستحقاق وكلفةُ المحفظة:
+     قيمتان تنشرهما خطةُ الاقتراض سنوياً بلا تاريخٍ سابقٍ في البيانات) يُعلَن
+     حدُّه نصّاً بدل أن يُترك رقماً معلّقاً. */
+  const _spkDebtBn=(function(){
+    try{
+      const a=(D.debt||[]).map(r=>r[4]).filter(v=>v!=null);
+      return a.length>=2? a.slice(-20) : null;
+    }catch(e){ return null; }
+  })();
   const kp=[
     {l:'رصيد الدين العام',v:nf0.format(n.debtTotalBn)+' مليار',d:n.asOf,
+     spark:_spkDebtBn, sparkFmt:v=>nf0.format(Math.round(v))+' مليون ريال',
      i:'إجماليُّ رصيد أدوات الدين الحكومي القائمة كما ينشره <b>المركز الوطني لإدارة الدين</b>، بالمليار ريال. '+
        '<b>رصيدٌ نهايةَ فترةٍ لا تدفّق</b>، فلا يُجمع مع عجز السنة ولا يُطرح من الاحتياطي. '+
        'ولا يشمل ضماناتِ الدولة ولا دينَ الشركات المملوكة.'},
-    {l:'الدين إلى الناتج المحلي',v:iso(nf1.format(n.debtToGdpPct)+'%'),d:'على تقدير ناتج 2026م',
+    /* لا سلسلةَ للمقام (الناتجُ تقديرٌ سنويّ لسنةٍ لم تنتهِ)، فالمرساةُ مرجعٌ
+       صريحٌ على البسط: تغيّرُ رصيد الدين المنشور عن نهاية السنة السابقة. */
+    {l:'الدين إلى الناتج المحلي',v:iso(nf1.format(n.debtToGdpPct)+'%'), ref:true,
+     d:'على تقدير ناتج 2026م'+(n.changePct!=null? ' · وارتفع رصيدُ الدين '+iso(nf1.format(n.changePct)+'%')+' عن نهاية السنة السابقة':''),
      i:'رصيدُ الدين ÷ الناتج المحلي الإجمالي الاسمي. <b>البسطُ رصيدٌ منشور والمقامُ تقديرٌ</b> '+
        'لناتج سنةٍ لم تنتهِ بعد، فالنسبةُ تتغيّر عند نشر الناتج الفعليّ. '+
        'وهي نسبةُ رصيدٍ إلى تدفّقٍ سنويّ لا رصيدٍ إلى رصيد.'},
     /* التاريخ لا اسمُ الوثيقة: «خطة الاقتراض 2026م» اسمُ مصدرٍ صدر في 2026م
        ويصف محفظةً **بنهاية 2025م**، فوضعُه مكان التاريخ يوهم أن الرقم لمنتصف
        2026م كجارَيه. */
-    {l:'متوسط أجل الاستحقاق',v:n.atmYears.toFixed(1)+' سنة',
-     d:(n.planAsOf||'—')+' · خطة الاقتراض 2026م',
+    {l:'متوسط أجل الاستحقاق',v:n.atmYears.toFixed(1)+' سنة', ref:true,
+     d:(n.planAsOf||'—')+' · خطة الاقتراض 2026م · قيمةٌ واحدةٌ منشورة، ولا سلسلةَ لها تُقارَن بها',
      i:'<b>المتوسطُ المرجَّح لآجال أدوات الدين القائمة</b> بأوزان قيمها الاسمية '+
        '(<span dir="ltr">Average Time to Maturity</span>). كلّما طال قلّت مخاطرُ إعادة التمويل قريباً، '+
        'ولا يقيس كلفةَ الدين ولا مخاطرَ سعر الفائدة. مصدرُه خطةُ الاقتراض السنوية، '+
        'ويصف المحفظةَ في <b>تاريخ الخطة</b> لا في تاريخ قراءة اللوحة.'},
-    {l:'كلفة تمويل المحفظة',v:iso(n.costPct.toFixed(2)+'%'),
+    {l:'كلفة تمويل المحفظة',v:iso(n.costPct.toFixed(2)+'%'), ref:true,
      d:(n.planAsOf||'—')+' · خطة الاقتراض 2026م',
      i:'<b>متوسطُ كلفة المحفظة القائمة</b> كما ينشره المركز الوطني لإدارة الدين — أي معدّلُ الفائدة '+
        'المرجَّحُ على أدوات الدين القائمة، لا كلفةُ الإصدار الجديد ولا عائدُ السوق اليوم. '+
        'ويصف المحفظةَ في تاريخ الخطة.'}
   ];
-  document.getElementById('ndmcKpis').innerHTML=kp.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l):'')+
-    '</div><div class="v">'+x.v+
-    '</div><div class="d flat">'+x.d+'</div></div>').join('');
+  document.getElementById('ndmcKpis').innerHTML=kp.map(IXKPI).join('');
 
   draw('cMaturity',{type:'bar',data:{labels:['حسب مصدر التمويل','حسب نوع سعر الفائدة'],datasets:[
       {label:'داخلي / ثابت',data:[n.domesticPct,n.fixedPct],backgroundColor:C.s1,stack:'a',
@@ -34320,25 +34508,27 @@ function renderQuality(){
   const cov=Rv.coverage||[];
   const single=P.length-cov.length;
   const kp=[
-    {l:'الفترات المغطاة',v:nf0.format(P.length),
+    /* UXB-08: عددٌ بلا مقامٍ لا يُحكم عليه. فلكلِّ عددٍ هنا مقامُه الصريح. */
+    {l:'الفترات المغطاة',v:nf0.format(P.length), ref:true,d:'من '+qlab(P[0])+' إلى '+qlab(P[P.length-1]),
      i:'عددُ الأرباع التي تحمل بياناً في هذه اللوحة، من أول ربعٍ منشورٍ إلى آخره. '+
        '<b>وليست مقياسَ جودة</b> — هي حجمُ ما يُفحص لا حكمٌ عليه.'},
-    {l:'فترات لها أكثر من مصدر واحد',v:nf0.format(cov.filter(c=>c.sources>1).length),
+    {l:'فترات لها أكثر من مصدر واحد',v:nf0.format(cov.filter(c=>c.sources>1).length), ref:true,
+     d:'من أصل '+nf0.format(P.length)+' فترة، والباقي في مصدرٍ واحد',
      i:'الأرباعُ التي وردت أرقامُها في <b>أكثر من تقريرٍ منشور</b> (التقرير الربعيّ ثم التقرير السنويّ مثلاً)، '+
        'فأمكن مقابلةُ الرقم بالرقم. <b>وهي وحدها القابلةُ للمقابلة</b>: ما ورد في مصدرٍ واحد '+
        'لا يُقابَل بشيء، فسلامتُه غيرُ مُثبَتةٍ لا مُثبَتة.'},
-    {l:'الفروق المرصودة بين المصادر',v:nf0.format((Rv.diffs||[]).length),
+    {l:'الفروق المرصودة بين المصادر',v:nf0.format((Rv.diffs||[]).length), ref:true,
+     d:'في '+nf0.format(cov.filter(c=>c.sources>1).length)+' فترةً قابلةً للمقابلة',
      i:'عددُ المواضع التي اختلف فيها رقمان لبندٍ واحدٍ وفترةٍ واحدة بين تقريرين منشورين. '+
        '<b>والفرقُ ليس خطأً بالضرورة</b>: قد يكون مراجعةً معلَنةً من الناشر أو اختلافَ تبويب. '+
        'وما تفعله اللوحةُ هو <b>إظهارُ الفرق لا الحكمُ فيه</b>، وتعتمد الأحدثَ وتُبقي الأقدمَ ظاهراً.'},
-    {l:'إجمالي التنبيهات',v:nf0.format(alerts.length),
+    {l:'إجمالي التنبيهات',v:nf0.format(alerts.length), ref:true,
+     d:'على '+nf0.format(P.length)+' فترةً مفحوصة',
      i:'عددُ النقاط التي رصدتها فحوصُ هذه اللوحة وتستحقّ تدقيقَ القارئ — قفزاتٌ حادّة، '+
        'وخاناتٌ ناقصة، ومتطابقاتٌ لا تُغلق. <b>وهي فحوصُ اللوحة على نفسها وعلى ما استخرجته</b>، '+
        'لا تدقيقٌ لعمل الناشر ولا إثباتُ خطأٍ في أيّ مصدر.'}
   ];
-  document.getElementById('qKpis').innerHTML=kp.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l):'')+
-    '</div><div class="v">'+x.v+'</div></div>').join('');
+  document.getElementById('qKpis').innerHTML=kp.map(IXKPI).join('');
 
   const nd2=(Rv.diffs||[]).length, multi=cov.filter(c=>c.sources>1).length;
   const worst=alerts[0];
@@ -35098,15 +35288,15 @@ function renderIntl2(){
         (nMiss>0? ' ('+nMiss+' لا تنشر هذا المؤشر، فتخرج من الترتيب ولا تُعدّ أدنى)':'')+'. '+
         '<b>وقيمُ السنة الأخيرة تقديراتٌ وتوقعاتٌ من الناشر</b> لا بياناتٍ محقَّقة، '+
         'وترتيبٌ بين قيمٍ متقاربةٍ بلا حدود خطأ منشورة لا يُقرأ فرقاً مُثبَتاً.';
-      kp.push({l:lbl+' — الترتيب',v:r? r+' من '+rs.length : '—', i:defI,
+      /* المرساةُ في القيمة نفسِها: رتبةٌ من أصلِ عددٍ معلوم، ومعها قيمةُ
+         المملكة ووحدتُها في الذيل. */
+      kp.push({l:lbl+' — الترتيب',v:r? r+' من '+rs.length : '—', i:defI, ref:true,
                d:((q.d.SAU&&q.d.SAU[y]!=null)? iFmt(q.d.SAU[y],q)+ (q.unit.charAt(0)==='%'?'':' ') + q.unit+' · '+ylab(y) : '')+
                  (nMiss>0? ' · <span class="muted">من أصل '+g.length+' في المجموعة — '+
                    nMiss+' '+arN(nMiss,'دولة لا تنشر','دولتان لا تنشران','دول لا تنشر','دولةً لا تنشر')+
                    ' هذا المؤشر</span>' : '')});
     });
-  document.getElementById('iKpis').innerHTML=kp.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l):'')+'</div><div class="v">'+x.v+
-    '</div><div class="d flat">'+x.d+'</div></div>').join('');
+  document.getElementById('iKpis').innerHTML=kp.map(IXKPI).join('');
 }
 const span2=a=>ylab(a[0])+' — '+ylab(a[a.length-1]);
 const nf2i=numFmt({minimumFractionDigits:2,maximumFractionDigits:2});
@@ -35664,6 +35854,10 @@ function infoDot(text,label){
   const IX=window.MIRSAD_IX;
   return (IX&&IX.infoDot)? IX.infoDot(text,label) : '';
 }
+/* المولّدُ المشترك لبطاقة المؤشّر — نسخةٌ واحدةٌ لكلّ اللوحات (UXB-08). */
+const IXKPI=x=>{ const f=window.MIRSAD_IX&&window.MIRSAD_IX.kpiCard;
+  if(!f) throw new Error('MIRSAD: مولّدُ بطاقة المؤشّر غير متاح (MIRSAD_IX.kpiCard).');
+  return f(x,infoDot); };
 
 
 /* حارس القيم غير المعرَّفة: Intl.NumberFormat يحوّل null إلى «0» وNaN إلى «NaN»،
@@ -35774,25 +35968,34 @@ function renderOverview(){
   const hasRef=refV.length===oil.length && refV.every(x=>typeof x==='number');
   const nonoilNow =E.gdp[YD.length-1]-oilFull[oilFull.length-1];
   const nonoilPrev=E.gdp[YD.length-2]-oilFull[oilFull.length-2];
+  /* ── UXB-08: خطُّ الشرارة من سلسلة المؤشّر نفسِه ───────────────────── */
+  const _tail=(a,k)=>{ const b=(a||[]).filter(v=>v!=null&&isFinite(v)); return b.length>=2? b.slice(-(k||12)) : null; };
+  const _spkGdp=_tail(g,12);
+  const _spkGrowth=_tail(g.map((v,i)=>i? (v/g[i-1]-1)*100 : null),12);
+  const _spkOilShare=_tail(oilFull.map((o,i)=>g[i]? o/g[i]*100 : null),12);
+  const _spkNonoilG=_tail(g.map((v,i)=>{ if(!i) return null;
+    const a=v-(oilFull[i]||0), b=g[i-1]-(oilFull[i-1]||0);
+    return b? (a/b-1)*100 : null; }),12);
   const kp=[
-    {l:'الناتج المحلي الإجمالي الاسمي', v:fmt(g[n]),
+    {l:'الناتج المحلي الإجمالي الاسمي', v:fmt(g[n]), spark:_spkGdp,
+     sparkFmt:v=>fmt(Math.round(v))+' مليون ريال',
      i:'مجموع القيمة المضافة لجميع الوحدات المنتِجة المقيمة في الاقتصاد، مضافاً إليه '+
        'صافي الضرائب على المنتجات — وفق نظام الحسابات القومية (SNA 2008). و«الاسمي» '+
        'يعني أنه مقوَّمٌ بأسعار سنته نفسها ولم يُنقَّ من أثر تغيّر الأسعار، فارتفاعه '+
        'يجمع تغيّر الكميات وتغيّر الأسعار معاً.',
      d:ylab(Y[n])+' · '+UM+(n>=Y.length-1?' · رقم أوّلي':'')},
-    {l:'النمو الاسمي للناتج', v:pct1((g[n]/g[n-1]-1)*100),
+    {l:'النمو الاسمي للناتج', v:pct1((g[n]/g[n-1]-1)*100), spark:_spkGrowth, sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:'التغيّر في الناتج الاسمي بين سنتين متتاليتين منسوباً إلى السنة الأولى. '+
        'ولا يُقرأ نمواً اقتصادياً: جزءٌ منه تغيّرُ أسعارٍ وجزءٌ تغيّرُ كميات، '+
        'والفصل بينهما في مؤشرات النمو الحقيقي أدناه.',
      cls:(g[n]>=g[n-1]?'up':'down'), d:ylab(Y[n])+' مقابل '+ylab(Y[n-1])},
-    {l:'حصة استخراج النفط الخام والغاز من الناتج', v:pct1(shareNow),
+    {l:'حصة استخراج النفط الخام والغاز من الناتج', v:pct1(shareNow), spark:_spkOilShare, sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:'القيمة المضافة لشعبة استخراج النفط الخام والغاز الطبيعي (القسم B من التصنيف '+
        'الصناعي الدولي الموحّد) منسوبةً إلى الناتج الاسمي. ولا تشمل تكرير النفط ولا '+
        'الصناعات البتروكيميائية، فهذه أنشطةٌ تحويلية تُبوَّب في الصناعة التحويلية.',
      d:ylab(YD[YD.length-1])+' · كانت '+pct1(shareThen)+' في '+ylab(YD[0])+
        ' — شعبة الاستخراج وحدها، دون التكرير'},
-    {l:'نمو الناتج غير النفطي الاسمي', v:pct1((nonoilNow/nonoilPrev-1)*100),
+    {l:'نمو الناتج غير النفطي الاسمي', v:pct1((nonoilNow/nonoilPrev-1)*100), spark:_spkNonoilG, sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:'الناتج الاسمي مطروحاً منه الأنشطة النفطية كما تعرّفها الهيئة العامة للإحصاء '+
        '(الاستخراج والتكرير معاً)، ثم نموّه بين سنتين. ويختلف عن «نمو الأنشطة غير '+
        'النفطية» في المؤشرات الربعية لأن هذا اسميٌّ وذاك حقيقيٌّ منقّى من أثر الأسعار.',
@@ -35801,10 +36004,7 @@ function renderOverview(){
        (hasRef? ' · بتعريف الهيئة: الأنشطة النفطية تضمّ الاستخراج والتكرير معاً'
               : ' · بيان التكرير غير متاح، فالمطروح الاستخراج وحده')}
   ];
-  document.getElementById('e-kpis').innerHTML=kp.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l):'')+
-    '</div><div class="v '+(x.cls||'')+'">'+x.v+
-    '</div><div class="d flat">'+x.d+'</div></div>').join('');
+  document.getElementById('e-kpis').innerHTML=kp.map(IXKPI).join('');
 
   /* --- المؤشرات الربعية: فترة مرجعية واحدة لكل البطاقات --- */
   const qref=qlab(rg.labels[m]);
@@ -35814,14 +36014,18 @@ function renderOverview(){
     'لا مع الربع السابق، فتُلغى الموسمية دون تعديلٍ موسميٍّ صريح. ';
   const qk=[
     {l:'النمو الحقيقي — الناتج الإجمالي', v:pct1(rg.gdp[m]), cls:rg.gdp[m]>=0?'up':'down',
+     spark:_tail(rg.gdp,16), sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:RQ+'وهذا المؤشر يشمل الأنشطة كلها: النفطية وغير النفطية والحكومية.'},
     {l:'النمو الحقيقي — الأنشطة غير النفطية', v:pct1(rg.nonoil[m]), cls:rg.nonoil[m]>=0?'up':'down',
+     spark:_tail(rg.nonoil,16), sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:RQ+'والأنشطة غير النفطية هي ما عدا استخراج النفط الخام والغاز وتكريره، '+
        'وتشمل الأنشطة الحكومية.'},
     {l:'النمو الحقيقي — الأنشطة النفطية', v:pct1(rg.oil[m]), cls:rg.oil[m]>=0?'up':'down',
+     spark:_tail(rg.oil,16), sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:RQ+'والأنشطة النفطية عند الهيئة تضمّ استخراج النفط الخام والغاز وتكرير النفط '+
        'معاً — فهي أوسع من شعبة الاستخراج وحدها في المؤشر السنوي أعلاه.'},
     {l:'النمو الحقيقي — الأنشطة الحكومية', v:pct1(rg.gov[m]), cls:rg.gov[m]>=0?'up':'down',
+     spark:_tail(rg.gov,16), sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:RQ+'والأنشطة الحكومية هي القيمة المضافة لأنشطة الإدارة العامة والدفاع '+
        'والضمان الاجتماعي الإلزامي (القسم O من التصنيف الصناعي الدولي الموحّد)، '+
        'وتُقاس بمدخلاتها لأن خدماتها غير سوقية.'}
@@ -35830,11 +36034,7 @@ function renderOverview(){
      للمراجعة، والفارق مقيس لا مُدّعى (ر1 2026م: 2.8% أولياً ثم 3.0% مفصَّلاً). */
   const stg=(rg.stage&&rg.stage[rg.labels[m]])||'مفصَّل';
   const isFlash=stg==='أولي';
-  document.getElementById('e-qkpis').innerHTML=qk.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l):'')+
-    (isFlash?' <span class="badge">تقدير أولي</span>':'')+
-    '</div><div class="v '+(x.cls||'')+'">'+x.v+
-    '</div><div class="d flat">'+qref+' · '+qb+'</div></div>').join('');
+  document.getElementById('e-qkpis').innerHTML=qk.map(IXKPI).join('');
   const qn=document.getElementById('e-qkpisNote');
   if(qn){
     const fv=rg.flashVsDetailed&&rg.flashVsDetailed['2026Q1'];
@@ -37125,6 +37325,10 @@ function infoDot(text,label){
   const IX=window.MIRSAD_IX;
   return (IX&&IX.infoDot)? IX.infoDot(text,label) : '';
 }
+/* المولّدُ المشترك لبطاقة المؤشّر — نسخةٌ واحدةٌ لكلّ اللوحات (UXB-08). */
+const IXKPI=x=>{ const f=window.MIRSAD_IX&&window.MIRSAD_IX.kpiCard;
+  if(!f) throw new Error('MIRSAD: مولّدُ بطاقة المؤشّر غير متاح (MIRSAD_IX.kpiCard).');
+  return f(x,infoDot); };
 const partTag=k=>PART&&k===PART.m?' <span class="badge">جزئي</span>':'';
 const PARTNOTE=PART
   ? 'آخر شهر في السلسلة ('+mlab(PART.m)+') <b>جزئي</b>: '+PART.d+' يوم تداول حتى '+dlab(lastD[0])+
@@ -37394,11 +37598,15 @@ function renderPrice(){
   /* en-10: حُذف هنا متغيّران مثبَّتان على 2026 و2025 لا يستدعيهما شيء —
      شيفرةٌ ميتة تُثبِّت سنتين، فتُوهم قارئ الملف أن اللوحة تعالج سنةً بعينها. */
   const kp=[
+    /* UXB-08: مرساةُ «آخر سعر» مسارُه نفسُه — تسعون يوماً من السلسلة اليومية. */
     {l:'آخر سعر منشور',v:usd(last)+' $',d:dlab(lastD[0]),
+     spark:(function(){ try{ const a=d.slice(-90).map(x=>x[1]).filter(v=>v!=null);
+       return a.length>=2? a : null; }catch(e){ return null; } })(),
+     sparkFmt:v=>v.toFixed(1)+' دولاراً',
      i:'سعر إقفال خام برنت المؤرَّخ (سلسلة RBRTE لدى إدارة معلومات الطاقة الأمريكية)، '+
        'بالدولار الأمريكي للبرميل. وهو سعرٌ فوريٌّ مرجعيٌّ في السوق العالمية، لا سعرَ '+
        'بيعٍ فعليّاً للخام السعودي — فأسعار البيع الرسمية تُحدَّد بفوارقَ عن مرجعٍ إقليمي.'},
-    {l:'التغير عن اليوم السابق',v:pct1((last/prev-1)*100),cls:last>=prev?'up':'down',d:'مقارنة بـ'+dlab(dly[dly.length-2][0]),
+    {l:'التغير عن اليوم السابق',v:pct1((last/prev-1)*100), ref:true,cls:last>=prev?'up':'down',d:'مقارنة بـ'+dlab(dly[dly.length-2][0]),
      i:'تغيّر إقفالٍ عن إقفال يومِ التداول السابق، لا عن اليوم التقويمي السابق — '+
        'فالعطل ونهايات الأسبوع لا تُنشر لها أسعار. وحركة يومٍ واحد لا تدلّ على اتجاه.'},
     /* en-4: حين يكون الشهر الجاري جزئياً فالطرفان غير متكافئين، وكان القيد
@@ -37406,7 +37614,7 @@ function renderPrice(){
        الرقم في عنوانه: القيد حيث تقع العين لا حيث ينتهي النص. */
     {l:'التغير عن الشهر المماثل قبل عام'+
        ((PART&&PART.m===curM)?' <span class="badge">مقارنة غير متجانسة</span>':''),
-     v:(mNow&&mAgo)?pct1((mNow/mAgo-1)*100):'—',
+     v:(mNow&&mAgo)?pct1((mNow/mAgo-1)*100):'—', ref:true,
      cls:(mNow&&mAgo&&mNow>=mAgo)?'up':'down',
      i:'مقارنة متوسطَي شهرين متماثلين من سنتين متتاليتين. تُستعمل السلسلة الشهرية '+
        'لا اليومية لأن اليومية في هذه اللوحة <b>نافذةٌ متدحرجة بعدد أيام التداول</b> ('+
@@ -37427,7 +37635,7 @@ function renderPrice(){
                     return a.length?{v:a.reduce((s,x)=>s+x[1],0)/a.length,n:a.length}:null;};
       const cur=avg(yr), prv=avg(yr-1);
       if(!cur) return {l:'متوسط '+ylab(2026)+' حتى تاريخه',v:'—',d:''};
-      return {l:'متوسط أول '+cur.n+' أشهر '+ylab(yr),v:usd(cur.v)+' $',
+      return {l:'متوسط أول '+cur.n+' أشهر '+ylab(yr),v:usd(cur.v)+' $', ref:true,
         i:'الوسط الحسابي لمتوسطات الأشهر المنشورة من السنة الجارية، ويُقابَل بالأشهر '+
           'نفسها من السنة السابقة لا بالسنة كاملة — فمقارنة سنةٍ جزئية بسنةٍ كاملة '+
           'تخلط أثر السعر بأثر عدد الأشهر. وهو متوسط أشهرٍ لا متوسط أيام تداول.',
@@ -37437,10 +37645,7 @@ function renderPrice(){
           (PART?' · آخر شهر جزئي ('+PART.d+' يوم تداول)':'')};
     })()
   ];
-  document.getElementById('n-kpis').innerHTML=kp.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l):'')+
-    '</div><div class="v '+(x.cls||'')+'">'+x.v+
-    '</div><div class="d flat">'+x.d+'</div></div>').join('');
+  document.getElementById('n-kpis').innerHTML=kp.map(IXKPI).join('');
   document.getElementById('n-asof').textContent='آخر سعر منشور: '+dlab(lastD[0]);
 
   draw('cNDaily',{type:'line',data:{labels:d.map(x=>dlab(x[0])),datasets:[
@@ -37544,7 +37749,7 @@ function renderLink(){
   const _rmin=_roll.length?Math.min.apply(null,_roll):null;
   const _rmax=_roll.length?Math.max.apply(null,_roll):null;
   const kp=[
-    {l:'أثر دولار واحد على الإيراد الربعي',v:fmt(perQ)+' مليون',
+    {l:'أثر دولار واحد على الإيراد الربعي',v:fmt(perQ)+' مليون', ref:true,
      i:'ميل انحدارٍ خطّيٍّ بالمربعات الصغرى للإيراد النفطي الربعي على متوسط برنت '+
        'للربع نفسه. وهو <b>ارتباطٌ مقيسٌ في مدى البيانات لا علاقةٌ سببية</b>: الإيراد '+
        'يتأثر أيضاً بالكمية المنتَجة وبسعر البيع الرسمي وبتوقيت التحصيل. ولا يُمدّ '+
@@ -37552,7 +37757,7 @@ function renderLink(){
      d:'من انحدار '+R.n+' ربعاً'+(ciQ?' · فترة ثقة 95%: '+ciQ:'')},
     /* sb-01: بطاقةُ الاستقرار — تُنشر سواءٌ صمد الميل أم لا. */
     (Rlate? {l:'استقرارُ الميل على الفترة',
-      v:fmt(Rlate.b)+' مليون',
+      v:fmt(Rlate.b)+' مليون', ref:true,
       cls:(_inCI===false?'down':''),
       i:'الميلُ نفسُه مقدَّراً على <b>آخر '+_lastN+' ربعاً</b> وحدها — وهي الفترةُ التي '+
         'يُقرأ فيها الرقمُ على الحاضر. والمعلمةُ المنشورة أعلاه مقدَّرةٌ على المدى الكامل. '+
@@ -37564,24 +37769,22 @@ function renderLink(){
         (_roll.length? ' والميلُ المتدحرج على نافذة اثني عشر ربعاً يتراوح بين '+
            fmt(_rmin)+' و'+fmt(_rmax)+' مليوناً.' : ''),
       d:'آخر '+_lastN+' ربعاً · '+(_inCI===false?'خارج فترة الثقة المنشورة':'داخل فترة الثقة المنشورة')} : null),
-    {l:'الأثر السنوي المكافئ',v:fmt(perY)+' مليون',
+    {l:'الأثر السنوي المكافئ',v:fmt(perY)+' مليون', ref:true,
      i:'الأثر الربعي مضروباً في أربعة. وهو <b>مكافئٌ حسابي</b> يفترض أربعة أرباع '+
        'بالوتيرة نفسها، لا تقديرٌ سنويٌّ مُقدَّرٌ من بياناتٍ سنوية.',
      d:'أربعة أرباع بالوتيرة نفسها'+(ciY?' · فترة ثقة 95%: '+ciY:'')},
-    {l:'ما يفسّره السعر من التباين',v:pct1((R.r2||0)*100),
+    {l:'ما يفسّره السعر من التباين',v:pct1((R.r2||0)*100), ref:true,
+     d:'من 0% (لا يفسّر شيئاً) إلى 100% (يفسّره كلَّه)',
      i:'معامل التحديد R²: نسبة تباين الإيراد النفطي التي يفسّرها السعر وحده في هذا '+
        'الانحدار. والباقي تفسّره عوامل أخرى غير مُدرَجة في النموذج.',
      d:'معامل التحديد R²'},
-    {l:'آخر ربع: الفعلي مقابل المفسَّر',v:fmt(resid[resid.length-1]),
+    {l:'آخر ربع: الفعلي مقابل المفسَّر',v:fmt(resid[resid.length-1]), ref:true,
      i:'البواقي: الإيراد الفعلي مطروحاً منه ما يتنبّأ به الانحدار عند سعر ذلك الربع. '+
        'فالموجب إيرادٌ فوق ما يفسّره السعر، والسالب دونه — ومصدر الفارق خارج السعر: '+
        'كميةٌ أو سعرُ بيعٍ رسميٌّ أو توقيتُ تحصيل.',
      cls:resid[resid.length-1]>=0?'up':'down',d:qlab(last.k)+' · الفارق غير السعري'}
   ];
-  document.getElementById('n-lkpis').innerHTML=kp.filter(Boolean).map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l):'')+
-    '</div><div class="v '+(x.cls||'')+'">'+x.v+
-    '</div><div class="d flat">'+x.d+'</div></div>').join('');
+  document.getElementById('n-lkpis').innerHTML=kp.filter(Boolean).map(IXKPI).join('');
 
   draw('cNFit',{type:'line',data:{labels:pr.map(o=>qlab(o.k)),datasets:[
       {label:'الإيراد النفطي الفعلي',data:ys,borderColor:C.s4,borderWidth:2.6,tension:.25,pointRadius:3},
@@ -38217,6 +38420,10 @@ function infoDot(text,label){
   const IX=window.MIRSAD_IX;
   return (IX&&IX.infoDot)? IX.infoDot(text,label) : '';
 }
+/* المولّدُ المشترك لبطاقة المؤشّر — نسخةٌ واحدةٌ لكلّ اللوحات (UXB-08). */
+const IXKPI=x=>{ const f=window.MIRSAD_IX&&window.MIRSAD_IX.kpiCard;
+  if(!f) throw new Error('MIRSAD: مولّدُ بطاقة المؤشّر غير متاح (MIRSAD_IX.kpiCard).');
+  return f(x,infoDot); };
 function kpi(label,val,sub,tone,info){
   return '<div class="kpi'+(tone?' '+tone:'')+'"><div class="kl">'+label+
          (info?infoDot(info,'تعريف: '+label):'')+'</div>'+
@@ -39321,6 +39528,10 @@ function infoDot(text,label){
   const IX=window.MIRSAD_IX;
   return (IX&&IX.infoDot)? IX.infoDot(text,label) : '';
 }
+/* المولّدُ المشترك لبطاقة المؤشّر — نسخةٌ واحدةٌ لكلّ اللوحات (UXB-08). */
+const IXKPI=x=>{ const f=window.MIRSAD_IX&&window.MIRSAD_IX.kpiCard;
+  if(!f) throw new Error('MIRSAD: مولّدُ بطاقة المؤشّر غير متاح (MIRSAD_IX.kpiCard).');
+  return f(x,infoDot); };
 function lastFullYear(){
   const P=D.periods, ys={};
   P.forEach((p,i)=>{ const y=+p.slice(0,4); (ys[y]=ys[y]||[]).push(i); });
@@ -39386,8 +39597,24 @@ function render(){
     return d<med? {m:last,d:d} : null;
   })();
   const partTxt=partial? ' · آخر شهر جزئي في الطرف الأحدث ('+partial.d+' يوم تداول)' : '';
+  /* ── UXB-08 (06-10-2026م): لكلِّ بطاقةٍ مرساةُ مقارنة ─────────────────
+     خطُّ الشرارة يُرسم من **سلسلة المؤشّر نفسِه** لا من سلسلةٍ قريبةٍ منه،
+     وإلا كان الرسمُ يصف غيرَ ما يقوله الرقم. وما لا سلسلةَ له يحمل مرجعاً
+     صريحاً (قيمةً سابقةً منشورةً أو مقاماً)، وما لا هذا ولا ذاك يُعلَن حدُّه. */
+  const spkBrent=(N&&N.monthly&&N.monthly.length>=6)? N.monthly.slice(-24).map(x=>x[1]) : null;
+  const spkBal=(function(){
+    try{
+      const P2=D.periods, ys2={};
+      P2.forEach((q,i)=>{ const y=+q.slice(0,4); (ys2[y]=ys2[y]||[]).push(i); });
+      const full=Object.keys(ys2).map(Number).filter(y=>ys2[y].length===4).sort();
+      const a=full.map(y=>ys2[y].reduce((t,i)=>t+((D.rev.TOTAL[i]||0)-(D.exp.TOTAL[i]||0)),0));
+      return a.length>=2? a : null;
+    }catch(e){ return null; }
+  })();
+  const spkGrowth=(rg&&rg.gdp&&rg.gdp.length>=6)? rg.gdp.slice(-16).filter(v=>v!=null) : null;
   const kp=[
     {l:'سعر برنت',v:(nLast?nLast[1].toFixed(2):'—')+' $',
+     spark:spkBrent, sparkFmt:v=>v.toFixed(1)+' دولاراً',
      i:'آخر إقفال منشور لخام برنت المؤرَّخ (سلسلة RBRTE — إدارة معلومات الطاقة '+
        'الأمريكية)، بالدولار للبرميل. سعرٌ مرجعيٌّ عالميٌّ لا سعرُ بيعٍ فعليّ للخام '+
        'السعودي. تفصيله في لوحة الطاقة والنفط.',
@@ -39397,25 +39624,27 @@ function render(){
        'بحسب ما قُبض وما صُرف فعلاً لا بحسب ما استُحق. الموجب فائضٌ والسالب عجزٌ '+
        'يُعرض بين قوسين. مبوَّبٌ وفق دليل إحصاءات مالية الحكومة (GFSM 2014). '+
        'تفصيله في لوحة المالية العامة.',
-     d:(bal>=0?'فائض':'عجز')+' · مليون ريال'},
+     d:(bal>=0?'فائض':'عجز')+' · مليون ريال', spark:spkBal,
+     sparkFmt:v=>fmt(Math.round(v))+' مليون ريال'},
     {l:'النمو الحقيقي'+(rFlash?' <span class="badge">تقدير أولي</span>':''),
-     v:pct1(rg.gdp[m]),cls:rg.gdp[m]>=0?'up':'down',
+     v:pct1(rg.gdp[m]),cls:rg.gdp[m]>=0?'up':'down', spark:spkGrowth,
+     sparkFmt:v=>(Math.round(v*10)/10)+'%',
      i:'نمو الناتج المحلي الإجمالي بالأسعار الثابتة عن الربع المماثل من السنة السابقة. '+
        '«الحقيقي» يعني أن أثر تغيّر الأسعار أُزيل فبقي تغيّر الكميات، والمقارنة '+
        'السنوية تُلغي الموسمية. تفصيله في لوحة الاقتصاد الكلي.',
      d:'ر'+rg.labels[m].slice(5)+' '+rg.labels[m].slice(0,4)+'م · مقارنة بالربع المماثل'+
        (rFlash?' · يسبق النشرة المفصَّلة':'')},
     /* المقام تقديرٌ لا رقمٌ محقق — والقيد كان على البطاقة الداخلية وحدها. */
-    {l:'الدين إلى الناتج',v:nd.debtToGdpPct?iso(nf1.format(nd.debtToGdpPct)+'%'):'—',
+    {l:'الدين إلى الناتج',v:nd.debtToGdpPct?iso(nf1.format(nd.debtToGdpPct)+'%'):'—', ref:true,
      i:'رصيد الدين الحكومي القائم منسوباً إلى الناتج المحلي الإجمالي الاسمي. '+
        '<b>البسط رصيدٌ منشور والمقام تقديرٌ</b> لناتج سنةٍ لم تنتهِ بعد، فالنسبة '+
        'تتغيّر عند نشر الناتج الفعلي. ونسبةُ رصيدٍ إلى تدفّقٍ سنويّ لا رصيدٍ إلى رصيد.',
-     d:nd.asOf?(nd.asOf+' · '+fmt(nd.debtTotalBn)+' مليار ريال · على تقدير ناتج 2026م'):''}
+     /* لا سلسلةَ ربعيةً للمقام (الناتج تقديرٌ سنوي)، فالمرساةُ مرجعٌ صريح:
+        تغيّرُ رصيد الدين المنشور عن نهاية السنة السابقة. */
+     d:nd.asOf?(nd.asOf+' · '+fmt(nd.debtTotalBn)+' مليار ريال · على تقدير ناتج 2026م'+
+       (nd.changePct!=null? ' · ارتفع الرصيدُ '+iso(nf1.format(nd.changePct)+'%')+' عن نهاية السنة السابقة':'')):''}
   ];
-  document.getElementById('homeKpis').innerHTML=kp.map(x=>
-    '<div class="card kpi"><div class="l">'+x.l+(x.i?infoDot(x.i,'تعريف: '+x.l)   /* الوسوم تُنزع في المولّد المشترك */:'')+
-    '</div><div class="v '+(x.cls||'')+'">'+x.v+
-    '</div><div class="d flat">'+x.d+'</div></div>').join('');
+  document.getElementById('homeKpis').innerHTML=kp.map(IXKPI).join('');
 
   const oilShare=F.oil/F.rev*100, cov=F.nonoil/F.exp*100;
   const cards=[
@@ -39479,6 +39708,45 @@ function render(){
   document.getElementById('homeChain').innerHTML=links.map((l,i)=>
     '<div class="lk"><div class="n">'+l.n+'</div><div class="v">'+l.v+'</div><div class="u">'+l.u+'</div></div>'+
     (i<links.length-1?'<div class="ar">←</div>':'')).join('');
+  /* ── UXB-22: رسمُ لوحة البداية ─────────────────────────────────────
+     يمرّ من ‎MIRSAD_IX.wrap‎ كبقيّة رسوم اللوحة، فيرث منه الاتجاهَ والوسمَ
+     المباشر والتعليقَ المثبَّت ووحدةَ المحور، ويُختَم كما تُختَم كلُّ بطاقةِ
+     رسم (تواترٌ وتغطيةٌ ووحدةٌ وأساس) فتقبله بوابةُ vstamps وvcov. */
+  (function(){
+    try{
+      const el=document.getElementById('hBal'); if(!el||!window.Chart) return;
+      const P2=D.periods, ys2={};
+      P2.forEach((q,i)=>{ const y=+q.slice(0,4); (ys2[y]=ys2[y]||[]).push(i); });
+      const full=Object.keys(ys2).map(Number).filter(y=>ys2[y].length===4).sort();
+      if(full.length<2) return;
+      const vals=full.map(y=>ys2[y].reduce((t,i)=>t+((D.rev.TOTAL[i]||0)-(D.exp.TOTAL[i]||0)),0));
+      const IX=window.MIRSAD_IX;
+      const Cp=(IX&&IX.pal)? IX.pal() : {s3:'#059',s8:'#a33',ink3:'#888',line:'#ddd'};
+      const prev=window.Chart.getChart? window.Chart.getChart(el) : null; if(prev) prev.destroy();
+      let cfg={type:'bar',
+        data:{labels:full.map(ylab),datasets:[{label:'الفائض/(العجز)',data:vals,
+          backgroundColor:vals.map(v=>v>=0?Cp.s3:Cp.s8),borderRadius:4,borderSkipped:false}]},
+        options:{maintainAspectRatio:false,
+          scales:{x:{grid:{display:false},ticks:{color:Cp.ink3,maxRotation:0}},
+                  y:{grid:{color:Cp.line,drawTicks:false},border:{display:false},
+                     ticks:{color:Cp.ink3,padding:8,
+                       callback:v=>v<0? '('+nf0.format(-v)+')' : nf0.format(v)}}},
+          plugins:{legend:{display:false},
+            tooltip:{callbacks:{label:c=>(c.parsed.y>=0?'فائض ':'عجز ')+fmt(Math.abs(c.parsed.y))}}}}};
+      if(IX&&IX.wrap) cfg=IX.wrap('hBal',cfg,{unit:'مليون ريال',dec:0,freq:'y'});
+      new window.Chart(el,cfg);
+      if(IX&&IX.stamp) IX.stamp('hBal',[['التواتر','سنوي'],
+        ['التغطية',ylab(full[0])+' — '+ylab(full[full.length-1])],
+        ['الوحدة','مليون ريال'],
+        ['الأساس','الإيرادات ناقص المصروفات · الأساس النقدي · GFSM 2014']]);
+      const neg=vals.filter(v=>v<0).length;
+      const el2=document.getElementById('hBalNote');
+      if(el2) el2.innerHTML='<b>القراءة:</b> من '+full.length+' سنةٍ مكتملة سُجِّل العجزُ في '+
+        neg+' منها والفائضُ في '+(full.length-neg)+'. '+
+        'والسنواتُ الجزئيةُ غيرُ معروضةٍ هنا لأنّ مقارنةَ سنةٍ ناقصةٍ بسنةٍ تامّةٍ مقارنةٌ غيرُ متكافئة.';
+    }catch(e){}
+  })();
+
   document.getElementById('homeChainNote').innerHTML='<b>لماذا هذا الترتيب:</b> كل حلقة مدخلٌ للتي تليها، '+
     'وهذا هو سبب وجود اللوحات الثلاث في مكان واحد: السعر يحدد الإيراد النفطي، والإيراد مع المصروفات يحدد الرصيد، '+
     'والرصيد المتراكم يحدد الدين، والدين يُقاس بنسبته إلى الاقتصاد الذي تقيسه لوحة الاقتصاد الكلي. '+
