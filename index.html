@@ -147,8 +147,8 @@ try{
    "@language": "ar"
   }
  ],
- "dcat:version": "2.527",
- "owl:versionInfo": "2.527",
+ "dcat:version": "2.530",
+ "owl:versionInfo": "2.530",
  "dcat:dataset": [
   {
    "@type": "dcat:Dataset",
@@ -1736,15 +1736,23 @@ nav.tabs .tab .tdesc{display:none}
 /* UX-09: الخطُّ المصغَّر في بطاقة المؤشّر، مسارُ السلسلة في النطاق المعروض.
    لونُه لونُ الحكم إن وُجد، وإلا لونُ الحبر الثالث. وهو زخرفةٌ دلاليّةٌ
    مخفيّةٌ عن شجرة الإتاحة: الرقمُ والمقارنةُ منطوقان، والخطُّ يُعينُ العينَ. */
-.kpi .sparkwrap{margin:var(--sp-2) 0 var(--sp-1);height:26px;color:var(--ink-3);opacity:.85}
+/* ── ux-24 (26-10-2026م) · خطُّ الشرارة يُرى ──────────────────────────────
+   كان الخطُّ رمادياً باهتاً (‎ink-3‎ بشفافية 0.85) وارتفاعُه 26 بكسلاً وسُمكُه
+   1.6، فلا يكاد يُقرأ اتجاهُه على الشاشة. وهو نصفُ ما تقوله البطاقة: الرقمُ
+   يقول «أين نحن» والخطُّ يقول «إلى أين نسير». فيُرفع إلى لون العلامة في
+   الحالة المحايدة (ويبقى الأخضرُ والأحمر لحالتَي التحسّن والتراجع، فالمعنى
+   لا يُحمل على اللون وحدَه بل تحمله شارةُ الحكم المكتوبة)، ويُرفع ارتفاعُه
+   إلى 32 وسُمكُه إلى 2، بلا شفافية. */
+.kpi .sparkwrap{margin:var(--sp-3) 0 var(--sp-2);height:32px;color:var(--brand-soft)}
 .kpi .sparkwrap.up{color:var(--good)}
 .kpi .sparkwrap.down{color:var(--bad)}
-.kpi .spark{display:block;width:100%;height:26px}
+.kpi .spark{display:block;width:100%;height:32px}
+.kpi .spark path{stroke-width:2}
 /* UX-08: زرُّ توسيع نتائج البحث داخل سطر العدّاد. */
 .gs-more{background:transparent;border:0;padding:0 var(--sp-1);color:var(--brand-text);
   font:inherit;font-size:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .gs-more:hover{color:var(--ink)}
-@media(max-width:520px){ .kpi .sparkwrap,.kpi .spark{height:20px} }
+@media(max-width:520px){ .kpi .sparkwrap,.kpi .spark{height:24px} }
 .tabscount{display:none}   /* UX-03: يظهر على الضيّق وحده */
 .tab{padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);background:transparent;border:var(--hair) solid var(--line);
   color:var(--ink-2);font-size:var(--fs-sm);cursor:pointer;font-family:inherit;transition:background-color .15s,color .15s,border-color .15s}
@@ -1768,7 +1776,21 @@ nav.tabs .tab .tdesc{display:none}
 /* ux-open-01: طيُّ أدوات الضبط */
 details.tfold{margin-bottom:var(--sp-5);border:var(--hair) solid var(--line-soft);border-radius:var(--r);
   background:var(--surface-1)}
-details.tfold>summary{cursor:pointer;padding:var(--sp-4) var(--sp-5);font-size:var(--fs-sm);color:var(--ink-2);min-height:24px}
+details.tfold>summary{cursor:pointer;padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm);color:var(--ink-2);min-height:24px}
+/* ── ux-23 (26-10-2026م) · شريطا الحالة والضبط يتجاوران لا يتراكمان ──────
+   «ضبطُ العرض» و«النطاقُ المعروض» يقولان الحالةَ نفسَها في شريطين
+   متتابعين: 52 و51 بكسلاً على الشاشة الواسعة، و77 و83 على الجوال. وأحدُهما
+   ضابطٌ والآخرُ بيانُ حالة، فيُقرآن معاً لا مرّتين. فيُضمّان إلى سطرٍ واحد
+   حيث يتّسع، ويُشدّ إيقاعُهما الرأسيّ حيث لا يتّسع. */
+@media (min-width:721px){
+  details.tfold:not([open]){display:inline-block;vertical-align:top;margin-bottom:var(--sp-3)}
+  details.tfold:not([open])+.scopebar{display:inline-flex;margin-top:0;
+    margin-inline-start:var(--sp-3);vertical-align:top}
+}
+@media (max-width:720px){
+  details.tfold{margin-bottom:var(--sp-2)}
+  .scopebar{margin-top:0;row-gap:var(--sp-1)}
+}
 details.tfold>summary:hover{color:var(--ink)}
 details.tfold .filters{margin:0;border:0;border-top:var(--hair) solid var(--line-soft);border-radius:0;background:transparent}
 /* ux-load-02: فهرسُ التبويب الطويل */
@@ -1776,6 +1798,15 @@ nav.tabidx{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);align-items:b
   padding:var(--sp-4) var(--sp-4);border:var(--hair) solid var(--line-soft);border-radius:var(--r);background:var(--surface-1);
   font-size:var(--fs-xs);line-height:var(--lh-loose)}
 nav.tabidx b{color:var(--ink-2);font-weight:600}
+/* ── ux-23 · الفهرسُ أداةُ تنقّلٍ تُطلَب، لا كتلةٌ تُدفَع ────────────────
+   بطاقةُ الفهرس تعرض ثمانيةَ أسئلةٍ طويلة فترتفع 179 بكسلاً على الجوال
+   و48 على الشاشة الواسعة، وهي قائمةُ انتقالٍ يُرجع إليها عند الحاجة.
+   فتُطوى خلف عنوانٍ يُعلن عددَها، ويبقى معلَمُ التنقّل (nav) ومسمّاه. */
+.tabidx details>summary{cursor:pointer;list-style:none;min-height:24px;color:var(--ink-2)}
+.tabidx details>summary::-webkit-details-marker{display:none}
+.tabidx details>summary::after{content:'\25be';margin-inline-start:var(--sp-3);opacity:.7}
+.tabidx details[open]>summary::after{content:'\25b4'}
+.tabidx .idxl{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);align-items:baseline;margin-top:var(--sp-3)}
 /* UXB-09: عمقُ التمرير يبلغ 13,940 بكسلاً في أعمق تبويب (16.5 شاشة)، وسبعةُ
    تبويباتٍ تتجاوز 6,000. فالفهرسُ الذي يُبنى في رأس التبويب يغيب عن القارئ
    بعد أوّل شاشة. فيبقى لاصقاً: هو المرساةُ الوحيدة في صفحةٍ بهذا الطول. */
@@ -2138,6 +2169,21 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
    ومحتوًى لا سبيلَ إليه محتوًى غيرُ منشور. والحلُّ مطبَّقٌ أصلاً في الشريط الفرعيّ. */
 .domswitch{display:flex;gap:var(--sp-3);margin:0 0 var(--sp-5);flex-wrap:wrap;overflow-x:auto;
   scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:var(--sp-1)}
+/* ── ux-23 (26-10-2026م) · مبدّلُ اللوحات صفٌّ واحدٌ على الضيّق ──────────
+   ‎flex-wrap:wrap‎ يغلب ‎overflow-x‎، فعلى 390 بكسلاً تقع اللوحاتُ الخمس في
+   ثلاثة صفوف ترتفع 162 بكسلاً وتترك الخامسةَ وحدَها في سطرها، وهو شكلٌ
+   يُقرأ عطلاً لا تصميماً. وقِيس أنّ أوّلَ رقمٍ على الجوال يقع عند 954
+   بكسلاً في لوحة البداية و1,370 في الصورة الكلية، أي تحت الطيّة بـ13%
+   و62%. فيصير صفّاً واحداً يُمرَّر بالنمط المطبَّق أصلاً في الشريط
+   الفرعيّ منذ UX-03، ويسقط وصفُ اللوحة من الزرّ لأنّ سطرَ صدارة التبويب
+   يحمله تحته مباشرةً. */
+@media(max-width:700px){
+  .domswitch{flex-wrap:nowrap;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+    margin-inline:calc(-1 * var(--wrapx,20px));padding-inline:var(--wrapx,20px);scrollbar-width:none}
+  .domswitch::-webkit-scrollbar{display:none}
+  .domswitch button{min-width:0;white-space:nowrap;padding:var(--sp-3) var(--sp-4);min-height:40px}
+  .domswitch button span{display:none}
+}
 .domswitch button{scroll-snap-align:start}
 .domswitch button{flex:0 0 auto;display:flex;flex-direction:column;gap:var(--sp-1);align-items:flex-start;
   background:var(--surface-1);border:var(--hair) solid var(--line);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
@@ -2204,6 +2250,15 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
   h1{font-size:var(--fs-2xl)}
   .mark{width:38px;height:38px}
   header.top{gap:var(--sp-4);padding-bottom:var(--sp-5);margin-bottom:var(--sp-5)}
+  /* ── ux-23 · البحثُ ومبدّلُ الوضع في سطرٍ واحد على الضيّق ──────────────
+     كانا سطرين مستقلّين (44 و36 بكسلاً) فوق شريط اللوحات، وهما ضابطان
+     لا محتوى. فيتقاسمان سطراً واحداً، ويبقى اسمُ اللوحة وبيانُها سطراً
+     كاملاً فوقهما. */
+  header.top>.brand{flex:1 1 100%}
+  header.top>.gsearchbox{flex:1 1 140px;min-width:0;width:auto}
+  header.top>.gsearchbox input{width:100%;min-width:0}
+  header.top>.themebtn{flex:0 0 auto}
+  header.top>.badgefold{flex:1 1 100%}
   .wrap{padding:var(--sp-5) var(--wrapx) var(--sp-10)}
 
   /* أهداف لمس لا تقل عن 44px ونصوص لا تقل عن 11px */
@@ -3904,7 +3959,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> <b>السبعة</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد في 19-09-2026م:</b> كان منشوراً «ستّة»، والشقُّ الثاني من <span dir="ltr">(B)</span> لم يكن مفحوصاً:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.527</span>+<span id="fHashAttr">61e2a45e</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.530</span>+<span id="fHashAttr">996456c8</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -3926,7 +3981,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل، ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.527+61e2a45e · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">61e2a45e</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.530+996456c8 · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">996456c8</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL، فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -3950,7 +4005,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.527+61e2a45e · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">61e2a45e</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.530+996456c8 · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">996456c8</span></div>
 </footer>
 </div>
 
@@ -23998,6 +24053,36 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     "was": "قِيس موضعُ أوّل رقمٍ في الصفحة: في تبويب «الصورة الكلية» يبدأ عند 1,062 بكسلاً على شاشة 1440x900، أي تحت الطيّة بـ18%، وعلى 1280x800 تحت الطيّة بـ33%. وسببُه تراكمُ تسع كتلٍ من المقدّمة: ترويسةٌ فيها الشريطُ الوصفيُّ مفتوحاً (التغطية والوحدة والمعيار والمصدر وتواتر النشر، وهو بيانٌ يُقرأ مرّةً ثم يُعرَف)، ومسارٌ، ومبدّلُ لوحات، وشريطُ ثلاثةَ عشرَ تبويباً كلُّ تبويبٍ سطران، ولوحةُ ضبطٍ مفتوحةٌ بستّ مجموعاتِ تحكّم، وشريطُ نطاقٍ يُكرّر حالتَها حرفياً، وفهرسُ بطاقات، وعنوانُ القسم وصدارتُه",
     "now": "الشريطُ الوصفيُّ مطويٌّ في كلّ عرضٍ وزرُّه يجلس في سطر البيانات نفسِه، وقيدُ الصفة («مستقلّة · غير رسمية») يبقى ظاهراً لأنه يجب أن يبلغ القارئَ لا أن يُتاح له؛ ولوحةُ الضبط مطويّةٌ وحالتُها مكتوبةٌ في عنوان طيّتها فلا تُخفيها؛ ووصفُ التبويب الفرعيّ يسقط من الشريط ويبقى في سطر الصدارة تحته مباشرةً. والمقيسُ بعدها: أوّلُ رقمٍ عند 891 بكسلاً بدل 1,062 في تبويب الصورة الكلية (ارتفاعٌ 171 بكسلاً)، وعند 625 بدل 589 في لوحة البداية (نزولٌ 36 بكسلاً، وهو ثمنُ الزرّ في أخفِّ اللوحات)",
     "why": "لوحةُ بياناتٍ لا يُرى فيها رقمٌ على الشاشة الأولى تُقرأ واجهةَ تنقّلٍ لا لوحةَ بيانات، والكشفُ التدريجيّ يقتضي أن يُطوى ما يُقرأ مرّةً ويبقى ما يُقرأ دائماً"
+   },
+   {
+    "d": "26-10-2026م",
+    "v": "2.529",
+    "t": "لوحة",
+    "w": "الجوالُ أولاً: شريطُ اللوحات صفٌّ واحد، والفهرسُ يُطلَب، والضابطان يتجاوران",
+    "ref": "ux-23",
+    "was": "أربعةُ مواضعَ تدفع أوّلَ رقمٍ تحت الطيّة، وقِيست كلُّها: مبدّلُ اللوحات يحمل flex-wrap:wrap فيغلب التمرير، فتقع اللوحاتُ الخمس في ثلاثة صفوفٍ ترتفع 162 بكسلاً وتبقى الخامسةُ وحدَها في سطرها؛ وبطاقةُ فهرس التبويب مبسوطةٌ دائماً فترتفع 179 بكسلاً على الجوال و48 على الشاشة الواسعة؛ والبحثُ ومبدّلُ الوضع سطران مستقلّان (44 و36 بكسلاً) وهما ضابطان لا محتوى؛ و«ضبطُ العرض» و«النطاقُ المعروض» شريطان متتابعان يقولان الحالةَ نفسَها (52 و51 بكسلاً على الواسعة، و77 و83 على الجوال). فكان أوّلُ رقمٍ في الصورة الكلية عند 1,062 بكسلاً على 1440x900 و1,370 على 390x844",
+    "now": "مبدّلُ اللوحات صفٌّ واحدٌ يُمرَّر على الضيّق بالنمط المطبَّق في الشريط الفرعيّ منذ UX-03؛ والفهرسُ مطويٌّ خلف عنوانٍ يُعلن عددَه مع بقاء معلَم التنقّل ومسمّاه وحفظِ الحالة في الجلسة؛ والبحثُ والمبدّلُ يتقاسمان سطراً؛ والضابطُ وبيانُ الحالة يتجاوران في سطرٍ حيث يتّسع ويُشدُّ إيقاعُهما حيث لا يتّسع. والمقيسُ بعدها: 820 بكسلاً بدل 1,062 على 1440x900 (من 118% من الطيّة إلى 91%)، و1,144 بدل 1,370 على الجوال، و680 بدل 954 في لوحة البداية على الجوال (من 113% إلى 81%)",
+    "why": "لوحةٌ لا يُرى فيها رقمٌ على الشاشة الأولى تُقرأ واجهةَ تنقّل، وشكلٌ يترك عنصراً وحدَه في سطره يُقرأ عطلاً لا تصميماً"
+   },
+   {
+    "d": "26-10-2026م",
+    "v": "2.529",
+    "t": "لوحة",
+    "w": "خطُّ الشرارة يُرى",
+    "ref": "ux-24",
+    "was": "خطُّ الشرارة في بطاقات المؤشر رماديٌّ باهت (اللونُ ink-3 بشفافية 0.85) وارتفاعُه 26 بكسلاً وسُمكُ خطّه 1.6، فلا يكاد يُقرأ اتجاهُه. وهو نصفُ ما تقوله البطاقة: الرقمُ يقول أين نحن والخطُّ يقول إلى أين نسير",
+    "now": "لونُ العلامة في الحالة المحايدة، ويبقى الأخضرُ والأحمر لحالتَي التحسّن والتراجع (والمعنى لا يُحمل على اللون وحدَه بل تحمله شارةُ الحكم المكتوبة)، والارتفاعُ 32 بكسلاً والسُّمكُ 2 بلا شفافية",
+    "why": "عنصرٌ يحمل نصفَ الرسالة ولا يكاد يُرى عنصرٌ معطَّلٌ لا عنصرٌ هادئ"
+   },
+   {
+    "d": "26-10-2026م",
+    "v": "2.530",
+    "t": "لوحة",
+    "w": "مستمعُ الفهرس واحدٌ على القسم لا واحدٌ في كلِّ تصيير",
+    "ref": "ux-25",
+    "was": "طيُّ فهرس التبويب (ux-23) رَبَط مستمعَ حالةٍ بعنصر الطيّ نفسِه، والفهرسُ يُعاد بناؤه في كلِّ تصيير، فزاد عددُ المستمعين واحداً في كلِّ دورة. وقاسته بوّابةُ التسرُّب على النسخة السليمة: 366 ثم 367",
+    "now": "مستمعٌ واحدٌ على القسم الذي يبقى، يُركَّب مرّةً ويُفوَّض إليه الحدث، ويُلتقط في طور الالتقاط لأنّ حدثَ الطيّ لا يصعد",
+    "why": "تسرُّبٌ يزيد واحداً في كلِّ دورة لا يُرى في جلسةٍ قصيرة ويتراكم في جلسةٍ طويلة، والبوّابةُ أمسكته قبل النشر"
    }
   ],
   "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في تبويب «البيانات والمصادر» الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
@@ -33110,9 +33195,32 @@ function ixTabIndexNow(sec,minCards){
     const shown=(k>1? lbl+'، '+(ORD[k]||k) : lbl);
     items.push('<a href="#'+t.id+'">'+(shown.length>46? shown.slice(0,45)+'…' : shown)+'</a>');
   });
+  /* ── ux-23 (26-10-2026م) · الفهرسُ يُطلَب ولا يُدفَع ────────────────────
+     كان الفهرسُ مبسوطاً دائماً: 179 بكسلاً على الجوال و48 على الشاشة
+     الواسعة من المقدّمة قبل أوّل رقم، وهو قائمةُ انتقالٍ يُرجع إليها عند
+     الحاجة لا محتوًى يُقرأ. فيُطوى خلف عنوانٍ يُعلن عددَه، ويبقى معلَمُ
+     التنقّل ومسمّاه كما هما فلا يسقط من بنية المعالم. والحالةُ محفوظةٌ
+     في الجلسة متى فتحه المستعمل. */
   const box=document.createElement('nav');
   box.className='tabidx'; box.setAttribute('aria-label','فهرس بطاقات هذا التبويب');
-  box.innerHTML='<b>فهرسُ هذا التبويب ('+items.length+'):</b> '+items.join('');
+  const key='mirsad.idx.'+(sec.id||'x');
+  box.innerHTML='<details><summary><b>فهرسُ هذا التبويب ('+items.length+')</b></summary>'+
+    '<div class="idxl">'+items.join('')+'</div></details>';
+  const dt=box.querySelector('details');
+  try{ dt.open = sessionStorage.getItem(key)==='1'; }catch(e){}
+  /* الفهرسُ يُعاد بناؤه في كلِّ تصيير، فمستمعٌ يُربط به في كلِّ مرّة يزيد
+     عدَّ المستمعين واحداً في كلِّ دورة، وهو تسرُّبٌ قاسته بوّابةُ التسرُّب
+     (366 ثم 367). فالمستمعُ واحدٌ على القسم الذي يبقى، يُركَّب مرّةً
+     ويُفوَّض إليه الحدث. و‎toggle‎ لا يصعد، فيُلتقط في طور الالتقاط. */
+  if(!sec.__ixIdxWired){
+    sec.__ixIdxWired=1;
+    sec.addEventListener('toggle',function(e){
+      const d=e.target;
+      if(!d||!d.parentNode||!d.parentNode.classList||
+         !d.parentNode.classList.contains('tabidx')) return;
+      try{ sessionStorage.setItem('mirsad.idx.'+(sec.id||'x'), d.open?'1':'0'); }catch(e2){}
+    }, true);
+  }
   const lead=sec.querySelector(':scope > .tablead');
   if(lead&&lead.nextSibling) sec.insertBefore(box,lead.nextSibling);
   else sec.insertBefore(box,sec.firstChild);
