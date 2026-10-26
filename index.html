@@ -147,8 +147,8 @@ try{
    "@language": "ar"
   }
  ],
- "dcat:version": "2.526",
- "owl:versionInfo": "2.526",
+ "dcat:version": "2.527",
+ "owl:versionInfo": "2.527",
  "dcat:dataset": [
   {
    "@type": "dcat:Dataset",
@@ -1717,6 +1717,14 @@ h1{font-size:var(--fs-3xl);font-weight:600}
 
 /* tabs */
 nav.tabs{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-bottom:var(--sp-6)}
+/* ── UX-22 · الشريطُ الفرعيُّ سطرٌ واحدٌ لكلِّ تبويب ─────────────────────
+   كان كلُّ تبويبٍ فرعيٍّ سطرين: اسمُه ووصفُه. وثلاثةَ عشرَ تبويباً في لوحة
+   المالية تقع في صفّين، فيبلغ الشريطُ 112 بكسلاً. والوصفُ مكرَّرٌ: سطرُ
+   صدارة التبويب (tablead) يحمل وصفَ المنتقى كاملاً تحت الشريط مباشرةً،
+   وهو ما يقرؤه القارئ فعلاً. وقد كان الوصفُ مطويّاً على الجوال منذ UX-03
+   للسبب نفسِه، فيُعمَّم: يبقى الوصفُ في مبدّل اللوحات (خمسةٌ لا ثلاثةَ عشر،
+   وهو أولُ اختيار)، ويسقط من الشريط الفرعيّ. */
+nav.tabs .tab .tdesc{display:none}
 /* UX-07: مسارُ التنقّل، يُجيب «أين أنا؟» ويكمّل عنوانَ المستند. */
 .crumb{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3);margin:0 0 var(--sp-4);
   font-size:var(--fs-2xs);color:var(--ink-3);letter-spacing:.01em}
@@ -1813,8 +1821,33 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bot
 .attrib b{color:var(--ink-2);font-weight:600}
 .grid>.attrib,.g4>.attrib,.g3>.attrib,.g2>.attrib{grid-column:1/-1}
 /* ux-mob-02: الشريطُ الوصفيّ، مفتوحٌ دائماً على الواسع، مطويٌّ على الضيّق */
-.badgefold>summary{display:none}
+/* ── UX-22 (26-10-2026م) · ما يُقرأ مرّةً يُطوى، وما يُقرأ دائماً يبقى ──
+   الشريطُ الوصفيُّ (التغطية · الوحدة · معيار التبويب · المصدر · تواتر
+   النشر) كان مفتوحاً على العروض فوق 720 بكسلاً وحدها، وهو بيانٌ يُقرأ
+   مرّةً ثم يُعرَف. وقِيس أثرُه: أولُ رقمٍ في تبويب «الصورة الكلية» يبدأ عند
+   1,062 بكسلاً على شاشة 1440x900، أي **تحت الطيّة بـ18%**، وعلى 1280x800
+   تحت الطيّة بـ33%، وعلى الجوال بـ62%. فصار المطويُّ مطويّاً في كلّ عرض،
+   وبقي قيدُ الصفة («مستقلّة · غير رسمية») ظاهراً لأنه قيدٌ يجب أن يبلغ
+   القارئَ لا أن يُتاح له (LEG-03). */
+.badgefold>summary{display:block;cursor:pointer;list-style:none;font-size:var(--fs-xs);
+  color:var(--ink-2);padding:var(--sp-3) var(--sp-4);min-height:24px;border:var(--hair) solid var(--ctl-border);
+  border-radius:var(--r-md);background:var(--surface-1);margin-top:var(--sp-3)}
+.badgefold>summary::-webkit-details-marker{display:none}
+.badgefold>summary::after{content:'\25be';margin-inline-start:var(--sp-3);opacity:.7}
+.badgefold[open]>summary::after{content:'\25b4'}
 .badgefold .badges{display:flex}
+.badgefold:not([open]) .badges .badge{display:none}
+.badgefold:not([open]) .badges #bIndep{display:inline-flex;margin-top:var(--sp-3)}
+.badgefold[open] .badges{margin-top:var(--sp-3)}
+.badgefold[open] .badges .badge{display:inline-flex}
+/* UX-22: على الشاشات الواسعة يجلس زرُّ الشريط الوصفيّ في سطر البيانات
+   نفسِه لا في سطرٍ مستقلّ، فلا يُستبدَل سطران بسطرٍ وزرّ. */
+@media (min-width:721px){
+  .badgefold>summary{display:inline-block;margin-top:0;padding:var(--sp-1) var(--sp-4);
+    font-size:var(--fs-2xs);background:transparent}
+  .badgefold:not([open]) .badges{margin-top:0;align-items:center}
+  .badgefold:not([open]) .badges #bIndep{margin-top:0}
+}
 /* ux-cal-01: سطرُ التواتر نصٌّ لا شارةٌ قصيرة، يأخذ سطرَه كاملاً ويلتفّ،
    وإلا فاض عن عرض النافذة (التقطته بوّابةُ الفيض المُضافة في ap-18). */
 #hdrFreq{flex:1 1 100%;max-width:100%;white-space:normal;line-height:var(--lh-loose);
@@ -3871,7 +3904,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> <b>السبعة</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد في 19-09-2026م:</b> كان منشوراً «ستّة»، والشقُّ الثاني من <span dir="ltr">(B)</span> لم يكن مفحوصاً:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.526</span>+<span id="fHashAttr">3a404372</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.527</span>+<span id="fHashAttr">eb0deeee</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -3893,7 +3926,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل، ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.526+3a404372 · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">3a404372</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.527+eb0deeee · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">eb0deeee</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL، فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -3917,7 +3950,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.526+3a404372 · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">3a404372</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.527+eb0deeee · 26-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">eb0deeee</span></div>
 </footer>
 </div>
 
@@ -23955,6 +23988,16 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     "was": "حارسُ الحرّاس كان يسأل سؤالاً واحداً: هل تغيّر نصُّ الصفحة بعد الزرع؟ وزرعٌ مركَّبٌ من استبدالين يُجيب بنعم ولو مات أحدُهما. فلمّا عُدِّل موضعٌ في الطبقة المشتركة مات نصفُ زرعٍ وبقي نصفُه: صار الزرعُ يُلقي خطأً ظاهراً بدل أن يُخفيه، وسقط الفاحصُ بسببٍ غيرِ الذي سُمِّي له. وزرعٌ ثانٍ كان يبحث عن جملةٍ لا تُكتب في الصفحة إلا في حالةِ بياناتٍ بعينها، فمات صامتاً على كلِّ صفحةٍ طازجة",
     "now": "يُرصد كلُّ نداءِ استبدالٍ يقع على الصفحة، وما لا يجد مطلوبَه يُسمَّى بنصِّه ويسقط حارسُ الحرّاس؛ والزرعُ المشروطُ بحالة بياناتٍ صار يُفرّغ الحاويَ المُعلَن نفسَه وهو قائمٌ في كلّ حال. وأُضيف وضعُ جفافٍ (MIRSAD_PLANT_DRY) يقابل 128 زرعاً بالصفحة في ثوانٍ بدل خمسٍ وعشرين دقيقة، فيُكشف الزرعُ الميّت قبل تشغيل السلسلة",
     "why": "زرعٌ ميّتٌ يُقرأ التقاطاً وهو التقاطُ شيءٍ آخر، وهو «حارسٌ لا يحرس» في الحارس نفسِه، وقد وقع مرّتين قبل اليوم بالعلّة عينِها"
+   },
+   {
+    "d": "26-10-2026م",
+    "v": "2.527",
+    "t": "لوحة",
+    "w": "المقدّمةُ قبل أوّل رقم: ما يُقرأ مرّةً يُطوى",
+    "ref": "ux-22",
+    "was": "قِيس موضعُ أوّل رقمٍ في الصفحة: في تبويب «الصورة الكلية» يبدأ عند 1,062 بكسلاً على شاشة 1440x900، أي تحت الطيّة بـ18%، وعلى 1280x800 تحت الطيّة بـ33%. وسببُه تراكمُ تسع كتلٍ من المقدّمة: ترويسةٌ فيها الشريطُ الوصفيُّ مفتوحاً (التغطية والوحدة والمعيار والمصدر وتواتر النشر، وهو بيانٌ يُقرأ مرّةً ثم يُعرَف)، ومسارٌ، ومبدّلُ لوحات، وشريطُ ثلاثةَ عشرَ تبويباً كلُّ تبويبٍ سطران، ولوحةُ ضبطٍ مفتوحةٌ بستّ مجموعاتِ تحكّم، وشريطُ نطاقٍ يُكرّر حالتَها حرفياً، وفهرسُ بطاقات، وعنوانُ القسم وصدارتُه",
+    "now": "الشريطُ الوصفيُّ مطويٌّ في كلّ عرضٍ وزرُّه يجلس في سطر البيانات نفسِه، وقيدُ الصفة («مستقلّة · غير رسمية») يبقى ظاهراً لأنه يجب أن يبلغ القارئَ لا أن يُتاح له؛ ولوحةُ الضبط مطويّةٌ وحالتُها مكتوبةٌ في عنوان طيّتها فلا تُخفيها؛ ووصفُ التبويب الفرعيّ يسقط من الشريط ويبقى في سطر الصدارة تحته مباشرةً. والمقيسُ بعدها: أوّلُ رقمٍ عند 891 بكسلاً بدل 1,062 في تبويب الصورة الكلية (ارتفاعٌ 171 بكسلاً)، وعند 625 بدل 589 في لوحة البداية (نزولٌ 36 بكسلاً، وهو ثمنُ الزرّ في أخفِّ اللوحات)",
+    "why": "لوحةُ بياناتٍ لا يُرى فيها رقمٌ على الشاشة الأولى تُقرأ واجهةَ تنقّلٍ لا لوحةَ بيانات، والكشفُ التدريجيّ يقتضي أن يُطوى ما يُقرأ مرّةً ويبقى ما يُقرأ دائماً"
    }
   ],
   "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في تبويب «البيانات والمصادر» الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
@@ -32972,8 +33015,16 @@ function ixFoldFilters(host,key,state){
      فصار الضابطُ مفتوحاً افتراضاً على الشاشات التي تتّسع له، ومطويّاً على
      الضيّقة حيث يزاحم الجواب (وهو ما تعالجه UX-04). والحالةُ تبقى محفوظةً
      في الجلسة متى بدّلها المستعمل. */
-  let _defOpen=true;
-  try{ _defOpen = !window.matchMedia('(max-width:720px)').matches; }catch(e){}
+  /* ── UX-22 (26-10-2026م) · الضابطُ مطويٌّ حتى يُطلَب ─────────────────────
+     فُتح الضابطُ افتراضاً في 19-09-2026م لأنّ بوّابةً أخفقت في اختيار مدىً
+     داخل طيّةٍ مغلقة. ثم صار للبوابات نداءٌ مُعلَنٌ يفتح الطيّات
+     (ixOpenFolds)، فزال سببُ الفتح وبقي أثرُه: لوحةُ الضبط 190 بكسلاً من
+     المقدّمة قبل أوّل رقم، وحالتُها مكرَّرةٌ حرفياً في شريط «النطاق
+     المعروض» الذي يليها. وملخَّصُ الحالة مكتوبٌ في عنوان الطيّة نفسِه
+     («ضبط العرض، ر1 2017م – ر2 2026م · ربعي · مليون ريال»)، فالمطويُّ
+     يُعلن حالتَه ولا يُخفيها. فصار مطويّاً في كلّ عرض، وتبقى الحالةُ
+     محفوظةً في الجلسة متى فتحه المستعمل. */
+  let _defOpen=false;
   try{ const v=sessionStorage.getItem('mirsad.fold.'+key);
        d.open = (v===null)? _defOpen : (v==='1'); }catch(e){ d.open=_defOpen; }
   d.addEventListener('toggle',()=>{ try{ sessionStorage.setItem('mirsad.fold.'+key,d.open?'1':'0'); }catch(e){} });
