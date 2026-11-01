@@ -105,7 +105,7 @@ try{
   "@type": "xsd:date"
  },
  "dcterms:modified": {
-  "@value": "2026-10-29",
+  "@value": "2026-11-01",
   "@type": "xsd:date"
  },
  "dcat:landingPage": {
@@ -147,8 +147,8 @@ try{
    "@language": "ar"
   }
  ],
- "dcat:version": "2.535",
- "owl:versionInfo": "2.535",
+ "dcat:version": "2.557",
+ "owl:versionInfo": "2.557",
  "dcat:dataset": [
   {
    "@type": "dcat:Dataset",
@@ -1534,7 +1534,11 @@ try{
   --fs-4xl:clamp(1.8125rem,1.45rem + 1.7vw,2.3125rem); --fs-5xl:clamp(2.125rem,1.7rem + 2vw,2.75rem);/* 29 → 37 */
 
   /* ── إيقاعٌ رأسيّ محسوب من ارتفاع السطر، لا مُقدَّرٌ بالبكسل ── */
-  --lh-tight:1.35; --lh:1.7; --lh-loose:1.9;
+  /* UX-14 (31-10-2026م): كانت ثلاثةُ مواضعَ تكتب ‎line-height:var(--lh-mid)‎،
+     وهي قيمةٌ غيرُ صالحةٍ فيُسقطها المتصفّحُ ويرِث 1.7؛ ومعها إحالتان إلى
+     ‎--lh-5‎ و‎--lh-4‎ وهما غيرُ معرَّفين. والمقصودُ 1.75، فصار رمزاً
+     مُعلَناً في السلّم ولا يُكتب رقماً حرفياً ولا قيمةً معيبة. */
+  --lh-tight:1.35; --lh:1.7; --lh-mid:1.75; --lh-loose:1.9;
   /* VIS-14 (19-09-2026م): كان هنا سلَّمُ تباعدٍ ‎--sp-1…--sp-8‎ بوحدة ‎rlh‎،
      مُعلَناً ولا يستعمله شيءٌ في الصفحة كلِّها، أحدَ عشرَ رمزاً من ثلاثةَ
      عشرَ شيفرةٌ ميّتة. ووجودُ الرمز يوهم بأنّ النظامَ محكوم ثم يُثبت العدُّ
@@ -1712,6 +1716,18 @@ a{color:var(--brand-soft)}
    والمعالجةُ الجذرية أن يحمل المحدِّدُ العامُّ الحدَّ نفسه، فيُستوفى
    بالميلاد لا بالترقيع، وما يحتاج سلوكاً آخرَ يُصرّح به بمحدِّدٍ أخصّ. */
 a[href]{display:inline-block;min-height:24px;min-width:24px;line-height:1.5}
+/* ── UX-01 (31-10-2026م) · شرحُ التبويب يُطوى في العروض كلِّها ────────────
+   قيس في جولة 27-10-2026م أنَّ أوّلَ رقمٍ يقع عند 859 بكسلاً على 1280
+   (1.07 شاشة) وعند 1,122 على 390 (1.33)، وأنَّ ثماني طبقاتِ تنقُّلٍ ووصفٍ
+   تسبقه. ومنها سطرُ صدارة التبويب: 118 بكسلاً على 1280، شرحُه يُقرأ مرّةً.
+   وكان الطيُّ على الضيّق وحدَه، فالقاعدةُ تختلف بين عرضين بلا سببٍ مُعلَن.
+   فصار الطيُّ واحداً في العروض كلِّها: العنوانُ ظاهرٌ دائماً زرَّ كشفٍ
+   مُعلَنَ الحالة، والشرحُ خلفه، وتُحفظ حالتُه في الجلسة. */
+.tablead .tlead-p{display:none}
+.tablead.lead-on .tlead-p{display:block}
+.tablead .tlead-h{cursor:pointer}
+.tablead .tlead-h::after{content:'\00a0\25be';font-size:var(--fs-2xs);opacity:.7}
+.tablead.lead-on .tlead-h::after{content:'\00a0\25b4'}
 .muted{color:var(--ink-3)}
 .sub{color:var(--ink-2)}
 
@@ -1728,7 +1744,16 @@ h1{font-size:var(--fs-3xl);font-weight:600}
 .badge b{color:var(--brand-soft);font-weight:600}
 
 /* tabs */
-nav.tabs{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-bottom:var(--sp-6)}
+/* ── UX-09 (31-10-2026م) · صفُّ تبويباتٍ ينكسر فيُلغي قراءةَ الصفّ ────────
+   قيس: ثلاثةَ عشرَ تبويباً في صفّين عند 1280 بكسلاً (85 بكسلاً) وثلاثةِ
+   صفوفٍ عند 768 (154)، والانكسارُ يُلغي قراءةَ الصفِّ الواحد ويُنفق من
+   الشاشة الأولى سطراً أو سطرين. فصار صفّاً واحداً يُمرَّر أفقياً في
+   العروض كلِّها، كما كان على الضيّق وحدَه. */
+nav.tabs{display:flex;gap:var(--sp-2);flex-wrap:nowrap;margin-bottom:var(--sp-6);
+  overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;
+  scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs .tab{flex:0 0 auto;scroll-snap-align:center}
 /* ── UX-22 · الشريطُ الفرعيُّ سطرٌ واحدٌ لكلِّ تبويب ─────────────────────
    كان كلُّ تبويبٍ فرعيٍّ سطرين: اسمُه ووصفُه. وثلاثةَ عشرَ تبويباً في لوحة
    المالية تقع في صفّين، فيبلغ الشريطُ 112 بكسلاً. والوصفُ مكرَّرٌ: سطرُ
@@ -1916,8 +1941,18 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bot
 select,input[type=number],input.inp,input[type=search]{background:var(--surface-2);border:var(--hair) solid var(--line);color:var(--ink);
   border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-sm);min-width:110px}
 .seg{display:flex;background:var(--surface-2);border:var(--hair) solid var(--line);border-radius:var(--r-md);overflow:hidden}
+/* ── UX-16 (31-10-2026م) · زرٌّ غيرُ نشِطٍ بلا حدٍّ يُدرَك ───────────────────
+   قيس: 86 عنصراً متمايزاً حدُّه دون 3:1 عند 1280 بكسلاً و117 عند 390،
+   وأكثرُها أزرارُ المجموعات المقسَّمة غيرِ النشِطة، بلا خلفيةٍ ولا حدّ
+   (‎background:transparent;border:0‎)، فلا يُدرَك أنها عناصرُ تحكُّم إلا
+   بالنصّ. والمعيار 1.4.11 يسري على ما يلزمُ إدراكُه لتمييز العنصر، ونصُّها
+   ظاهرٌ بتباينٍ كافٍ، فالمخالفةُ محلُّ اجتهادٍ لا قطع. والعلاجُ رخيصٌ بلا
+   أثرٍ على التباين: فاصلٌ بين الأزرار بلون حدٍّ مُعلَنٍ يبلغ 3:1، فيُدرَك
+   أنَّ الكتلةَ مجموعةُ أزرارٍ لا نصّاً واحداً. */
 .seg button{background:transparent;border:0;color:var(--ink-2);padding:var(--sp-3) var(--sp-4);font-family:inherit;
   font-size:var(--fs-sm);cursor:pointer}
+.seg button + button{border-inline-start:var(--hair) solid var(--ctl-border)}
+.seg button.on + button, .seg button:has(+ button.on){border-inline-start-color:transparent}
 .seg button.on{background:var(--brand);color:var(--on-brand);font-weight:600}
 
 /* grid + cards */
@@ -2050,7 +2085,7 @@ details.kpifold > summary .kf-h{color:var(--ink-3)}
 .drow .k{color:var(--ink-3);flex:0 0 auto}
 .drow .v{color:var(--ink);font-variant-numeric:tabular-nums;text-align:start;font-weight:500}
 .dsec{font-size:var(--fs-3xs);letter-spacing:.1em;color:var(--brand-deep-txt);margin:var(--sp-6) 0 var(--sp-2);font-weight:600}
-.dnote{font-size:var(--fs-xs);color:var(--ink-3);line-height:var(--lh)5;margin-top:var(--sp-4);
+.dnote{font-size:var(--fs-xs);color:var(--ink-3);line-height:var(--lh-mid);margin-top:var(--sp-4);
   border-inline-start:var(--bw-2) solid var(--brand-deep);padding-inline-start:var(--sp-4)}
 .dnote b{color:var(--ink-2)}
 .dspark{height:78px;margin:var(--sp-4) 0 var(--sp-2);position:relative;width:100%}
@@ -2096,7 +2131,7 @@ canvas{cursor:pointer}
 .homecard:focus-visible{outline:var(--bw-2) solid var(--brand);outline-offset:var(--bw-2)}
 .homecard .hl{font-size:var(--fs-3xs);letter-spacing:.12em;color:var(--brand-text)}
 .homecard h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:0}
-.homecard .q{font-size:var(--fs-sm);color:var(--ink-3);line-height:var(--lh)5}
+.homecard .q{font-size:var(--fs-sm);color:var(--ink-3);line-height:var(--lh-mid)}
 .homecard .a{font-size:var(--fs-base);color:var(--ink-2);line-height:1.8;border-inline-start:var(--bw-2) solid var(--brand-deep);
   padding-inline-start:var(--sp-4)}
 .homecard .a b{color:var(--ink)}
@@ -2161,6 +2196,23 @@ table.clickable tbody tr:focus-visible{outline:var(--bw-2) solid var(--ink);outl
    ولا تحتاج اسماً معلَناً ولا محطةَ تركيزٍ إضافية. */
 .perbar,.chips{flex-wrap:wrap}
 .perbar>.chip,.chips>*{max-inline-size:100%;min-inline-size:0}
+/* UX-02: التعليمةُ تتبع وسيلةَ الإدخال لا عرضَ الشاشة. والافتراضُ نصُّ
+   اللمس، فجهازٌ لا يُجيب عن الاستعلام يرى ما يستطيع فعله. */
+.hint-hover{display:none}
+@media (hover:hover) and (pointer:fine){
+  .hint-hover{display:inline-flex}
+  .hint-touch{display:none}
+}
+/* UX-05: زرُّ العودة، ثابتُ الموضع، لا يحجب محتوىً ولا يدخل الطباعة. */
+.totop{position:fixed;inset-inline-end:var(--sp-5);inset-block-end:var(--sp-5);z-index:40;
+  background:var(--surface-2);color:var(--ink-2);border:var(--hair) solid var(--ctl-border);
+  border-radius:var(--r-pill);padding:var(--sp-3) var(--sp-5);font-family:inherit;
+  font-size:var(--fs-2xs);cursor:pointer;min-height:40px;display:inline-flex;align-items:center;
+  gap:var(--sp-2);box-shadow:var(--shadow-1);transition:background-color .15s,color .15s}
+.totop:hover{background:var(--surface-3);color:var(--ink)}
+.totop[hidden]{display:none}
+@media print{ .totop{display:none!important} }
+@media (prefers-reduced-motion:reduce){ .totop{transition:none} }
 .tiphint{font-size:var(--fs-2xs);color:var(--ink-3);display:inline-flex;align-items:center;gap:var(--sp-2);
   background:var(--surface-2);border:var(--hair) solid var(--line-soft);border-radius:var(--r-pill);padding:var(--sp-2) var(--sp-4)}
 .pill{display:inline-block;font-size:var(--fs-2xs);padding:var(--sp-1) var(--sp-3);border-radius:var(--r-pill);
@@ -2179,7 +2231,10 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
    ثابتاً، فبين 701 و989 بكسل تُحجَب لوحةُ الصندوق بصفر بكسل مرئي ولا مدخلَ لها
    سواه (بطاقاتُ الرئيسة ثلاثٌ لا تشمله)، وبين 990 و1279 يُطلّ مبتوراً واسمُه مقصوص.
    ومحتوًى لا سبيلَ إليه محتوًى غيرُ منشور. والحلُّ مطبَّقٌ أصلاً في الشريط الفرعيّ. */
-.domswitch{display:flex;gap:var(--sp-3);margin:0 0 var(--sp-5);flex-wrap:wrap;overflow-x:auto;
+/* UX-01 (31-10-2026م): ‎flex-wrap:wrap‎ يغلب ‎overflow-x‎، فكان المبدّلُ
+   ينكسر إلى صفّين أو ثلاثة في كلِّ عرضٍ دون 1280. فصارت القاعدةُ واحدةً:
+   صفٌّ لا ينكسر ويُمرَّر أفقياً، كما في الشريط الفرعيّ. */
+.domswitch{display:flex;gap:var(--sp-3);margin:0 0 var(--sp-5);flex-wrap:nowrap;overflow-x:auto;
   scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:var(--sp-1)}
 /* ── ux-23 (26-10-2026م) · مبدّلُ اللوحات صفٌّ واحدٌ على الضيّق ──────────
    ‎flex-wrap:wrap‎ يغلب ‎overflow-x‎، فعلى 390 بكسلاً تقع اللوحاتُ الخمس في
@@ -2189,6 +2244,17 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
    و62%. فيصير صفّاً واحداً يُمرَّر بالنمط المطبَّق أصلاً في الشريط
    الفرعيّ منذ UX-03، ويسقط وصفُ اللوحة من الزرّ لأنّ سطرَ صدارة التبويب
    يحمله تحته مباشرةً. */
+.domswitch button{scroll-snap-align:start}
+.domswitch button{flex:0 0 auto;display:flex;flex-direction:column;gap:var(--sp-1);align-items:flex-start;
+  background:var(--surface-1);border:var(--hair) solid var(--line);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
+  color:var(--ink-2);font-family:inherit;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;text-align:right;min-width:210px}
+/* ── UX-01 (31-10-2026م) · تجاوزٌ يسبق ما يتجاوزه فلا يتجاوزه ──────────────
+   كانت هذه الكتلةُ مكتوبةً **قبل** القاعدة الأساسية أعلاه، والقاعدتان
+   بالتخصيص نفسِه، فالأخيرةُ في المصدر هي التي تسري: فبقي ‎min-width:210px‎
+   سارياً على 390 بكسلاً ولم يسرِ ‎min-width:0‎ المكتوبُ له. وقيس الأثر:
+   مبدّلُ اللوحات يرتفع **150 بكسلاً** على 390 (ثلاثةُ صفوف) وهو أكبرُ كتلةٍ
+   واحدةٍ تدفع أوّلَ رقمٍ تحت الطيّة، مع أنَّ العلاجَ مكتوبٌ منذ 26-10-2026م.
+   فصار الترتيبُ صحيحاً: الأساسُ أوّلاً ثم تجاوزُه. */
 @media(max-width:700px){
   .domswitch{flex-wrap:nowrap;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
     margin-inline:calc(-1 * var(--wrapx,20px));padding-inline:var(--wrapx,20px);scrollbar-width:none}
@@ -2196,10 +2262,6 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
   .domswitch button{min-width:0;white-space:nowrap;padding:var(--sp-3) var(--sp-4);min-height:40px}
   .domswitch button span{display:none}
 }
-.domswitch button{scroll-snap-align:start}
-.domswitch button{flex:0 0 auto;display:flex;flex-direction:column;gap:var(--sp-1);align-items:flex-start;
-  background:var(--surface-1);border:var(--hair) solid var(--line);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
-  color:var(--ink-2);font-family:inherit;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;text-align:right;min-width:210px}
 .domswitch button:hover{background:var(--surface-2);color:var(--ink)}
 /* ── VIS-16 (19-09-2026م) ────────────────────────────────────────────
    كانت تعبئةُ «مختار» ولونُ نصِّه مطابقَين تماماً لحالة «تحت المؤشّر»،
@@ -2215,9 +2277,16 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 .domswitch b{font-family:var(--font-display);font-weight:600;font-size:var(--fs-base)}
 .domswitch span{font-size:var(--fs-2xs);color:var(--ink-3)}
 .domswitch button.on span{color:var(--brand-soft)}
-@media(max-width:700px){.domswitch{flex-direction:column}.domswitch button{min-width:0;width:100%}}
+/* UX-01 (31-10-2026م): أُسقطت هنا قاعدةٌ قديمة تجعل المبدّلَ عموديّاً
+   (‎flex-direction:column‎ و‎width:100%‎) على الضيّق، وكانت تَجُبّ قاعدةَ
+   «صفٌّ واحدٌ يُمرَّر» المكتوبةَ قبلها، فبقي المبدّلُ 150 بكسلاً على 390
+   بكسلاً وهو أكبرُ كتلةٍ تدفع أوّلَ رقمٍ تحت الطيّة. ثلاثُ مجموعاتٍ من
+   القواعد كانت تتنازع العنصرَ نفسَه عند العرض نفسِه. */
 /* بين 701 و1279 يلتفّ الشريطُ سطرين بدل أن يُخرج لوحةً عن الشاشة. */
-@media(min-width:701px) and (max-width:1279px){.domswitch button{min-width:0;flex:1 1 220px}}
+/* UX-01 (31-10-2026م): وأُسقطت قاعدةُ التمدُّد (‎flex:1 1 220px‎) في المدى
+   701 إلى 1279، فكانت تُنتج ثلاثةَ صفوفٍ عند 768 بكسلاً (154 بكسلاً).
+   والقاعدةُ واحدةٌ في العروض كلِّها: صفٌّ يُمرَّر أفقياً. */
+@media(min-width:701px) and (max-width:1279px){.domswitch button{min-width:0}}
 
 /* ===== تحسينات الجوال ===== */
 @media(max-width:700px){
@@ -2225,8 +2294,12 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
   /* شريط التبويبات: صف واحد يُمرَّر أفقياً بدل خمسة صفوف تبتلع الشاشة */
   /* cx-12: النزيف كان مثبَّتاً على 20 نقطة بينما حشو الغلاف 16 هنا و12 دون
      520، فيتجاوز الشريطُ حافةَ الشاشة بأربع نقاط إلى ثمان. فيتبع المتغيّر. */
+  /* UX-05 (31-10-2026م): وصار الشريطُ لاصقاً على الضيّق كذلك، فكان على
+     الهاتف **صفرُ** عنصرٍ لاصق مع عمقٍ يبلغ 34 شاشة. */
   nav.tabs{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;
     -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;
+    position:sticky;top:0;z-index:var(--z-sticky);background:var(--bg);
+    padding-block:var(--sp-2);
     margin-inline:calc(-1 * var(--wrapx,20px));padding-inline:var(--wrapx,20px);scrollbar-width:none}
   nav.tabs::-webkit-scrollbar{display:none}
   nav.tabs .tab{flex:0 0 auto;scroll-snap-align:center;min-height:40px}
@@ -2251,8 +2324,8 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
     letter-spacing:.02em}
 
 
-  /* مبدّل اللوحات: بطاقتان في الصف بلا وصف، بدل أربع بطاقات طوليّة */
-  .domswitch{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+  /* مبدّل اللوحات: صفٌّ واحدٌ يُمرَّر أفقياً (UX-01 في 31-10-2026م: كان
+     شبكةً من عمودين فيرتفع 150 بكسلاً، والصفُّ الواحدُ 50). */
   .domswitch button{width:auto;min-width:0;padding:var(--sp-3) var(--sp-4);min-height:44px;
     align-items:center;justify-content:center;text-align:center}
   .domswitch button span{display:none}
@@ -2307,7 +2380,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 #dom-pif .note{background:var(--surface-1);border:var(--hair) solid var(--line-soft);border-radius:var(--r-md);
   padding:var(--sp-4) var(--sp-5);margin:var(--sp-3) 0;font-size:var(--fs-xs);line-height:1.85;color:var(--ink-2)}
 #dom-pif .quote{border-inline-start:var(--bw-3) solid var(--brand);background:var(--surface-1);
-  padding:var(--sp-4) var(--sp-5);margin:var(--sp-4) 0;font-size:var(--fs-sm);line-height:var(--lh-loose)5;color:var(--ink-2);border-radius:0 var(--r-md) var(--r-md) 0}
+  padding:var(--sp-4) var(--sp-5);margin:var(--sp-4) 0;font-size:var(--fs-sm);line-height:var(--lh-loose);color:var(--ink-2);border-radius:0 var(--r-md) var(--r-md) 0}
 #dom-pif .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin:var(--sp-4) 0}
 #dom-pif .pcard,#homeScope .pcard{background:var(--surface-1);border:var(--hair) solid var(--line);border-radius:var(--r);padding:var(--sp-5)}
 #dom-pif .pcard b,#homeScope .pcard b{display:block;color:var(--brand-soft);font-size:var(--fs-sm);margin-bottom:var(--sp-3)}
@@ -2366,7 +2439,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 .idot-tip{position:fixed;z-index:var(--z-tip);max-width:330px;
   background:var(--surface-2);color:var(--ink);
   border:var(--hair) solid var(--line);border-radius:var(--r-md);
-  padding:var(--sp-4) var(--sp-4);font-size:var(--fs-xs);line-height:var(--lh)5;
+  padding:var(--sp-4) var(--sp-4);font-size:var(--fs-xs);line-height:var(--lh-mid);
   box-shadow:var(--shadow-1);pointer-events:auto;text-align:start}
 .idot-tip b{color:var(--brand-ink,var(--brand-text))}
 @media (prefers-reduced-motion:reduce){.idot>span{transition:none}}
@@ -2687,16 +2760,8 @@ nav.tabs{margin-bottom:var(--sp-5);gap:var(--sp-2)}
   .badgefold:not([open]) .badges #bIndep{display:inline-flex;margin-top:var(--sp-3)}
   .badgefold[open] .badges{margin-top:var(--sp-3)}
   .badgefold[open] .badges .badge{display:inline-flex}
-  /* ── ux-26 (26-10-2026م) · شرحُ التبويب يُطوى على الضيّق ────────────────
-     سطرُ صدارة التبويب (عنوانُه وشرحُه) يرتفع 146 بكسلاً على 390 بكسلاً،
-     وهو شرحٌ يُقرأ مرّةً. فيبقى العنوانُ ظاهراً دائماً ويُطوى الشرحُ خلفه،
-     فلا يُحذف بيانٌ ويرتفع أوّلُ رقم. وعلى الشاشات الواسعة يبقى مبسوطاً
-     لأنّ المساحة تحتمله ولا يزاحم الجواب. */
-  .tablead .tlead-p{display:none}
-  .tablead.lead-on .tlead-p{display:block}
-  .tablead .tlead-h{cursor:pointer}
-  .tablead .tlead-h::after{content:'\00a0\25be';font-size:var(--fs-2xs);opacity:.7}
-  .tablead.lead-on .tlead-h::after{content:'\00a0\25b4'}
+  /* ux-26 (26-10-2026م): نُقلت هذه القواعدُ خارجَ استعلام العرض في
+     31-10-2026م (UX-01)، فالطيُّ صار قاعدةً واحدةً في العروض كلِّها. */
   .herofold>summary{display:block;cursor:pointer;list-style:none;min-height:24px;
     color:var(--ink-2);font-size:var(--fs-sm);line-height:1.85}
   .herofold>summary::-webkit-details-marker{display:none}
@@ -2721,7 +2786,7 @@ nav.tabs{margin-bottom:var(--sp-5);gap:var(--sp-2)}
   padding:var(--sp-2) var(--sp-1);min-height:24px;line-height:var(--lh);text-align:start}
 .aboutlink::after{content:"\2190";margin-inline-start:var(--sp-3);opacity:.75}
 .aboutlink:hover{color:var(--ink);border-bottom-color:var(--brand)}
-#dom-about .abtext{font-size:var(--fs-xs);line-height:var(--lh-loose)5;color:var(--ink-3);max-width:88ch}
+#dom-about .abtext{font-size:var(--fs-xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:88ch}
 #dom-about .abtext b{color:var(--ink-2);font-weight:600}
 #dom-about .abtext>div{margin-bottom:var(--sp-3)}
 #dom-about .abtext>div:last-child{margin-bottom:0}
@@ -2811,6 +2876,27 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   border:var(--hair) solid var(--ctl-border)}
 @media print{.themebtn{display:none}}
 }
+
+/* ── UX-04 (31-10-2026م) · سطرٌ بلا حدٍّ أقصى ─────────────────────────────
+   قيس في جولة 27-10-2026م أنَّ أطولَ سطرٍ 298 محرفاً عند 1440 بكسلاً، وأنَّ
+   269 إلى 280 كتلةً سرديةً تتجاوز 75 محرفاً، والمدى المنشورُ للقراءة
+   المريحة 45 إلى 75. وكان ‎.card .hint‎ وحدَه محدوداً بـ‎82ch‎.
+   والحدُّ يُفرض على النصّ السرديِّ وحدَه: الجداولُ والأختامُ والرقاقاتُ
+   والشبكاتُ تُقرأ مسحاً لا سطراً فلا يُضيَّق عليها. و‎68ch‎ في أعلى المدى
+   المنشور فلا تُهدر عرضاً.
+   **وموضعُ هذه الكتلة في آخر الورقة مقصود:** القواعدُ المتساويةُ في
+   التخصيص تُحسم بالترتيب، وقد ثبت في هذه الجولة ثلاثُ مواضعَ كان العلاجُ
+   فيها مكتوباً **قبل** ما يتجاوزه فلم يسرِ (مبدّلُ اللوحات مرّتين، وحدُّ
+   المقاس). فلا يُكتب علاجٌ قبل ما يغلبه. */
+.abtext p, .abtext li, .evtnote p, .evtnote li,
+section > p, .blocknote, .tlead-p, .srcnote, .a11ylist li,
+.note, .hint, .card .hint, .card > p, .card .note,
+section p, section li, div.muted, .card div.muted{max-width:60ch}
+/* والشاراتُ والرقاقاتُ والأختامُ وسطورُ التذييل تُقرأ مسحاً لا سطراً. */
+.badge, .badges *, .perbar *, footer *, thead *, .chip, .pill{max-width:none}
+/* وما حمل جدولاً أو شبكةً أو رسماً لا يُضيَّق، فالتضييقُ للسطر لا للكتلة. */
+.note:has(table), .note:has(.grid), .note:has(canvas),
+.hint:has(table), .card .hint:has(table){max-width:none}
 </style>
 
 <a href="#mainContent" class="skiplink">تخطَّ إلى المحتوى</a>
@@ -2832,7 +2918,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
            واحداً (إعادةُ نشرٍ بعد تعديلِ نصّ فاحص، أو مهمّةٌ مجدولة) يُعلن على
            القارئ تحديثاً لم يقع. فصار الحقلان اثنين: «آخر بيان منشور» يُشتقّ
            من آخر فترةٍ في البيان، و«تاريخ البناء» باسمه الصحيح. -->
-      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">29-10-2026م</span></div>
+      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">01-11-2026م</span></div>
     </div>
   </div>
   <!-- ux-mob-02: على 390 نقطةً كانت الشاشةُ الأولى كلُّها ترويسةً وشريطَ
@@ -2861,7 +2947,10 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          4200 نقطة من أعلى الصفحة، أي آخرَ شاشةٍ من أربع. والترويسةُ نفسها
          تحمل قرائنَ رسميةً (اسمُ المملكة، «مصادر رسمية»). فصارت شارةٌ دائمة
          في الترويسة تحمل القيد، تُحيل إلى البطاقة كاملةً، ويحرسها vlegal. -->
+    <!-- UX-03: المفعِّلُ يُعلن أنه يفتح لوحاً وأيُّ لوحٍ، فيُعلَم بالإعلان
+         ما كان يُعلَم بالاختيار وحدَه. والحالةُ تُضبَط عند الفتح والإغلاق. -->
     <a class="badge" id="bIndep" href="#aboutBox"
+       role="tab" aria-controls="dom-about" aria-selected="false"
        title="لوحة تحليلية مستقلة، لا تُصدرها ولا تعتمدها ولا تراجعها أي جهة حكومية"
        style="border-color:var(--ctl-border);text-decoration:none;color:var(--ink-2)">مستقلّة · <b>غير رسمية</b></a>
     <!-- cx-37: وسم الحقل يتبع اللوحة: «التغطية» مدىً زمنيٌّ على اللوحات
@@ -2892,6 +2981,15 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
      style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"></div>
 <div id="a11yLiveData" aria-live="polite" aria-atomic="true"
      style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"></div>
+<!-- UX-05 (31-10-2026م): قيس عمقُ التمرير فبلغ 23.4 شاشةً عند 1280 بكسلاً
+     و34.0 عند 390 في تبويب «البيانات»، والوسيطُ 4.92 و8.39، وروابطُ العودة
+     إلى الأعلى **صفر**، والعناصرُ اللاصقة عنصرٌ واحدٌ على سطح المكتب
+     و**صفرٌ** على الهاتف. فرابطُ التخطّي يُوصِل إلى المحتوى ولا شيءَ يُرجِع
+     منه. فصار زرُّ عودةٍ يظهر بعد شاشتين، وصار شريطُ التبويبات لاصقاً على
+     العروض الضيّقة كما هو على الواسعة. -->
+<button type="button" id="toTop" class="totop" hidden
+  aria-label="العودة إلى أعلى الصفحة">
+  <span aria-hidden="true">&#8593;</span> أعلى الصفحة</button>
 <main id="mainContent" tabindex="-1">
 <div class="domswitch" id="domswitch" role="tablist" aria-label="اختيار اللوحة">
   <button data-d="home" class="on"><b>الرئيسة</b><span>الصورة الجامعة ومداخل اللوحات</span></button>
@@ -3003,7 +3101,13 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   </div>
   <div class="f" style="margin-inline-start:auto;align-items:flex-end"><label>&nbsp;</label>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <span class="tiphint">مرّر المؤشر على أي رسم لقراءة تحليلية، واضغط أي نقطة للتفصيل الكامل</span>
+      <!-- UX-02 (31-10-2026م): كان نصٌّ واحدٌ يأمر بالتمرير بالفأرة ويظهر على
+           أجهزة اللمس، والملفُّ كلُّه فيه صفرُ استعمالٍ لـhover:none أو
+           pointer:coarse، فالتكيُّفُ بالعرض وحدَه وهو لا يدلّ على نوع المؤشِّر
+           (معيار 3.3.2: الوسومُ والتعليماتُ تصف ما يُستطاع فعلاً).
+           فصارا نصّين، كلٌّ منهما تحت استعلامِ وسيلةٍ تخصُّه. -->
+      <span class="tiphint hint-hover">مرّر المؤشر على أي رسم لقراءة تحليلية، واضغط أي نقطة للتفصيل الكامل</span>
+      <span class="tiphint hint-touch">اضغط أي نقطة في الرسم للتفصيل الكامل، واضغط علامة الاستفهام لقراءة تحليلية</span>
       <button class="btn" id="dl"><span aria-hidden="true">⬇</span> تصدير البيانات CSV</button>
     </div></div>
 </div>
@@ -3959,7 +4063,12 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
      أراده أم لم يُرده. فصار لوحةً يُدخل إليها بضغطة، بفهرسٍ وبطاقاتٍ
      لكلِّ مسألةٍ بطاقة، بدل تسعة أسطرٍ متتابعة.
      ولم يُحذف حرف: البوّابةُ تفحص النصَّ لا موضعَه، وهو باقٍ في المستند. -->
-<div class="domain" id="dom-about">
+<!-- UX-03 (31-10-2026م): كان اللوحُ بلا role="tabpanel" وبلا aria-labelledby
+     خلافاً لإخوته الخمسة، وتفعيلُه يجعل تبويبات #domswitch الخمسةَ كلَّها
+     aria-selected="false" في آنٍ واحد، وقائمةُ تبويباتٍ لا تخلو من مختار
+     (معيار 4.1.2). فصار له دورُه ووسمُه، ومفعِّلُه #bIndep صار يُعلن أنه
+     يفتح لوحاً ويحمل حالتَه، فيُعلَم من الإعلان ما لا يُعلَم من الاختيار. -->
+<div class="domain" id="dom-about" role="tabpanel" aria-labelledby="bIndep" tabindex="-1">
   <div class="tablead">
     <div class="tlead-h">عن اللوحة</div>
     <p class="tlead-p">من يُصدر هذه الأرقام ومن لا يُصدرها، وما الذي يُنقل كما نُشر وما الذي يُحتسب هنا، والرخصةُ وصيغةُ الإسناد واصطلاحاتُ العرض ومصادرُ كلِّ سلسلة.</p>
@@ -3985,11 +4094,11 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          واحد من اللوحة: بحثُ نصّ الصفحة عن «قوس» لا يُخرج شيئاً، بينما
          الموجبُ يحمل «+» صريحاً. فيقرأ القارئُ (4.8%) موجباً وهي انكماش. --></div></div>
   </div>
-  <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل بنود المادة <span dir="ltr">3(a)(1)</span> <b>السبعة</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد في 19-09-2026م:</b> كان منشوراً «ستّة»، والشقُّ الثاني من <span dir="ltr">(B)</span> لم يكن مفحوصاً:
+  <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل مُوجَبات المادة <span dir="ltr">3(a)(1)</span> <b>الثمانية</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد مرّتين:</b> كان «ستّة» فصار «سبعة» في 19-09-2026م حين أُضيف الشقُّ الثاني من <span dir="ltr">(B)</span> إلى الفحص، <b>والعددُ الصحيح ثمانيةٌ لا سبعة</b> (L-05 في 31-10-2026م): 5 + 2 + 1 = 8، وهو تفكيكُ الجملة نفسِها، وهو عددُ ما تفحصه بوّابتُها (<span dir="ltr">vlegal</span>)، فكان الرقمُ المنشور يخالف تفكيكَه الذي يَليه ويخالف فاحصَه:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.535</span>+<span id="fHashAttr">ba879910</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.557</span>+<span id="fHashAttr">62ff62dc</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
-        https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات: القسمان 5 و6</span><br>
+        https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات وحدّ المسؤولية: القسم 5</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
         <span dir="rtl">ولا تعديلاتٍ سابقة على المادة قبل هذه: هذه أولُ طبقةٍ مشتقّة منها (البند <span dir="ltr">3(a)(1)(B)</span> يشترط الإبقاء على الإشارة إن وُجدت)</span><br>
         <span dir="rtl">تُتاح الطبقة المشتقّة بموجب</span> CC BY 4.0 <span dir="rtl">(البند <span dir="ltr">3(a)(1)(C)</span>)</span>
@@ -4009,7 +4118,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل، ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.535+ba879910 · 29-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">ba879910</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.557+62ff62dc · 01-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">62ff62dc</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL، فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -4033,7 +4142,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.535+ba879910 · 29-10-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">ba879910</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.557+62ff62dc · 01-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">62ff62dc</span></div>
 </footer>
 </div>
 
@@ -15364,7 +15473,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
   "def_ar": "أي يوم في السنة لا يختص بأيام العمل فقط."
  }
 ]</script>
-<script>window.MIRSAD_GATES={"plants": {"vfresh": 4, "vcsv": 11, "vlegal": 7, "vtabs": 4, "vaxis": 4, "vtext": 18, "va11y": 18, "vall": 2, "vstamps": 3, "vleak": 2, "vdcat": 2, "vsr": 5, "vdash": 4, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 1, "vscope": 1, "vfade": 1, "vtok": 8, "vdir": 3, "vrev": 3}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vneg", "vpaint", "vpart", "vplant", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
+<script>window.MIRSAD_GATES={"plants": {"vfresh": 4, "vcsv": 13, "vlegal": 7, "vtabs": 4, "vaxis": 4, "vtext": 18, "va11y": 18, "vall": 2, "vstamps": 3, "vleak": 2, "vdcat": 2, "vsr": 5, "vdash": 4, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vtok": 8, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vname": ["home", "fiscal", "econ", "energy", "pif"], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vname": ["home", "fiscal", "econ", "energy", "pif"], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
  "periods": [
   "2017Q1",
   "2017Q2",
@@ -16142,16 +16251,16 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    90090.0,
    1268163.6,
    1164309.2,
-   103854.40000000014
+   103854.4
   ],
   [
    2023,
    1130000.0,
-   1114000.0000000002,
-   15999.999999999767,
+   1114000.0,
+   16000.0,
    1212289.6,
    1293235.9,
-   -80946.29999999981
+   -80946.3
   ],
   [
    2024,
@@ -16160,22 +16269,22 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    -79000.0,
    1259095.4,
    1374720.2,
-   -115624.80000000005
+   -115624.8
   ],
   [
    2025,
-   1183999.8572320135,
+   1184000.0,
    1285000.0,
-   -101000.14276798652,
+   -101000.0,
    1111826.4,
    1388431.6,
-   -276605.2000000002
+   -276605.2
   ],
   [
    2026,
    1147400.0,
-   1312799.9695309633,
-   -165399.96953096334,
+   1312800.0,
+   -165400.0,
    null,
    null,
    null
@@ -16547,81 +16656,81 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    1,
    "الإدارة العامة",
    "Public Administration",
-   32259.885172507275,
-   7788.77158925501,
-   7093.803346992508
+   32259.89,
+   7788.77,
+   7093.8
   ],
   [
    2022,
    1,
    "العسكري",
    "Military",
-   170899.76382662533,
-   42644.75141034489,
-   43533.41610658989
+   170899.76,
+   42644.75,
+   43533.42
   ],
   [
    2022,
    1,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   101280.16541120625,
-   23579.537295529957,
-   22328.486475479996
+   101280.17,
+   23579.54,
+   22328.49
   ],
   [
    2022,
    1,
    "الخدمات البلدية",
    "Municipal Services",
-   49589.33080861911,
-   7595.986516910002,
-   6869.261205600006
+   49589.33,
+   7595.99,
+   6869.26
   ],
   [
    2022,
    1,
    "التعليم",
    "Education",
-   185102.64197416502,
-   45548.68479703005,
-   44968.33682948994
+   185102.64,
+   45548.68,
+   44968.34
   ],
   [
    2022,
    1,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   138236.06216825702,
-   37726.60881526997,
-   34404.67276169754
+   138236.06,
+   37726.61,
+   34404.67
   ],
   [
    2022,
    1,
    "الموارد الاقتصادية",
    "Economic Resources",
-   53591.31824621533,
-   11253.561037210004,
-   11487.917604440003
+   53591.32,
+   11253.56,
+   11487.92
   ],
   [
    2022,
    1,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   42037.70958759359,
-   9061.49341722,
-   10286.029346099998
+   42037.71,
+   9061.49,
+   10286.03
   ],
   [
    2022,
    1,
    "البنود العامة",
    "General Items",
-   182003.09497619068,
-   35267.82352112,
-   31232.4883403
+   182003.09,
+   35267.82,
+   31232.49
   ],
   [
    2022,
@@ -16629,89 +16738,89 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    "الإجمالي",
    "Total",
    955000.0,
-   220467.21839988985,
-   212204.4120166899
+   220467.22,
+   212204.41
   ],
   [
    2022,
    2,
    "الإدارة العامة",
    "Public Administration",
-   32259.885172507275,
-   17673.493066885043,
-   14861.801751082518
+   32259.89,
+   17673.49,
+   14861.8
   ],
   [
    2022,
    2,
    "العسكري",
    "Military",
-   170899.76382662533,
-   105119.87979830823,
-   93904.6678946448
+   170899.76,
+   105119.88,
+   93904.67
   ],
   [
    2022,
    2,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   101280.16541120625,
-   49600.97491437995,
-   45689.32698948
+   101280.17,
+   49600.97,
+   45689.33
   ],
   [
    2022,
    2,
    "الخدمات البلدية",
    "Municipal Services",
-   49589.33080861911,
-   24993.66024555,
-   14252.23284817001
+   49589.33,
+   24993.66,
+   14252.23
   ],
   [
    2022,
    2,
    "التعليم",
    "Education",
-   185102.64197416502,
-   98340.90512722493,
-   91109.64849529987
+   185102.64,
+   98340.91,
+   91109.65
   ],
   [
    2022,
    2,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   138236.06216825702,
-   99534.43493580243,
-   91839.55159809522
+   138236.06,
+   99534.43,
+   91839.55
   ],
   [
    2022,
    2,
    "الموارد الاقتصادية",
    "Economic Resources",
-   53591.31824621533,
-   29721.427763380005,
-   27141.530719700004
+   53591.32,
+   29721.43,
+   27141.53
   ],
   [
    2022,
    2,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   42037.70958759359,
-   19021.261638440003,
-   22115.44479228
+   42037.71,
+   19021.26,
+   22115.44
   ],
   [
    2022,
    2,
    "البنود العامة",
    "General Items",
-   182003.09497619068,
-   68919.06677171,
-   64009.11379564
+   182003.09,
+   68919.07,
+   64009.11
   ],
   [
    2022,
@@ -16719,89 +16828,89 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    "الإجمالي",
    "Total",
    955000.0,
-   512925.1042616806,
-   464923.3188843924
+   512925.1,
+   464923.32
   ],
   [
    2022,
    3,
    "الإدارة العامة",
    "Public Administration",
-   32259.885172507275,
-   27446.035560202556,
-   21964.49263551754
+   32259.89,
+   27446.04,
+   21964.49
   ],
   [
    2022,
    3,
    "العسكري",
    "Military",
-   170899.76382662533,
-   159175.26370550817,
-   134425.58394176976
+   170899.76,
+   159175.26,
+   134425.58
   ],
   [
    2022,
    3,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   101280.16541120625,
-   77127.36102792996,
-   73859.87955187002
+   101280.17,
+   77127.36,
+   73859.88
   ],
   [
    2022,
    3,
    "الخدمات البلدية",
    "Municipal Services",
-   49589.33080861911,
-   44483.97065241001,
-   22694.81755831002
+   49589.33,
+   44483.97,
+   22694.82
   ],
   [
    2022,
    3,
    "التعليم",
    "Education",
-   185102.64197416502,
-   146352.8982113449,
-   137522.46523167982
+   185102.64,
+   146352.9,
+   137522.47
   ],
   [
    2022,
    3,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   138236.06216825702,
-   153668.11916551497,
-   133125.73499380023
+   138236.06,
+   153668.12,
+   133125.73
   ],
   [
    2022,
    3,
    "الموارد الاقتصادية",
    "Economic Resources",
-   53591.31824621533,
-   49552.06184704002,
-   41244.69782564
+   53591.32,
+   49552.06,
+   41244.7
   ],
   [
    2022,
    3,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   42037.70958759359,
-   27663.87235026999,
-   34974.05939662998
+   42037.71,
+   27663.87,
+   34974.06
   ],
   [
    2022,
    3,
    "البنود العامة",
    "General Items",
-   182003.09497619068,
-   115181.6263002875,
-   101808.61415289999
+   182003.09,
+   115181.63,
+   101808.61
   ],
   [
    2022,
@@ -16809,15 +16918,15 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    "الإجمالي",
    "Total",
    955000.0,
-   800651.2088205081,
-   701620.3452881174
+   800651.21,
+   701620.35
   ],
   [
    2022,
    4,
    "الإدارة العامة",
    "Public Administration",
-   32259.885172507275,
+   32259.89,
    40867.0,
    34165.0
   ],
@@ -16826,7 +16935,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "العسكري",
    "Military",
-   170899.76382662533,
+   170899.76,
    228067.0,
    201891.0
   ],
@@ -16835,7 +16944,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   101280.16541120625,
+   101280.17,
    114696.0,
    106486.0
   ],
@@ -16844,7 +16953,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "الخدمات البلدية",
    "Municipal Services",
-   49589.33080861911,
+   49589.33,
    75448.0,
    38563.0
   ],
@@ -16853,7 +16962,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "التعليم",
    "Education",
-   185102.64197416502,
+   185102.64,
    201523.0,
    191908.0
   ],
@@ -16862,7 +16971,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   138236.06216825702,
+   138236.06,
    226637.0,
    197200.0
   ],
@@ -16871,7 +16980,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "الموارد الاقتصادية",
    "Economic Resources",
-   53591.31824621533,
+   53591.32,
    76519.0,
    71068.0
   ],
@@ -16880,7 +16989,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   42037.70958759359,
+   42037.71,
    41414.0,
    50993.0
   ],
@@ -16889,7 +16998,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    4,
    "البنود العامة",
    "General Items",
-   182003.09497619068,
+   182003.09,
    159137.0,
    146659.0
   ],
@@ -16907,1078 +17016,1078 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    1,
    "الإدارة العامة",
    "Public Administration",
-   36946.55325332142,
-   11882.49413789,
-   7788.77158925501
+   36946.55,
+   11882.49,
+   7788.77
   ],
   [
    2023,
    1,
    "العسكري",
    "Military",
-   259248.7813182039,
-   58852.9421997375,
-   42644.75141034489
+   259248.78,
+   58852.94,
+   42644.75
   ],
   [
    2023,
    1,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   105400.3400750296,
-   27116.11274896,
-   23579.537295529957
+   105400.34,
+   27116.11,
+   23579.54
   ],
   [
    2023,
    1,
    "الخدمات البلدية",
    "Municipal Services",
-   63118.12279083214,
-   10433.93673757,
-   7595.986516910002
+   63118.12,
+   10433.94,
+   7595.99
   ],
   [
    2023,
    1,
    "التعليم",
    "Education",
-   189010.55563123457,
-   52148.697007589995,
-   45548.68479703005
+   189010.56,
+   52148.7,
+   45548.68
   ],
   [
    2023,
    1,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   189342.94196547067,
-   49604.31812631501,
-   37726.60881526997
+   189342.94,
+   49604.32,
+   37726.61
   ],
   [
    2023,
    1,
    "الموارد الاقتصادية",
    "Economic Resources",
-   71770.7163108311,
-   17294.314717699996,
-   11253.561037210004
+   71770.72,
+   17294.31,
+   11253.56
   ],
   [
    2023,
    1,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   34026.576159952296,
-   9708.69427256,
-   9061.49341722
+   34026.58,
+   9708.69,
+   9061.49
   ],
   [
    2023,
    1,
    "البنود العامة",
    "General Items",
-   165135.4124950861,
-   46813.09087809,
-   35267.82352112
+   165135.41,
+   46813.09,
+   35267.82
   ],
   [
    2023,
    1,
    "الإجمالي",
    "Total",
-   1113999.9999999618,
-   283854.6008264125,
-   220467.21839988985
+   1114000.0,
+   283854.6,
+   220467.22
   ],
   [
    2023,
    2,
    "الإدارة العامة",
    "Public Administration",
-   36946.55325332142,
-   21682.808042535005,
-   17673.493066885043
+   36946.55,
+   21682.81,
+   17673.49
   ],
   [
    2023,
    2,
    "العسكري",
    "Military",
-   259248.7813182039,
-   111248.4252618625,
-   105119.87979830823
+   259248.78,
+   111248.43,
+   105119.88
   ],
   [
    2023,
    2,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   105400.3400750296,
-   54482.0435104,
-   49600.97491437995
+   105400.34,
+   54482.04,
+   49600.97
   ],
   [
    2023,
    2,
    "الخدمات البلدية",
    "Municipal Services",
-   63118.12279083214,
-   26644.99596582,
-   24993.66024555
+   63118.12,
+   26645.0,
+   24993.66
   ],
   [
    2023,
    2,
    "التعليم",
    "Education",
-   189010.55563123457,
-   102819.40924245001,
-   98340.90512722493
+   189010.56,
+   102819.41,
+   98340.91
   ],
   [
    2023,
    2,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   189342.94196547067,
-   127945.24161820501,
-   99534.43493580243
+   189342.94,
+   127945.24,
+   99534.43
   ],
   [
    2023,
    2,
    "الموارد الاقتصادية",
    "Economic Resources",
-   71770.7163108311,
-   37337.94893015,
-   29721.427763380005
+   71770.72,
+   37337.95,
+   29721.43
   ],
   [
    2023,
    2,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   34026.576159952296,
-   18552.19621866,
-   19021.261638440003
+   34026.58,
+   18552.2,
+   19021.26
   ],
   [
    2023,
    2,
    "البنود العامة",
    "General Items",
-   165135.4124950861,
-   103232.80316220001,
-   68919.06677171
+   165135.41,
+   103232.8,
+   68919.07
   ],
   [
    2023,
    2,
    "الإجمالي",
    "Total",
-   1113999.9999999618,
-   603945.8719522825,
-   512925.1042616806
+   1114000.0,
+   603945.87,
+   512925.1
   ],
   [
    2023,
    3,
    "الإدارة العامة",
    "Public Administration",
-   36946.55325332142,
-   31663.654801345,
-   27446.035560202556
+   36946.55,
+   31663.65,
+   27446.04
   ],
   [
    2023,
    3,
    "العسكري",
    "Military",
-   259248.7813182039,
-   173537.68327448252,
-   159175.26370550817
+   259248.78,
+   173537.68,
+   159175.26
   ],
   [
    2023,
    3,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   105400.3400750296,
-   83298.9837958,
-   77127.36102792996
+   105400.34,
+   83298.98,
+   77127.36
   ],
   [
    2023,
    3,
    "الخدمات البلدية",
    "Municipal Services",
-   63118.12279083214,
-   45481.51076798,
-   44483.97065241001
+   63118.12,
+   45481.51,
+   44483.97
   ],
   [
    2023,
    3,
    "التعليم",
    "Education",
-   189010.55563123457,
-   151859.70699547004,
-   146352.8982113449
+   189010.56,
+   151859.71,
+   146352.9
   ],
   [
    2023,
    3,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   189342.94196547067,
-   185383.855282695,
-   153668.11916551497
+   189342.94,
+   185383.86,
+   153668.12
   ],
   [
    2023,
    3,
    "الموارد الاقتصادية",
    "Economic Resources",
-   71770.7163108311,
-   52201.955135,
-   49552.06184704002
+   71770.72,
+   52201.96,
+   49552.06
   ],
   [
    2023,
    3,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   34026.576159952296,
-   27166.60546875,
-   27663.87235026999
+   34026.58,
+   27166.61,
+   27663.87
   ],
   [
    2023,
    3,
    "البنود العامة",
    "General Items",
-   165135.4124950861,
-   147663.20969840998,
-   115181.6263002875
+   165135.41,
+   147663.21,
+   115181.63
   ],
   [
    2023,
    3,
    "الإجمالي",
    "Total",
-   1113999.9999999618,
-   898257.1652199326,
-   800651.2088205081
+   1114000.0,
+   898257.17,
+   800651.21
   ],
   [
    2023,
    4,
    "الإدارة العامة",
    "Public Administration",
-   36946.55325332142,
-   47925.513326545,
-   40867.433703152565
+   36946.55,
+   47925.51,
+   40867.43
   ],
   [
    2023,
    4,
    "العسكري",
    "Military",
-   259248.7813182039,
-   254476.91090210248,
-   228067.4273551281
+   259248.78,
+   254476.91,
+   228067.43
   ],
   [
    2023,
    4,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   105400.3400750296,
-   114384.35857135,
-   114695.87119924
+   105400.34,
+   114384.36,
+   114695.87
   ],
   [
    2023,
    4,
    "الخدمات البلدية",
    "Municipal Services",
-   63118.12279083214,
-   76992.39606197001,
-   75447.67417546
+   63118.12,
+   76992.4,
+   75447.67
   ],
   [
    2023,
    4,
    "التعليم",
    "Education",
-   189010.55563123457,
-   209931.79684359004,
-   201522.81080494786
+   189010.56,
+   209931.8,
+   201522.81
   ],
   [
    2023,
    4,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   189342.94196547067,
-   255902.81090429498,
-   226636.96050636173
+   189342.94,
+   255902.81,
+   226636.96
   ],
   [
    2023,
    4,
    "الموارد الاقتصادية",
    "Economic Resources",
-   71770.7163108311,
-   85412.12406444999,
-   76519.41907568503
+   71770.72,
+   85412.12,
+   76519.42
   ],
   [
    2023,
    4,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   34026.576159952296,
-   40460.07093318001,
-   41414.26541952003
+   34026.58,
+   40460.07,
+   41414.27
   ],
   [
    2023,
    4,
    "البنود العامة",
    "General Items",
-   165135.4124950861,
-   207750.11023370997,
-   159136.9809766175
+   165135.41,
+   207750.11,
+   159136.98
   ],
   [
    2023,
    4,
    "الإجمالي",
    "Total",
-   1113999.9999999618,
-   1293236.0918411925,
-   1164308.8432161128
+   1114000.0,
+   1293236.09,
+   1164308.84
   ],
   [
    2024,
    2,
    "الإدارة العامة",
    "Public Administration",
-   42652.8586965828,
-   28090.049536799997,
-   21682.808042535005
+   42652.86,
+   28090.05,
+   21682.81
   ],
   [
    2024,
    2,
    "العسكري",
    "Military",
-   269048.79608637997,
-   104255.4684696899,
-   111248.4252618625
+   269048.8,
+   104255.47,
+   111248.43
   ],
   [
    2024,
    2,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   112181.06531699999,
-   59958.072327620095,
-   54482.0435104
+   112181.07,
+   59958.07,
+   54482.04
   ],
   [
    2024,
    2,
    "الخدمات البلدية",
    "Municipal Services",
-   81218.03892361463,
-   57649.47659208,
-   26644.99596582
+   81218.04,
+   57649.48,
+   26645.0
   ],
   [
    2024,
    2,
    "التعليم",
    "Education",
-   195062.34310132638,
-   101898.62887491003,
-   102819.40924245001
+   195062.34,
+   101898.63,
+   102819.41
   ],
   [
    2024,
    2,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   213743.08231984935,
-   138613.36969516994,
-   127945.24161820501
+   213743.08,
+   138613.37,
+   127945.24
   ],
   [
    2024,
    2,
    "الموارد الاقتصادية",
    "Economic Resources",
-   83660.604617,
-   40712.593199309995,
-   37337.94893015
+   83660.6,
+   40712.59,
+   37337.95
   ],
   [
    2024,
    2,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   37885.965271,
-   21683.880231790004,
-   18552.19621866
+   37885.97,
+   21683.88,
+   18552.2
   ],
   [
    2024,
    2,
    "البنود العامة",
    "General Items",
-   215547.2456669422,
-   121891.09195039999,
-   103232.80316220001
+   215547.25,
+   121891.09,
+   103232.8
   ],
   [
    2024,
    2,
    "الإجمالي",
    "Total",
-   1250999.9999996952,
-   674752.63087777,
-   603945.8719522825
+   1251000.0,
+   674752.63,
+   603945.87
   ],
   [
    2024,
    3,
    "الإدارة العامة",
    "Public Administration",
-   42652.8586965828,
-   39982.61563234998,
-   31663.654801345
+   42652.86,
+   39982.62,
+   31663.65
   ],
   [
    2024,
    3,
    "العسكري",
    "Military",
-   269048.79608637997,
-   176064.19784363007,
-   173537.68327448252
+   269048.8,
+   176064.2,
+   173537.68
   ],
   [
    2024,
    3,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   112181.06531699999,
-   92492.13580497011,
-   83298.9837958
+   112181.07,
+   92492.14,
+   83298.98
   ],
   [
    2024,
    3,
    "الخدمات البلدية",
    "Municipal Services",
-   81218.03892361463,
-   81442.31160374002,
-   45481.51076798
+   81218.04,
+   81442.31,
+   45481.51
   ],
   [
    2024,
    3,
    "التعليم",
    "Education",
-   195062.34310132638,
-   151122.99131591004,
-   151859.70699547004
+   195062.34,
+   151122.99,
+   151859.71
   ],
   [
    2024,
    3,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   213743.08231984935,
-   201006.40954943997,
-   185383.855282695
+   213743.08,
+   201006.41,
+   185383.86
   ],
   [
    2024,
    3,
    "الموارد الاقتصادية",
    "Economic Resources",
-   83660.604617,
-   67080.93727358,
-   52201.955135
+   83660.6,
+   67080.94,
+   52201.96
   ],
   [
    2024,
    3,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   37885.965271,
-   31973.187149190002,
-   27166.60546875
+   37885.97,
+   31973.19,
+   27166.61
   ],
   [
    2024,
    3,
    "البنود العامة",
    "General Items",
-   215547.2456669422,
-   173031.0609662896,
-   147663.20969840998
+   215547.25,
+   173031.06,
+   147663.21
   ],
   [
    2024,
    3,
    "الإجمالي",
    "Total",
-   1250999.9999996952,
-   1014195.8471390998,
-   898257.1652199326
+   1251000.0,
+   1014195.85,
+   898257.17
   ],
   [
    2024,
    4,
    "الإدارة العامة",
    "Public Administration",
-   42652.8586965828,
-   53895.41510436999,
-   47925.513326545
+   42652.86,
+   53895.42,
+   47925.51
   ],
   [
    2024,
    4,
    "العسكري",
    "Military",
-   269048.79608637997,
-   236664.34439917034,
-   254476.91090210248
+   269048.8,
+   236664.34,
+   254476.91
   ],
   [
    2024,
    4,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   112181.06531699999,
-   126853.26572620017,
-   114384.35857135
+   112181.07,
+   126853.27,
+   114384.36
   ],
   [
    2024,
    4,
    "الخدمات البلدية",
    "Municipal Services",
-   81218.03892361463,
-   116399.49475978003,
-   76992.39606197001
+   81218.04,
+   116399.49,
+   76992.4
   ],
   [
    2024,
    4,
    "التعليم",
    "Education",
-   195062.34310132638,
-   203665.24004347,
-   209931.79684359004
+   195062.34,
+   203665.24,
+   209931.8
   ],
   [
    2024,
    4,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   213743.08231984935,
-   272673.65001268004,
-   255902.81090429498
+   213743.08,
+   272673.65,
+   255902.81
   ],
   [
    2024,
    4,
    "الموارد الاقتصادية",
    "Economic Resources",
-   83660.604617,
-   92744.00728638981,
-   85412.12406444999
+   83660.6,
+   92744.01,
+   85412.12
   ],
   [
    2024,
    4,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   37885.965271,
-   44143.33903134001,
-   40460.07093318001
+   37885.97,
+   44143.34,
+   40460.07
   ],
   [
    2024,
    4,
    "البنود العامة",
    "General Items",
-   215547.2456669422,
-   227681.4924097595,
-   207750.11023370997
+   215547.25,
+   227681.49,
+   207750.11
   ],
   [
    2024,
    4,
    "الإجمالي",
    "Total",
-   1250999.9999996952,
-   1374720.24877316,
-   1293236.0918411925
+   1251000.0,
+   1374720.25,
+   1293236.09
   ],
   [
    2025,
    1,
    "الإدارة العامة",
    "Public Administration",
-   44358.142849843396,
-   18913.90293375003,
-   16521.62987122
+   44358.14,
+   18913.9,
+   16521.63
   ],
   [
    2025,
    1,
    "العسكري",
    "Military",
-   272347.225947075,
-   51399.178786108714,
-   49294.55422782999
+   272347.23,
+   51399.18,
+   49294.55
   ],
   [
    2025,
    1,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   121251.33154235361,
-   30323.158883970187,
-   30061.307398
+   121251.33,
+   30323.16,
+   30061.31
   ],
   [
    2025,
    1,
    "الخدمات البلدية",
    "Municipal Services",
-   64845.852290041665,
-   25120.14759115998,
-   26790.87028916
+   64845.85,
+   25120.15,
+   26790.87
   ],
   [
    2025,
    1,
    "التعليم",
    "Education",
-   201124.94173097188,
-   53939.87686489008,
-   51585.91964514999
+   201124.94,
+   53939.88,
+   51585.92
   ],
   [
    2025,
    1,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   259846.4839287264,
-   72219.79023045838,
-   60501.96073865
+   259846.48,
+   72219.79,
+   60501.96
   ],
   [
    2025,
    1,
    "الموارد الاقتصادية",
    "Economic Resources",
-   86832.6372659861,
-   18379.026672179974,
-   18686.236572809998
+   86832.64,
+   18379.03,
+   18686.24
   ],
   [
    2025,
    1,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   41929.11886474225,
-   9936.53664973,
-   9568.304422710002
+   41929.12,
+   9936.54,
+   9568.3
   ],
   [
    2025,
    1,
    "البنود العامة",
    "General Items",
-   192464.265580713,
-   42085.328501380005,
-   42809.38170551996
+   192464.27,
+   42085.33,
+   42809.38
   ],
   [
    2025,
    1,
    "الإجمالي",
    "Total",
-   1285000.0000004536,
-   322316.94711362734,
-   305820.1648710499
+   1285000.0,
+   322316.95,
+   305820.16
   ],
   [
    2025,
    2,
    "الإدارة العامة",
    "Public Administration",
-   44358.142849843396,
-   29578.64622442,
-   28090.049536799997
+   44358.14,
+   29578.65,
+   28090.05
   ],
   [
    2025,
    2,
    "العسكري",
    "Military",
-   272347.225947075,
-   111218.58438774999,
-   104255.4684696899
+   272347.23,
+   111218.58,
+   104255.47
   ],
   [
    2025,
    2,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   121251.33154235361,
-   60849.54650393,
-   59958.072327620095
+   121251.33,
+   60849.55,
+   59958.07
   ],
   [
    2025,
    2,
    "الخدمات البلدية",
    "Municipal Services",
-   64845.852290041665,
-   43156.20882591,
-   57649.47659208
+   64845.85,
+   43156.21,
+   57649.48
   ],
   [
    2025,
    2,
    "التعليم",
    "Education",
-   201124.94173097188,
-   104076.59707891002,
-   101898.62887491003
+   201124.94,
+   104076.6,
+   101898.63
   ],
   [
    2025,
    2,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   259846.4839287264,
-   155793.15197784,
-   138613.36969516994
+   259846.48,
+   155793.15,
+   138613.37
   ],
   [
    2025,
    2,
    "الموارد الاقتصادية",
    "Economic Resources",
-   86832.6372659861,
-   45702.52060555,
-   40712.593199309995
+   86832.64,
+   45702.52,
+   40712.59
   ],
   [
    2025,
    2,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   41929.11886474225,
-   18522.94655343,
-   21683.880231790004
+   41929.12,
+   18522.95,
+   21683.88
   ],
   [
    2025,
    2,
    "البنود العامة",
    "General Items",
-   192464.265580713,
-   89547.53189150999,
-   121891.09195039999
+   192464.27,
+   89547.53,
+   121891.09
   ],
   [
    2025,
    2,
    "الإجمالي",
    "Total",
-   1285000.0000004536,
-   658445.73404925,
-   674752.63087777
+   1285000.0,
+   658445.73,
+   674752.63
   ],
   [
    2025,
    3,
    "الإدارة العامة",
    "Public Administration",
-   44358.142849843396,
-   41329.546914729995,
-   39982.61563234998
+   44358.14,
+   41329.55,
+   39982.62
   ],
   [
    2025,
    3,
    "العسكري",
    "Military",
-   272347.225947075,
-   172674.57493753,
-   176064.19784363007
+   272347.23,
+   172674.57,
+   176064.2
   ],
   [
    2025,
    3,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   121251.33154235361,
-   94683.69036955999,
-   92492.13580497011
+   121251.33,
+   94683.69,
+   92492.14
   ],
   [
    2025,
    3,
    "الخدمات البلدية",
    "Municipal Services",
-   64845.852290041665,
-   67170.66822101,
-   81442.31160374002
+   64845.85,
+   67170.67,
+   81442.31
   ],
   [
    2025,
    3,
    "التعليم",
    "Education",
-   201124.94173097188,
-   156820.60004738,
-   151122.99131591004
+   201124.94,
+   156820.6,
+   151122.99
   ],
   [
    2025,
    3,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   259846.4839287264,
-   222178.10874591998,
-   201006.40954943997
+   259846.48,
+   222178.11,
+   201006.41
   ],
   [
    2025,
    3,
    "الموارد الاقتصادية",
    "Economic Resources",
-   86832.6372659861,
-   68120.09030462,
-   67080.93727358
+   86832.64,
+   68120.09,
+   67080.94
   ],
   [
    2025,
    3,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   41929.11886474225,
-   29390.595206939994,
-   31973.187149190002
+   41929.12,
+   29390.6,
+   31973.19
   ],
   [
    2025,
    3,
    "البنود العامة",
    "General Items",
-   192464.265580713,
-   164474.64509449,
-   173031.0609662896
+   192464.27,
+   164474.65,
+   173031.06
   ],
   [
    2025,
    3,
    "الإجمالي",
    "Total",
-   1285000.0000004536,
-   1016842.51984218,
-   1014195.8471390998
+   1285000.0,
+   1016842.52,
+   1014195.85
   ],
   [
    2025,
    4,
    "الإدارة العامة",
    "Public Administration",
-   44358.142849843396,
-   57893.2296421,
-   53895.41510436999
+   44358.14,
+   57893.23,
+   53895.42
   ],
   [
    2025,
    4,
    "العسكري",
    "Military",
-   272347.225947075,
-   249126.74198084002,
-   236664.34439917034
+   272347.23,
+   249126.74,
+   236664.34
   ],
   [
    2025,
    4,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   121251.33154235361,
-   127381.373103,
-   126853.26572620017
+   121251.33,
+   127381.37,
+   126853.27
   ],
   [
    2025,
    4,
    "الخدمات البلدية",
    "Municipal Services",
-   64845.852290041665,
-   92329.43204695,
-   116399.49475978003
+   64845.85,
+   92329.43,
+   116399.49
   ],
   [
    2025,
    4,
    "التعليم",
    "Education",
-   201124.94173097188,
-   212464.35076794,
-   203665.24004347
+   201124.94,
+   212464.35,
+   203665.24
   ],
   [
    2025,
    4,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   259846.4839287264,
-   278877.91812863003,
-   272673.65001268004
+   259846.48,
+   278877.92,
+   272673.65
   ],
   [
    2025,
    4,
    "الموارد الاقتصادية",
    "Economic Resources",
-   86832.6372659861,
-   92493.20887606,
-   92744.00728638981
+   86832.64,
+   92493.21,
+   92744.01
   ],
   [
    2025,
    4,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   41929.11886474225,
-   42351.462195529995,
-   44143.33903134001
+   41929.12,
+   42351.46,
+   44143.34
   ],
   [
    2025,
    4,
    "البنود العامة",
    "General Items",
-   192464.265580713,
-   235513.92823463999,
-   227681.4924097595
+   192464.27,
+   235513.93,
+   227681.49
   ],
   [
    2025,
    4,
    "الإجمالي",
    "Total",
-   1285000.0000004536,
-   1388431.6449756902,
-   1374720.24877316
+   1285000.0,
+   1388431.64,
+   1374720.25
   ],
   [
    2026,
    1,
    "الإدارة العامة",
    "Public Administration",
-   57006.01793907282,
-   21425.866928900003,
-   18913.90293375003
+   57006.02,
+   21425.87,
+   18913.9
   ],
   [
    2026,
    1,
    "العسكري",
    "Military",
-   239796.40611910075,
-   64712.98441562001,
-   51399.178786108714
+   239796.41,
+   64712.98,
+   51399.18
   ],
   [
    2026,
    1,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   120266.44753946744,
-   34430.123365839994,
-   30323.158883970187
+   120266.45,
+   34430.12,
+   30323.16
   ],
   [
    2026,
    1,
    "الخدمات البلدية",
    "Municipal Services",
-   71839.73621783512,
-   26218.023452440004,
-   25120.14759115998
+   71839.74,
+   26218.02,
+   25120.15
   ],
   [
    2026,
    1,
    "التعليم",
    "Education",
-   201811.2587214971,
-   57027.409084479994,
-   53939.87686489008
+   201811.26,
+   57027.41,
+   53939.88
   ],
   [
    2026,
    1,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   259290.84780410776,
-   80848.39643199001,
-   72219.79023045838
+   259290.85,
+   80848.4,
+   72219.79
   ],
   [
    2026,
    1,
    "الموارد الاقتصادية",
    "Economic Resources",
-   91948.79490033383,
-   28021.424129739997,
-   18379.026672179974
+   91948.79,
+   28021.42,
+   18379.03
   ],
   [
    2026,
    1,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   34711.9100463247,
-   12498.410086919997,
-   9936.53664973
+   34711.91,
+   12498.41,
+   9936.54
   ],
   [
    2026,
    1,
    "البنود العامة",
    "General Items",
-   236128.55024322396,
-   61502.22734268,
-   42085.328501380005
+   236128.55,
+   61502.23,
+   42085.33
   ],
   [
    2026,
    1,
    "الإجمالي",
    "Total",
-   1312799.9695309636,
+   1312799.97,
    386685.0,
    322317.0
   ],
@@ -17987,90 +18096,90 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    2,
    "الإدارة العامة",
    "Public Administration",
-   57006.01793907282,
-   34064.46692237,
-   29578.64622442
+   57006.02,
+   34064.47,
+   29578.65
   ],
   [
    2026,
    2,
    "العسكري",
    "Military",
-   239796.40611910075,
-   124573.93876321001,
-   111218.58438774999
+   239796.41,
+   124573.94,
+   111218.58
   ],
   [
    2026,
    2,
    "الأمن والمناطق الإدارية",
    "Security and Regional Administration",
-   120266.44753946744,
-   66815.27523299001,
-   60849.54650393
+   120266.45,
+   66815.28,
+   60849.55
   ],
   [
    2026,
    2,
    "الخدمات البلدية",
    "Municipal Services",
-   71839.73621783512,
-   46253.441711440006,
-   43156.20882591
+   71839.74,
+   46253.44,
+   43156.21
   ],
   [
    2026,
    2,
    "التعليم",
    "Education",
-   201811.2587214971,
-   109733.81161951998,
-   104076.59707891002
+   201811.26,
+   109733.81,
+   104076.6
   ],
   [
    2026,
    2,
    "الصحة والتنمية الاجتماعية",
    "Health & Social Development",
-   259290.84780410776,
-   170607.05696573,
-   155793.15197784
+   259290.85,
+   170607.06,
+   155793.15
   ],
   [
    2026,
    2,
    "الموارد الاقتصادية",
    "Economic Resources",
-   91948.79490033383,
-   56481.47324228,
-   45702.52060555
+   91948.79,
+   56481.47,
+   45702.52
   ],
   [
    2026,
    2,
    "التجهيزات الأساسية والنقل",
    "Infrastructure and Transportation",
-   34711.9100463247,
-   22414.58394132,
-   18522.94655343
+   34711.91,
+   22414.58,
+   18522.95
   ],
   [
    2026,
    2,
    "البنود العامة",
    "General Items",
-   236128.55024322396,
-   128813.39095798999,
-   89547.53189150999
+   236128.55,
+   128813.39,
+   89547.53
   ],
   [
    2026,
    2,
    "الإجمالي",
    "Total",
-   1312799.9695309636,
-   759757.4393568499,
-   658445.73404925
+   1312799.97,
+   759757.44,
+   658445.73
   ]
  ],
  "debt": [
@@ -24161,6 +24270,226 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     "was": "سجلُّ الفروق يرصد ثلاثين موضعاً اختلف فيها رقمان منشوران لبندٍ وفترة. وقيس الثلاثون جميعاً: خمسٌ منها (ر1 2022م: مصروفات التمويل، والإعانات، والمصروفات الأخرى، وحيازة الأصول غير المالية، وجملة المصروفات) تحمل قيمةً غيرَ منشورةٍ في أيِّ طبعة، هي تقريبُ اللوحة نفسِها للقيمة المنشورة إلى منزلةٍ واحدة (6,605.56 صارت 6,605.6). والخمسةُ والعشرون الباقية تحمل أقلَّ الطبعتين دقّةً. ونصُّ اللوحة يقول «تعتمد الأحدثَ وتُبقي الأقدمَ ظاهراً»، ورأسُ جدول الفروق يسمّي عمودَيه «القيمة في أول تقرير» و«القيمة في تقرير لاحق»، وكلا الدعويين لا سندَ له في السجلّ: قيمُ كلِّ موضعٍ مخزَّنةٌ مرتَّبةً تصاعدياً (ثلاثون من ثلاثين، واحتمالُ ذلك بترتيبٍ بحسب الطبعة واحدٌ من 1,073,741,824)، فالسجلُّ لا يحمل الطبعةَ أصلاً",
     "now": "القاعدةُ المعتمدة صارت واحدةً مُعلَنة: <b>أدقُّ قيمةٍ منشورة</b>، تُطبَّق على المواضع الثلاثين كلِّها (تغيّرت ثلاثون قيمة)، فلا تقريبَ تُضيفه اللوحة ولا دقّةَ تُسقطها. ودعوى «الأحدث» رُفعت وأُعلن حدُّها: السجلُّ يرصد القيمَ المنشورة ولا يرصد طبعاتِها، فلا يُقال إن المعتمَد أحدثُ طبعةً. ورأسُ الجدول صار «أدقُّ قيمةٍ منشورة، وهي المعتمَدة» و«القيمةُ المنشورة الأخرى» و«فرقُ التقريب»، وتُعرض القيمتان بدقّتهما المنشورة (منزلتان) لا بمنزلةٍ واحدة. وبوّابةُ GATE-39 تقابل كلَّ قيمةٍ في السجلّ بما في البيان وتُسقط البناءَ عند أيِّ اختلاف، وتُسقطه كذلك إن تعذّر ربطُ بندٍ واحدٍ من السجلّ بخانةٍ في البيان، وإن عاد نصُّ الصفحة يدّعي طبعةً. ومزروعةٌ تُثبت التقاطها",
     "why": "قيمةٌ غيرُ منشورةٍ في أيِّ طبعة ليست استخراجاً بل حساباً، والدعوى بطبعةٍ لا يحملها السجلُّ دعوى أوسعُ من سندها. والقاعدةُ التي لا تُحرسها بوّابةٌ تعود بعد جولة"
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بوابة",
+    "w": "الحرّاسُ الأربعةُ التي كانت تمرُّ على مخالفةٍ واقعة",
+    "ref": "G-01 · G-02 · G-03 · G-04",
+    "was": "قيس بتشغيلٍ على نسخٍ معدَّلة: بوّابةُ التصدير تَعُدّ أزرارَها وملفّاتِها ولا تقابل العددين، فأُصمِت كلُّ زرٍّ ثالثٍ فطبعت «45 من 59» ثم مرّت بالرمز صفر. وثلاثُ بوّاباتٍ (الاتجاه واللون والبكسل) تنتقل بنقرةٍ عمياء ولا تستورد وحدةَ الملاحة المؤكَّدة، فبتغيير مفتاح تبويبٍ واحد طبعت أعداداً أنقصَ (66 بدل 67 و785 بدل 798) ومرّت بالرمز صفر، وهي مستثناةٌ من مقابلة النطاق المُعلَن بالمقيس لأنها لا تستورد تلك الوحدة. وبوّابةُ السالب تقرأ ثلاثةَ معرّفاتِ محاورَ بأسمائها، ومحورا y1 وx2 خارج الحكم كلِّه فمرّ وسمٌ سالبٌ خامٌّ عليهما. وهدفُ البناء لا يمسّ شهادةَ الاجتياز، فبناءٌ بعد فحصٍ يترك شهادةً سليمةَ الشكل لصفحةٍ أخرى، وقد وقع هذا الانفصالُ في مصنعَين.",
+    "now": "العددان يُقابَلان مقابلةً تامّة، وفشلُ النقرة صار إخفاقاً لا سكوتاً. والثلاثةُ تنتقل بالملاحة المؤكَّدة وتُبلِّغ عن تعذُّر الدخول باسمه ثم تسقط، فدخلت تحت مقابلة النطاق. والحكمُ على كلِّ معرّفات المحاور لا ثلاثةٍ منها، ويُنشر عددُ الرسوم والمحاور والوسوم المفحوصة وتسقط البوّابةُ إن لم يُفحص شيء. و«make build» يُبطل الشهادةَ أوّلَ شيء. ولكلٍّ مزروعةٌ أُثبت التقاطُها بالسبب المُسمّى.",
+    "why": "حارسٌ يمرُّ على مخالفةٍ واقعة ليس حارساً، ومرورُه يُقرأ شهادةَ سلامةٍ على ما لم يُفحَص؛ وشهادةٌ لصفحةٍ غيرِ التي تشهد لها تُبطل عقدَ النشر كلَّه."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "عيّنةُ الخطأ المطلق صارت واحدةً للجانبين",
+    "ref": "S-01",
+    "was": "متوسطُ الخطأ المطلق كان يُحتسب لكلِّ جانبٍ على مشاهداته: الإيراداتُ على ثماني سنواتٍ (أُسقطت 2017م لأنَّ انحرافَها 0.0715 نقطةً دون ضوضاء تقريب مقامها 0.0723) والمصروفاتُ على تسعٍ، والعددُ المنشور (ثمانٍ) عددُ الإيرادات وحدَه، والنصُّ يقول «ولا تدخل هذه السنواتُ متوسطَ الخطأ المطلق» عن الجانبين. فنُشر فارقٌ 0.8306 نقطة وحكمٌ بتفوّق جانبٍ على آخر.",
+    "now": "العيّنةُ واحدة: سنةٌ تسقط من جانبٍ تسقط من الجانبين معاً. والفارقُ على العيّنة الموحَّدة (2018م إلى 2025م) 0.2058 نقطة، وهو دون نصف النقطة فتنقلب الخلاصةُ بحكم بوّابة اللوحة نفسِها إلى «لا يُقرأ تفوّقُ جانبٍ على آخر». والوسيطُ صار 8.9694% للمصروفات بعد 8.0، ويُنشر أنَّ العيّنةَ موحَّدة.",
+    "why": "عيّنتان مختلفتان تحت عددٍ واحدٍ مقارنةٌ غيرُ متكافئة، وبوّابةُ اللوحة نفسِها كانت تنقضُ الحكمَ لو قيس على عيّنةٍ واحدة."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "الرقمُ القياسيُّ لا يُقاس على فترةٍ ناقصة",
+    "ref": "S-02 · S-04",
+    "was": "الأساسُ كان أوّلَ فترةٍ مجموعُها غيرُ صفر، وهي 2017م وهي موسومةٌ ناقصةً بعلامة ٭، والحاشيةُ نفسُها تقول «فلا يُقارَن عمودها بعمود سنةٍ كاملة» ثم يُقاس عليها كلُّ ما بعدها: أساسُ مزيج الإيرادات 450,122 بدل 691,505 (معامل 1.53626) وأساسُ مزيج المصروفات 571,580 بدل 929,997 (1.62706)، فتضخيمٌ 53.6% و62.7% في كلِّ عمودٍ من العشرة. وختمُ الوحدة يقول «فلا تبلغ سلسلةٌ منفردةٌ 100» مطلقاً، والقيمُ المرسومةُ تنقضه (تعويضات العاملين 2025م = 100.52 و«نفطية» 2022م = 190.45، فوق 100 في تسعةٍ من عشرة أعمدة).",
+    "now": "الأساسُ أوّلُ فترةٍ غيرِ موسومةٍ بالنقص، والقاعدةُ واحدةٌ للسلسلة المفردة والمكدَّس. وإن لم توجد فترةٌ كاملةٌ في المدى فلا تُفهرَس السلاسلُ أصلاً، ويتبع ختمُ الوحدة ما وقع فلا يقول «رقم قياسي» على قيمٍ لم تُفهرَس. ودعوى «لا تبلغ 100» قُيِّدت بفترة الأساس وأُعلن أنها قد تُتجاوَز بعدها.",
+    "why": "الرقمُ القياسيُّ يقتضي فترةَ أساسٍ متكافئة، وقياسٌ على فترةٍ تُعلَن اللوحةُ نفسُها أنها لا تُقارَن يُفقد كلَّ ما بعدها معناه."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "حاشيةُ الموائمة تُسمّي مجموعتَها وتنشر الفارقَ مقيساً",
+    "ref": "S-03",
+    "was": "مجموعةُ الموائمة اتّحادُ سبعة بنود ورسمُ المزيج يرسم اثنين، فعمودُ 2017م 450,122 والإجماليُّ السنويُّ المنشور 691,505، فارقُ 241,383 مليون ريال (34.9%). والحاشيةُ تقول «كل البنود المعروضة» وهي مجموعةٌ أوسعُ من بنود الرسم، ولا تقول إنَّ العمودَ ليس الإجماليَّ المنشور.",
+    "now": "جُرِّبت موائمةُ كلِّ رسمٍ على بنوده هو فأسقطت بوّابةَ المكوّنات (مجموعُ المكدَّس يجب أن يساوي الإجماليَّ المجاور، وهو قيدٌ محروسٌ بمزروعةٍ قائمة)، فالموائمةُ المشتركةُ صحيحةٌ بنيوياً والعطبُ في الدعوى. فصارت الحاشيةُ تُسمّي المجموعةَ الحقيقية، وتنشر لكلِّ سنةٍ موسومةٍ عمودَ الرسم والإجماليَّ المنشورَ والفارقَ بينهما بالمليون وبالنسبة، وتقول صريحاً إنَّ العمودَ ليس الإجماليَّ السنويَّ المنشور.",
+    "why": "القيدُ صحيحٌ ولا يُكسَر لأجل دعوى، والدعوى تُصحَّح لتصف القيدَ كما هو، ويُنشر الفارقُ مقيساً فلا يُقرأ عمودٌ على أنه غيرُ ما هو."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "فترةُ الثقة تُبنى على درجات حرية البواقي",
+    "ref": "S-05",
+    "was": "فترةُ ثقة معامل الارتباط بين بواقي النموذجين كانت تُبنى على n الخام (ثمانيةٍ وثلاثين ربعاً) وهي بواقي نموذجين يقدِّر كلٌّ منهما خمسةَ معالم، والجدولُ المجاورُ يُعلن للبواقي نفسِها «درجات الحرية (المشاهدات − 5 معالم) = 33». فنُشرت الفترة [0.0074, 0.5850] ومعها حكمُ «فالتغايرُ مُثبَت».",
+    "now": "الفترةُ تُبنى على درجات الحرية الفعلية (33) وتُسمّى في النصّ بمسندها، فصارت [(0.019), 0.602] وهي تحتوي الصفر، فانقلب الحكمُ المنشور آلياً إلى «فالتغايرُ غيرُ مُثبَتٍ إحصائياً عند هذا المستوى».",
+    "why": "حكمُ «مُثبَت» لا يصمد على درجات الحرية التي تُعلنها اللوحةُ نفسُها للبواقي نفسِها، وتناقضُ موضعين في شاشةٍ واحدةٍ أشدُّ من خطأٍ في أحدهما."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "العلاقةُ الدائريةُ لا تُحتسب شاهداً، فترةً فترة",
+    "ref": "S-06",
+    "was": "التبويبُ يُسقط علاقةَ الدين عن الشهادة لأنَّ الإجماليَّ المخزَّن هو الجمعُ البتّيُّ للطرفين فصفرُها حتميّ، والمعيارُ نفسُه لم يُطبَّق على سائر علاقات المكوّنات: قيس في الجدول القطاعي أنَّ سبعةَ عشرَ موضعاً من واحدٍ وعشرين تطابقٌ بتّيٌّ تامّ، فلا يشهد منها غيرُ أربعة.",
+    "now": "المعيارُ يُطبَّق على كلِّ علاقةٍ فترةً فترة: كلُّ فترةٍ إجماليُّها هو الجمعُ البتّيُّ لأجزائها تُفصَل في صفٍّ مستقلٍّ موسومٍ «دائرية لا تشهد»، والتصنيفُ يُشتقّ من القياس لا يُكتب بيدٍ فلا يتقادم. وبعد تصحيح الدقّة المصطنعة صارت الفتراتُ الشاهدةُ في الجدول القطاعي أربعةَ عشرَ بعد أربع، والدائريةُ سبعاً بعد سبعةَ عشر.",
+    "why": "معيارٌ يُطبَّق على علاقةٍ ويُترك في أخرى تحمل الصفةَ نفسَها يُنتج شهادةً أوسعَ من سندها، والصفرُ الحتميُّ ليس دليلَ أمانةِ نقل."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "لا تُخزَّن منزلةٌ عشريةٌ لم ينشرها الناشر",
+    "ref": "S-07 · GATE-40",
+    "was": "الاعتمادُ القطاعيُّ والمعتمدُ السنويُّ كانا مخزَّنَين بعشر خاناتٍ معنويةٍ وأكثر (44,358.142849843396 · 1,183,999.8572320135) لمبالغَ تُنشر بملايينَ صحيحةٍ أو بمنزلتين. وليست المشكلةُ في المظهر: دالّةُ وحدةِ التقريب تُعيد صفراً لأيِّ قيمةٍ غيرِ مستديرة، فبوّابةُ الضوضاء التي تُسقط انحرافاً أصغرَ من تقريب مقامه كانت معطَّلةً لإيراد 2025م المعتمد (كانت ستبلغ 0.0422 نقطة)، ودالّةُ القاسم المشترك في جسر الانحراف تعمل في 2017م ولا تعمل في 2022م إلى 2026م.",
+    "now": "كلُّ رقمٍ بدقّة ناشره: صُحِّحت قيمةٌ في الميزانية ومئةٌ وتسعٌ وخمسون قيمةً في الجدول القطاعي، فعادت بوّابةُ الضوضاء تعمل (0.0422 نقطة لإيراد 2025م) وارتفعت الفتراتُ الشاهدةُ في متطابقة القطاع من أربعٍ إلى أربعةَ عشر. وبوّابةُ GATE-40 تُسقط البناءَ عند أيِّ منزلةٍ تتجاوز الدقّةَ المُعلَنة لجدولها (ألفٌ ومئتان وإحدى وسبعون قيمةً مفحوصة)، وجدولا الدين والاحتياطي خارجَ الحكم بحدٍّ مُعلَنٍ يجب أن يُنشر في الصفحة وإلا سقط البناء.",
+    "why": "دقّةٌ مُصطنعةٌ لا تُجمِّل العرضَ فحسب بل تُعطِّل حارساً بُني لهذا الغرض بعينه، وتعطيلٌ صامتٌ أسوأُ من غيابٍ مُعلَن."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "وسطُ المجموعة الدولية واحدٌ في اللوحة كلِّها",
+    "ref": "S-08",
+    "was": "بطاقةُ الحوكمة كانت تقيس على المتوسط، واللوحةُ تُعلن في التبويب نفسِه وفي كتالوج المعادلات «وسيط بقية المجموعة، الوسيط لا المتوسط، لأن المجموعة تضم قيماً متطرفة تُزيح المتوسط» وتُطبّقه على كلِّ بطاقةٍ دوليةٍ سواها. وقيس على ثماني عشرةَ دولةً مستثنياً المملكة: فجوةُ «فعالية الحكومة» بالمتوسط +0.012 وبالوسيط (0.065)، أي تنقلب إشارتُها بإزاحةٍ 0.077 درجة ويتغيّر ترتيبُ الأبعاد. والبطاقةُ نفسُها تقول إنَّ الدرجات «تُقرأ كنطاقٍ لا كرقمٍ دقيق» ثم تُرتِّب بفجوةٍ قدرُها مئةُ جزءٍ من الدرجة.",
+    "now": "القاعدةُ واحدةٌ في اللوحة كلِّها: وسيطُ بقية المجموعة، وأسماءُ السلاسل في الرسم والنصّ تتبعها. وأُعلن حدُّ الترتيب: أصغرُ فجوةٍ فيه تُنشر بمقدارها، والناشرُ ينشر لكلِّ درجةٍ خطأً معيارياً لا تحمله هذه اللوحةُ في سلسلتها فلا يُقابَل الفارقُ به، فيُقرأ الترتيبُ ترتيبَ مقدارٍ مقيسٍ لا فرقاً مُثبَتاً.",
+    "why": "قاعدةٌ مطبَّقةٌ في كلِّ بطاقةٍ ومتروكةٌ في واحدةٍ تُنتج رقمين لمقامٍ واحد، وترتيبٌ على فجوةٍ أصغرَ من خطأ المصدر دعوى بلا سند."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "نافذةُ خطّ الشرارة تحمل ما نُشر كلَّه وتُبقي الثغرةَ مقطوعة",
+    "ref": "S-09",
+    "was": "خطُّ الشرارة كان يُبنى بمُقتطِعٍ يعني «آخرَ ما اتّصل»، فيتوقّف عند أوّل ثغرةٍ داخلية ويُسقط كلَّ ما قبلها. وقيس في بطاقات النمو الحقيقي الربعيّ: سلسلةُ الأنشطة النفطية المنشورة خمسُ قيمٍ أعلاها 8.3% وأُعلن «في 2 فترة وأعلاه 2.9%»، فارقُ 5.4 نقطة وثلاثُ مشاهداتٍ منشورةٍ غيرُ ممثَّلة؛ وغيرُ النفطية 4.9% لا 2.9%، والحكومية 3.2% لا 1.5%.",
+    "now": "النافذةُ تحمل آخرَ ما نُشر من القيم وتُبقي ثغراتِها الداخليةَ فراغاتٍ مقطوعةً لا مطويّة (ورسمُ الشرارة يقطع الخطَّ عند الفراغ أصلاً)، ويُوصَف المدى على ما نُشر لا على ما بقي بعد الثغرة، ويُعلَن عددُ الفترات غير المنشورة في النافذة.",
+    "why": "بترُ ما قبل الثغرة يُنشر مدىً أصغرَ من مدى السلسلة المنشورة تحت اسمها، وهو أسوأُ من طَيِّ الثغرة لأنه يبدو سليماً."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بيان",
+    "w": "حسابٌ واحدٌ للنسبة، ومنازلُ لا تحمل أكثرَ مما تحمله المحاكاة",
+    "ref": "S-10 · S-11 · S-12",
+    "was": "خانةُ الجدول كانت تحتسب نسبةَ التجاوز من المقام المطبوع (3 ÷ 0.35 = 8.57) والجملةُ المجاورةُ تطبع النسبةَ المخزَّنة (8.53)، فرقمان لكمّيةٍ واحدةٍ في كتلةٍ واحدةٍ وفارقان 0.04 و0.02. والمقامُ وسطُ محاكاةٍ على اثني عشرَ ألفَ تشغيل فخطؤه المعياريُّ 1.59% من مقام عتبة 3، أي أنَّ المنزلةَ الثانيةَ ضوضاءُ محاكاةٍ والتبويبُ يُعلن ذلك عن المنزلة الرابعة من الاحتمال ولا يُعلنه هنا. وعتبةُ عرض الاحتمال مكتوبةٌ بيدٍ (0.0002) ولا تطابق حدَّ عدٍّ صفريٍّ (0.000083) ولا حدَّ قاعدة الثلاثة (0.00025).",
+    "now": "للنسبة حسابٌ واحدٌ يُستعمل في الخانة وفي الجملة معاً، ويُنشر معها خطأُ المحاكاة وتُقصَر المنازلُ على ما يحمله. وعتبةُ الاحتمال تُشتقّ من عدد التشغيلات نفسِه بقاعدة الثلاثة، فإن تغيّر العددُ تغيّرت معه.",
+    "why": "رقمان لكمّيةٍ واحدةٍ متجاورةٍ يُفقدان القارئَ المرجعَ، ومنزلةٌ هي ضوضاءُ محاكاةٍ تُقرأ دقّةً ليست فيها."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "عرض",
+    "w": "أطرافُ فترات الثقة بدقّةٍ واحدةٍ ولا تبلغ رقماً مستحيلاً",
+    "ref": "S-14",
+    "was": "طرفا فترة ثقة معامل الارتباط كانا يُطبعان بمنزلتين، والحدُّ الأعلى 0.99643 يُطبع «1» وهو رقمٌ مستحيلٌ لفترةِ فيشر إذ لا يبلغ المعاملُ الواحدَ بهذا التحويل أبداً، فيُقرأ تدهوراً تامّاً للفترة؛ وطرفاها بدقّتين مختلفتين.",
+    "now": "الطرفان بثلاث منازلَ معاً، وهي تكفي لتمييز 0.996 عن الواحد.",
+    "why": "رقمٌ مستحيلٌ في مدى الكمّية يُقرأ نتيجةً، ودقّتان لطرفَي كمّيةٍ واحدةٍ تُوهمان بفارقٍ في المعلومية."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "عرض",
+    "w": "سنةٌ ينقصها ربعٌ في أيٍّ من الإجماليين سنةٌ ناقصة",
+    "ref": "S-15",
+    "was": "الشرطُ كان بـ«أو» والتعليقُ فوقه يقتضي «و»: «سنةٌ ينقصها ربعٌ في أيٍّ منهما سنةٌ ناقصة». فربعٌ ينشر الإيرادَ دون المصروف كان يُحتسب ربعاً كاملاً فتُقرأ السنةُ كاملةً وهي ناقصة. وقيس على البيان الحاليّ: صفرٌ من ثمانيةٍ وثلاثين ربعاً في هذه الحالة، فالعطبُ كامنٌ لا واقع.",
+    "now": "الشرطُ صار «و» كما يقتضيه الوصفُ المنشور فوقه.",
+    "why": "عطبٌ كامنٌ لا يكتشفه العرضُ أدعى إلى الإصلاح من عطبٍ ظاهر، ووصفٌ لا ينفّذه الكودُ دعوى بلا سند."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "عرض",
+    "w": "نافذةُ كلِّ بطاقةٍ مُسمّاةٌ أو موحَّدة",
+    "ref": "S-16 · S-17",
+    "was": "مسارُ سعر برنت كان نافذتين لمؤشّرٍ واحدٍ وقيمةٍ أخيرةٍ واحدة (مئةٌ وعشرون يومَ تداولٍ في الصفحة الجامعة وتسعون في تبويب الأسعار)، فمبدأُ المسار 106.1 في موضعٍ و75.7 في آخر. ومسارُ رصيد الدين نافذتان ووحدتان (اثنتان وعشرون فترةً بالمليون، وعشرون بالمليار) بلا تسميةِ نافذةٍ في أيٍّ منهما.",
+    "now": "نافذةُ برنت واحدةٌ مُعلَنةٌ في الموضعين. ونافذتا الدين مختلفتان بحقٍّ لأنَّ إحداهما تتبع النطاقَ المعروضَ والأخرى آخرَ عشرين ربعاً منشوراً، فصارت كلٌّ منهما مُسمّاةً في بطاقتها مع وحدتها.",
+    "why": "نافذتان لاسمٍ واحدٍ تُقرآن مسارَ المؤشّر وهما مسارُ نافذتين، والتسميةُ تكفي حيث يكون الاختلافُ مقصوداً."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "إتاحة",
+    "w": "الاسمُ المنطوقُ يبدأ بالنصّ المرئيّ في كلِّ عنصرٍ تفاعليّ",
+    "ref": "A-01 · GATE-41",
+    "was": "معيارُ 2.5.3 يقتضي أن يحوي الاسمُ المنطوقُ نصَّ الوسم المرئيّ لأنَّ من يُشغِّل بالصوت ينطق ما يرى. وقيس في واحدٍ وثلاثين نطاقاً من ثلاثةٍ وثلاثين: مئتان وثمانون مخالفةً مؤكَّدةً من ألفٍ ومئةٍ وسبعة عناصرَ تفاعليةٍ ذاتِ نصٍّ مرئيّ، أكثرُها من أربعة مُولِّدات: «الرابط» مئةٌ وتسع (ولا واحدٌ منها يحوي اسمُه كلمتَه)، و«تقادُم المصادر» ثمانون، و«صفحة الشروط» أربعٌ وعشرون، و«تنزيل» أربعٌ وأربعون.",
+    "now": "الإصلاحُ مرّةٌ واحدةٌ في الطبقة المشتركة: كلُّ عنصرٍ تفاعليٍّ يحمل وسماً مُعلَناً لا يحوي نصَّه المرئيَّ يُعاد بناءُ وسمه فيبدأ بالمرئيِّ ثم يزيد، والمرئيُّ يُحتسب كما يُحتسب الاسمُ (بإسقاط المخفيِّ عن النطق وما لا يُرى)، والمقابلةُ احتواءُ الحروف لا الصياغة. والمقيسُ بعده صفرٌ من ألفٍ وخمسةٍ وثلاثين. وبوّابةُ GATE-41 تحرس القاعدةَ على اللوحات الخمس فمُولِّدٌ جديدٌ لا يُفلت.",
+    "why": "إصلاحُ أربعة مُولِّداتٍ يُغلق أربعةَ أبوابٍ ويترك البابَ مفتوحاً لخامسٍ يُكتب غداً، والقاعدةُ في الطبقة المشتركة تسري على ما لم يوجد بعد."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "إتاحة",
+    "w": "حالةُ الكشف تُعلَن، وقيمةُ المنزلق تتبع معناها، ومواضعُ أخرى",
+    "ref": "A-02 · A-03 · A-05 · A-06 · A-07 · A-10",
+    "was": "أربعةٌ وثلاثون زرَّ تفسيرٍ بلا aria-expanded قطّ، والصفحةُ تُنسِّق حالةً لا تحدث، والأشدُّ أنَّ التركيزَ يفتح التلميحَ وEnter يُغلقه فتنشيطُ زرٍّ وسمُه سؤالٌ يسحب الجواب. ونصُّ قيمةِ منزلقِ كلفةِ الدين يُنطق «زيادة 5 بالمئة» وهو مستوىً لا زيادة، فيناقض وسمَ الأداة. ومقطعٌ لاتينيٌّ واحدٌ من أربعةٍ ومئةٍ بلا lang. وتبديلُ وضع العرض وحدَه لا يُعلَن من ثماني حركاتٍ مقيسة. ورأسُ زاويةٍ يدخل الشجرةَ بلا اسمٍ منطوق. ورابطُ التخطّي يستبدل حالةَ الملاحة في العنوان فتضيع اللوحةُ عند إعادة التحميل.",
+    "now": "الحالةُ تُعلَن وتُحدَّث فصار التنسيقُ حيّاً، وما فتحه التركيزُ لا يطويه أوّلُ تنشيط. ولكلِّ منزلقٍ معناه مُعلَنٌ في تعريفه (مستوىً أو تغيّر) ونصُّ القيمة يتبعه. وأُضيف lang للمقطع اللاتينيّ، وصار تبديلُ الوضع يُعلَن كغيره، ولرأس الزاوية اسمٌ مسموعٌ غيرُ مرئيّ، ورابطُ التخطّي ينقل التركيزَ ولا يمسّ العنوان.",
+    "why": "حالةٌ لا تصل التقنياتَ المساعدة تُفقِد الزرَّ معناه، وتنشيطٌ يسحب الجوابَ يجعل الأداةَ تعمل ضدّ غرضها المُعلَن في وسمها."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "إتاحة",
+    "w": "دورُ الرسم يبقى ويصير اسمُه يُسمّي الفعل",
+    "ref": "A-04 · UX-12",
+    "was": "رصد مراجعان مستقلّان أنَّ خمسةَ عشرَ رسماً تُعلَن «زرّاً» واسمُها يصف المحتوى لا الفعل، فيُنطق «زرّ، كيف تحرّك الإيرادُ والمصروف...» بطولٍ يبلغ مئتين وواحداً وثلاثين محرفاً.",
+    "now": "الدورُ لا يتغيّر: تغييرُه إلى «صورة» عُولج من قبل وأُعيد عنه لأنَّ العنصرَ يحمل tabindex ومعالِجَ مفاتيحَ يفتح حواراً، فإعلانُه محتوىً ساكناً يمنع بعضَ قارئات الشاشة في وضع التصفّح من تسليم الضغطات إليه، ودورٌ يكذّب السلوكَ أسوأُ من اسمٍ يصف محتوىً. والذي تغيّر الاسم: يبدأ بالفعل الذي يقع عند التنشيط ثم يُسمّي الرسم، ويبقى الوصفُ التحليليُّ في حقل الوصف يتخطّاه من شاء.",
+    "why": "الدورُ والاسمُ والسلوكُ يجب أن تتّفق ثلاثتُها، والردُّ على جزءٍ من ملاحظةٍ بدليلٍ منشورٍ نتيجةٌ مشروعةٌ تُنشر كما يُنشر قبولُها."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "بوابة",
+    "w": "كلُّ دعوى في بطاقة البوابات تُقابَل بما يفعله الكود",
+    "ref": "G-05 · G-06 · G-07 · G-08 · G-09 · G-11 · G-12 · G-13 · G-14 · G-15 · G-16 · G-17 · G-18 · G-19 · G-20 · G-21 · G-22 · G-23 · G-24 · G-25 · G-26 · G-27",
+    "was": "عشرون دعوىً كانت أوسعَ من تطبيقها أو حدّاً مطبَّقاً غيرَ مُعلَن: بطاقةُ الإتاحة تقول «تباينُ نصٍّ على قائمةٍ محدَّدة» والمسحُ شاملٌ منذ 19-09-2026م؛ وسماحُ العقد الحيّة مئتان وعتبةُ زمن النقرة مئةٌ وعشرون، كلاهما مطبَّقٌ وغيرُ مُعلَن؛ ومصفوفةُ حالات المحاور على خمسة تبويباتٍ من ثلاثةَ عشرَ والنصُّ يقول «كلُّها»؛ وأرضيةُ عيّنة مسار التركيز نصفُ العناصر والتعليقُ يقول عُشرَها؛ وحالتان من ستٍّ في بوّابة النطاق بلا حكمين من ثلاثة؛ وذراعا الشفافية الساكنتان بقائمتَي ملفّاتٍ مختلفتين وبلا مزروعة؛ وذراعُ الطباعة تبتلع خطأَ الملاحة بـcatch فارغٍ وصفرُها حصيلةُ «لم أجد» و«لم أصل» معاً؛ ولا بوّابةَ تقرأ بيانَ الإتاحة إطلاقاً فإسقاطُ صفٍّ من خمسةٍ وخمسين لا يُسقط بناءً؛ وبصمةُ «بلا شبكة» مجموعٌ واحدٌ على سبعةٍ وستّين رسماً لا يُسمّي المختلف؛ وجردُ الزرع يُقرأ بثلاثة أنماطٍ نصّيةٍ على مصدر ملفٍّ آخر؛ وأربعُ مزروعاتٍ بتوقُّعٍ واحدٍ لا يميّز بينها؛ وستُّ توقُّعاتٍ عامّةٍ تُثبت السقوطَ لا التقاطَ الصنف؛ وحالةُ اختبارٍ في عقد الناشر لا تُدخل الفرعَ الذي تُسمّيه؛ ورقمان لعدّين مختلفين في الشهادة بلا حقلٍ يفرّق بينهما؛ وبوّابةُ المُشغِّل خارجَ حارسِ النطاق هي نفسُها؛ وبروتوكولُ النقل الثلاثيُّ (اسمٌ فريدٌ لكلِّ حزمة، ومقابلةُ بصمتِها على الجهاز قبل فكّها، ثمّ مطابقةُ المصنع بالكامل) مكتوبٌ نثراً في ترويسة ملفّ، وخطوتاه الأولى والثانية لا يُشغّلهما شيءٌ في خطِّ النشر؛ ومدخلا الحزمة والنشر يُعيدان السلسلةَ كاملةً (25 بوابةً و138 مخالفةً مزروعةً، نحو 50 دقيقةً) على الملفِّ نفسِه الذي اجتازها قبل دقائق، ومآلُ كلفةٍ كهذه تخطّي الخطوة لا إعادتُها؛ وحارسُ مطابقة المصنع بالحزمة يقابلُها باسمٍ عامّ يبقى في المجلّد من جولةٍ إلى جولة، فنقضت الخطوةُ الأخيرةُ الأولى: قيس مصنعٌ مُزامَنٌ تماماً على حزمةٍ عمرُها 5 أيّامٍ فقال «المزامنةُ ناقصة» في ملفَّين، والجهةُ الأخرى أخطرُ: حزمةٌ قديمةٌ تطابق مصنعاً قديماً تُنتج «مطابقٌ بالكامل» عن غير المفحوص.",
+    "now": "كلُّ دعوى قُوبلت بما يقع: فإمّا أُصلح الكودُ ليبلغ الدعوى (شمولُ المحاور · الأحكامُ الثلاثةُ في حالات النطاق · توحيدُ قائمتَي الملفّات · نزعُ الـcatch الفارغ وإضافةُ أرضيةٍ · حارسٌ لبيان الإتاحة في البناء · بصمةٌ لكلِّ رسمٍ على حدة · جردُ الزرع يُصدَّر من ملفّه ويسقط البناءُ إن خالف النمطَ · توقُّعاتٌ تُسمّي أصنافَها · ترتيبُ فحوص الشهادة · حقلٌ لكلِّ عدٍّ باسمه · بوّابةُ المُشغِّل دخلت حارسَها)، وإمّا أُعلن الحدُّ في البطاقة بمقداره المقيس (سماحُ العقد · عتبةُ النقرة · قيدُ المصفوفة · أرضيةُ العيّنة · تغطيةُ الزرع لكلِّ شرطٍ منشور)، وبروتوكولُ النقل صار مدخلاً واحداً يشترطُه خطُّ النشر: يبني الحزمة، ويطبع اسمَها الفريدَ وبصمتَها وبصمةَ الصفحة داخلها، ولا يُسلِّم شيئاً حتّى يقول فاحصُ المطابقة إنّ المصنعَ مطابقٌ للحزمة بالكامل؛ وشرطُ دخولِه شهادةُ الاجتياز نفسُها (بصمةً وحجماً ومِرقاةَ بواباتٍ وصلاحيةً ونطاقاً) لا إعادةُ السلسلة، فإن غابت الشهادةُ أو خالفت الملفّ شُغّلت كاملةً؛ والحزمةُ المرجعيةُ صارت تُنتقى بشهادة الاجتياز لا بالاسم العامّ: بصمةُ الصفحة داخلها تطابق بصمةَ الشهادة وإلا رُفضت باسمها وبصمتها ولم تُقَس، ويُطبع في كلِّ تشغيلٍ أيُّ حزمةٍ قوبِل بها، وللحارس فحصٌ ذاتيٌّ بثلاث حالاتٍ مزروعةٍ يسبق بناءَ الحزمة فلا يُعتمد عليه قبل أن يُثبِت التقاطَه.",
+    "why": "بطاقةُ البوابات دعوى للقارئ لا تعليقٌ للمطوِّر، ودعوى أوسعُ من تطبيقها تُنتج ثقةً بما لم يُفحَص، وهو أخطرُ من غياب الفحص لأنها تُسكِت السؤال."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "نظام",
+    "w": "تصحيحُ إحالاتٍ نظاميةٍ ثبت خطؤها بقراءة النصّ الأوّليّ",
+    "ref": "L-03 · L-04 · L-05",
+    "was": "ثلاثةُ أخطاءٍ واقعيةٍ في الإحالة إلى نصّ الرخصة: صيغةُ الإسناد المنشورةُ والمسافرةُ مع كلِّ ملفٍّ مُصدَّر تقول «إخلاء الضمانات وحدّ المسؤولية: القسمان 5 و6»؛ وبوّابةُ الفحص تُسمّي «رابطَ نصّ الرخصة» البندَ (iv) و«إشعارَ إخلاء الضمانات» البندَ (iii)؛ والصفحةُ تنشر أنَّ موجَبات المادة 3(a)(1) سبعةٌ وتفكيكُها الذي يَليها في الجملة نفسِها يقتضي ثمانية، وبوّابتُها تفحص ثمانية.",
+    "now": "قُرئ النصُّ القانونيُّ من مصدره فثبت أنَّ القسمَ الخامسَ عنوانُه «إخلاء الضمانات وحدّ المسؤولية» والسادسَ «مدّةُ الرخصة وإنهاؤها»، وأنَّ (iii) هو الإشعارُ المُحيل إلى الرخصة و(iv) المُحيلُ إلى إخلاء الضمانات. فصارت الإحالةُ إلى القسم الخامس وحدَه بفرعيه، وصار البندان في محلّهما في البوّابة، وصار العددُ ثمانيةً وهو تفكيكُ الجملة نفسِها وعددُ ما تفحصه بوّابتُها.",
+    "why": "أداةٌ تشهد باستيفاء بندٍ مُرقَّمٍ وهي تنسب الرقمَ إلى غير مدلوله تُبطل شهادتَها، وإحالةٌ خاطئةٌ تسافر مع كلِّ ملفٍّ مُصدَّر يسافر خطؤها معها."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "نظام",
+    "w": "سجلُّ شروط الناشرين يسافر مع كلِّ ملفٍّ مُصدَّر",
+    "ref": "L-01 · L-02",
+    "was": "الكتلةُ القانونيةُ المسافرةُ مع تسعةٍ وخمسين ملفاً (ثلاثةُ آلافٍ وستُّ مئةٍ وعشرون محرفاً) تحمل إسنادَ اللوحة لنفسها وإشعارَ MIT كاملاً ونفيَ تأييدٍ يُسمّي سبعةَ عشرَ ناشراً، وصفرَ صيغةِ إسنادٍ مشترطةٍ لناشرٍ واحد، وصفرَ روابطَ لصفحة شروطِ ناشر. واللوحةُ نفسُها أثبتت القاعدةَ في مسائلها المنشورة («حين يُنتزع البيان إلى ملفٍّ مستقلّ ينتقل عبءُ الإسناد إلى الملفّ») ثم نقلت إسنادَها هي وحدَه، وحكمُ «مستوفًى» في صفوف الناشرين كان مقيساً على الصفحة لا على قناة التصدير.",
+    "now": "سجلُّ شروط الناشرين الثمانيةَ عشرَ يُنقل إلى كلِّ ملفٍّ مشتقّاً من السجلّ نفسِه لا مكتوباً بيد: لكلِّ ناشرٍ ما يشترطه وحالُ قراءة شروطه ورابطُها إن كان منشوراً، وما لم تُقرأ شروطُه يُقال. فصارت الكتلةُ ثمانيةَ آلافٍ وواحداً وثلاثين محرفاً وفيها ثلاثةَ عشرَ رابطاً بعد اثنين. وذراعٌ في بوّابة التصدير تقابل عددَ أسطر الناشرين في الديباجة بعدد الناشرين في السجلّ المنشور وتُسقط البناءَ عند النقص، ومزروعةٌ تُثبت التقاطَها.",
+    "why": "عبءُ الإسناد ينتقل مع البيان حين يُنتزع من الصفحة، فملفٌّ يحمل إسنادَ ناقلِه وحدَه يُسقط حقَّ ناشرِ الأرقام على من يتسلّمه."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "نظام",
+    "w": "تسعُ مسائلَ التزامٍ تُعرض على مختصّ، وحدُّ الجولة مُعلَن",
+    "ref": "L-06 · L-07 · L-08 · L-09 · L-10 · L-11 · L-12 · L-13",
+    "was": "مراجعةُ الالتزام رصدت محاورَ لا تُحسَم بغير مختصّ ولم تكن معروضةً: بياناتُ قارئ اللوحة نفسِه (ثلاثةُ طلباتٍ في كل تحميلٍ إلى مضيفَين يملكهما طرفٌ ثالثٌ خارج المملكة، ومفاتيحُ تُكتب في جهاز الزائر، وصفرُ إشعارِ خصوصيةٍ منشور)؛ وصيغةُ إسنادٍ منسوبةٌ إلى نصٍّ لم يُثبت فيه وجودُها؛ وتوزيعاتٌ قابلةٌ للتنزيل لناشرٍ حكمُه «غيرُ مستوفًى» بإقرار اللوحة؛ وإخراجُ القسم 2(b)(1) حقوقَ الخصوصية والشخصية من المرخَّص وهو غيرُ مُعلَن؛ وعشرُ توزيعاتٍ تُعلن مجتمعةً عنواناً واحداً للوصول وصفرَ عنوانِ تنزيل؛ والقسمُ الرابعُ من الرخصة (حقوقُ قواعد البيانات) غيرُ مذكورٍ قطّ؛ وتصنيفُ الناشر «منظّمةً» في وصفٍ آليٍّ ونفيُ صفةِ الجهة في نصٍّ مقروءٍ للعين؛ والإسنادُ إلى الوسيط دون المصدر الأصليّ في الحقل المقروء آلياً.",
+    "now": "التسعُ نُشرت مسائلَ مفتوحةً تُعرض على مختصّ، كلٌّ منها بنصّها ومحلِّ الإشكال والسؤال المطلوب جوابُه، إلى جانب المسائل الثلاثةَ عشرَ القائمة. وأُعلن حدُّ الجولة: ثمانيةُ نصوصٍ لم تُفتح في هذه الجولة (منها نظامُ حماية البيانات الشخصية ولائحتُه، ونظامُ حماية حقوق المؤلف، ونظامُ السوق المالية ولوائحُه، ومدونةُ شفافية المالية العامة)، فمحاورُها قائمةٌ على سند اللوحة نفسِها لا على قراءةٍ مستقلّة.",
+    "why": "مراجعةُ الالتزام تُخرج مسائلَ لا أحكاماً، ومسألةٌ معروضةٌ خيرٌ من حكمٍ بلا ترخيصٍ ولا مسؤولية؛ وما لم يُقرأ نصُّه يُقال إنه لم يُقرأ."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "واجهة",
+    "w": "الشاشةُ الأولى تحمل رقماً، وسطرُ القراءة محدود، والعودةُ متاحة",
+    "ref": "UX-01 · UX-02 · UX-03 · UX-04 · UX-05 · UX-06 · UX-09 · UX-10 · UX-11 · UX-14 · UX-16",
+    "was": "قيس أنَّ أوّلَ رقمٍ يقع تحت الطيّة في العروض الأربعة (859 بكسلاً عند 1280 و1,122 عند 390)، وأنَّ نصّاً يأمر بالتمرير بالفأرة يظهر على أجهزة اللمس (وفي الملفّ كلِّه صفرُ استعمالٍ لاستعلام نوع المؤشِّر)، وأنَّ لوحَ «عن اللوحة» بلا دورٍ ولا وسمٍ خلافاً لإخوته الخمسة وتفعيلُه يُخلي القائمةَ من مختار، وأنَّ أطولَ سطرٍ 298 محرفاً، وأنَّ عمقَ التمرير يبلغ 34 شاشةً وروابطُ العودة صفرٌ والعناصرُ اللاصقة صفرٌ على الهاتف، وأنَّ نصّاً موضوعياً بحجم 10.1 بكسلاً في عشرين موضعاً منها قيمةٌ رقمية، وأنَّ ثلاثةَ عشرَ تبويباً تنكسر إلى صفّين، وأنَّ اسمَ اللوحة يُعاد ثلاثَ مرّاتٍ في 500 بكسل، وأنَّ صفَّ المؤشّرات مطويٌّ على الجهاز الأضيق، وأنَّ ثلاثةَ مواضعَ تكتب قيمةَ ارتفاعِ سطرٍ معيبةً تُسقطها المتصفّحات، وأنَّ أزرارَ المجموعات غيرَ النشِطة بلا حدٍّ يُدرَك.",
+    "now": "أوّلُ رقمٍ صار 782 بكسلاً عند 1280 و1440 (0.98 و0.87 شاشة، فوق الطيّة)، و936 عند 768 بعد 1,096، و1,026 عند 390 بعد 1,122. والسببُ المقيسُ ثلاثةُ مواضعَ كان العلاجُ فيها مكتوباً قبلَ ما يتجاوزه فلم يسرِ: مبدّلُ اللوحات كان 150 بكسلاً فصار 46، وصفُّ التبويبات 85 فصار 41. والتعليمةُ تتبع وسيلةَ الإدخال لا عرضَ الشاشة، ولوحُ «عن اللوحة» حمل دورَه ووسمَه ومفعِّلُه صار تبويباً يحمل حالتَه، وسطرُ القراءة محدودٌ فنزلت الكتلُ فوق ثمانين محرفاً من 67 من 67 إلى 4 وأسوأُها 85 بعد 100، والعودةُ إلى الأعلى زرٌّ يظهر بعد شاشتين وشريطُ التبويبات لاصقٌ على الضيّق، وأدنى مقاسٍ صار 12 بكسلاً وصفرٌ تحته، وصفُّ المؤشّرات مفتوحٌ في العروض كلِّها، وارتفاعُ السطر صار رمزاً مُعلَناً، ولأزرار المجموعات فاصلٌ يبلغ 3:1.",
+    "why": "لوحةُ بياناتٍ لا تُظهر بياناً في شاشتها الأولى تنقض غرضَها، وعلاجٌ يُكتب قبل ما يغلبه ليس علاجاً بل اعتقادٌ بأنه وقع."
+   },
+   {
+    "d": "31-10-2026م",
+    "v": "2.557",
+    "t": "واجهة",
+    "w": "ما لم يُعالَج في جولة الواجهة يُعلَن بمقداره",
+    "ref": "UX-07 · UX-08 · UX-15",
+    "was": "ثلاثُ ملاحظاتٍ تحسينيةٍ قيست ولم تُعالَج في هذا الإصدار: سلّمُ المقاسات سبعةَ عشرَ حجماً فيها عشرةُ أزواجٍ متتاليةٍ تفصلُها بكسلٌ أو أقلّ؛ وسلّمُ المسافات ثلاثٌ وعشرون قيمةً منها أربعَ عشرةَ ليست من مضاعفات أربعة بينما السلّمُ الرباعيُّ مستعملٌ في 739 موضعاً؛ ومهمَّةٌ طويلةٌ عند التحميل تبلغ 145 مللي ثانية والعتبةُ المنشورة خمسون.",
+    "now": "لم تُعالَج، وتُعلَن هنا بمقدارها المقيس: السلّمان محروسان ببوّابة الرموز فكلُّ قيمةٍ تمرُّ برمزٍ معلَن، والاختصارُ تغييرٌ بصريٌّ واسعُ الأثر يُعرض على صاحب العمل قبل تنفيذه؛ والمهمّةُ الطويلةُ واحدةٌ من ثلاثٍ ومجموعُها 278 مللي ثانية وأوّلُ رسمٍ للمحتوى 332 إلى 448، والأداءُ في مجمله داخلَ الحدود.",
+    "why": "قيدٌ يُعلَن بمقداره خيرٌ من قيدٍ يُسكَت عنه، ولا يُقفل قيدٌ بغير إصلاحٍ أو إعلانِ حدٍّ أو ردٍّ بدليل."
    }
   ],
   "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في تبويب «البيانات والمصادر» الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
@@ -24242,7 +24571,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    },
    {
     "n": "vall",
-    "g": "تُشغّل السلسلة كلها وتكتشف البوابات من المجلد لا من قائمة مكتوبة: أيُّ فاحصٍ موجودٍ خارج السلسلة يُسقط البناء، فلا يبقى فاحصٌ معطَّلٌ بصمت. وتفتح هي نفسها الرسومَ في اللوحات الأربع التحليلية وتضغط كلَّ رسمٍ فيها <b>وتُسقط البناء إن لم يُفتح درجُ رسمٍ واحد</b>. وتُعيد الزيارة <b>بلا شبكة</b> فتُثبت أن الصفحة تعمل كاملةً وتُصيَّر رسومُها دون أي طلبٍ خارجيّ."
+    "g": "تُشغّل السلسلة كلها وتكتشف البوابات من المجلد لا من قائمة مكتوبة: أيُّ فاحصٍ موجودٍ خارج السلسلة يُسقط البناء، فلا يبقى فاحصٌ معطَّلٌ بصمت. وتفتح هي نفسها الرسومَ في اللوحات الأربع التحليلية وتضغط كلَّ رسمٍ فيها <b>وتُسقط البناء إن لم يُفتح درجُ رسمٍ واحد</b>. وتُعيد الزيارة <b>بلا شبكة</b> فتُثبت أن الصفحة تعمل كاملةً وتُصيَّر رسومُها <b>وعددُ رسومها وبصمةُ قيمها ومؤشّرُ إصدارها تطابق نظيرَها بشبكة</b>. <b>وحدُّ هذه الدعوى مُعلَنٌ ومقيس (G-10):</b> المقيسُ تطابقُ النتيجة لا غيابُ الطلب، والصفحةُ تطلب <b>ورقةَ خطوطٍ واحدةً غيرَ حاجبة</b> من مضيفٍ خارجيٍّ (<span dir=\"ltr\">fonts.googleapis.com</span> ومعها <span dir=\"ltr\">preconnect</span> إلى <span dir=\"ltr\">fonts.gstatic.com</span>)، فتصل إلى ذلك المضيف بيانات طلبِ الزائر؛ وإن أخفق الطلبُ صُيِّرت الصفحةُ كاملةً بخطوط النظام، وقد قيس ذلك. ولا يفحص أحدٌ <b>عددَ</b> الطلبات الخارجية، فطلبٌ خارجيٌّ ثانٍ غيرُ حاجبٍ لا يُسقط بناءً."
    },
    {
     "n": "vstamps",
@@ -24257,8 +24586,12 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     "g": "قاعدةُ الطبعة المعتمدة واحدةٌ مُعلَنة: <b>أدقُّ قيمةٍ منشورة</b>. تُقابَل كلُّ قيمةٍ في سجلّ الفروق بما في البيان المنشور مساواةً تامّة، فلا دقّةً تُسقطها اللوحةُ ولا تقريباً تُضيفه؛ وبندٌ في السجلّ لا يُربط بخانةٍ في البيان يُسقط البناءَ ولا يُتجاوَز؛ ولا يدّعي النصُّ طبعةً لا يحملها السجلُّ."
    },
    {
+    "n": "vprec",
+    "g": "لا تُخزَّن منزلةٌ عشريةٌ لم ينشرها الناشر. لكلِّ جدولٍ دقّةٌ مُعلَنةٌ ومسنَدها، وقيمةٌ تتجاوزها تُسقط البناء، لأنَّ الدقّة المصطنعة <b>تُعطِّل حرّاسَ الخشونة</b> التي تُسقط انحرافاً أصغرَ من تقريب مقامه. وجدولا الدين والاحتياطي مستثنيان لأنَّ مصدرَ منازلهما لم يُثبَت، <b>والاستثناءُ يجب أن يكون مُعلَناً في الصفحة</b> وإلا سقط البناء."
+   },
+   {
     "n": "vscope",
-    "g": "تبديل المدى والتواتر والوحدة يقود المرسوم فعلاً: عددُ الفترات المرسومة يُقاس على <b>كل رسمٍ ظاهر</b> ويجب أن يطابق المُنتقى، ويُحكَم على شريط النطاق نفسه فلا يصف مدىً غير المعروض، ولكلِّ حالةٍ من حالاته الستّ حكمٌ مقيس."
+    "g": "تبديل المدى والتواتر والوحدة يقود المرسوم فعلاً: عددُ الفترات المرسومة يُقاس على <b>كل رسمٍ ظاهر</b> ويجب أن يطابق المُنتقى، ويُحكَم على شريط النطاق نفسه فلا يصف مدىً غير المعروض، ولكلِّ حالةٍ من حالاته الستّ حكمٌ مقيس، <b>والأحكامُ الثلاثةُ تُطبَّق على الحالات كلِّها</b>: عددُ فترات الرسم الرئيس، وكلُّ رسمٍ ظاهرٍ معه، وشريطُ النطاق (G-08: كانت حالتان من ستٍّ تُحكَمان بالأوّل وحدَه)."
    },
    {
     "n": "vtabs",
@@ -24274,7 +24607,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    },
    {
     "n": "vaxis",
-    "g": "لا محورَ يحمل وسمين متطابقين، فلا تلتبس فترتان. <b>وتُزار مصفوفةُ الحالات كلُّها</b>، النطاق × التواتر × الوحدة، باختيار الأزرار بمفاتيحها البنيوية لا بنصوصها، ويسقط البناءُ إن لم يوجد هدفُ ضغطٍ معلَن."
+    "g": "لا محورَ يحمل وسمين متطابقين، فلا تلتبس فترتان. <b>وتُزار مصفوفةُ الحالات</b> (النطاق × التواتر × الوحدة) <b>حيث توجد عناصرُ التحكّم التي تقودها</b>، وهي خمسةُ تبويباتٍ في لوحة المالية (الصورة الكلية · الإيرادات · المصروفات · العجز والدين · البيانات)، وما عداها يُقاس <b>مرّةً في حالته القائمة</b> (G-13: كان النصُّ يقول «كلُّها» بلا قيد، والمقيسُ 88 حالةً منها 60 حالةَ مصفوفةٍ و28 حالةً قائمة)، باختيار الأزرار بمفاتيحها البنيوية لا بنصوصها، ويسقط البناءُ إن لم يوجد هدفُ ضغطٍ معلَن."
    },
    {
     "n": "vcov",
@@ -24286,15 +24619,19 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    },
    {
     "n": "va11y",
-    "g": "فحصٌ آليٌّ لجزءٍ معلومٍ من <span dir=\"ltr\">WCAG 2.2</span> مستوى <span dir=\"ltr\">AA</span>: اسمٌ برمجيٌّ <b>غيرُ فارغ</b> لكل حقل إدخال، وبديلٌ نصّيٌّ لكل رسمٍ <b>يحمل رقماً ووصفاً</b>، وهدفُ لمسٍ لا يقلّ عن 24×24، وتباينُ نصٍّ فوق العتبة على قائمةٍ محدَّدة، <b>وحدُّ عناصر التحكّم فوق 3:1 بتركيب طبقات الشفافية</b>، وبنيةُ صفحةٍ سليمة (<span dir=\"ltr\">main</span> · رابط تخطٍّ · لغة · اتجاه · عنوان مستند). وحالُ كلِّ معيارٍ من الخمسة والخمسين منشورٌ في بيان الإتاحة."
+    "g": "فحصٌ آليٌّ لجزءٍ معلومٍ من <span dir=\"ltr\">WCAG 2.2</span> مستوى <span dir=\"ltr\">AA</span>: اسمٌ برمجيٌّ <b>غيرُ فارغ</b> لكل حقل إدخال، وبديلٌ نصّيٌّ لكل رسمٍ <b>يحمل رقماً ووصفاً</b>، وهدفُ لمسٍ لا يقلّ عن 24×24، وتباينُ نصٍّ فوق العتبة في <b>كلِّ عنصرٍ ظاهرٍ يحمل نصّاً مباشراً</b> (G-06: كان الفحصُ على قائمةٍ محدَّدةٍ من المواضع ثم صار مسحاً شاملاً في 19-09-2026م، وبقيت البطاقةُ وبيانُ الإتاحة يقولان «قائمةٌ محدَّدة»، والمستثنى صريحٌ: المخفيُّ لقارئ الشاشة <span dir=\"ltr\">.sronly</span> وما عليه <span dir=\"ltr\">aria-hidden</span>)، <b>وحدُّ عناصر التحكّم فوق 3:1 بتركيب طبقات الشفافية</b>، وبنيةُ صفحةٍ سليمة (<span dir=\"ltr\">main</span> · رابط تخطٍّ · لغة · اتجاه · عنوان مستند). وحالُ كلِّ معيارٍ من الخمسة والخمسين منشورٌ في بيان الإتاحة."
    },
    {
     "n": "vsr",
-    "g": "محاكاةُ قارئ الشاشة: تُقرأ شجرةُ الإتاحة التي يبنيها المتصفّح، وهي المصدرُ الذي يقرأ منه قارئُ الشاشة، ويُحكَم على <b>ما يُنطَق</b> لا على ما في الصفحة: لا عنصرَ تفاعليّ يُعلَن بلا اسم، ولا عنصرين لا يُميَّز بينهما بالسمع، ولا اسمَ رمزيّاً لا يُنطق، ولا نصَّ <b>ذا معنًى</b> يُرى ولا يدخل الشجرة (والزخرفةُ المخفيّة مستثناة صراحةً)، <b>ولا خليةَ جدولٍ إلا يحكمها رأسُ عمودٍ ورأسُ صفٍّ معاً، الحكمُ على الخلية لا على الجدول</b>، <b>ولا بديلَ رسمٍ متعدّدِ السلاسل إلا ويُسمّي كلَّ سلسلةٍ ويذكر أقصاها مقابَلاً بأرقام الرسم</b>، <b>وتُجرَّب المنطقةُ الحيّة على أربعة أصنافٍ من عناصر التحكّم في كل لوحة</b> لا على مرشِّحٍ واحد، ولا يقفز مسارُ التركيز إلى الوراء."
+    "g": "محاكاةُ قارئ الشاشة: تُقرأ شجرةُ الإتاحة التي يبنيها المتصفّح، وهي المصدرُ الذي يقرأ منه قارئُ الشاشة، ويُحكَم على <b>ما يُنطَق</b> لا على ما في الصفحة: لا عنصرَ تفاعليّ يُعلَن بلا اسم، ولا عنصرين لا يُميَّز بينهما بالسمع، ولا اسمَ رمزيّاً لا يُنطق، ولا نصَّ <b>ذا معنًى</b> يُرى ولا يدخل الشجرة (والزخرفةُ المخفيّة مستثناة صراحةً)، <b>ولا خليةَ جدولٍ إلا يحكمها رأسُ عمودٍ ورأسُ صفٍّ معاً، الحكمُ على الخلية لا على الجدول</b>، <b>ولا بديلَ رسمٍ متعدّدِ السلاسل إلا ويُسمّي كلَّ سلسلةٍ ويذكر أقصاها مقابَلاً بأرقام الرسم</b>، <b>وتُجرَّب المنطقةُ الحيّة على أربعة أصنافٍ من عناصر التحكّم في كل لوحة</b> لا على مرشِّحٍ واحد، ولا يقفز مسارُ التركيز إلى الوراء، <b>على عيّنةٍ لا تقلّ عن نصف العناصر القابلة للتركيز الظاهرة</b> (G-14: الأرضيةُ كانت مطبَّقةً وغيرَ مُعلَنة، والمقيسُ 81 محطّةً من 136 عنصراً، أي 59.6%)."
+   },
+   {
+    "n": "vname",
+    "g": "الاسمُ المنطوقُ يحوي النصَّ المرئيَّ في كلِّ عنصرٍ تفاعليٍّ ظاهرٍ يحمل وسماً مُعلَناً (معيار WCAG 2.2 رقم 2.5.3)، لأنَّ من يُشغِّل الصفحة بالصوت ينطق ما يرى. والظهورُ يُقرأ من المتصفّح (<span dir=\"ltr\">checkVisibility</span>) لا من الأنماط. <b>وحدُّ الفحص مُعلَن:</b> النصُّ المرئيُّ الذي يُقاس وسمٌ قصيرٌ يحمل حرفاً أو رقماً، فالأيقونةُ ليست وسماً والفقرةُ ليست وسماً. ويُنشر عددُ ما قيس، ومجموعةٌ فارغةٌ تُسقط البناءَ ولا تُقرأ سلامة."
    },
    {
     "n": "vplant",
-    "g": "تزرع مخالفاتٍ متعمَّدة في نسخةٍ من الصفحة المبنية، لكلِّ بوابةٍ مخالفتُها، وتتحقق أن كلَّ مخالفةٍ يلتقطها فاحصُها، وأن كلَّ فاحصٍ ينجح على النسخة السليمة. فحصُ الفاحص. وعددُ المزروع وتوزيعُه على البوابات محتسبٌ من ملفّها ومنشورٌ في جدول التغطية تحت هذه البطاقة."
+    "g": "تزرع مخالفاتٍ متعمَّدة في نسخةٍ من الصفحة المبنية، لكلِّ بوابةٍ مخالفتُها، وتتحقق أن كلَّ مخالفةٍ يلتقطها فاحصُها، وأن كلَّ فاحصٍ ينجح على النسخة السليمة. فحصُ الفاحص. وعددُ المزروع وتوزيعُه على البوابات محتسبٌ من ملفّها ومنشورٌ في جدول التغطية تحت هذه البطاقة. <b>وحدُّ هذه التغطية مُعلَنٌ ومقيس (G-16 · G-05 · G-17 في 31-10-2026م):</b> الدعوى «لكلِّ بوابةٍ مخالفتُها» قائمةٌ بحقّها، <b>ولا تعني «لكلِّ دعوىٍ مزروعة»</b>: بطاقاتُ بعض البوّابات تُعلن شروطاً أكثرَ من مزروعاتها، فـ<span dir=\"ltr\">vleak</span> ثلاثةُ شروطٍ منشورةٍ ولها مزروعتان، و<span dir=\"ltr\">vdcat</span> ستُّ شروطٍ ولها مزروعتان، و<span dir=\"ltr\">vscope</span> ستُّ حالاتٍ ولها مزروعةٌ واحدة، و<span dir=\"ltr\">vfade</span> ثلاثُ أذرعٍ ومزروعتُها على الحيّة وحدها. فما لا مزروعةَ له <b>مطبَّقٌ ولم يُثبت التقاطُه</b>، وذلك يُقال ولا يُسكَت عنه. <b>وجردُ المزروعات يُصدَّر من ملفّها نفسِه</b> لا يُقرأ بنمطٍ نصّيٍّ على مصدره (G-24)، ويسقط البناءُ إن اختلف المُصدَّرُ عن النمط. <b>وكلُّ توقُّعٍ يُسمّي صنفَ مخالفته</b> لا يكتفي برأس الإخفاق، فقد كانت أربعُ مزروعاتٍ لـ<span dir=\"ltr\">vdash</span> تحمل توقُّعاً واحداً لا يميّز بينها."
    },
    {
     "n": "vdcat",
@@ -24306,7 +24643,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    },
    {
     "n": "vleak",
-    "g": "لا معالِجَ حدثٍ يتراكم: تُدار ثلاثُ دوراتٍ كاملةٍ على اللوحات الأربع وتبويباتها مع جمعِ المهملات صراحةً، ويُشترط أن يستقرّ عددُ مستمعي الأحداث والعقدِ الحيّة بين الدورتين الثانية والثالثة، وأن يبقى زمنُ معالجة نقرةٍ واحدة دون عتبةٍ معلَنة. وهذا صنفٌ من العطب لم يكن له مسارٌ إلى الاكتشاف: لا بوابةَ كانت تقيس زمناً ولا مستمعاً ولا ذاكرة."
+    "g": "لا معالِجَ حدثٍ يتراكم: تُدار ثلاثُ دوراتٍ كاملةٍ على اللوحات الأربع وتبويباتها مع جمعِ المهملات صراحةً، ويُشترط أن <b>يستقرّ استقراراً تامّاً</b> عددُ مستمعي الأحداث بين الدورتين الثانية والثالثة (لا زيادةَ ولو واحداً)، وأن <b>لا تزيد العقدُ الحيّة على 200 عقدة</b> بينهما (G-12: الحدُّ كان مطبَّقاً وغيرَ مُعلَن، والمقيسُ اليوم فارقٌ سالبٌ قدرُه 40 عقدة، فالسماحُ غيرُ مُستهلَك)، وأن يبقى زمنُ معالجة نقرةٍ واحدة <b>دون 120 مللي ثانية</b>. وهذا صنفٌ من العطب لم يكن له مسارٌ إلى الاكتشاف: لا بوابةَ كانت تقيس زمناً ولا مستمعاً ولا ذاكرة."
    },
    {
     "n": "vcsv",
@@ -24318,7 +24655,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    },
    {
     "n": "vfade",
-    "g": "صلاحيةُ اللون بذراعين: ذراعٌ ساكنة تحظر تركيبَ الشفافية بوصلٍ نصّيّ على لونٍ من رموز التصميم، وذراعٌ حيّة تشترط أن يفهم المتصفّحُ كلَّ سلسلةِ لونٍ تصل فعلاً إلى أيِّ رسم. وعلّتُها أن <span dir=\"ltr\">Canvas</span> يتجاهل الإسنادَ الباطلَ صمتاً فتبقى آخرُ قيمةٍ أُسندت، فيمتلئ ما كان يُراد صبغةً شفّافةً بلونٍ آخرَ دون أن يسقط بناء."
+    "g": "صلاحيةُ اللون بثلاث أذرع: ذراعٌ ساكنةٌ تحظر تركيبَ الشفافية بوصلٍ نصّيّ على لونٍ من رموز التصميم، وذراعٌ ساكنةٌ ثانيةٌ تحظر الشفافيةَ الثابتة، <b>وكلتاهما على قائمة الملفّات نفسِها</b> (G-07: كانت القائمتان مختلفتين بلا سببٍ مُعلَن، فكان <span dir=\"ltr\">interact.js</span> داخلَ إحداهما خارجَ الأخرى)، وذراعٌ حيّة تشترط أن يفهم المتصفّحُ كلَّ سلسلةِ لونٍ تصل فعلاً إلى أيِّ رسم. وعلّتُها أن <span dir=\"ltr\">Canvas</span> يتجاهل الإسنادَ الباطلَ صمتاً فتبقى آخرُ قيمةٍ أُسندت، فيمتلئ ما كان يُراد صبغةً شفّافةً بلونٍ آخرَ دون أن يسقط بناء."
    },
    {
     "n": "vpaint",
@@ -24644,10 +24981,11 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     "اسمٌ برمجيٌّ لكل حقل إدخال، <span dir=\"ltr\">select · input · textarea</span> (معيارا 3.3.2 و4.1.2)",
     "بديلٌ نصّيٌّ لكل رسمٍ بيانيّ، <b>ويُقاس محتواه لا وجودُه</b>: تُقابَل أرقامُ البديل بأرقام الرسم، وتُنسب كلُّ قيمةٍ قصوى إلى سلسلتها (معيار 1.1.1)",
     "هدفُ لمسٍ لا يقلّ عن 24×24 نقطة لكل عنصرٍ تفاعليّ (معيار 2.5.8)",
-    "تباينُ النصّ فوق 4.5:1 على قائمةٍ محدَّدةٍ من المواضع: بطاقات المؤشر والحواشي والرقاقات والشارات وروابط المصادر (معيار 1.4.3، <b>جزئياً، لا على كل نصٍّ في الصفحة</b>)",
+    "تباينُ النصّ فوق 4.5:1 في <b>كلِّ عنصرٍ ظاهرٍ يحمل نصّاً مباشراً</b> في اللوحات الخمس وتبويباتها (معيار 1.4.3). <b>والمستثنى صريح:</b> المخفيُّ لقارئ الشاشة (<span dir=\"ltr\">.sronly</span>) وما عليه <span dir=\"ltr\">aria-hidden</span>، <b>وما يُرسم داخل <span dir=\"ltr\">canvas</span></b> فلا تراه شجرةُ المستند. (G-06 في 31-10-2026م: كان الفحصُ على قائمةٍ محدَّدةٍ ثم صار شاملاً في 19-09-2026م، وبقي هذا البيانُ يقول «قائمةٌ محدَّدة» و«جزئياً، لا على كل نصٍّ في الصفحة»، فكان البيانُ الرسميُّ أضيقَ من المطبَّق.)",
     "<b>حدودُ عناصر التحكّم فوق 3:1</b>، بتركيب طبقات الشفافية نزولاً حتى أول طبقةٍ معتمة (معيار 1.4.11)",
     "بنيةُ الصفحة: <span dir=\"ltr\">main</span> واحد ورابطُ تخطٍّ ولغةٌ واتجاهٌ وعنوانٌ معلَنة (معايير 3.1.1 و2.4.1 و2.4.2)",
-    "ما يُنطَق فعلاً لقارئ الشاشة، من شجرة الإتاحة التي يبنيها المتصفّح: اسمٌ منطوقٌ لكل عنصرٍ تفاعليّ، وتمايُزُه بالسمع عمّا حوله، وألّا يُرى نصٌّ ذو معنًى لا يدخل الشجرة، <b>وأن يحكم كلَّ خليةِ جدولٍ رأسُ عمودٍ ورأسُ صفٍّ معاً، على مستوى الخلية لا الجدول</b>، <b>وأن تُعلن المنطقةُ الحيّة عند تغيير كلِّ صنفٍ من عناصر التحكّم في كل لوحة</b> (القوائم والمجموعات والمنزلقات ومربّعات الاختيار)، وألّا يقفز مسارُ التركيز إلى الوراء (البوابة <span dir=\"ltr\">vsr</span>)"
+    "ما يُنطَق فعلاً لقارئ الشاشة، من شجرة الإتاحة التي يبنيها المتصفّح: اسمٌ منطوقٌ لكل عنصرٍ تفاعليّ، وتمايُزُه بالسمع عمّا حوله، وألّا يُرى نصٌّ ذو معنًى لا يدخل الشجرة، <b>وأن يحكم كلَّ خليةِ جدولٍ رأسُ عمودٍ ورأسُ صفٍّ معاً، على مستوى الخلية لا الجدول</b>، <b>وأن تُعلن المنطقةُ الحيّة عند تغيير كلِّ صنفٍ من عناصر التحكّم في كل لوحة</b> (القوائم والمجموعات والمنزلقات ومربّعات الاختيار)، وألّا يقفز مسارُ التركيز إلى الوراء (البوابة <span dir=\"ltr\">vsr</span>)",
+    "الاسمُ المنطوقُ يحوي النصَّ المرئيَّ في كلِّ عنصرٍ تفاعليٍّ ظاهرٍ يحمل وسماً مُعلَناً (معيار 2.5.3)، والظهورُ يُقرأ من المتصفّح لا من الأنماط، والمقيسُ احتواءُ الحروف لا احتواءُ الصياغة. <b>وحدُّه مُعلَن:</b> المقيسُ وسمٌ قصيرٌ فيه حرفان على الأقل، فالأيقونةُ ليست وسماً والفقرةُ ليست وسماً"
    ],
    "manual": [
     "التنقّل بلوحة المفاتيح وترتيبُ التركيز ومصيدتُه داخل الدرج وإعادتُه عند الإغلاق (معايير 2.1.2 و2.4.7 و2.4.11)، <b>فحصٌ يدويّ، آخره 05-09-2026م</b>، ولا يُعاد في كل بناء.",
@@ -24670,7 +25008,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    ],
    "contact": "تُرسل ملاحظات الإتاحة بفتح مسألةٍ في مستودع اللوحة على <span dir=\"ltr\">GitHub</span>: <span dir=\"ltr\">github.com/salrajih90/mirsad/issues</span>، وتُقيَّد كل معالجة في سجل التصحيحات.",
    "asOf": "05-09-2026م",
-   "autoAsOf": "29-10-2026م",
+   "autoAsOf": "01-11-2026م",
    "sc": [
     [
      "1.1.1",
@@ -25172,7 +25510,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
      "o": "هيئة الأوراق المالية والبورصات الأمريكية",
      "t": "https://www.sec.gov/privacy",
      "read": "04-09-2026م، وأُعيدت القراءة 11-10-2026م",
-     "need": "معلوماتُ الموقع عامّة «<span dir=\"ltr\">may be copied or further distributed … without the SEC's permission</span>» مع ذكر الهيئة مصدراً · <b>وحدُّ الوصول الآليّ</b> «<span dir=\"ltr\">no more than 10 requests per second</span>» · <b>ومنعان كانا مُسقَطَين وأُضيفا في 11-10-2026م:</b> منعُ الشعار والأعمال الفنية «<span dir=\"ltr\">do not use the SEC seal or any of the other logos or artwork</span>»، ومنعُ الأدوات الآلية غير المصنَّفة «<span dir=\"ltr\">does not allow \"unclassified\" bots or automated tools to crawl the site</span>».",
+     "need": "معلوماتُ الموقع عامّة «<span dir=\"ltr\" lang=\"en\">may be copied or further distributed … without the SEC's permission</span>» مع ذكر الهيئة مصدراً · <b>وحدُّ الوصول الآليّ</b> «<span dir=\"ltr\">no more than 10 requests per second</span>» · <b>ومنعان كانا مُسقَطَين وأُضيفا في 11-10-2026م:</b> منعُ الشعار والأعمال الفنية «<span dir=\"ltr\">do not use the SEC seal or any of the other logos or artwork</span>»، ومنعُ الأدوات الآلية غير المصنَّفة «<span dir=\"ltr\">does not allow \"unclassified\" bots or automated tools to crawl the site</span>».",
      "met": "مستوفًى في النسخ والإسناد وحدِّ المعدّل · ومستوفًى في الشعار (لا شعارَ ولا عملاً فنياً من الموقع في اللوحة) · ومسألةٌ مفتوحة في الأدوات الآلية",
      "n": "وصُحِّح في إصدارٍ سابق الرقمُ النظاميّ في الفهرس الآليّ من <span dir=\"ltr\">0001616854</span> إلى <span dir=\"ltr\">0001767640</span>، وهو الظاهر في <span dir=\"ltr\">EDGAR</span> باسم <span dir=\"ltr\">PUBLIC INVESTMENT FUND</span>.<br><b>وتصحيحُ نقلٍ ناقص (L2-12، 11-10-2026م):</b> كان هذا الصفُّ يسجّل الإذنَ وحدَّ المعدّل ويُسقط منعَين في الصفحة نفسِها. وأحدُهما يمسّ سلسلةَ التحديث المجدولة: <b>هل يُعدّ جالبُ البيان المجدول «أداةً آليةً غيرَ مصنَّفة»</b> بمفهوم السياسة؟ واللوحةُ تجلب إقرارات 13F دورياً. <b>فالمسألةُ معروضةٌ على مختصّ</b>، والحدُّ المُعلَن أنّ الجلبَ يقع دون حدِّ المعدّل المنشور ولا يُعلن تصنيفاً."
     },
@@ -25257,9 +25595,18 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
     "بمقياس لائحة الأشخاص المرخّص لهم ولائحة أعمال الأوراق المالية، هل يقع نشرُ مؤشراتٍ مشتقّة وتوقّعاتٍ وسيناريوهات وسعرِ تعادل، مقرونةً بجداول حيازاتٍ وتصنيفاتٍ ائتمانية، خارج النشاطات المستوجِبة للترخيص؟ وعلى أيّ نصٍّ تُبنى جملةُ «لا تمارس نشاطاً مرخَّصاً» المنشورة في 9 مواضع من هذا المستند؟ <b>وتصحيحُ إقرارٍ سابق (11-10-2026م):</b> كانت هذه المسألةُ تقول إنه «لم يُفتح نصٌّ من أنظمة السوق المالية»، وذلك غيرُ صحيحٍ على إطلاقه: قُرئ نصُّ المادة (53) من قواعد طرح الأوراق المالية والالتزامات المستمرة في 05-09-2026م وأُعيدت صياغةُ قاعدة الإفصاح عليه، وهو مُدرَجٌ في جدول المصادر المرجعية. والذي لم يُقرأ هو <b>لائحةُ الأشخاص المرخَّص لهم ولائحةُ أعمال الأوراق المالية ونظامُ السوق المالية نفسُه ومبادئُ IOSCO</b>، وعليها وحدَها يُبنى الحكمُ على هذه الجملة.",
     "<b>أُجيبت جزئياً بالبناء (11-10-2026م)، وتبقى في المستوى الأدنى:</b> نفيُ التأييد انتقل فعلاً إلى الوصف الآليّ، فكلُّ المجموعات الأربعَ عشرَ تحمله في حقل <span dir=\"ltr\">dcterms:rights</span> ويُقابله فاحصٌ. والمسألةُ الباقية: هل ينتقل العبءُ كذلك إلى مستوى <b>التوزيعة</b> (<span dir=\"ltr\">dcat:Distribution</span>) حين تُنتزع وحدَها، كما انتقل عبءُ الإسناد إلى ملفّ CSV؟",
     "هل يُعدّ إعلانُ تاريخ السلسلة في موضعٍ منفصلٍ وافياً بالإقرار الذي تطلبه إدارة معلومات الطاقة، أم يلزم إدراجُه في نصّ الإقرار كما في المثال المنشور؟ وما درجةُ إلزام «<span dir=\"ltr\">should</span>»؟",
-    "هل تُعدّ نسبةُ حيازةٍ دقيقةٌ في شركةٍ مدرجةٍ مسمّاة، مقرونةً بوصف «مساهمٍ فرد»، بياناً «من شأنه أن يؤدي إلى معرفة الفرد على وجه التحديد»؟ وهل يغيّر من الحكم أنّ الغرض من ذكرها الإفصاحُ عن تعديلٍ سابقٍ لا العرض؟"
+    "هل تُعدّ نسبةُ حيازةٍ دقيقةٌ في شركةٍ مدرجةٍ مسمّاة، مقرونةً بوصف «مساهمٍ فرد»، بياناً «من شأنه أن يؤدي إلى معرفة الفرد على وجه التحديد»؟ وهل يغيّر من الحكم أنّ الغرض من ذكرها الإفصاحُ عن تعديلٍ سابقٍ لا العرض؟",
+    "L-01: حين تكون مادةُ الناشر مرخَّصةً أصلاً بـCC BY 4.0 (مجموعتا WDI وWGI لدى البنك الدولي بنصّ صفحة تراخيصه)، هل تُستوفى بنودُ 3(a)(1) تجاهه بذكر اسمه ورابط صفحته، أم تلزم الصيغةُ الثمانيةُ كاملةً كما تلزم من يأخذ عن هذه اللوحة؟ وهل وصفُ مادةٍ مرخَّصةٍ بأنها «لا ترخّصها هذه اللوحة» يُسقط عن المتلقّي حقّاً مُنح له أصلاً من ناشرها؟",
+    "L-02: هل تستوفي الإحالةُ إلى اسم الناشر ورابطِ صفحة شروطه شرطَ إسنادٍ منصوصٍ بصيغةٍ بعينها (مثل «Source: International Monetary Fund») حين يسافر البيانُ في ملفٍّ مستقلّ؟ وما الذي تقتضيه عبارةُ صندوق النقد «communicate and promote compliance by their end users» من مُصدِّرٍ يُنزِّل تسعةً وخمسين ملفاً: نصُّ الشروط، أم رابطُها، أم ذكرُ وجودها؟",
+    "L-06: هل تقع لوحةٌ شخصيةٌ غيرُ تجاريةٍ تحت موجب إشعار الخصوصية في المادة (12) من نظام حماية البيانات الشخصية؟ وهل يُعدّ عنوانُ الإنترنت الذي يُنقَل بطلبِ ورقةِ خطوطٍ إلى مضيفٍ خارجيٍّ «بياناً شخصياً» ونقلُه «نقلاً خارج المملكة» بمفهوم المادة (29)؟ وهل يختلف الحكمُ لو استُضيف الخطُّ في الملفّ نفسِه؟",
+    "L-08: هل يختلف حكمُ «النشر» في البند (6.0) من سياسات نشر إحصاءات المملكة عن حكم إتاحة صورةٍ قابلةٍ للتنزيل من البيان؟ وهل يُغيِّر من الحكم أنَّ المنشورَ مؤشراتٌ محتسَبةٌ من نشراتٍ منشورةٍ لا بياناتُ مسوحٍ أوّلية؟ وهل يَلزم تعليقُ توزيعاتِ ناشرٍ لم تُبلَغ شروطُه إلى أن تُبلَغ؟",
+    "L-09: القسم 2(b)(1) من CC BY 4.0 يُخرج حقوقَ الخصوصية والشخصية والحقوقَ المعنوية من المرخَّص بنصّه («Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights»). فهل يلزم مَن يُرخّص بهذه الرخصة موادَّ تجاور بياناتٍ قد تكون شخصيةً أن يُعلن هذا الإخراجَ صراحةً للمتلقّي، أم يكفي أنَّ الرخصةَ نفسَها تقوله؟",
+    "L-10: هل يُعدّ إعلانُ توزيعةٍ بصيغتها ونوعِ وسيطها ومعرّفها، بلا موضعٍ يُنال منه، وعداً لحاصدٍ آليّ؟ ويختلف الحكمُ إن كان التصديرُ يجري في المتصفّح فلا تمثيلَ ثابتاً للتوزيعة على خادم؟ (المقيس: عشرُ توزيعاتٍ تُعلن مجتمعةً عنواناً واحداً للوصول، وصفرَ عنوانِ تنزيل.)",
+    "L-11: هل يسري القسم 4 من CC BY 4.0 (حقوقُ قواعد البيانات ذاتِ الطبيعة الخاصّة) حيث لا يعرف النظامُ السعوديُّ حقّاً مستقلاً لقواعد البيانات؟ وما أثرُ 4(b) على من حمّل ملفّاً من هذه اللوحة وأدرجه في قاعدته هو؟",
+    "L-12: هل يُنشئ تصنيفُ الناشر «منظّمةً» (foaf:Organization) في وصفٍ آليٍّ منشورٍ ظهورَ صفةٍ اعتباريةٍ يُحتجّ بها على ناشره، ولو نفاها نصٌّ مقروءٌ للعين في موضعٍ آخر من الصفحة؟",
+    "L-13: إذا سرى موجبُ الإسناد على البيان المأخوذ «عن مستعملٍ آخر» (نصُّ شروط صندوق النقد)، فهل يلزم تسميةُ المُقرِّ الأصليّ إلى جانب الناشر الوسيط في الحقل المقروء آلياً كما يلزم في النصّ المقروء للعين؟"
    ],
-   "limit": "<b>وحدٌّ يُقرأ مع كلِّ ما سبق:</b> ثلاثةٌ من محاور الالتزام، <b>البيانات الشخصية · البيانات المفتوحة · أنظمة السوق المالية</b>، <b>لم يراجعها مختصٌّ مؤهَّل قطّ</b>، ولم تُراجَع على نصٍّ أوّليٍّ في جولتين متتاليتين (حجبٌ وملفُّ <span dir=\"ltr\">robots</span> في موقعَيها). وما في هذه البطاقة قياسٌ على نصوصٍ قُرئت وحدَها. <b>وأعدادُ الجدول تُحتسب منه آلياً</b> ولا تُكتب بيد: صفوفُه 18 صفّاً، فيها 12 صفّاً لم تُبلَغ شروطُها و10 صفوف بلا رابطٍ أصلاً، وقد صُحّح هذا العدُّ مرّتين بعد تدقيقٍ مستقلّ (19-09-2026م و11-10-2026م) لأنه كان مكتوباً فتقادم. وفيه كذلك <b>مسائلُ مفتوحة</b> نشأت عن القراءة: شرطُ الإذن الكتابيّ لدى الهيئة العامة للإحصاء · منعُ التجميع والاشتقاق في شروط <span dir=\"ltr\">S&amp;P</span> · وحظرُ الحفظ في شروط <span dir=\"ltr\">FRED</span>. <b>ولا يُعتمد على هذه البطاقة اعتمادَ المشورة.</b>"
+   "limit": "<b>وحدٌّ يُقرأ مع كلِّ ما سبق:</b> ثلاثةٌ من محاور الالتزام، <b>البيانات الشخصية · البيانات المفتوحة · أنظمة السوق المالية</b>، <b>لم يراجعها مختصٌّ مؤهَّل قطّ</b>، ولم تُراجَع على نصٍّ أوّليٍّ في جولتين متتاليتين (حجبٌ وملفُّ <span dir=\"ltr\">robots</span> في موقعَيها). وما في هذه البطاقة قياسٌ على نصوصٍ قُرئت وحدَها. <b>وأعدادُ الجدول تُحتسب منه آلياً</b> ولا تُكتب بيد: صفوفُه 18 صفّاً، فيها 12 صفّاً لم تُبلَغ شروطُها و10 صفوف بلا رابطٍ أصلاً، وقد صُحّح هذا العدُّ مرّتين بعد تدقيقٍ مستقلّ (19-09-2026م و11-10-2026م) لأنه كان مكتوباً فتقادم. وفيه كذلك <b>مسائلُ مفتوحة</b> نشأت عن القراءة: شرطُ الإذن الكتابيّ لدى الهيئة العامة للإحصاء · منعُ التجميع والاشتقاق في شروط <span dir=\"ltr\">S&amp;P</span> · وحظرُ الحفظ في شروط <span dir=\"ltr\">FRED</span>. <b>ولا يُعتمد على هذه البطاقة اعتمادَ المشورة.</b> <b>وحدُّ جولة 31-10-2026م مُعلَنٌ ومقيس:</b> كُلِّف مراجعُ التزامٍ مستقلّ، فأصلحَ هذا الإصدارُ ثلاثةَ أخطاءٍ واقعيةٍ ثبتت بقراءة النصّ الأوّليّ (القسمُ 5 لا «القسمان 5 و6» · والبندان (iii) و(iv) كانا مقلوبين في بوّابة الفحص · وعددُ موجَبات 3(a)(1) ثمانيةٌ لا سبعة)، ونقلَ سجلَّ شروط الناشرين الثمانيةَ عشرَ إلى كلِّ ملفٍّ مُصدَّر بعد أن كان الملفُّ يحمل إسنادَ اللوحة وحدَه. <b>وما لم يُقَس على نصٍّ:</b> لم تُفتح في تلك الجولة نصوصُ نظام حماية البيانات الشخصية ولائحته (المفتوحُ دليلُ سدايا الرسميُّ لا النظام)، ولا نظامُ حماية حقوق المؤلف، ولا سياسةُ البيانات المفتوحة وضوابطُ حوكمة البيانات الوطنية، ولا نظامُ السوق المالية ولوائحُه، ولا مبادئُ IOSCO، ولا مدونةُ شفافية المالية العامة، ولا سياساتُ نشر إحصاءات المملكة. فهذه المحاورُ قائمةٌ على سند اللوحة نفسِها لا على قراءةٍ مستقلّة، وذلك يُقال."
   },
   "refKey": {
    "ec": "لوحة الاقتصاد الكلي",
@@ -25304,7 +25651,9 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
    "OPS": "تدقيقٌ مستقلّ (08-10-2026م)، خطُّ البيانات وسلامتُها الداخلية",
    "A2": "تدقيقٌ مستقلّ (10-10-2026م)، الإتاحة: شجرةُ الإتاحة على 33 عرضاً في الوضعين",
    "S2": "تدقيقٌ مستقلّ (10-10-2026م)، الإحصاء: إعادةُ احتساب كلِّ معادلةٍ منشورة",
-   "L2": "تدقيقٌ مستقلّ (10-10-2026م)، الأنظمة: مراجعةُ التزامٍ على نصوصٍ مفتوحة"
+   "L2": "تدقيقٌ مستقلّ (10-10-2026م)، الأنظمة: مراجعةُ التزامٍ على نصوصٍ مفتوحة",
+   "G": "جولةُ المراجع المستقلّ لنطاق الحرّاس والدعاوى المنشورة (31-10-2026م)",
+   "UX": "جولةُ المراجع المستقلّ لواجهة المستخدم وتجربته (27-10-2026م)"
   },
   "refKeyNote": "كان المفتاحُ المنشور يشرح تسعَ بادئاتٍ من اثنتين وعشرين، فثمانيةٌ وثمانون قيداً من مئةٍ وتسعةٍ وسبعين تحمل رمزاً لا يُحلّ. <b>وستٌّ منها كانت مبتورةً</b> إلى آخر ثلاثة محارف (<span dir=\"ltr\">ebt · ios · ntl · ate · ity · ata</span>)، أثرُ تحويلٍ برمجيّ قصّ البادئات ولم يلتقطه شيء، فاستُعيدت إلى أصلها (<span dir=\"ltr\">debt · ratios · intl · rate · quality · data</span>). <b>وحارسُ البناء يسقط الآن</b> إن ورد في حقل المرجع بادئةٌ ليست في هذا المفتاح.",
   "originNote": "حقلُ «المنشأ» يفرّق، بنصّ سياسة المراجعات، بين <b>مراجعةِ الناشر</b> (تغييرٌ في الرقم الأصلي) و<b>تصحيحِ اللوحة</b> (خطأٌ وقعت فيه هي). وكلُّ قيدٍ في هذا السجلّ من الصنف الثاني، والعدّادُ يقول «صفر» من الأول، <b>وهو صفرٌ يحتاج بياناً لا يُترك</b>: اللوحةُ ترصد فعلاً <b>ثلاثين فرقاً بين إصدارات تقارير الناشر</b> وتنشرها بأعيانها في تبويب «جودة البيانات» تحت «الفروق المرصودة بين إصدارات التقارير». <b>ولماذا لا تُقيَّد هنا:</b> لأنها كلُّها فروقُ تقريبٍ عشريّ أقصاها نصفُ وحدةٍ من وحدة النشر، <b>ولم يتغيّر بها رقمٌ منشورٌ في هذه اللوحة</b>، فالسجلُّ يقيّد ما تغيّر في المعروض، وتلك تُنشر حيث تُقاس. فإن غيّرت مراجعةُ ناشرٍ رقماً معروضاً قُيّدت هنا بمنشأ «نشر».",
@@ -30013,6 +30362,27 @@ function ixSparkSvg(vals,cls){
    (DQAF 4.2: الفترةُ غير المنشورة خانةٌ فارغةٌ موسومة لا تُطوى).
    فصار الاقتطاعُ هنا وحدَه: آخرُ ما اتّصل من القيم، يتوقّف عند أوّل ثغرةٍ
    من جهة النهاية، ويعود ‎null‎ إن لم يبقَ نقطتان. */
+/* ── S-09 (31-10-2026م) · ذيلٌ يَبتر ما قبل الثغرة فيُنشر مدىً أصغر ────
+   كان خطُّ الشرارة يُبنى بـ‎ixTail‎ وهو «آخرُ ما اتّصل»، فيتوقّف عند أوّل
+   ثغرةٍ داخلية ويُسقط كلَّ ما قبلها. وقيس الأثر في بطاقات النمو الحقيقي
+   الربعيّ: سلسلةُ الأنشطة النفطية المنشورة ‎[(0.5), 3.8, 8.3, ثغرة, 2.9,
+   (24.7)]‎، فأُعلن «في 2 فترة ... وأعلاه 2.9%» وأعلى المنشور **8.3%**،
+   فارقُ 5.4 نقطة، و3 من 5 مشاهداتٍ منشورةٍ غيرُ ممثَّلة. وغيرُ النفطية
+   4.9% لا 2.9%، والحكومية 3.2% لا 1.5%.
+   و‎ixSparkSvg‎ يقطع الخطَّ عند ‎null‎ أصلاً (‎started=false‎)، فلا حاجةَ إلى
+   البتر: فصارت النافذةُ تحمل آخرَ k قيمةٍ **منشورة** وتُبقي ثغراتِها
+   الداخليةَ فراغاتٍ مقطوعةً لا مطويّة (DQAF 4.2)، ويُوصَف المدى على ما
+   نُشر لا على ما بقي بعد الثغرة. و‎ixTail‎ يبقى لما يلزمه مجرىً متّصل. */
+function ixWin(a,k){
+  const n=k||12;
+  const A=(a||[]).map(v=>(v==null||typeof v!=='number'||!isFinite(v))?null:v);
+  let end=A.length-1; while(end>=0 && A[end]==null) end--;
+  if(end<0) return null;
+  let i=end, got=0, start=end;
+  while(i>=0 && got<n){ if(A[i]!=null){ got++; start=i; } i--; }
+  if(got<2) return null;
+  return A.slice(start,end+1);
+}
 function ixTail(a,k){
   const n=k||12, A=a||[];
   const ok=v=>(v!=null&&typeof v==='number'&&isFinite(v));
@@ -30047,9 +30417,18 @@ function ixSparkWrap(vals,label,fmt,cls,note){
     const g=t.match(/^\s*-\s*(.*)$/);
     if(g) return 'سالب '+g[1];
     return t; };
+  /* S-09: الثغرةُ الداخليةُ في النافذة تُعلَن، فلا يُقرأ العددُ عدَّ
+     فتراتٍ متّصلة ولا يُقرأ الخطُّ المقطوعُ خطّاً واصلاً. */
+  const _gapN=(function(){ let a=-1,b=-1,g=0;
+    (vals||[]).forEach((v,i)=>{ const okv=(v!=null&&isFinite(v));
+      if(okv){ if(a<0) a=i; b=i; } });
+    for(let i=a;i<=b;i++){ const v=(vals||[])[i]; if(!(v!=null&&isFinite(v))) g++; }
+    return g; })();
   const txt='مسارُ '+(label||'المؤشر')+' في '+fin.length+' فترة: من '+f(fin[0])+
             ' إلى '+f(fin[fin.length-1])+'، وأدناه '+f(Math.min.apply(null,fin))+
-            ' وأعلاه '+f(Math.max.apply(null,fin))+'.'+(note? ' '+note : '');
+            ' وأعلاه '+f(Math.max.apply(null,fin))+'.'+
+            (_gapN? ' وفي النافذة '+_gapN+' فترةً غيرَ منشورة، والخطُّ مقطوعٌ عندها ولا يُوصَل.' : '')+
+            (note? ' '+note : '');
   /* S-01: القيمتان الطرفيّتان تُكتبان سمتين على الغلاف، فلا يُستخرج الرقمُ
      من النثر. والنثرُ يحمل لفظَ العنوان وفيه «إلى» أحياناً («المصروفات إلى
      الناتج»)، فأيُّ مُفكِّكٍ نصّيٍّ يقرأ غيرَ ما يريد، والسمةُ لا تحتمل. */
@@ -30268,7 +30647,6 @@ function ixKpiCard(x,dot){
 
 function ixKpiFold(){
 
-  const NARROW=820;
   document.querySelectorAll('.domain').forEach(dm=>{
     const secs=[...dm.querySelectorAll('section')].filter(x=>x.offsetParent&&x.offsetHeight>0);
     const hosts=[];
@@ -30309,17 +30687,25 @@ function ixKpiFold(){
         (head? '، أوّلُها '+head : ''));
       g.parentElement.insertBefore(d,g);
       d.appendChild(sm); d.appendChild(g);
-      const narrow=()=> (window.innerWidth||1440)<=NARROW;
-      if(!d.dataset.userset) d.open=!narrow();
+      /* ── UX-11 و UX-01 (31-10-2026م) · الأرقامُ تُطوى حيث يُطال التمريرُ أقلّ ──
+         كان صفُّ المؤشّرات مطويّاً افتراضياً دون 820 بكسلاً، فتختفي أرقامُ
+         التبويب خلف نقرةٍ على الجهاز الأضيق، وهو الجهازُ الأقلُّ احتمالاً
+         للتمرير الطويل. وقيس: أوّلُ رقمٍ على 390 بكسلاً يقع عند 1,122 بكسلاً
+         (1.33 شاشة) وعلى 1280 عند 859 (1.07)، والطَّيُّ يضاعف الأثرَ حيث هو
+         أشدّ. فصار الصفُّ مفتوحاً في العروض كلِّها، ويبقى الطَّيُّ متاحاً
+         للقارئ ويُحفَظ اختيارُه. والمطويُّ افتراضياً صار شريطَ الفلاتر. */
+      if(!d.dataset.userset) d.open=true;
       d.addEventListener('toggle',()=>{ d.dataset.userset='1'; });
     });
   });
 }
 let _ixKfT=null;
 addEventListener('resize',function(){ clearTimeout(_ixKfT); _ixKfT=setTimeout(function(){
+  /* UX-11: لا يُغلِق تغييرُ المقاس صفَّ المؤشّرات، فالقاعدةُ واحدةٌ في
+     العروض كلِّها، ومن طواه بنفسه يبقى طَيُّه. */
   document.querySelectorAll('details.kpifold').forEach(d=>{
     if(d.dataset.userset) return;
-    d.open=(window.innerWidth||1440)>820;
+    d.open=true;
   });
 },200); });
 
@@ -30533,6 +30919,11 @@ function ixTheme(mode){
   const _P=ixPal();
   try{ ixChartTheme(_P); }catch(e){}   /* السِمةُ قبل إعادة التصيير، وإلا رُسم بالقديم */
   _themeSubs.forEach(f=>{ try{ f(_P); }catch(e){} });
+  /* A-06 (31-10-2026م): من 8 حركاتٍ مقيسةٍ تُعلن الصفحةُ 7 (تبويب · لوحة ·
+     منزلق · قائمة · بحث · فرز · بناء) ويبقى زرُّ الوضع صامتاً وحدَه، وهو
+     تناقضٌ مع عُرف الصفحة نفسِها. فصار يُعلَن كغيره. */
+  try{ ixSay('الوضع: '+(ixThemeNow()==='dark'?'داكن':'فاتح')+
+    (ixThemeMode()==='auto'? '، تِبعاً للنظام' : '')); }catch(e){}
   const btn=document.getElementById('themeBtn');
   if(btn){ const md=ixThemeMode(); btn.setAttribute('aria-label',ixThemeLabel(md));
            const _l=btn.querySelector('.tlbl'); if(_l) _l.textContent=ixThemeText(md); }
@@ -30660,6 +31051,79 @@ const IX_PER_YEAR={q:4,y:1,ttm:4,m:12,d:252};
 /* ── cx-21: منطقة تمرير بلا عنصرٍ قابل للتركيز داخلها لا تصلها لوحة
    المفاتيح إطلاقاً، فالمحتوى المقتطَع محجوبٌ عمّن لا يستعمل فأرة.
    WCAG 2.2 معيار النجاح 2.1.1. تُوسم آلياً بعد كل تصيير بقياس تجاوزها. */
+/* ── A-01 (31-10-2026م) · اسمٌ منطوقٌ لا يحوي النصَّ المرئيّ ───────────────
+   معيارُ WCAG 2.2 رقم 2.5.3 (Label in Name، المستوى A) يقتضي أن يحوي الاسمُ
+   المنطوقُ نصَّ الوسم المرئيّ، لأنَّ من يُشغِّل الصفحة بالصوت ينطق ما يرى.
+   وقيس في 31 نطاقاً من 33: **280 مخالفةً مؤكَّدة** من 1,107 عنصرٍ تفاعليٍّ
+   ذي نصٍّ مرئيّ. وأكثرُها من أربعة مُولِّدات: «الرابط» (109، ولا واحدٌ منها
+   يحوي اسمُه كلمةَ «الرابط» لأنَّ ‎aria-label‎ يَجُبّ المحتوى)، و«تقادُم
+   المصادر» (80)، و«صفحة الشروط» (24)، و«تنزيل: …» (44).
+   وإصلاحُ كلِّ مُولِّدٍ على حدة يُغلق أربعةَ أبوابٍ ويترك البابَ مفتوحاً
+   لخامسٍ يُكتب غداً. فالإصلاحُ في الطبقة المشتركة مرّةً واحدة: **كلُّ**
+   عنصرٍ تفاعليٍّ يحمل وسماً مُعلَناً لا يحوي نصَّه المرئيّ يُعاد بناءُ وسمه
+   فيبدأ بالمرئيِّ ثم يزيد. وهي مرّةٌ ساكنةٌ لا تُغيّر شيئاً إن كان الاسمُ
+   مستوفياً، ولا تمسّ ما نصُّه المرئيُّ أيقونةٌ لا حرفَ فيها ولا رقم. */
+const IX_LIN_SEL='a[href],button,[role="button"],[role="link"],summary,'+
+  'input:not([type="hidden"]),select,textarea,[tabindex="0"]';
+/* التسويةُ قبل المقابلة، وقد صُحِّحت بمزروعةٍ كشفت عطبَين في المرّة نفسِها:
+   (أ) ‎textContent‎ يضمّ أبناءً كتليّين بلا فاصل، فنصُّ التبويب يصير
+       «الصورة الكليةالإيراد والمصروف» ولا يُطابق اسمَه «الصورة الكلية، الإيراد
+       والمصروف» وهو مستوفٍ فعلاً. فتُسقَط الفواصلُ والمسافاتُ من الطرفين معاً،
+       فيصير المقياسُ احتواءَ الحروف لا احتواءَ الصياغة.
+   (ب) و‎textContent‎ يقرأ ما هو مخفيٌّ عن النطق: أيقونةُ «i» داخل
+       ‎<span aria-hidden="true">‎ ليست وسماً مرئياً بالمعنى الذي يقصده
+       المعيار، وضمُّها كان يُنتج اسماً أسوأَ ممّا أصلح («i، ما معنى...»).
+       فيُحتسب المرئيُّ كما يُحتسب الاسمُ: بإسقاط الفروع المخفيّة عن النطق
+       وإسقاط ما لا يُرى (sronly). */
+function _ixLinNorm(t){
+  return String(t||'')
+    .replace(/[\u064B-\u0652\u0670\u06D6-\u06ED]/g,'')   /* التشكيل */
+    .replace(/[\u200e\u200f\u2066-\u2069]/g,'')            /* محارفُ العزل */
+    .replace(/[\u0622\u0623\u0625]/g,'\u0627')             /* صورُ الألف */
+    .replace(/[\s\u060C,;:.\u061B\u00b7\u2022()\[\]\u00ab\u00bb"'\/\-\u2013\u2014]/g,'');
+}
+/* النصُّ المرئيُّ: المحتوى بعد إسقاط ما لا يُنطَق وما لا يُرى. */
+function _ixLinVis(el){
+  try{
+    const c=el.cloneNode(true);
+    c.querySelectorAll('[aria-hidden="true"],.sronly').forEach(x=>x.remove());
+    return String(c.textContent||'').replace(/\s+/g,' ').trim();
+  }catch(e){ return String(el.textContent||'').replace(/\s+/g,' ').trim(); }
+}
+function ixLabelInName(root){
+  let fixed=0, seen=0;
+  try{
+    (root||document).querySelectorAll(IX_LIN_SEL).forEach(el=>{
+      const lab=el.getAttribute('aria-label');
+      if(!lab) return;
+      const vis=_ixLinVis(el);
+      /* وسمٌ لا فقرة، وفيه حرفان على الأقل فليس أيقونةً حرفية. */
+      if(!vis || vis.length>80) return;
+      if((vis.match(/[\u0621-\u064A0-9A-Za-z]/g)||[]).length<2) return;
+      seen++;
+      if(_ixLinNorm(lab).indexOf(_ixLinNorm(vis))>=0) return;   /* مستوفٍ */
+      el.setAttribute('aria-label', vis+'، '+lab);
+      fixed++;
+    });
+  }catch(e){}
+  return {seen:seen, fixed:fixed};
+}
+/* المرّةُ تُشغَّل بعد كلِّ تصييرٍ بمُراقبٍ **واحد** يُنشأ مرّةً، فلا يزيد
+   عددُ المستمعين بين الدورات (وهو ما تحرسه vleak). */
+function ixWireLabelInName(){
+  try{
+    ixLabelInName(document);
+    if(window.__ixLinObs || typeof MutationObserver!=='function') return;
+    let q=false;
+    const run=()=>{ q=false; ixLabelInName(document); };
+    window.__ixLinObs=new MutationObserver(()=>{
+      if(q) return; q=true;
+      if(typeof requestAnimationFrame==='function') requestAnimationFrame(run);
+      else setTimeout(run,32);
+    });
+    window.__ixLinObs.observe(document.body,{childList:true,subtree:true});
+  }catch(e){}
+}
 function ixWireScrollables(){
   /* ── cx-12: جدولٌ بلا غلافٍ يُمرَّر يوسّع بطاقته إلى أوسع من الشاشة، فتُقصّ
      أعمدته عند 320 نقطة ويُفقد محتواها، والغلاف كان يُكتب يدوياً عند كل
@@ -31083,9 +31547,45 @@ function ixCsvLegal(o){
     'يُنسب إلى: المرصد المالي والاقتصادي (مُعِدّ المرصد المالي والاقتصادي هو الجهة المعيَّنة لتلقّي الإسناد)، https://mrsdx-fo.net',
     '© 2026 مُعِدّ المرصد المالي والاقتصادي، الطبقة المشتقّة (التنسيق والاحتساب والوصف) مرخَّصة بموجب CC BY 4.0',
     'نصّ الرخصة: https://creativecommons.org/licenses/by/4.0/ · والنصّ القانوني: https://creativecommons.org/licenses/by/4.0/legalcode',
-    'إخلاء الضمانات وحدّ المسؤولية: القسمان 5 و6 من النصّ القانوني للرخصة، تُقدَّم المادة كما هي بلا ضمان من أي نوع',
+    /* L-03 (31-10-2026م): كانت الإحالةُ «القسمان 5 و6»، وقُرئ النصُّ القانونيُّ
+       من مصدره: «Section 5 – Disclaimer of Warranties and Limitation of
+       Liability» و«Section 6 – Term and Termination». فحدُّ المسؤولية في
+       القسم 5 نفسِه (الفرع b)، والقسمُ 6 إنهاءُ رخصةٍ لا إخلاءُ ضمان.
+       والإحالةُ تسافر مع كلِّ ملفٍّ مُصدَّر، فالخطأُ يسافر معها. */
+    'إخلاء الضمانات وحدّ المسؤولية: القسم 5 من النصّ القانوني للرخصة (الفرع a إخلاءُ الضمانات والفرع b حدُّ المسؤولية)، تُقدَّم المادة كما هي بلا ضمان من أي نوع',
     'بيان التعديل: '+mod,
     'وأرقام الناشرين حقوقها لأصحابها وشروط استعمالها شروطهم، ولا ترخّصها هذه اللوحة',
+    /* ── L-01 و L-02 (31-10-2026م) · إسنادُ الناشرين لا يسافر مع الملفّ ──────
+       الكتلةُ كانت تحمل إسنادَ اللوحة لنفسها وإشعارَ MIT كاملاً ونفيَ تأييدٍ
+       يُسمّي سبعةَ عشرَ ناشراً، **وصفرَ صيغةِ إسنادٍ مشترطةٍ لأيِّ ناشر**
+       وصفرَ روابطَ لصفحة شروطِ ناشرٍ واحد. واللوحةُ نفسُها أثبتت القاعدةَ:
+       «حين يُنتزع البيان إلى ملفٍّ مستقلّ ينتقل عبءُ الإسناد إلى الملفّ»،
+       ثم نقلت إسنادَها هي وحدَه. وحكمُ «مستوفًى» في صفوف الناشرين كان
+       مقيساً على الصفحة ولم يُقَس على قناة التصدير.
+       فصار سجلُّ شروط الناشرين (18 صفّاً) يُنقل إلى الملفّ **مشتقّاً من
+       السجلّ نفسِه** لا مكتوباً بيد: لكلِّ ناشرٍ ما يشترطه، وحالُ قراءة
+       شروطه، ورابطُها إن كان منشوراً. وما لم تُقرأ شروطُه يُقال، فلا يحمل
+       الملفُّ سكوتاً عنه. */
+    ...(function(){
+      try{
+        const P=(((window.DATA||{}).src||{}).legal||{}).pubs||[];
+        if(!P.length) return ['تنبيه: سجلُّ شروط الناشرين غير متاح في هذه النسخة، فلا تُقرأ هذه الكتلة حصراً للشروط'];
+        const head='وشروطُ الناشرين كما قرأتها اللوحةُ ('+P.length+' ناشراً)، '+
+          'وهي شروطُهم لا شروطُ اللوحة، ويُرجَع إلى نصّها عند الناشر:';
+        const rows=P.map(r=>{
+          const o=String(r.o||'').trim();
+          /* الشرطةُ المفردةُ ليست معلومةً: تُقال العلّةُ نصّاً. */
+          const _clean=v=>{ const z=String(v==null?'':v).replace(/<[^>]*>/g,'').trim();
+            return /^[\u2014\u2013-]$/.test(z)? '' : z; };
+          const need=_clean(r.need), met=_clean(r.met), t=_clean(r.t);
+          return '  - '+o+
+            ' | المشترط: '+(need || 'لم تَبلُغ اللوحةُ صيغةً مشترطة')+
+            ' | الحال: '+(met || 'غير مقروءة')+
+            ' | الشروط: '+(t || 'لا رابطَ شروطٍ بلغته اللوحة');
+        });
+        return [head].concat(rows);
+      }catch(e){ return ['تنبيه: تعذّر نقلُ سجلّ شروط الناشرين إلى هذا الملفّ']; }
+    })(),
     'هذه اللوحة عمل تحليلي مستقل، وليست جهة رسمية ولا تعتمدها أي جهة حكومية',
     'ولا تشارك في إعدادها ولا ترعاها ولا تعتمدها ولا تؤيدها: '+ixNoEndorseAr(),
     /* L-01: الحدُّ الذي تنشره الصفحةُ يسافر مع الملفّ. */
@@ -32216,7 +32716,13 @@ function ixEvtNote(card,labels){
   })();
   const li=hit.map(ri=>{ const r=rows[ri];
     return '<li><b>'+(ri+1)+'. '+ixEsc(r.t)+'</b>، <span class="muted">'+ixEsc(r.d)+'</span>'+
-      '<div class="muted" style="font-size:0.72em;line-height:1.85">'+(r.s||'')+
+      /* ── UX-06 (31-10-2026م) · نصٌّ موضوعيٌّ دون أرضية المقاس ──────────────
+         كان المقاسُ نسبيّاً (‎0.72em‎) على متنٍ 14 بكسلاً، فصار المحسوبُ
+         10.08 بكسلاً في عشرين موضعاً، منها قيمةٌ رقميةٌ («15%») وسطورٌ
+         تبلغ 156 محرفاً. والقاعدةُ المُعلَنة في اللوحة أنَّ الأرضيةَ 12
+         والعشرةُ استثناءٌ **لسطر المصدر وحدَه**. فصار المقاسُ رمزاً من
+         السلّم (‎--fs-3xs‎ = 12) فلا ينزل بالوراثة دون الأرضية. */
+      '<div class="muted" style="font-size:var(--fs-3xs);line-height:1.85">'+(r.s||'')+
       (r.u? ' <span class="srclinks"><a href="'+ixEsc(r.u)+'" target="_blank" rel="noopener noreferrer" title="'+
         ixEsc(r.u)+'" aria-label="مصدر الحدث، '+ixEsc(r.t)+(_cardName?'، في بطاقة «'+ixEsc(_cardName)+'»':'')+'">الرابط</a></span>':'')+
       (r.v? '' : ' <span class="badge na">غير مُتحقَّقٍ منه من مستندٍ أوّليّ</span>')+'</div></li>';
@@ -32530,6 +33036,15 @@ function ixTipShow(btn){
   });
   tip.hidden=false;
   btn.setAttribute('aria-describedby','ix-tip');
+  /* ── A-02 (31-10-2026م) · حالةُ كشفٍ لا تصل التقنياتَ المساعدة ──────────
+     كانت ‎aria-expanded‎ تبقى ‎null‎ قبل النقر وبعده وبعد Escape، في 34 زرّاً
+     كلِّها تحمل ‎data-tip‎، والصفحةُ تُنسّق حالةً لا تحدث
+     (‎.idot[aria-expanded="true"]>span‎)، فالتنسيقُ ميّت.
+     والأشدُّ: وسمُ الزرّ «ما معنى معيار التبويب؟» وتنشيطُه بـEnter كان
+     **يسحب الجواب** لأنَّ التركيزَ يفتح والتنشيطَ يُغلق. فصارت الحالةُ
+     تُعلَن، ويصير التنسيقُ حيّاً، ويفتح Enter ولا يُغلق إن كان مفتوحاً
+     بالتركيز وحده. */
+  btn.setAttribute('aria-expanded','true');
   _ixTipOwner=btn;
   /* الموضع: تحت الأيقونة، ويُزاح ليبقى داخل الشاشة، ويُقلب فوقها إن ضاق الأسفل. */
   tip.style.left='0px'; tip.style.top='0px';
@@ -32545,7 +33060,7 @@ function ixTipHide(){
   if(!_ixTipEl) return;
   _ixTipEl.hidden=true;
   if(_ixTipOwner){ _ixTipOwner.removeAttribute('aria-describedby');
-                   }
+                   _ixTipOwner.setAttribute('aria-expanded','false'); }
   _ixTipOwner=null;
 }
 function ixInfoDot(text,label){
@@ -32559,7 +33074,8 @@ function ixInfoDot(text,label){
      بالعبارة نفسها، فمن يتنقّل بقائمة الأزرار يسمعها ثماني مرّاتٍ ولا يعرف
      أيَّ مؤشرٍ تخصّ. والاسمُ متاحٌ في محيطها، فيُشتقّ منه عند التصيير:
      تُوسَم النقطةُ ليُملأ اسمُها من عنوان مؤشرها في الطبقة نفسها. */
-  return '<button type="button" class="idot"'+
+  /* A-02: الحالةُ تُعلَن ابتداءً، فلا يقرأ قارئُ الشاشة زرَّ كشفٍ بلا حالة. */
+  return '<button type="button" class="idot" aria-expanded="false"'+
     (nm? ' aria-label="'+ixEsc(nm)+'"' : ' data-idot-auto="1"')+
     ' data-tip="'+ixEsc(text)+'">'+
     '<span aria-hidden="true">i</span></button>';
@@ -32585,13 +33101,21 @@ function ixInfoDot(text,label){
     if(_tipTouch && Date.now()-_tipTouch<900) return;   /* لمسٌ لا تحويم: لا يُطوى بمغادرةٍ مُخلَّقة */
     ixTipHide();
   });
-  document.addEventListener('focusin',e=>{ const b=isDot(e.target); if(b) ixTipShow(b); else if(_ixTipOwner) ixTipHide(); });
+  /* A-02 (31-10-2026م): التركيزُ يفتح التلميح، ثم Enter يُخلّق ‎click‎ فيجد
+     التلميحَ مفتوحاً فيطويه، فتنشيطُ زرٍّ وسمُه سؤالٌ **يسحب الجواب**. فما
+     فتحه التركيزُ وحدَه لا يطويه أوّلُ تنشيط: يُثبَّت، ويطويه الثاني. */
+  let _tipByFocus=false;
+  document.addEventListener('focusin',e=>{ const b=isDot(e.target);
+    if(b){ ixTipShow(b); _tipByFocus=true; }
+    else if(_ixTipOwner){ ixTipHide(); _tipByFocus=false; } });
   document.addEventListener('click',e=>{
     const b=isDot(e.target);
     if(b){ e.preventDefault();
       const justOpenedByTouch = _tipTouch && (Date.now()-_tipTouch<900) && (Date.now()-_tipOpenAt<900);
+      if(_ixTipOwner===b && _tipByFocus){ _tipByFocus=false; return; }   /* تثبيتٌ لا طَيّ */
       if(_ixTipOwner===b && !justOpenedByTouch) ixTipHide();
       else { ixTipShow(b); _tipOpenAt=Date.now(); }
+      _tipByFocus=false;
       return; }
     if(_ixTipEl && !_ixTipEl.contains(e.target)) ixTipHide();
   });
@@ -32702,7 +33226,18 @@ function ixChartAlt(cv){
        والتعليماتُ تُذكر مرّةً في أعلى اللوح كذلك، فلا يُثقَل الوصفُ بها. */
     /* فاصلٌ معلَّقٌ في نهاية الاسم («… سنوي ·») يقع حين تخلو إحدى الرقاقات.
        والاسمُ يُنطق كما هو، فيُقلَّم طرفاه. */
-    cv.setAttribute('aria-label', String(cv.__ixAltBase).replace(/[\s·—,،]+$/,''));
+    /* ── A-04 · UX-12 (31-10-2026م) · دورٌ يَعِد بفعلٍ واسمٌ يصف محتوىً ──────
+     رصد مراجعان مستقلّان أنَّ الرسمَ يُعلَن «زرّاً» واسمُه يصف **المحتوى**
+     لا **الفعل**، فيُنطق «زرّ، كيف تحرّك الإيرادُ والمصروف...».
+     **والدورُ لا يتغيّر:** تغييرُه إلى «صورة» عُولج من قبل وأُعيد عنه
+     (rg-13) لأنَّ العنصرَ يحمل ‎tabindex‎ ومعالِجَ ‎keydown‎ يفتح حواراً،
+     فإعلانُه محتوىً ساكناً يمنع بعضَ قارئات الشاشة في وضع التصفّح من
+     تسليم ضغطات المفاتيح إليه، ودورٌ يكذّب السلوكَ أسوأُ من اسمٍ يصف
+     محتوىً. **والذي يتغيّر الاسم:** يبدأ بالفعل الذي يقع عند التنشيط ثم
+     يُسمّي الرسم، ويبقى الوصفُ التحليليُّ في ‎aria-describedby‎ يتخطّاه من
+     شاء. فالدورُ والاسمُ والسلوكُ تتّفق ثلاثتُها. */
+    cv.setAttribute('aria-label',
+      'تفصيلُ الرسم: '+String(cv.__ixAltBase).replace(/[\s·—,،]+$/,''));
     var _did = (cv.id||('cv'+Math.random().toString(36).slice(2,8)))+'-desc';
     /* الوصفُ يسكن مستودعاً واحداً مخفيّاً في آخر المستند، لا داخل البطاقة.
        و‎aria-describedby‎ يُحلّ بالمعرِّف في المستند كلِّه فلا يضرّه البعد.
@@ -33164,10 +33699,8 @@ function ixTabLead(host,sec,m){
   (function(){
     const h=el.querySelector('.tlead-h'), pp=el.querySelector('.tlead-p');
     if(!h||!pp) return;
-    let narrow=false;
-    try{ narrow=window.matchMedia('(max-width:720px)').matches; }catch(e){}
-    if(!narrow){ el.classList.add('lead-on'); h.removeAttribute('role');
-      h.removeAttribute('tabindex'); h.removeAttribute('aria-expanded'); return; }
+    /* UX-01 (31-10-2026م): كان الطيُّ على الضيّق وحدَه، فصار قاعدةً واحدةً
+       في العروض كلِّها، وصار للعنوان دورُه وحالتُه في كلِّ عرض. */
     const key='mirsad.lead.'+((sec&&sec.id)||'x');
     let open=false; try{ open=sessionStorage.getItem(key)==='1'; }catch(e){}
     const paint=()=>{ el.classList.toggle('lead-on',open);
@@ -33476,7 +34009,7 @@ window.MIRSAD_IX={
   pal:ixPal, fade:ixFade, fill:ixFill, fillAlpha:ixFillAlpha, fillRoles:IX_FILL_ROLE, applyDir:ixApplyDir, dirRtl:ixDirRtl,   /* VIS-04 */
   markSortable:ixMarkSortable, nameCards:ixNameCards,
   sparkSvg:ixSparkSvg, sparkWrap:ixSparkWrap,
-  kpiCard:ixKpiCard, tail:ixTail, sparkCheck:ixSparkCheck, csvLegal:ixCsvLegal, tabTitle:ixTabTitle, chartFs:ixChartFs, rootPx:ixRootPx,   /* VIS-13 */ vt:ixVT, chartTheme:ixChartTheme, onTheme:ixOnTheme, setTheme:ixTheme, themeNow:ixThemeNow, wireTheme:ixWireTheme,
+  kpiCard:ixKpiCard, tail:ixTail, win:ixWin, labelInName:ixLabelInName, wireLabelInName:ixWireLabelInName, sparkCheck:ixSparkCheck, csvLegal:ixCsvLegal, tabTitle:ixTabTitle, chartFs:ixChartFs, rootPx:ixRootPx,   /* VIS-13 */ vt:ixVT, chartTheme:ixChartTheme, onTheme:ixOnTheme, setTheme:ixTheme, themeNow:ixThemeNow, wireTheme:ixWireTheme,
   tCrit:tCritIX,
   wireSearch:ixWireSearch,
   tabDesc:ixTabDesc,
@@ -33615,6 +34148,24 @@ window.MIRSAD_IX={
 };
 document.addEventListener('DOMContentLoaded',function(){
   try{ ixWireTheme(); }catch(e){}
+  /* A-01 (31-10-2026م): مرّةُ «الاسمُ يحوي المرئيّ» تُركَّب مرّةً واحدةً
+     وتُعاد عند كلِّ تصييرٍ بمُراقبٍ واحد، فتسري على ما يُولَّد لاحقاً. */
+  try{ ixWireLabelInName(); }catch(e){}
+  /* ── A-10 (31-10-2026م) · رابطُ التخطّي يمحو حالةَ الملاحة ───────────────
+     كان ‎location.hash‎ يصير ‎#mainContent‎ بدل ‎#/home‎، فمن أعاد التحميلَ
+     أو شارك العنوانَ بعد التخطّي فقد اللوحةَ التي كان فيها. والتركيزُ وحدَه
+     هو المطلوب من الرابط، فيُمنَع تغييرُ العنوان ويُنقَل التركيزُ يدوياً. */
+  try{
+    const sk=document.querySelector('a.skiplink[href^="#"]');
+    if(sk) sk.addEventListener('click',function(ev){
+      const id=String(sk.getAttribute('href')||'').slice(1);
+      const t=id && document.getElementById(id);
+      if(!t) return;
+      ev.preventDefault();
+      if(!t.hasAttribute('tabindex')) t.setAttribute('tabindex','-1');
+      try{ t.focus({preventScroll:false}); }catch(e){ t.focus(); }
+    });
+  }catch(e){}
   const c=document.getElementById('dClose'), s=document.getElementById('scrim');
   if(c) c.onclick=close; if(s) s.onclick=close;
   /* كان ‎close()‎ يُنفَّذ على كل Escape ولو كان الدرجُ مغلقاً، فينزع ‎inert‎
@@ -33792,12 +34343,23 @@ const ST=(id,freq,cov,unit,basis)=>{ if(window.MIRSAD_IX&&window.MIRSAD_IX.stamp
   window.MIRSAD_IX.stamp(id,[['التواتر',freq],['التغطية',cov],['الوحدة',unit],basis?['الأساس',basis]:null]); };
 const FREQ=()=>S.freq==='y'?'سنوي':(S.freq==='ttm'?'متحرك 4 أرباع':'ربعي');
 const COV=()=>scopeLabel();
-const UNIT=()=>S.unit==='idx'?'رقم قياسي (فترة الأساس=100)':'مليون ريال';
+/* S-02 (31-10-2026م): والقاعدةُ واحدةٌ للمفرد كما للمكدَّس: الوحدةُ تتبع
+   ما وقع. و_idxOff مُعرَّفٌ أدناه ولا يُنادى إلا وقتَ التصيير. */
+const UNIT=()=>(S.unit==='idx'&&!_idxOff())?'رقم قياسي (فترة الأساس=100)'
+  :(S.unit==='idx'? 'مليون ريال، لا يُفهرَس (لا فترةَ أساسٍ مكتملةً في المدى)' : 'مليون ريال');
 /* STAT-02 (19-09-2026م): الرسمُ المكدَّس يُفهرَس على **مجموع** فترة الأساس لا
    على قيمة كلِّ سلسلة، فاسمُ وحدته غيرُ اسم وحدة الرسم المفرد. وكان الاسمُ
    واحداً، فقُرئت حصّةُ سلسلةٍ من المجموع معدَّلَ نموٍّ لها، وقُيس أنّ ذلك
    يقلب إشارةَ ثلاثةٍ من خمسة بنودٍ في تركيبة غير النفطي. */
-const UNIT_STACK=()=>S.unit==='idx'?'رقم قياسي للمجموع (مجموع فترة الأساس=100)':'مليون ريال';
+/* ── S-02 (31-10-2026م) · وحدةٌ تَعِد بفهرسةٍ لم تقع ──────────────────────
+   لمّا صار الامتناعُ عن الفهرسة واقعاً (لا فترةَ أساسٍ مكتملةً في المدى)،
+   كان الختمُ يبقى يقول «رقم قياسي» على قيمٍ لم تُفهرَس، فأسقطته بوّابةُ
+   vaxis بحقٍّ: «وحدتُه رقمٌ قياسيٌّ ولا يُعلن فترةَ أساسٍ بعينها». فصارت
+   الوحدةُ تتبع ما وقع لا ما طُلب. */
+const _idxOff=()=>_BASE_SKIP.length>0;
+const UNIT_STACK=()=>(S.unit==='idx'&&!_idxOff())
+  ?'رقم قياسي للمجموع (مجموع فترة الأساس=100)'
+  :(S.unit==='idx'? 'مليون ريال، لا يُفهرَس (لا فترةَ أساسٍ مكتملةً في المدى)' : 'مليون ريال');
 /* mq-10: الختمُ كان واحداً لمعادلتين مختلفتين. الرسمُ المفرد يُفهرَس سلسلةً
    سلسلةً فتبلغ كلٌّ منها 100 عند فترة الأساس؛ والمكدَّسُ يُفهرَس على أساسٍ
    واحد هو مجموعُ فترة الأساس، فتكون المكوّناتُ حصصاً منه ولا تبلغ إحداها
@@ -33805,8 +34367,10 @@ const UNIT_STACK=()=>S.unit==='idx'?'رقم قياسي للمجموع (مجمو�
    عن المئة عند أول فترةٍ لا يجدها. والآليةُ صحيحةٌ وهي الوحيدة التي تحفظ
    التركيب، والخطأ في الصياغة. فصار الختمُ يتبع نوعَ الرسم لا يُكتب واحداً. */
 const BAS=(stacked)=>S.unit!=='idx' ? 'الأساس النقدي · GFSM 2014'
-  : (stacked
-     ? ('<b>مجموع</b> '+_baseTxt()+'، والمكوّناتُ حصصُها منه فلا تبلغ إحداها 100 · الأساس النقدي')
+  : (_idxOff() ? (_baseTxt()+' · الأساس النقدي')
+     : stacked
+     ? ('<b>مجموع</b> '+_baseTxt()+'، والمكوّناتُ حصصُها منه فلا تبلغ إحداها 100 '+
+        '<b>عند فترة الأساس</b> · الأساس النقدي')
      : (_baseTxt()+' · الأساس النقدي'));
 
 /* ---------- state ---------- */
@@ -33914,7 +34478,12 @@ function view(){
      وتُحتسب مرة واحدة هنا بدل أن يعيد كل رسمٍ اكتشافها، أو لا يكتشفها. */
   const cover = ys.map(y=>{
     const qi = P.map((p,i)=>i).filter(i=>+P[i].slice(0,4)===y);
-    const has = qi.filter(i=>series('rev','TOTAL')[i]!=null || series('exp','TOTAL')[i]!=null);
+    /* S-15 (31-10-2026م): كان المُعامِلُ «أو» والتعليقُ أعلاه يقتضي «و»:
+       «سنةٌ ينقصها ربعٌ في أيٍّ منهما سنةٌ ناقصة». فربعٌ ينشر الإيرادَ دون
+       المصروف كان يُحتسب ربعاً كاملاً فتُقرأ السنةُ كاملةً وهي ناقصة.
+       وقيس الأثرُ على البيان الحاليّ: 0 من 38 ربعاً في هذه الحالة، فالعطبُ
+       كامنٌ لا واقع، وهو أدعى إلى الإصلاح لأنه لا يُكتشف بالعرض. */
+    const has = qi.filter(i=>series('rev','TOTAL')[i]!=null && series('exp','TOTAL')[i]!=null);
     return {y, n:has.length, full:has.length===4, qs:has.map(i=>+P[i].slice(5))};
   });
   const labels = ys.map((y,k)=> cover[k].full? ylab(y) : ylab(y)+' \u066D');
@@ -33942,13 +34511,25 @@ function view(){
 /* حاشية السنة الناقصة، تُستدعى في كل رسمٍ سنويّ.
    تُسمّي السنة وعدد أرباعها المنشورة، وتنفي صراحةً أن يكون انخفاضُ عمودها
    انخفاضاً حقيقياً. وبلا هذه الحاشية يقرأ القارئ نصفَ سنةٍ هبوطاً بالنصف. */
-function alignedNote(A){
+function alignedNote(A, setName, gapTxt){
   if(S.freq!=='y' || !A.partial || !A.partial.length) return '';
   const one = c => ylab(c.y)+' ('+arQtrs(c.n)+' من أربعة: '+c.qs.map(q=>'ر'+q).join(' و')+')';
-  return '<b>سنة غير مكتملة:</b> '+A.partial.map(one).join('، ')+
-    '، أعمدتها تُبنى من الأرباع التي تكتمل فيها <b>كل</b> البنود المعروضة معاً، '+
-    'حتى يتفق مجموع المكوّنات مع الإجمالي في الرسوم المجاورة. فلا يُقارَن عمودها بعمود سنةٍ كاملة. '+
-    'وهي موسومة في المحور بعلامة \u066D.';
+  /* ── S-03 (31-10-2026م) · دعوى أضيقُ من المجموعة التي تقيّد العمود ──────
+     كانت الحاشيةُ تقول «كل البنود المعروضة»، والمجموعةُ التي تقيّد العمود
+     **أوسعُ** من بنود الرسم: ر4 2017م يحمل النفطيَّ وغيرَ النفطيّ منشورَين،
+     ويخرج من العمود لأنَّ مكوّناتٍ لا يرسمها الرسمُ ناقصةٌ فيه. فصار
+     العمودُ 450,122 والإجماليُّ السنويُّ المنشور 691,505.
+     فصارت الحاشيةُ تُسمّي المجموعةَ الحقيقية، **وتنشر الفارقَ مقيساً**
+     مقابل الإجمالي المنشور، فلا يُقرأ العمودُ إجماليَّ السنة. */
+  return '<b>سنة غير مكتملة'+(setName? ' ('+setName+')' : '')+':</b> '+A.partial.map(one).join('، ')+
+    '، أعمدتها تُبنى من الأرباع التي تكتمل فيها <b>كل</b> '+
+    (setName? 'بنود هذه المجموعة' : 'البنود المعروضة')+' معاً، '+
+    'حتى يتفق مجموع المكوّنات مع الإجمالي في الرسوم المجاورة. '+
+    '<b>والمجموعةُ أوسعُ من بنود هذا الرسم</b>، فقد يخرج ربعٌ تكتمل فيه بنودُ الرسم '+
+    'لأنَّ بنداً آخرَ في المجموعة ناقصٌ فيه. '+
+    '<b>فعمودُ السنة الناقصة ليس الإجماليَّ السنويَّ المنشور</b> ولا يُقرأ قراءتَه، '+
+    'ولا يُقارَن بعمود سنةٍ كاملة. وهي موسومة في المحور بعلامة \u066D.'+
+    (gapTxt? ' '+gapTxt : '');
 }
 function partialNote(v){
   if(S.freq!=='y' || !v.partial || !v.partial.length) return '';
@@ -33966,11 +34547,24 @@ function partialNote(v){
    فترةَ أساسٍ قطُّ حتى في وضع الترقيم، فختمُهما «رصيد نهاية الفترة» وحدَه.
    فصارت الفترةُ تُسمّى بعينها، مشتقّةً من موضع الاحتساب نفسِه، ولكلِّ سلسلةٍ
    أساسُها إن تعدَّدت (DQAF 4.2: سنةُ الأساس معلنة · SNA 2008 §15). */
-let _BASE_LBL=[];
+let _BASE_LBL=[], _BASE_SKIP=[];
+/* S-02 (31-10-2026م): العلّةُ نفسُها كانت في السلسلة المفردة كما في المكدَّس:
+   الأساسُ أوّلُ قيمةٍ غيرِ فارغة ولو كانت فترةً موسومةً ناقصة. فالقاعدةُ
+   واحدةٌ في الموضعين: لا يُفهرَس على فترةٍ غيرِ متكافئة، ويُمتنع عن
+   الفهرسة إن لم توجد فترةٌ كاملةٌ في المدى. */
 function applyUnit(arr, labels){
   if(S.unit!=='idx') return arr;
-  const bi = arr.findIndex(x=>x!=null&&isFinite(x)&&x!==0);
-  if(bi<0) return arr.map(()=>null);
+  const mark=i=>!!(labels && labels[i]!=null && /\u066D/.test(String(labels[i])));
+  let bi=-1;
+  for(let i=0;i<arr.length;i++){
+    const x=arr[i];
+    if(x!=null&&isFinite(x)&&x!==0&&!mark(i)){ bi=i; break; }
+  }
+  if(bi<0){
+    const anyVal=arr.some(x=>x!=null&&isFinite(x)&&x!==0);
+    if(anyVal){ _BASE_SKIP.push('لا فترةَ أساسٍ مكتملةً في المدى المعروض'); return arr; }
+    return arr.map(()=>null);
+  }
   if(labels && labels[bi]!=null) _BASE_LBL.push(String(labels[bi]));
   const base = arr[bi];
   return arr.map(x=> x==null?null: x/base*100);
@@ -33979,9 +34573,14 @@ function applyUnit(arr, labels){
    من رسمٍ إلى آخر. */
 function _baseTxt(){
   const u=[...new Set(_BASE_LBL)]; _BASE_LBL=[];
+  const sk=[...new Set(_BASE_SKIP)]; _BASE_SKIP=[];
+  /* S-02: الامتناعُ عن الفهرسة يُعلَن ولا يُسكَت عنه، وإلا قرأ القارئُ
+     ختمَ «رقم قياسي» على قيمٍ لم تُفهرَس. */
+  if(sk.length) return 'لا يُفهرَس: '+sk.join(' · ')+'، والقيمُ بوحدتها الأصلية';
   if(!u.length) return 'فترة الأساس: أول فترة منشورة في المدى = 100';
-  return u.length===1 ? ('فترة الأساس: '+u[0]+' = 100')
-                      : ('فترة الأساس لكل سلسلة: '+u.join(' · ')+' = 100');
+  const tail=' (أوّلُ فترةٍ مكتملةٍ في المدى، فالناقصةُ لا تصلح أساساً)';
+  return u.length===1 ? ('فترة الأساس: '+u[0]+' = 100'+tail)
+                      : ('فترة الأساس لكل سلسلة: '+u.join(' · ')+' = 100'+tail);
 }
 /* ── fx-2: الرسمُ المكدَّس والرقمُ القياسي ─────────────────────────────
    خمسةُ رسومٍ كانت تختم «رقم قياسي (فترة الأساس=100)» ولا تُحوَّل قيمُها
@@ -33990,16 +34589,31 @@ function _baseTxt(){
    الأساس فيصير المجموعُ عددَ السلاسل في مئة، ويختلُّ التركيب. فيُقسَم الكلُّ
    على أساسٍ واحد هو مجموعُ فترة الأساس: يبقى التركيبُ على نسبته ويصير
    المجموعُ 100 عند الأساس، وهو معنى الرقم القياسي للمجموع. */
+/* ── S-02 (31-10-2026م) · أساسٌ على فترةٍ ناقصة ──────────────────────────
+   كان الأساسُ **أوّلَ** فترةٍ مجموعُها غيرُ صفر، وهي 2017م وهي سنةٌ موسومةٌ
+   ناقصةً بعلامة ٭، والحاشيةُ نفسُها تقول «فلا يُقارَن عمودها بعمود سنةٍ
+   كاملة» ثم يُقاس عليها كلُّ ما بعدها. وقيس الأثر: أساسُ مزيج الإيرادات
+   450,122 بدل 691,505 (معامل 1.53626)، وأساسُ مزيج المصروفات 571,580 بدل
+   929,997 (معامل 1.62706)، فتضخيمٌ 53.6% و62.7% في كلِّ عمودٍ من العشرة.
+   والرقمُ القياسيُّ يقتضي فترةَ أساسٍ **متكافئة**، فصار الأساسُ أوّلَ فترةٍ
+   غيرِ موسومةٍ بالنقص. وإن لم توجد فترةٌ كاملةٌ في المدى فلا تُفهرَس
+   السلاسلُ أصلاً، ويُسجَّل سببُ الامتناع ليُعلنه الختم. */
+const PART_MARK=/\u066D/;
 function idxStack(series, labels){
   if(S.unit!=='idx') return series;
   const n=Math.max(0,...series.map(a=>a?a.length:0));
-  let base=null, bi=-1;
-  for(let i=0;i<n;i++){
-    let t=0,any=false;
+  const tot=i=>{ let t=0,any=false;
     series.forEach(a=>{ const x=a&&a[i]; if(x!=null){ t+=x; any=true; } });
-    if(any&&t){ base=t; bi=i; break; }
+    return any&&t? t : null; };
+  const partial=i=>!!(labels && labels[i]!=null && PART_MARK.test(String(labels[i])));
+  let base=null, bi=-1;
+  for(let i=0;i<n;i++){ const t=tot(i); if(t!=null && !partial(i)){ base=t; bi=i; break; } }
+  if(base==null){
+    /* لا فترةَ كاملةً في المدى: الامتناعُ أصحُّ من أساسٍ غيرِ متكافئ. */
+    let anyVal=false; for(let i=0;i<n;i++) if(tot(i)!=null){ anyVal=true; break; }
+    if(anyVal) _BASE_SKIP.push('لا فترةَ أساسٍ مكتملةً في المدى المعروض');
+    return series;
   }
-  if(!base) return series;
   /* OPS-11: موضعُ الأساس يُسجَّل ليُسمّيه الختم. */
   if(labels && labels[bi]!=null) _BASE_LBL.push(String(labels[bi]));
   return series.map(a=>a? a.map(x=>x==null?null:x/base*100) : a);
@@ -34193,7 +34807,13 @@ function renderKPI(){
      info:'الأصول غير المالية (الرأسمالي) ÷ إجمالي المصروفات، الجزء المُوجَّه إلى الاستثمار لا التشغيل.'},
     {l:'رصيد الدين العام',v:dbt?fmt(dbt.r[4]):'—',u:MR,d:null,spark:sparkDebt,sparkFmt:_skM,
      sub:dbt? (qy(dbt.r[0],dbt.r[1])+(dbt.inside?'':'، خارج النطاق المعروض')) : '',
-     info:'رصيد قائم في نهاية الفترة لا تدفق خلالها، فلا يُجمع عبر الفترات، ويُعرض آخر رصيد داخل النطاق المعروض.'}
+     /* S-17 (31-10-2026م): مسارُ هذه البطاقة يتبع **النطاقَ المعروض**، ومسارُ
+        بطاقةِ بنية المحفظة آخرُ عشرين ربعاً منشوراً مهما كان النطاق، فكان
+        مؤشّرٌ واحدٌ بمسارَين ومبدأَين ووحدتين ولا تُسمّى نافذتُه في أيٍّ
+        منهما. فصارت النافذةُ مُسمّاةً في كلتيهما. */
+     info:'رصيد قائم في نهاية الفترة لا تدفق خلالها، فلا يُجمع عبر الفترات، ويُعرض آخر رصيد داخل النطاق المعروض. '+
+       '<b>وخطُّ المسار يتبع النطاقَ المعروض</b> (وحدتُه مليون ريال كوحدة الرقم أعلاه)، '+
+       'لا آخرَ عددٍ ثابتٍ من الأرباع، فيختلف مبدؤه باختلاف ما تختاره.'}
   ];
   document.getElementById('kpis').innerHTML = items.map((it,i)=>{
     let dd='';
@@ -34393,6 +35013,16 @@ function renderRev(){
   })();
   const v=view();
   const NOC0=['TAX_GOODS','TAX_INCOME','TAX_TRADE','TAX_OTHER','OTHER_REV'];
+  /* ── S-03 (31-10-2026م) · القيدُ صحيحٌ والدعوى كانت ناقصة ───────────────
+     رُصد أنَّ مجموعةَ الموائمة اتّحادُ سبعةِ بنود ورسمُ المزيج يرسم اثنين،
+     فصار عمودُ 2017م 450,122 بدل 691,505 المنشورة للسنة (فارقٌ 241,383
+     مليون ريال = 34.9%). وجُرِّبت موائمةُ كلِّ رسمٍ على بنوده هو، فأسقطت
+     بوّابةَ vpart: مجموعُ المكدَّس يجب أن يساوي الإجماليَّ المجاور، وهو
+     قيدٌ محروسٌ بمزروعةٍ قائمة، فالموائمةُ المشتركة **صحيحةٌ بنيوياً**.
+     والعطبُ كان في **الدعوى** لا في العدد: الحاشيةُ تقول «كل البنود
+     المعروضة» وهي في الحقيقة مجموعةٌ **أوسعُ** من بنود هذا الرسم، ولا
+     تقول للقارئ أنَّ العمودَ ليس الإجماليَّ السنويَّ المنشور.
+     فبقي القيدُ وصارت الدعوى تُسمّي مجموعتَها وتنشر الفارقَ مقيساً. */
   const AM = S.freq==='y' ? v.aligned('rev',NOC0.concat(['OIL','NONOIL'])) : null;
   const mixLbl = AM? AM.labels : v.labels;
   const mixOf = k => AM? AM.data[k] : v.agg('rev',k);
@@ -34505,7 +35135,24 @@ function renderRev(){
      معروضة» ثم «يحتاج ثلاث سنوات»، فتنقض نفسها ظاهرياً. */
   const ysFull=ys.filter(y=>P.filter(p=>+p.slice(0,4)===y).length===4).length;
   document.getElementById('nRev').innerHTML =
-    (AM&&AM.partial.length? '<span class="muted">'+alignedNote(AM)+'</span><br>':'')+
+    (AM&&AM.partial.length? '<span class="muted">'+
+       alignedNote(AM,'النفطية وغير النفطية ومكوّناتُ غير النفطية الخمسة معاً، وهي أوسعُ من بنود كلِّ رسمٍ على حدة',
+         /* S-03: الفارقُ يُنشر مقيساً لا يُوصَف: عمودُ الرسم مقابل الإجمالي
+            السنويِّ المنشور لكلِّ سنةٍ موسومة. */
+         (function(){
+           const tot=v.agg('rev','TOTAL');
+           const parts=AM.partial.map(c=>{
+             const k=(v.years||[]).indexOf(c.y);
+             if(k<0) return null;
+             const dOil=(AM.data.OIL||[])[k], dNo=(AM.data.NONOIL||[])[k], pub=tot[k];
+             if(dOil==null||dNo==null||pub==null) return null;
+             const drawn=dOil+dNo;
+             return ylab(c.y)+': العمودُ '+fmt(drawn)+' والإجماليُّ السنويُّ المنشور '+fmt(pub)+
+                    '، فارقُ '+fmt(pub-drawn)+' مليون ريال ('+
+                    numFmt({minimumFractionDigits:1,maximumFractionDigits:1}).format((pub-drawn)/pub*100)+'%)';
+           }).filter(Boolean);
+           return parts.length? '<b>وبالقياس:</b> '+parts.join('، ')+'.' : '';
+         })())+'</span><br>':'')+
     (volOK
       ? '<b>تحليل التقلب:</b> الانحراف المعياري لمعدل النمو السنوي للإيرادات النفطية '+nf1.format(sdO)+
         ' نقطة مئوية مقابل '+nf1.format(sdN)+' نقطة فقط لغير النفطية، أي أن البند النفطي أعلى تقلباً بنحو '+
@@ -34683,7 +35330,7 @@ function renderExp(){
       plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}}}});
 
   (function(){const e=document.getElementById('nExpMix');
-    if(e) e.innerHTML = AE&&AE.partial.length? alignedNote(AE)
+    if(e) e.innerHTML = AE&&AE.partial.length? alignedNote(AE,'بنود المصروفات الثمانية')
       : '<b>القراءة:</b> البنود مرتّبة بحجمها، والتصنيف وفق دليل إحصاءات مالية الحكومة (GFSM 2014).'
         /* ── UXB-01 (05-10-2026م) · حدٌّ مُعلَنٌ لا عطبٌ مستور ──────────────
            قِيس: ثماني فئاتٍ مكدَّسةٍ على 38 ربعاً = 296 قطعةً في منطقةِ رسمٍ
@@ -34897,8 +35544,14 @@ function renderDebt(){
      مضاعفٌ تامٌّ للألف فهو معلومٌ إلى ±500، و783,343 ليس مستديراً فلا يُقيَّد. */
   const _roundUnit=(v)=>{ const x=Math.abs(v);
     if(!(x>0)||!isFinite(x)) return 0;
+    /* S-07 (31-10-2026م): كان الاختبارُ يقع على الرقم كما هو، وقيمةٌ تحمل
+       غبارَ فاصلةٍ عائمة (1,183,999.8572320135 لإيراد 2025م المعتمد، وهو
+       منشورٌ بملايينَ صحيحة) تُعيد 0 فتُعطَّل بوّابةُ الضوضاء كلُّها: كانت
+       ستبلغ 0.0422 نقطة. فيُنظَّف الغبارُ قبل الاختبار، فلا يُعطِّل حارساً
+       فارقٌ أصغرُ من ريالٍ واحد. */
     const UN=[1000,500,100,50,10];
-    for(const u of UN){ if(Math.abs(x/u-Math.round(x/u))<1e-9) return u; }
+    const z=Math.round(x*1e6)/1e6;
+    for(const u of UN){ if(Math.abs(z/u-Math.round(z/u))<1e-9) return u; }
     return 0; };
   /* القيدُ من **المقام**: نصفُ وحدةِ تقريبه منسوباً إليه، بالنقاط المئوية. */
   const _noise=(den)=>{ const u=_roundUnit(den); return u? (u/2)/Math.abs(den)*100 : 0; };
@@ -34917,8 +35570,22 @@ function renderDebt(){
   const mae = a=>{const z=a.filter(x=>x!=null);return z.length?z.reduce((s,x)=>s+Math.abs(x),0)/z.length:null;};
   const mbe = a=>{const z=a.filter(x=>x!=null);return z.length?z.reduce((s,x)=>s+x,0)/z.length:null;};
   const sgn = v=>v==null?'—':(v<0?'('+nf1.format(-v)+'%)':iso(nf1.format(v)+'%'));
-  const aR=mae(varRev), aE=mae(varExp), bR=mbe(varRev), bE=mbe(varExp);
-  const nObs=varRev.filter(x=>x!=null).length;
+  /* ── S-01 (31-10-2026م) · عيّنتان مختلفتان تحت عددٍ واحد ──────────────
+     كان المتوسطان يُحتسبان كلٌّ على مشاهداته: الإيراداتُ على 8 سنوات
+     (أُسقطت 2017م لأنَّ انحرافَها 0.0715 نقطةً دون ضوضاء تقريب مقامها
+     0.0723)، والمصروفاتُ على 9 لأنَّ انحرافَها فيها 4.4940 نقطةً فوق
+     الضوضاء. والعددُ المنشور (8) عددُ الإيرادات وحدَه، والنصُّ يقول «ولا
+     تدخل هذه السنواتُ متوسطَ الخطأ المطلق» عن الجانبين.
+     وقيس الأثر: الفارقُ المنشور 0.8306 نقطة، وعلى العيّنة الموحَّدة
+     (2018م–2025م) 0.2058 نقطة، وهو **دون نصف النقطة** فتنقلب خلاصةُ
+     اللوحة بحكم بوّابتها هي إلى «لا يُقرأ تفوّقُ جانبٍ على آخر». والوسيطُ
+     كذلك: 8.0 صارت 8.9694 للمصروفات.
+     فصارت العيّنةُ واحدةً: سنةٌ تسقط من جانبٍ تسقط من الجانبين معاً،
+     ويُنشر عددُ المشاهدات مرّةً واحدةً لأنه واحد. */
+  const _both=varRev.map((x,i)=>(x!=null&&varExp[i]!=null)?i:-1).filter(i=>i>=0);
+  const _cR=_both.map(i=>varRev[i]), _cE=_both.map(i=>varExp[i]);
+  const aR=mae(_cR), aE=mae(_cE), bR=mbe(_cR), bE=mbe(_cE);
+  const nObs=_both.length;
   /* Math.abs(null − null) = 0 فيمرّ الفرع «الفارق أقل من نصف نقطة» بلا مشاهدة
      واحدة، فتُنشر خلاصة مقارنة من العدم. البوابة على عدد المشاهدات لا على الرقم. */
   const haveObs = nObs>0 && aR!=null && aE!=null;
@@ -34931,8 +35598,8 @@ function renderDebt(){
   const _med=a=>{ const v=(a||[]).filter(x=>x!=null&&isFinite(x)).slice().sort((x,y)=>x-y);
     if(!v.length) return null;
     return v.length%2? v[(v.length-1)/2] : (v[v.length/2-1]+v[v.length/2])/2; };
-  const medR=_med(varRev.filter(x=>x!=null).map(Math.abs));
-  const medE=_med(varExp.filter(x=>x!=null).map(Math.abs));
+  const medR=_med(_cR.map(Math.abs));
+  const medE=_med(_cE.map(Math.abs));
   document.getElementById('nAcc').innerHTML='<b>دقة التقدير:</b> '+
     (haveObs
       /* STAT-13 (19-09-2026م): «متوسط» بلا تسمية الوسط، والأوزانُ معلومةٌ
@@ -34941,7 +35608,7 @@ function renderDebt(){
          كما تفعل اللوحةُ في الطواعية. */
       ? 'متوسط الخطأ المطلق في تقدير الإيرادات '+nf1.format(aR)+'% مقابل '+nf1.format(aE)+
         '% للمصروفات على '+arYearsJ(nObs)+
-        ' <span class="muted">(وسطٌ حسابيٌّ <b>غيرُ مرجَّح</b> على السنوات، لا مرجَّحٌ بحجم الميزانية'+
+        ' <span class="muted">(<b>عيّنةٌ موحَّدةٌ للجانبين</b>، وسطٌ حسابيٌّ <b>غيرُ مرجَّح</b> على السنوات، لا مرجَّحٌ بحجم الميزانية'+
         (medR!=null? '؛ والوسيطُ '+nf1.format(medR)+'% و'+nf1.format(medE)+'%' : '')+')</span>، '+cmp+'. '+
         'ومتوسط الانحراف <em>بإشارته</em> '+sgn(bR)+' للإيرادات و'+sgn(bE)+' للمصروفات؛ '+
         'الموجب يعني أن المتحقق فاق المقدَّر. '
@@ -34949,7 +35616,9 @@ function renderDebt(){
     (_thin.length? '<b>وسنواتٌ لا تُنشر لها نسبةُ انحراف:</b> '+[...new Set(_thin)].join(' و')+
       '، لأن الاعتمادَ المقرَّ فيها مضاعفٌ تامٌّ للألف مليون فهو معلومٌ إلى ±500 مليون، '+
       'والانحرافُ المحتسَبُ أصغرُ من ضوضاء ذلك التقريب. '+
-      '<b>ولا تدخل هذه السنواتُ متوسطَ الخطأ المطلق</b> أعلاه. ' : '')+
+      '<b>ولا تدخل هذه السنواتُ متوسطَ الخطأ المطلق</b> أعلاه، '+
+      '<b>وتُسقَط من الجانبين معاً إن سقطت من أحدهما</b> (S-01)، فالعيّنةُ واحدةٌ '+
+      'والعددُ المنشور يصحّ على الجانبين. ' : '')+
     '<span class="hint">الخطأ المطلق يقيس حجم الانحراف لا اتجاهه، ولا يدلّ وحده على فاعلية أداة سياسة. '+
     'والقيم تتغير بتغيّر النطاق الزمني المختار.</span>';
 }
@@ -35323,15 +35992,27 @@ function renderFc(){
      الصفر**، فالتضييقُ المُعلَن يصير 0.3% عند الحدّ الأدنى، أي أن المكسبَ
      كلَّه داخلَ خطأِ تقدير المعامل. فتُنشر الفترةُ ويُنشر التحسيسُ على
      طرفَيها، فلا يُقرأ تضييقٌ على أنه مُثبَت. */
+  /* ── S-05 (31-10-2026م) · فترةُ ثقةٍ على مشاهداتٍ خام لبواقي توفيق ──────
+     كانت الفترةُ تُبنى على n الخام (38 ربعاً) وهذه بواقي نموذجين يقدِّر كلٌّ
+     منهما **خمسةَ معالم**، والجدولُ المجاورُ يُعلن للبواقي نفسِها «درجات
+     الحرية (المشاهدات − 5 معالم) = 33». وقيس الأثر: على 38 تكون الفترةُ
+     [0.0074, 0.5850] فلا تحتوي الصفر ويُنشر «التغايرُ مُثبَت»؛ وعلى درجات
+     الحرية التي تُعلنها اللوحةُ نفسُها (33) تكون [(0.019), 0.602] **فتحتوي
+     الصفر**، وعلى 34 كذلك. فحكمُ «مُثبَت» لا يصمد عند أيٍّ من التصحيحين.
+     فصارت الفترةُ تُبنى على درجات الحرية الفعلية، وتُسمّى في النصّ. */
+  const _RK=5;
   const _fz=(r,n)=>{ if(!(n>3)||!(Math.abs(r)<1)) return null;
     const z=0.5*Math.log((1+r)/(1-r)), se=1/Math.sqrt(n-3), q=1.959964;
     const lo=Math.tanh(z-q*se), hi=Math.tanh(z+q*se);
     return [lo,hi]; };
-  const _rci=rc? _fz(rc.r,rc.n) : null;
+  const _rcDf=rc? Math.max(4,rc.n-_RK) : null;
+  const _rci=(rc&&_rcDf)? _fz(rc.r,_rcDf) : null;
   const rcRow = rc? '<tr><td colspan="3" class="dim">الارتباط بين بواقي النموذجين: '+
       '<b><span dir="ltr">r = '+rc.r.toFixed(3)+'</span></b> على '+arQtrs(rc.n)+
       '، كمية بلا وحدة في المدى من (1) إلى 1، لا نسبة مئوية. '+
-      (_rci? '<b>وفترةُ ثقته 95%</b> بتحويل فيشر <span dir="ltr">['+
+      (_rci? '<b>وفترةُ ثقته 95%</b> بتحويل فيشر على '+arN(_rcDf,'درجةِ حريةٍ','درجتَي حريةٍ','درجاتِ حريةٍ','درجةَ حريةٍ')+
+        ' <span class="muted">(المشاهداتُ '+rc.n+' ناقصاً '+_RK+' معالمَ يقدِّرها النموذج، '+
+        'وهي درجاتُ الحرية نفسُها المنشورةُ لهذه البواقي في جدول جودة النموذج)</span> <span dir="ltr">['+
         (_rci[0]<0?'('+Math.abs(_rci[0]).toFixed(4)+')':_rci[0].toFixed(4))+' – '+_rci[1].toFixed(4)+
         ']</span>'+((_rci[0]<=0&&_rci[1]>=0)? '، <b>وهي تحتوي الصفر</b>، فالتغايرُ غيرُ مُثبَتٍ إحصائياً عند هذا المستوى' :
         '، فالتغايرُ مُثبَتٌ عند هذا المستوى')+
@@ -35442,11 +36123,16 @@ function renderFc(){
 }
 
 /* ---------- simulator ---------- */
+/* A-03 (31-10-2026م): كان نصُّ القيمة المنطوق واحداً للمنزلقات الأربعة
+   («زيادة 5 بالمئة»)، وثلاثةٌ منها **معدّلاتُ نموّ** فالصيغةُ صحيحةٌ فيها،
+   والرابعُ **مستوىً** (متوسط كلفة الدين 0 إلى 10%) فيُنطق «زيادة 5 بالمئة»
+   وهو مستوىً لا زيادة، فيناقض وسمَ الأداة نفسَه. فصار لكلِّ منزلقٍ معناه
+   مُعلَناً في تعريفه، ونصُّ القيمة يتبعه. */
 const SIM = [
-  {k:'oil', l:'نمو الإيرادات النفطية', v:0, min:-40, max:40},
-  {k:'nonoil', l:'نمو الإيرادات غير النفطية', v:6, min:-20, max:30},
-  {k:'exp', l:'نمو المصروفات', v:3, min:-15, max:20},
-  {k:'rate', l:'متوسط كلفة الدين (نفقات التمويل ÷ الدين)', v:4, min:0, max:10}
+  {k:'oil', l:'نمو الإيرادات النفطية', v:0, min:-40, max:40, vt:'delta'},
+  {k:'nonoil', l:'نمو الإيرادات غير النفطية', v:6, min:-20, max:30, vt:'delta'},
+  {k:'exp', l:'نمو المصروفات', v:3, min:-15, max:20, vt:'delta'},
+  {k:'rate', l:'متوسط كلفة الدين (نفقات التمويل ÷ الدين)', v:4, min:0, max:10, vt:'level'}
 ];
 const SIM_DEF = SIM.map(s=>s.v);
 function baseYear(){
@@ -35506,8 +36192,12 @@ function renderSim(){
      الوحيد الذي جوهرُه التفاعل هو الوحيد الصامت (SC 4.1.3). ومن لا يرى
      الشاشة يسمع من المنزلق قيمتَه هو ولا يسمع النتيجةَ التي حرّكها.
      وثانويّاً: ‎aria-valuetext‎ يجعل القيمةَ منطوقةً بوحدتها لا رقماً مجرّداً. */
-  const _vt=el=>{ const v=+el.value;
-    el.setAttribute('aria-valuetext',(v>0?'زيادة ':(v<0?'نقص ':''))+Math.abs(v)+' بالمئة'); };
+  const _vt=el=>{ const v=+el.value; const i=+el.dataset.i;
+    const kind=(SIM[i]&&SIM[i].vt)||'delta';
+    /* A-03: المستوى يُنطق مستوىً، والتغيّرُ يُنطق زيادةً أو نقصاً. */
+    el.setAttribute('aria-valuetext', kind==='level'
+      ? (Math.abs(v)+' بالمئة')
+      : ((v>0?'زيادة ':(v<0?'نقص ':''))+Math.abs(v)+' بالمئة')); };
   document.querySelectorAll('#sliders input').forEach(el=>{ _vt(el);
     el.addEventListener('input',e=>{
       const i=+e.target.dataset.i; SIM[i].v=+e.target.value;
@@ -36493,7 +37183,11 @@ function renderMaturity(){
      spark:_spkDebtBn, sparkFmt:v=>nf0.format(Math.round(v))+' مليار ريال',
      i:'إجماليُّ رصيد أدوات الدين الحكومي القائمة كما ينشره <b>المركز الوطني لإدارة الدين</b>، بالمليار ريال. '+
        '<b>رصيدٌ نهايةَ فترةٍ لا تدفّق</b>، فلا يُجمع مع عجز السنة ولا يُطرح من الاحتياطي. '+
-       'ولا يشمل ضماناتِ الدولة ولا دينَ الشركات المملوكة.'},
+       'ولا يشمل ضماناتِ الدولة ولا دينَ الشركات المملوكة. '+
+       /* S-17 (31-10-2026م): النافذةُ تُسمّى، فلا يُقرأ مبدأُ المسار هنا مبدأَ
+          المسار في بطاقة «الصورة الكلية» التي تتبع النطاق المعروض. */
+       '<b>وخطُّ المسار آخرُ 20 ربعاً منشوراً</b> بالمليار ريال، مهما كان النطاقُ المختار '+
+       'في تبويبات المالية، فمبدؤه غيرُ مبدأ المسار في بطاقة «الصورة الكلية».'},
     /* لا سلسلةَ للمقام (الناتجُ تقديرٌ سنويّ لسنةٍ لم تنتهِ)، فالمرساةُ مرجعٌ
        صريحٌ على البسط: تغيّرُ رصيد الدين المنشور عن نهاية السنة السابقة. */
     {l:'الدين إلى الناتج المحلي',v:iso(nf1.format(n.debtToGdpPct)+'%'), ref:true,
@@ -36733,10 +37427,47 @@ function renderQuality(){
   const SQ=(D.src&&D.src.squareNull)||null;
   const SPL=(D.src&&D.src.alertsNull&&D.src.alertsNull.split)||null;
   const nf2=numFmt({minimumFractionDigits:2,maximumFractionDigits:2});
-  const pv=v=>'<span dir="ltr">'+(v<0.0002?'P &lt; 0.0002':'P = '+v.toFixed(4))+'</span>';
+  /* ── S-12 (31-10-2026م) · عتبةٌ غيرُ مشتقّةٍ من حجم المحاكاة ───────────
+     كانت العتبةُ مكتوبةً بيدٍ (0.0002)، والمحاكاةُ 12,000 تشغيل: فالحدُّ
+     النقطيُّ لعدٍّ صفريٍّ 1 ÷ 12000 = 0.000083، والحدُّ الأعلى 95% بقاعدة
+     الثلاثة 3 ÷ 12000 = 0.00025، والمنشورُ 0.0002 لا يطابق أيّاً منهما
+     (وهو 2.4 ÷ 12000). فصارت العتبةُ تُشتقّ من عدد التشغيلات نفسِه، وهي
+     حدُّ قاعدة الثلاثة، فإن تغيّر العددُ تغيّرت معه. */
+  const _pRuns=(D.src&&((D.src.squareNull&&D.src.squareNull.runs)||
+                        (D.src.alertsNull&&D.src.alertsNull.runs)))||0;
+  const _pFloor=_pRuns>0? 3/_pRuns : 0.0002;
+  const _pFloorTxt=numFmt({minimumFractionDigits:5,maximumFractionDigits:5}).format(_pFloor);
+  const pv=v=>'<span dir="ltr">'+(v<_pFloor? 'P &lt; '+_pFloorTxt : 'P = '+v.toFixed(4))+'</span>';
   /* «المرصود» يُعرض محتسباً حيّاً لا مخزَّناً، والمخزَّن يبقى مرجعَ العدم
      (exp و ratio و p) لأنه ثمرة محاكاة. فإن باعد المحتسبُ المخزَّنَ أُعلن
      الفارق بدل أن يعرض الجدول رقماً لا تنتجه البيانات الحالية. */
+  /* ── S-10 و S-11 (31-10-2026م) · رقمان لكمّيةٍ واحدة، ومنزلةٌ هي ضوضاء ──
+     كانت الخانةُ تحتسب النسبةَ من المقام المطبوع (3 ÷ 0.35 = 8.57) والجملةُ
+     المجاورة تطبع النسبةَ المخزَّنة (8.53)، فرقمان لكمّيةٍ واحدةٍ في كتلةٍ
+     واحدة، والفارقان 0.04 و0.02 (نحو 0.47%). وزيادةً: المقامُ وسطُ محاكاةٍ
+     على 12,000 تشغيل، فخطؤه المعياريُّ sd/√runs، وهو 1.59% من مقام عتبة 3،
+     أي أنَّ المنزلةَ الثانيةَ من النسبة ضوضاءُ محاكاةٍ لا معنى، والتبويبُ
+     نفسُه يُعلن ذلك عن المنزلة الرابعة من الاحتمال ولا يُعلنه هنا.
+     فصار للنسبة **حسابٌ واحدٌ** يُستعمل في الخانة وفي الجملة معاً، ويُنشر
+     معها خطأُ المحاكاة، وتُقصَر المنازلُ على ما يحمله ذلك الخطأ. */
+  const sqRatio=(o,live)=>{
+    const obs=(live==null? o.obs : live);
+    const dec=(o.exp>0&&o.exp<1)? 2 : 1;
+    const expR=Math.round(o.exp*Math.pow(10,dec))/Math.pow(10,dec);
+    const ratio=(expR>0)? (obs/expR) : (o.ratio||null);
+    const runs=(SQ&&SQ.runs)||0;
+    /* خطأُ المحاكاة في وسط العدم يسري على النسبة بنسبته إلى المقام. */
+    const seExp=(runs>0&&o.sd!=null)? o.sd/Math.sqrt(runs) : null;
+    const se=(seExp!=null&&expR>0&&ratio!=null)? ratio*(seExp/expR) : null;
+    return {obs:obs, dec:dec, expR:expR, ratio:ratio, se:se};
+  };
+  const sqRatioTxt=q=>{
+    if(q.ratio==null) return '—';
+    const d=(q.se!=null && q.se>=0.05)? 1 : 2;
+    const f=numFmt({minimumFractionDigits:d,maximumFractionDigits:d});
+    const sef=numFmt({minimumFractionDigits:1,maximumFractionDigits:1});
+    return f.format(q.ratio)+'\u00d7'+(q.se!=null? ' \u00b1 '+sef.format(q.se) : '');
+  };
   const sqCell=(o,live)=>{
     const obs=(live==null? o.obs : live);
     const drift=(live!=null && live!==o.obs)
@@ -36747,11 +37478,10 @@ function renderQuality(){
        نسبةً مخزَّنةً ثالثة (8.53)، فثلاثةُ أرقامٍ لكمّيةٍ واحدةٍ في كتلةٍ
        واحدة، والمطبوعان يُنتجان رابعاً (3 ÷ 0.4 = 7.50). فيُطبع المقامُ
        بمنازلَ تكفي نسبتَه، وتُحتسب النسبةُ من المطبوع نفسِه. */
-    const _dec=(o.exp>0&&o.exp<1)? 2 : 1;
-    const _expR=Math.round(o.exp*Math.pow(10,_dec))/Math.pow(10,_dec);
-    const _ratio=(_expR>0)? (obs/_expR) : ratio;
+    const q=sqRatio(o,live);
+    const _dec=q.dec, _expR=q.expR, _ratio=q.ratio;
     return '<td class="num"><b>'+obs+'</b>'+drift+' / '+(_dec===2? nf2.format(_expR) : nf1.format(_expR))+
-      ' <span class="muted">· <span dir="ltr">'+nf2.format(_ratio)+'\u00d7</span> · '+pv(o.p)+'</span></td>';};
+      ' <span class="muted">· <span dir="ltr">'+sqRatioTxt(q)+'</span> · '+pv(o.p)+'</span></td>';};
   const pFromMad=z=>{
     if(!MNUL) return null; const g=MNUL.grid, L=MNUL.logsf; z=Math.abs(z);
     if(z<=g[0]) return 1;
@@ -36876,18 +37606,32 @@ function renderQuality(){
      هل تساوي المكوّنات مجاميعها المنشورة في كل فترة؟ يُحتسب حيّاً ولا يُنقل. */
   const revC=['TAX_INCOME','TAX_GOODS','TAX_TRADE','TAX_OTHER','OTHER_REV'];
   const expC=['COMP_EMP','GOODS_SERV','FIN_EXP','SUBSIDIES','GRANTS','SOCIAL_BEN','OTHER_EXP','CAPEX'];
+  /* ── S-06 (31-10-2026م) · علاقةٌ دائريةٌ تُحتسب شاهداً ──────────────────
+     التبويبُ نفسُه يُسقط علاقةَ الدين عن الشهادة لأنَّ «الإجمالي المخزَّن
+     يساوي ناتجَ الجمع الثنائي للطرفين بتّاً ببتّ»، فصفرُها حتميّ. والمعيارُ
+     نفسُه لم يُطبَّق على سائر علاقات المكوّنات: قيس في الجدول القطاعي أنَّ
+     25 خانةً من 41 تطابقٌ بتّيٌّ تامّ، والإجماليُّ المخزَّن يساوي حصيلةَ
+     جمعِ أجزائه بالفاصلة العائمة تماماً (1,113,999.9999999618 لـ2023م)، فلا
+     يبقى فارقٌ صحيحٌ إلا في 8 خانات. فالمعيارُ الواحدُ يُطبَّق على الكلّ:
+     **كلُّ فترةٍ إجماليُّها هو الجمعُ البتّيُّ لأجزائها فترةٌ دائريةٌ لا
+     تشهد**، والتصنيفُ يُشتقّ من القياس لا يُكتب بيدٍ فلا يتقادم. */
   const addTest=(function(){
     let n1=0,m1=0,n2=0,m2=0,n3=0,m3=0,n4=0,m4=0,base=0,base1=0,baseE=0,baseD=0,baseS=0,baseY=0;
+    /* الدائريُّ لكلِّ علاقةٍ على حدة: عدده وأقصى فارقه ومقامُه. */
+    let c1=0,cm1=0,cb1=0, c3=0,cm3=0,cb3=0, c5=0,cm5=0,cb5=0;
+    const exact=(parts,tot)=>sum(parts)===tot;
     P.forEach((p,i)=>{
       const parts=revC.map(k=>D.rev[k]?D.rev[k][i]:null), no=D.rev.NONOIL[i],
             oil=D.rev.OIL[i], tot=D.rev.TOTAL[i];
-      if(parts.every(v=>v!=null)&&no!=null){ n1++; const dd=Math.abs(sum(parts)-no);
-        if(dd>=m1){ m1=dd; base1=no; } }
+      if(parts.every(v=>v!=null)&&no!=null){ const dd=Math.abs(sum(parts)-no);
+        if(exact(parts,no)){ c1++; if(dd>=cm1){ cm1=dd; cb1=no; } }
+        else { n1++; if(dd>=m1){ m1=dd; base1=no; } } }
       if(no!=null&&oil!=null&&tot!=null){ n2++; const dd=Math.abs(no+oil-tot);
         if(dd>=m2){ m2=dd; base=tot; } }
       const ep=expC.map(k=>D.exp[k]?D.exp[k][i]:null);
-      if(ep.every(v=>v!=null)&&D.exp.TOTAL[i]!=null){ n3++; const dd=Math.abs(sum(ep)-D.exp.TOTAL[i]);
-        if(dd>=m3){ m3=dd; baseE=D.exp.TOTAL[i]; } }
+      if(ep.every(v=>v!=null)&&D.exp.TOTAL[i]!=null){ const dd=Math.abs(sum(ep)-D.exp.TOTAL[i]);
+        if(exact(ep,D.exp.TOTAL[i])){ c3++; if(dd>=cm3){ cm3=dd; cb3=D.exp.TOTAL[i]; } }
+        else { n3++; if(dd>=m3){ m3=dd; baseE=D.exp.TOTAL[i]; } } }
     });
     (D.debt||[]).forEach(r=>{ if(r[2]!=null&&r[3]!=null&&r[4]!=null){ n4++;
       const dd=Math.abs(r[2]+r[3]-r[4]); if(dd>=m4){ m4=dd; baseD=r[4]; } } });
@@ -36903,8 +37647,9 @@ function renderQuality(){
       const rows=grp[k], tot=rows.find(r=>r[2]==='الإجمالي');
       if(!tot) return;
       const comp=rows.filter(r=>r[2]!=='الإجمالي').map(r=>r[5]);
-      if(tot[5]!=null&&comp.every(v=>v!=null)){ n5++; const dd=Math.abs(sum(comp)-tot[5]);
-        if(dd>=m5){ m5=dd; baseS=tot[5]; } }
+      if(tot[5]!=null&&comp.every(v=>v!=null)){ const dd=Math.abs(sum(comp)-tot[5]);
+        if(sum(comp)===tot[5]){ c5++; if(dd>=cm5){ cm5=dd; cb5=tot[5]; } }
+        else { n5++; if(dd>=m5){ m5=dd; baseS=tot[5]; } } }
       const y=+k.split('|')[0], q=+k.split('|')[1];
       if(q===4&&tot[5]!=null){
         const idx=P.map((p,i)=>i).filter(i=>+P[i].slice(0,4)===y);
@@ -36914,7 +37659,8 @@ function renderQuality(){
       }
     });
     return {n1:n1,m1:m1,n2:n2,m2:m2,n3:n3,m3:m3,n4:n4,m4:m4,n5:n5,m5:m5,n6:n6,m6:m6,
-            base:base,base1:base1,baseE:baseE,baseD:baseD,baseS:baseS,baseY:baseY};
+            base:base,base1:base1,baseE:baseE,baseD:baseD,baseS:baseS,baseY:baseY,
+            c1:c1,cm1:cm1,cb1:cb1, c3:c3,cm3:cm3,cb3:cb3, c5:c5,cm5:cm5,cb5:cb5};
   })();
   const at=addTest, atMax=Math.max(at.m1,at.m2,at.m3,at.m4,at.m5,at.m6);
   /* الفارق يُطبع بدقّته: fmt() تقرّب إلى العدد الصحيح فطبعت «0» لفارق 0.042،
@@ -36930,14 +37676,22 @@ function renderQuality(){
      في التبويب الذي يشهد للجودة. والصنف الثالث «دائرية» أُضيف لأن إجمالي الدين
      لدى الناشر خليةُ معادلةِ جمع، فالعلاقة تختبر معادلةً بنفسها ونتيجتها صفرٌ
      حتمي لا شاهدٌ على النقل. */
+  /* S-06: الصفُّ الدائريُّ يُنشر إلى جانب الشاهد ولا يُدمَج فيه، ولا يُنشر
+     صفٌّ خالٍ من الفترات (0 من 0 يُقرأ نجاحاً، وهو عطبٌ لا نتيجة). */
   const REL=[
     {t:'بنود الإيرادات غير النفطية = إجمالي غير النفطية', k:'in',  n:at.n1, m:at.m1, base:at.base1},
+    {t:'بنود الإيرادات غير النفطية = إجمالي غير النفطية <span class="muted">(فتراتٌ إجماليُّها جمعُ أجزائه بتّاً)</span>',
+     k:'circ', n:at.c1, m:at.cm1, base:at.cb1},
     {t:'النفطية + غير النفطية = إجمالي الإيرادات',        k:'in',  n:at.n2, m:at.m2, base:at.base},
     {t:'بنود المصروفات = إجمالي المصروفات',               k:'in',  n:at.n3, m:at.m3, base:at.baseE},
+    {t:'بنود المصروفات = إجمالي المصروفات <span class="muted">(فتراتٌ إجماليُّها جمعُ أجزائه بتّاً)</span>',
+     k:'circ', n:at.c3, m:at.cm3, base:at.cb3},
     {t:'الدين الداخلي + الخارجي = إجمالي الدين',          k:'circ',n:at.n4, m:at.m4, base:at.baseD},
     {t:'بنود الإنفاق القطاعي التسعة = إجمالي الجدول القطاعي', k:'in', n:at.n5, m:at.m5, base:at.baseS},
+    {t:'بنود الإنفاق القطاعي التسعة = إجمالي الجدول القطاعي <span class="muted">(فتراتٌ إجماليُّها جمعُ أجزائه بتّاً)</span>',
+     k:'circ', n:at.c5, m:at.cm5, base:at.cb5},
     {t:'إجمالي الجدول القطاعي السنوي = مجموع أرباع إجمالي المصروفات', k:'cross', n:at.n6, m:at.m6, base:at.baseY}
-  ];
+  ].filter(r=>r.n>0);
   const KIND={in:'داخل الجدول',cross:'عبر تقريرين',circ:'دائرية، لا تشهد'};
   const cIn=REL.filter(r=>r.k==='in').length, cX=REL.filter(r=>r.k==='cross').length,
         cC=REL.filter(r=>r.k==='circ').length;
@@ -36946,7 +37700,8 @@ function renderQuality(){
   /* أقصى فارق يُنسب إلى مقام علاقته هو، لا إلى مقام علاقةٍ أخرى (ج-17 / ث-15). */
   const worstRel=REL.filter(r=>r.k!=='circ').reduce((a,b)=>b.m>a.m?b:a);
   if(atEl) atEl.innerHTML='<span class="vh">اختبار الجمعية</span>'+
-    '<b>المكوّنات تساوي مجاميعها.</b> فُحصت '+REL.length+' علاقات جمعية على السلسلة كلها، حيّاً لا نقلاً، '+
+    '<b>المكوّنات تساوي مجاميعها.</b> فُحصت '+REL.length+' '+
+    arN(REL.length,'علاقة','علاقتان','علاقات','علاقةً')+' جمعية على السلسلة كلها، حيّاً لا نقلاً، '+
     'منها <b>'+nRel(cIn)+'</b> داخل الجدول الواحد، و<b>'+nRel(cX)+'</b>'+
     ' عبر جدولين في تقريرين مختلفين، و<b>'+nRel(cC)+'</b> دائرية لا تشهد بشيء (وتُعرض للإفصاح):'+
     '<table class="tbl"><thead><tr><th>العلاقة</th><th>الصنف</th><th>الفترات المفحوصة</th>'+
@@ -36962,12 +37717,29 @@ function renderQuality(){
     '% وهو أثر تقريب عشري لا فارق محتوى. '+
     '<b>وحدُّ الاختبار يُقال بدقّة:</b> '+nRel(cIn)+' تختبر <em>الجدول مع نفسه</em>، '+
     'فتُثبت أمانة النقل داخل الجدول ولا تُثبت أكثر. '+
-    '<b>وواحدة وحدها تختبر مصدرين</b>: جدول الإنفاق القطاعي في تقريرٍ يقابل جدول المصروفات '+
+    '<b>و'+nRel(cX)+' تختبر مصدرين</b>: جدول الإنفاق القطاعي في تقريرٍ يقابل جدول المصروفات '+
     'في تقارير الأرباع الأربعة، فيكشف خطأ نقلٍ في أيٍّ من الطرفين. '+
     '<b>وعلاقة الدين دائرية بالبناء:</b> إجمالي الدين في ملف الناشر خليةُ معادلةِ جمعٍ لا قيمةً مستقلة '+
     '(الإجمالي المخزَّن يساوي ناتج الجمع الثنائي للطرفين بتّاً ببتّ في '+at.n4+' صفاً من '+at.n4+')، '+
     'فصفرُها حتميٌّ ولا يشهد بأمانة نقل، وتُعرض موسومةً بذلك بدل أن تُعدّ شاهداً رابعاً. '+
+    /* S-06 (31-10-2026م): والمعيارُ نفسُه يُطبَّق على كلِّ علاقةٍ فترةً فترة. */
+    '<b>والمعيارُ نفسُه يُطبَّق على سائر علاقات المكوّنات فترةً فترة</b> (S-01): '+
+    'كلُّ فترةٍ إجماليُّها هو الجمعُ البتّيُّ لأجزائها دائريةٌ لا تشهد، وتُفصَل في صفٍّ مستقلّ. '+
+    'والمفصولُ مقيس: <b>'+at.c1+'</b> من '+(at.c1+at.n1)+' في بنود غير النفطية، '+
+    'و<b>'+at.c3+'</b> من '+(at.c3+at.n3)+' في بنود المصروفات، '+
+    'و<b>'+at.c5+'</b> من '+(at.c5+at.n5)+' في الجدول القطاعي. '+
+    'فما يشهد فعلاً هو الفتراتُ الباقية وحدَها، وهي أقلُّ ممّا كان يُعدّ شاهداً. '+
     'والاختبار كله يقيس أمانة الاستخراج من المنشور، لا صحة المنشور نفسه. '+
+    /* ── S-07 (31-10-2026م) · دقّةُ المخزَّن ودقّةُ الناشر ───────────────── */
+    '<b>ودقّةُ المخزَّن لا تتجاوز دقّةَ الناشر:</b> كان الاعتمادُ القطاعيُّ '+
+    'والمعتمدُ السنويُّ مخزَّنَين بعشر خاناتٍ معنويةٍ وأكثر لمبالغَ تُنشر '+
+    'بملايينَ صحيحةٍ أو بمنزلتين، وهي دقّةٌ مُصطنعةٌ لا تُجمِّل العرضَ فحسب '+
+    'بل <b>تُعطِّل حارساً</b>: بوّابةُ الضوضاء التي تُسقط انحرافاً أصغرَ من '+
+    'تقريب مقامه كانت معطَّلةً لإيراد 2025م المعتمد، وكانت ستبلغ 0.0422 نقطة. '+
+    'فصار كلُّ رقمٍ بدقّة ناشره، وتحرسه بوّابةٌ (GATE-40) تُسقط البناءَ عند '+
+    'أيِّ منزلةٍ زائدة. <b>وحدُّ هذه القاعدة مُعلَن:</b> منازلُ الدين والاحتياطي '+
+    'لم يُثبَت مصدرُها، فهما خارجَ الحكم، ولا تُقرأ منازلُهما دقّةً ولا تُحذَف '+
+    'قبل إثبات مصدرها. '+
     (function(){
       /* الفترات التي تنقص فيها المكوّنات، تُستنبط من البيان نفسه لا تُكتب. */
       const codes=REV_ORDER.concat(EXP_ORDER);
@@ -37058,17 +37830,24 @@ function renderQuality(){
       'مستقلّان، فتغييرهما معاً يخلط أثرَيهما. وكل خانة تُنشر بمرصودها ومعدل أساسها '+
       '(بمحاكاة الآلية نفسها على '+nf0.format(SQ.runs)+' عالَمٍ عدمي) واحتمالها:'+
       '<table class="tbl"><caption class="sronly">متانة ترتيب مقياسَي الشذوذ عند عتبتين: المرصود ومعدل العدم والنسبة والاحتمال</caption>'+
-      '<thead><tr><th>&nbsp;</th>'+
+      /* A-07 (31-10-2026م): كان رأسُ الزاوية ‎<th scope="col">&nbsp;</th>‎
+         فيدخل شجرةَ الإتاحة ‎columnheader‎ بلا اسمٍ منطوق (معيار 4.1.2).
+         فصار يحمل اسماً مسموعاً غيرَ مرئيّ يصف العمود. */
+      '<thead><tr><th><span class="sronly">المقياس</span></th>'+
       '<th>عتبة 2<br><span class="muted">المرصود / العدم · النسبة · الاحتمال</span></th>'+
       '<th>عتبة 3<br><span class="muted">المرصود / العدم · النسبة · الاحتمال</span></th></tr></thead><tbody>'+
       '<tr><td>الانحراف المعياري</td>'+sqCell(SQ.std2,alerts.length)+sqCell(SQ.std3,stdAt3)+'</tr>'+
       '<tr><td>الانحراف المطلق الوسيطي</td>'+sqCell(SQ.mad2,madAt2)+sqCell(SQ.mad3,madAlerts.length)+'</tr>'+
       '</tbody></table>'+
       '<b>والقراءة عند عتبةٍ مثبَّتة:</b> عند عتبة 2 تتقارب النسبتان '+
-      '('+nf2.format(SQ.mad2.ratio)+' للمتين مقابل '+nf2.format(SQ.std2.ratio)+' للمعياري)، '+
+      '('+sqRatioTxt(sqRatio(SQ.mad2,madAt2))+' للمتين مقابل '+
+      sqRatioTxt(sqRatio(SQ.std2,alerts.length))+' للمعياري)، '+
       'فارقُ الحصيلة ('+madAt2+' مقابل '+alerts.length+') فارقُ حساسيةِ العتبة لا فارقُ قدرةٍ على الكشف. '+
-      'وعند عتبة 3 يتجاوز <em>المعياري</em> عدمه بنسبة أكبر ('+nf2.format(SQ.std3.ratio)+
-      ' مقابل '+nf2.format(SQ.mad3.ratio)+') بينما احتمالُ المتين أصغر ('+
+      'وعند عتبة 3 يتجاوز <em>المعياري</em> عدمه بنسبة أكبر ('+
+      sqRatioTxt(sqRatio(SQ.std3,stdAt3))+
+      ' مقابل '+sqRatioTxt(sqRatio(SQ.mad3,madAlerts.length))+
+      ') <span class="muted">(± خطأ المحاكاة نفسِها على '+nf0.format(SQ.runs)+
+      ' تشغيل، فما دونه ضوضاءٌ لا تُقرأ)</span> بينما احتمالُ المتين أصغر ('+
       pv(SQ.mad3.p)+' مقابل '+pv(SQ.std3.p)+') لأن عدده أكبر. '+
       '<b>فلا يصحّ إطلاق «أحدهما أدلّ»:</b> الأربع كلها تتجاوز عدمها، والترتيب بينها '+
       'يتوقف على العتبة وعلى أي المقياسين يُسأل، وهذا هو الجواب المقيس. '+
@@ -37639,9 +38418,16 @@ function renderIntl2(){
   /* --- الحوكمة --- */
   const W=X3.wgi;
   if(W){
-    const avg=cs=>k=>{const a=cs.filter(c=>c!=='SAU').map(c=>W.d[k][c]).filter(x=>x!=null);
-      return a.length? a.reduce((s,x)=>s+x,0)/a.length : null;};
-    const gccA=avg(X3.meta.gcc), g20A=avg(X3.meta.g20);
+    /* ── S-08 (31-10-2026م) · وسطٌ يخالف القاعدة المُعلَنة في اللوحة ───────
+       كانت البطاقةُ تقيس على **المتوسط**، واللوحةُ تُعلن في التبويب نفسِه
+       وفي كتالوج المعادلات: «وسيط بقية المجموعة ... الوسيط لا المتوسط، لأن
+       المجموعة تضم قيماً متطرفة تُزيح المتوسط»، وتُطبّقه على كلِّ بطاقةٍ
+       دوليةٍ سواها. وقيس الأثر على 18 دولةً مستثنياً المملكة: فجوةُ «فعالية
+       الحكومة» بالمتوسط +0.012 وبالوسيط **(0.065)**، أي **تنقلب إشارتُها**
+       بإزاحةٍ قدرُها 0.077 درجة، ويتغيّر ترتيبُ الأبعاد.
+       فصارت القاعدةُ واحدةً في اللوحة كلِّها: وسيطُ بقية المجموعة. */
+    const grpMed=cs=>k=>med(cs.filter(c=>c!=='SAU').map(c=>W.d[k][c]));
+    const gccA=grpMed(X3.meta.gcc), g20A=grpMed(X3.meta.g20);
     const wAll=[]; W.dims.forEach(d=>{ wAll.push(W.d[d.k].SAU, gccA(d.k), g20A(d.k)); });
     const wF=wAll.filter(x=>x!=null&&isFinite(x));
     const wMn=Math.min(...wF), wMx=Math.max(...wF);
@@ -37650,9 +38436,9 @@ function renderIntl2(){
     draw('cWgi',{type:'radar',data:{labels:W.dims.map(d=>d.ar),datasets:[
         {label:'المملكة',data:W.dims.map(d=>W.d[d.k].SAU),borderColor:C.brand,
          backgroundColor:IXFILL(C.brand,'tint'),borderWidth:2.4,pointBackgroundColor:C.brand,pointRadius:3.5},
-        {label:'متوسط بقية مجلس التعاون (مستثنياً المملكة)',data:W.dims.map(d=>gccA(d.k)),borderColor:C.s1,
+        {label:'وسيط بقية مجلس التعاون (مستثنياً المملكة)',data:W.dims.map(d=>gccA(d.k)),borderColor:C.s1,
          backgroundColor:'transparent',borderWidth:1.8,borderDash:[5,4],pointRadius:2.5,pointBackgroundColor:C.s1},
-        {label:'متوسط بقية مجموعة العشرين (مستثنياً المملكة)',data:W.dims.map(d=>g20A(d.k)),borderColor:C.s3,
+        {label:'وسيط بقية مجموعة العشرين (مستثنياً المملكة)',data:W.dims.map(d=>g20A(d.k)),borderColor:C.s3,
          backgroundColor:'transparent',borderWidth:1.8,borderDash:[2,3],pointRadius:2.5,pointBackgroundColor:C.s3}]},
       options:{layout:{padding:6},
         scales:{r:{min:wLo,max:wHi,grid:{color:C.line},angleLines:{color:C.line},
@@ -37667,12 +38453,22 @@ function renderIntl2(){
     const byDist=[...gaps].sort((a,b)=>Math.abs(a.g)-Math.abs(b.g)); /* أقرب ← أبعد */
     const sg=v=>(v>=0?'+':'\u2212')+nf2i.format(Math.abs(v));
     document.getElementById('nWgi').innerHTML='<b>القراءة:</b> '+
-      'أقرب أبعاد الحوكمة إلى متوسط بقية مجموعة العشرين (مستثنياً المملكة) هو «'+byDist[0].d.ar+'» '+
+      'أقرب أبعاد الحوكمة إلى وسيط بقية مجموعة العشرين (مستثنياً المملكة) هو «'+byDist[0].d.ar+'» '+
       '<span dir="ltr">('+sg(byDist[0].g)+')</span>، وأبعدها «'+byDist[byDist.length-1].d.ar+'» '+
       '<span dir="ltr">('+sg(byDist[byDist.length-1].g)+')</span>. '+
-      'وأعلى الأبعاد على المتوسط «'+bySign[0].d.ar+'» <span dir="ltr">('+sg(bySign[0].g)+')</span>، '+
+      'وأعلى الأبعاد على الوسيط «'+bySign[0].d.ar+'» <span dir="ltr">('+sg(bySign[0].g)+')</span>، '+
       'وأدناها «'+bySign[bySign.length-1].d.ar+'» <span dir="ltr">('+sg(bySign[bySign.length-1].g)+')</span>. '+
       'هذه المؤشرات تقيس <b>جودة</b> إدارة المال العام لا حجمه، وهي أحد أهم مدخلات وكالات التصنيف بعد الأرقام المالية نفسها. '+
+      /* S-08 (31-10-2026م): البطاقةُ تُعلن أنَّ الدرجات «لها هامشُ خطأ فتُقرأ
+         كنطاقٍ لا كرقمٍ دقيق» ثم تُرتِّب الأبعادَ بفجوةٍ قدرُها مئةُ جزءٍ من
+         الدرجة. والناشرُ ينشر خطأً معيارياً لكلِّ درجة، وهذه اللوحةُ **لا
+         تحمله** في سلسلتها، فلا يُقابَل الفارقُ به. فيُعلَن الحدُّ ويُنشر
+         أصغرُ فارقٍ في الترتيب ليحكم القارئُ بنفسه. */
+      '<b>وحدُّ هذا الترتيب:</b> أصغرُ فجوةٍ فيه <span dir="ltr">'+
+      sg(byDist[0].g)+'</span> درجة، والناشرُ ينشر لكلِّ درجةٍ خطأً معيارياً '+
+      '<b>لا تحمله هذه اللوحة</b> في سلسلتها، فلا يُقابَل الفارقُ به. '+
+      'فالترتيبُ يُقرأ ترتيبَ مقدارٍ مقيسٍ لا فرقاً مُثبَتاً إحصائياً، '+
+      'والفجواتُ المتقاربةُ لا يُقرأ تقدُّمُ إحداها على الأخرى. '+
       '<span class="muted">'+W.note+'</span>';
   }
 
@@ -37936,7 +38732,10 @@ const TABS=[['overview','الصورة الكلية'],['rev','الإيرادات'
    سجلٌّ واحدٌ لكلِّ تبويب: وصفُ الزرّ · جملةُ التوجيه في رأسه · ما لا يعرضه ·
    ما لا يجوز استنتاجُه. تُبنى منه الثلاثةُ في الطبقة المشتركة. */
 const TABMETA={
- overview:{d:'الإيراد والمصروف والرصيد', t:'الصورة الكلية للمالية العامة',
+/* UX-10 (31-10-2026م): «المالية العامة» كان يُعاد ثلاثَ مرّاتٍ في 500
+   بكسلٍ متتالية: في فتات الطريق، وفي زرّ اللوحة النشِط، وفي هذا العنوان.
+   فأُسقط من العنوان، إذ يحمله ما فوقه موضعين، وبقي اسمُ التبويب وحدَه. */
+ overview:{d:'الإيراد والمصروف والرصيد', t:'الصورة الكلية',
    lead:'مسارُ الإيراد والمصروف والرصيد وحصّةِ النفط على المدى المنتقى، والجوابُ الأول عن «كيف حالُ الميزانية؟».',
    not:'لا تفصيلَ لبنود الإيراد ولا للمصروف هنا، وهما في تبويبَي «الإيرادات» و«المصروفات»؛ ولا دَينَ ولا احتياطيات، وهما في «العجز والدين».',
    why:'الرصيدُ المعروض <b>نقديٌّ</b> على أساس تقرير أداء الميزانية، فلا يُقرأ رصيداً على أساس الاستحقاق ولا يُقارَن برصيدِ حساباتٍ قومية.'},
@@ -38175,7 +38974,13 @@ function wireHeaderInfo(){
     '<b>وفي الرسوم المكدَّسة</b> (تركيبةُ الإيراد · غير النفطي · تركيبةُ المصروف · الدين) '+
     'يُقسَم الكلُّ على <b>مجموع</b> فترة الأساس لا كلُّ سلسلةٍ على قيمتها هي، '+
     'وإلا صارت كلُّ سلسلةٍ 100 عند الأساس فانكسر التكديس. '+
-    'فلا تبلغ سلسلةٌ منفردةٌ 100، <b>ولا تُقرأ قيمتُها معدَّلَ نموّ</b>: هي حصّتُها من مجموع الأساس مضروبةً في مئة. '+
+    /* S-04 (31-10-2026م): كانت الدعوى مطلقةً «فلا تبلغ سلسلةٌ منفردةٌ 100»،
+       وتنقضها القيمُ المرسومةُ في الرسم الذي تختمه: «تعويضات العاملين»
+       2025م تبلغ 100.52، و«نفطية» 2022م تبلغ 190.45 وهي فوق 100 في تسعةٍ
+       من عشرة أعمدة. فالحدُّ يقع عند فترة الأساس وحدَها. */
+    'فلا تبلغ سلسلةٌ منفردةٌ 100 <b>عند فترة الأساس</b>، وقد تتجاوزها في فترةٍ لاحقة '+
+    'إن صار حجمُها أكبرَ من مجموع فترة الأساس كلِّه. <b>ولا تُقرأ قيمتُها معدَّلَ نموّ</b>: '+
+    'هي حجمُها منسوباً إلى مجموع الأساس مضروباً في مئة. '+
     'والمقروءُ معدَّلَ نموٍّ في تلك الرسوم هو <b>المجموع</b> وحده.',
     'ما معنى وحدة العرض؟');
   const t=document.getElementById('stdInfo');
@@ -38513,8 +39318,11 @@ function renderOverview(){
      فالفراغُ صار فراغاً: ‎ixTail‎ يأخذ آخرَ القيم المتّصلة ويتوقّف عند أوّل
      ثغرة، فلا يُلفَّق اتّصالٌ ولا يُقرأ غائبٌ صفراً. والحصّةُ تُبنى من
      المقدار الذي تُعلنه البطاقةُ لا من غيره. */
-  const _tail=(a,k)=>{ const f=window.MIRSAD_IX&&window.MIRSAD_IX.tail;
-    if(!f) throw new Error('MIRSAD: مُقتطِعُ السلسلة غير متاح (MIRSAD_IX.tail).');
+  /* S-09 (31-10-2026م): كان المُستعمَلُ ‎tail‎ وهو يَبتر عند أوّل ثغرةٍ
+     داخلية، فيُنشر مدىً أصغرُ من مدى السلسلة المنشورة تحت اسمها. فصار
+     ‎win‎: آخرُ k قيمةٍ منشورة بثغراتها مقطوعةً لا مطويّة. */
+  const _tail=(a,k)=>{ const f=window.MIRSAD_IX&&(window.MIRSAD_IX.win||window.MIRSAD_IX.tail);
+    if(!f) throw new Error('MIRSAD: نافذةُ السلسلة غير متاحة (MIRSAD_IX.win).');
     return f(a,k||12); };
   const _nonoilS=g.map((v,i)=>(v!=null&&isFinite(v)&&oilFull[i]!=null&&isFinite(oilFull[i]))? v-oilFull[i] : null);
   const _spkGdp=_tail(g,12);
@@ -39354,7 +40162,13 @@ function renderLink(){
         (function(){ const _ci=(r,n)=>{ if(!(n>3)||!(Math.abs(r)<1)) return '';
             const z=0.5*Math.log((1+r)/(1-r)), se=1/Math.sqrt(n-3);
             const th=v=>(Math.exp(2*v)-1)/(Math.exp(2*v)+1);
-            return ' <span dir="ltr">['+nf2.format(th(z-1.96*se))+', '+nf2.format(th(z+1.96*se))+']</span>'; };
+            /* S-14 (31-10-2026م): كان الطرفان يُطبعان بمنزلتين، والحدُّ
+               الأعلى 0.99643 يُطبع «1» وهو رقمٌ **مستحيلٌ** لفترةِ فيشر:
+               المعاملُ لا يبلغ الواحدَ أبداً بهذا التحويل، فيُقرأ تدهوراً
+               تامّاً للفترة. وطرفاها بدقّتين مختلفتين كذلك. فصار الطرفان
+               بثلاث منازلَ معاً، وهي تكفي لتمييز 0.996 عن 1. */
+            const f3=numFmt({minimumFractionDigits:3,maximumFractionDigits:3});
+            return ' <span dir="ltr">['+f3.format(th(z-1.96*se))+', '+f3.format(th(z+1.96*se))+']</span>'; };
           return (corrD!=null? 'على <b>الفروق الأولى</b> '+nf2.format(corrD)+' ('+
              _dif.length+' '+arN(_dif.length,'مشاهدة','مشاهدتين','مشاهدات','مشاهدة')+')'+
              _ci(corrD,_dif.length):'')+
@@ -42300,7 +43114,11 @@ function render(){
      والمعالجةُ جذريةٌ لا توسيعُ سماح ولا إعلانُ استثناء: الخطُّ يُرسم من
      السلسلة اليومية نفسِها التي يُقرأ منها الرقم، فآخرُ نقطةٍ فيه **هي**
      الرقمُ بالبناء، فلا يتصوّر انفراجٌ بينهما مهما تحرّك السعر. */
-  const spkBrent=(N&&N.daily&&N.daily.length>=6)? N.daily.slice(-120).map(x=>x[1]) : null;
+  /* S-16 (31-10-2026م): كانت نافذةُ برنت 120 يوماً هنا و90 في تبويب
+     الأسعار، فمسارٌ واحدٌ بمبدأين (106.1 و75.7) لمؤشّرٍ واحدٍ وقيمةٍ أخيرةٍ
+     واحدة. فصارت النافذةُ واحدةً مُعلَنةً في الموضعين. */
+  const BRENT_WIN=90;
+  const spkBrent=(N&&N.daily&&N.daily.length>=6)? N.daily.slice(-BRENT_WIN).map(x=>x[1]) : null;
   const spkBal=(function(){
     try{
       const P2=D.periods, ys2={};
@@ -42539,6 +43357,12 @@ window.__homeRender=function(){
       b.setAttribute('tabindex',on?'0':'-1');
       b.setAttribute('aria-controls','dom-'+b.dataset.d);
     });
+    /* UX-03 (31-10-2026م): شارةُ الصفة هي مدخلُ لوح «عن اللوحة» وهو اللوحُ
+       السادس، فصارت تبويباً في القائمة نفسِها وتحمل حالتَها. فلا تخلو
+       القائمةُ من مختارٍ حين يُفتح هذا اللوح (معيار 4.1.2). */
+    (function(){ const bi=document.getElementById('bIndep');
+      if(bi){ bi.setAttribute('aria-selected', d==='about'?'true':'false');
+              bi.setAttribute('tabindex', d==='about'?'0':'-1'); } })();
     /* 10-09-2026م: «about» لوحةٌ سادسة خارج المبدّل، لا زرَّ لها فيه،
        ويُدخل إليها من التذييل ومن شارة الصفة في الترويسة. فتدخل حلقةَ
        الإظهار والإخفاء كبقيّة اللوحات ولا تُترك ظاهرةً تحت غيرها. */
@@ -42728,6 +43552,31 @@ window.__homeRender=function(){
       try{ const IX=window.MIRSAD_IX; IX&&IX.say&&IX.say('فُتحت صفحة «عن اللوحة»'); }catch(e){} };
     const g=document.getElementById('goAbout'); if(g) g.addEventListener('click',open);
     const bi=document.getElementById('bIndep'); if(bi) bi.addEventListener('click',open);
+  })();
+
+  /* ── UX-05 (31-10-2026م) · زرُّ العودة إلى الأعلى ────────────────────────
+     يظهر بعد شاشتين من التمرير، ويُخفى دونهما، ولا يحتسب الإظهارَ في كلِّ
+     حَدَثٍ بل في نبضةِ رسمٍ واحدة. وهو زرٌّ لا رابطٌ فلا يمسّ عنوانَ الصفحة
+     (كما عُولج في رابط التخطّي). */
+  (function(){
+    const b=document.getElementById('toTop');
+    if(!b) return;
+    let q=false;
+    const sync=()=>{ q=false;
+      const y=window.scrollY||document.documentElement.scrollTop||0;
+      const show=y>(window.innerHeight||800)*2;
+      if(show===b.hidden) b.hidden=!show; };
+    addEventListener('scroll',()=>{ if(q) return; q=true;
+      (window.requestAnimationFrame||setTimeout)(sync); },{passive:true});
+    b.addEventListener('click',()=>{
+      const soft=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+      try{ window.scrollTo({top:0,behavior:soft?'auto':'smooth'}); }catch(e){ window.scrollTo(0,0); }
+      /* التركيزُ يرجع إلى أوّل محطّةٍ في المحتوى، فلا يبقى على زرٍّ اختفى. */
+      try{ const m=document.getElementById('mainContent');
+           if(m){ if(!m.hasAttribute('tabindex')) m.setAttribute('tabindex','-1'); m.focus({preventScroll:true}); } }catch(e){}
+      try{ const IX=window.MIRSAD_IX; IX&&IX.say&&IX.say('عُدتَ إلى أعلى الصفحة'); }catch(e){}
+    });
+    sync();
   })();
 
   /* الإقلاع: يُقرأ العنوان قبل أي تصيير، لأن أول set تكتب العنوان فتمحو
