@@ -147,8 +147,8 @@ try{
    "@language": "ar"
   }
  ],
- "dcat:version": "2.557",
- "owl:versionInfo": "2.557",
+ "dcat:version": "2.558",
+ "owl:versionInfo": "2.558",
  "dcat:dataset": [
   {
    "@type": "dcat:Dataset",
@@ -2997,6 +2997,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   <button data-d="econ"><b>الاقتصاد الكلي</b><span>الحسابات القومية والناتج والقطاع الخارجي</span></button>
   <button data-d="energy"><b>الطاقة والنفط</b><span>الأسعار والمحرّك السعري للإيراد</span></button>
   <button data-d="pif"><b>صندوق الاستثمارات العامة</b><span>الأداء والمستهدفات والمقارنة السيادية</span></button>
+  <button data-d="ref"><b>المرجع</b><span>الجداول والمنهجية والحوكمة والمعجم</span></button>
 </div>
 
 <div class="domain" id="dom-home">
@@ -3066,7 +3067,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     <div class="note"><b>ما عُدِّل بعد النشر، وما فُحص فلم يتغيّر، وكيف تُسترجَع نسخةٌ استُشهد بها:</b>
       كلُّه في <b>بطاقات الحوكمة</b>، سجلُّ التصحيحات وسجلُّ الفحوص وسياسةُ المراجعات وتقويمُ التوقيت
       وأرشيفُ النسخ والفهرسُ الآليّ وبيانُ الإتاحة وبطاقتا البيانات الشخصية والالتزام النظامي،
-      وتُعرض في <b>تبويب «البيانات»</b> من أيّ لوحةٍ تفتحها.</div>
+      وتُعرض في <b>لوحة المرجع</b>، تبويب الحوكمة والالتزام.</div>
     <div class="note"><b>وليست هذه اللوحة جهةً رسمية:</b> عملٌ تحليليّ مستقل يعرض بياناتٍ منشورة من جهاتٍ
       رسمية ويشتقّ منها مؤشرات، ولا تُصدره ولا تعتمده ولا تراجعه أيُّ جهةٍ حكومية،
       والبيانُ كاملاً في بطاقة «عن هذه اللوحة» أسفل الصفحة.</div>
@@ -3198,12 +3199,25 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   <div class="card" style="margin-top:16px">
     <h3>أيُّ القطاعات أنفقت ما اعتُمد لها؟</h3>
     <div class="hint">اختر السنة لعرض نسبة التنفيذ لكل قطاع</div>
-    <div class="f" style="margin-bottom:12px"><label for="secYear">السنة المالية</label><select id="secYear"></select></div>
+    <div class="f" style="margin-bottom:12px"><label for="secYear">السنة المالية، الإنفاق حسب القطاع</label><select id="secYear"></select></div>
     <!-- ux-gap-03: السنواتُ الغائبةُ من القائمة كانت تُفسَّر على بُعد تبويبين -->
     <div class="note" id="nSecGap"></div>
     <div class="chartbox lg"><canvas id="cSector"></canvas></div>
     <div class="note" id="nSector"></div>
   </div>
+
+  <div class="subsec" id="sub-var">
+  <div class="blockhead" style="margin-top:34px"><span>جسر تحليل الانحراف</span> الفعليُّ عن المعتمَد بنداً بنداً</div>
+  <div class="note"><b>تحليل الانحراف، الفعليُّ عن المعتمَد:</b> جسرٌ يفكّك الفارقَ بين ميزانيةِ سنةٍ معتمَدةٍ ومنصرفِها الفعليّ بنداً بنداً. و«الانحراف» هنا انحرافُ الفعليّ عن المعتمَد، لا الانحرافُ المعياريّ. <b>ولا يَعرض:</b> لا يعرض هذا التبويب أسبابَ الانحراف ولا قراراتِ التعزيز التي أحدثته، لا تُنشر مفصَّلة. <b>وحدُّ القراءة:</b> الفارقُ رقمٌ مركَّب: يجتمع فيه تعزيزُ الاعتماد وتأخُّرُ التنفيذ وفروقُ التقدير، ولا يُفكَّك من المنشور.</div>
+
+  <div class="filters" style="margin-bottom:16px">
+    <div class="f"><label for="varYear">السنة المالية، جسر الانحراف</label><select id="varYear"></select></div>
+  </div>
+  <div class="card"><h3>ما الذي نقل الرصيدَ من المعتمد إلى الفعلي؟</h3>
+    <div class="chartbox lg"><canvas id="cWaterfall"></canvas></div>
+    <div class="note" id="nVar"></div>
+  </div>
+  </div><!-- /sub-var -->
 </section>
 
 <!-- ============ العجز والدين ============ -->
@@ -3240,6 +3254,23 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     <div class="chartbox sm"><canvas id="cMaturity"></canvas></div>
     <div class="note" id="nMaturity"></div>
   </div>
+
+  <div class="subsec" id="sub-rate">
+  <div class="blockhead" style="margin-top:34px"><span>التصنيف الائتماني السيادي</span> الجدارةُ بجوار الدين</div>
+  <div class="note"><b>التصنيف الائتماني:</b> مسارُ تصنيف المملكة لدى الوكالات الثلاث على سُلَّمٍ موحَّدٍ من صنع هذه اللوحة. <b>ولا يَعرض:</b> لا يعرض هذا التبويب تقارير الوكالات ولا مبرّراتِ كلّ إجراء، ولا تصنيفَ الجهات الأخرى. <b>وحدُّ القراءة:</b> السُّلَّمُ الموحَّدُ ترتيبٌ لا مسافة: الفرقُ بين درجتين ليس كمّياً، ولا يُجمع ولا يُتوسَّط.</div>
+
+  <div class="grid g3" id="rateCards"></div>
+<!-- lg-12: نفيُ الصفة الاستشارية كان في تذييل الصفحة وحده، بعيداً عن
+     البطاقات التي تحمل نسبَ ملكيةٍ وإقراراتِ حيازةٍ وتصنيفاتٍ ائتمانية. -->
+    <div class="card" id="adv-rate"><h3>حدودُ هذه الصفحة</h3><div class="muted"><b>ولا شيء في هذه الصفحة مشورةً استثمارية.</b> ما يُعرض هنا <b>بياناتٌ منشورةٌ من مصدرها</b> ونِسبٌ محتسبةٌ منها، بلا رأيٍ في مزايا التعامل في أي ورقةٍ مالية ولا مخاطره، ولا توصيةَ شراءٍ ولا بيعٍ ولا احتفاظ، ولا تقييمَ جدارةٍ ائتمانية من هذه اللوحة. و<b>هذه اللوحة ليست جهةً مرخَّصة</b> من هيئة السوق المالية ولا تمارس نشاطاً مرخَّصاً، و<b>لا يُبنى على غياب صفٍّ من الجداول استنتاج</b>.</div></div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>كيف تحرّك التصنيفُ الائتماني عبر الوكالات الثلاث؟</h3>
+    <div class="hint">خط متدرّج: كل قفزة هي قرار رفع أو خفض من الوكالة</div>
+    <div class="chartbox lg"><canvas id="cRate"></canvas></div>
+    <div class="note" id="nRate"></div>
+  </div>
+  </div><!-- /sub-rate -->
 </section>
 
 <!-- ============ التوقعات ============ -->
@@ -3266,12 +3297,11 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <div id="fcStats"></div>
     </div>
   </div>
-</section>
 
-<!-- ============ السيناريوهات ============ -->
-<section id="s-sim">
-  <div class="sechead"><h2>محاكاة السيناريوهات (What-If)</h2>
-  <p>حرّك المتغيرات لترى أثرها الفوري على الإيرادات والمصروفات والعجز ومسار الدين لثلاث سنوات قادمة. نقطة الانطلاق هي آخر سنة مالية كاملة.</p></div>
+  <div class="subsec" id="sub-sim">
+  <div class="blockhead" style="margin-top:34px"><span>محاكاة السيناريوهات</span> ماذا لو؟</div>
+  <div class="note"><b>السيناريوهات، ماذا لو؟:</b> أثرُ تغيُّرٍ مفترَضٍ في السعر أو الإنفاق أو النمو على الرصيد ومسارِ الدين. <b>ولا يَعرض:</b> لا يعرض هذا التبويب احتمالاتِ وقوع السيناريوهات ولا توزيعاً لها، ولا آثاراً غيرَ خطّية ولا ردودَ فعلٍ سلوكية. <b>وحدُّ القراءة:</b> السيناريو <b>حسابٌ شرطيٌّ لا توقُّع</b>: يفترض ثباتَ كلِّ ما عدا المنزلق، وهو افتراضٌ لا يقع في الواقع.</div>
+
   <div class="grid g3">
     <div class="card">
       <h3>المتغيرات</h3>
@@ -3299,7 +3329,10 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <div class="note" id="nTor"></div>
     </div>
   </div>
+  </div><!-- /sub-sim -->
 </section>
+
+<!-- ============ السيناريوهات ============ -->
 
 
 <!-- ============ النسب إلى الناتج ============ -->
@@ -3427,194 +3460,15 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   </div>
 </section>
 
-<section id="s-var">
-  <div class="sechead"><h2>جسر تحليل الانحراف</h2>
-  <p>يبدأ الجسر من الرصيد المعتمد في الميزانية وينتهي عند الرصيد الفعلي، ويُظهر بين الطرفين مساهمة كل مصدر انحراف: جانب الإيرادات أولاً ثم انحراف الإنفاق في كل قطاع <b>حيث يتوفر التفصيل القطاعي المنشور</b>، ومجمَّعاً في عمودٍ واحد حيث لا يتوفر. الأعمدة الخضراء تحسّن الرصيد والحمراء تضغطه.</p></div>
-  <div class="filters" style="margin-bottom:16px">
-    <div class="f"><label for="varYear">السنة المالية</label><select id="varYear"></select></div>
-  </div>
-  <div class="card"><h3>ما الذي نقل الرصيدَ من المعتمد إلى الفعلي؟</h3>
-    <div class="chartbox lg"><canvas id="cWaterfall"></canvas></div>
-    <div class="note" id="nVar"></div>
-  </div>
-</section>
 
 <!-- ============ التصنيف الائتماني ============ -->
-<section id="s-rate">
-  <div class="sechead"><h2>التصنيف الائتماني السيادي</h2>
-  <p>الوكالات الثلاث تستخدم رموزاً مختلفة للدرجة نفسها، لذلك تُعرض هنا على سُلَّم رقمي موحّد يسمح بمقارنتها على محور واحد. الدرجة أعلى = جدارة ائتمانية أعلى وكلفة اقتراض أقل.</p></div>
-  <div class="grid g3" id="rateCards"></div>
-<!-- lg-12: نفيُ الصفة الاستشارية كان في تذييل الصفحة وحده، بعيداً عن
-     البطاقات التي تحمل نسبَ ملكيةٍ وإقراراتِ حيازةٍ وتصنيفاتٍ ائتمانية. -->
-    <div class="card" id="adv-rate"><h3>حدودُ هذه الصفحة</h3><div class="muted"><b>ولا شيء في هذه الصفحة مشورةً استثمارية.</b> ما يُعرض هنا <b>بياناتٌ منشورةٌ من مصدرها</b> ونِسبٌ محتسبةٌ منها، بلا رأيٍ في مزايا التعامل في أي ورقةٍ مالية ولا مخاطره، ولا توصيةَ شراءٍ ولا بيعٍ ولا احتفاظ، ولا تقييمَ جدارةٍ ائتمانية من هذه اللوحة. و<b>هذه اللوحة ليست جهةً مرخَّصة</b> من هيئة السوق المالية ولا تمارس نشاطاً مرخَّصاً، و<b>لا يُبنى على غياب صفٍّ من الجداول استنتاج</b>.</div></div>
-
-  <div class="card" style="margin-top:16px">
-    <h3>كيف تحرّك التصنيفُ الائتماني عبر الوكالات الثلاث؟</h3>
-    <div class="hint">خط متدرّج: كل قفزة هي قرار رفع أو خفض من الوكالة</div>
-    <div class="chartbox lg"><canvas id="cRate"></canvas></div>
-    <div class="note" id="nRate"></div>
-  </div>
-</section>
 
 
 <!-- ============ جودة البيانات ============ -->
-<section id="s-quality">
-  <div class="sechead"><h2>ما الذي يستحق التدقيق، وهل تتغيّر الأرقام بعد نشرها؟</h2>
-  <p>بقية التبويبات تعرض الأرقام، وهذا التبويب يقيس مدى استحقاقها للثقة. يجيب عن سؤالين قبل أي تحليل: <b>أيّ نقطة من نحو ستمئة نقطة بيانات تستحق أن تُفتح لها التقارير الأصلية؟</b> و<b>هل تنشر وزارة المالية الرقم نفسه في كل إصدار لاحق، أم تعدّله؟</b> الأول يُنتجه نموذج الاتجاه والموسمية، والثاني تُنتجه مقارنة كل فترة عبر جميع التقارير التي وردت فيها.</p></div>
-  <div class="verdict" id="qVerdict"></div>
-  <div class="verdict" id="qAdd" style="margin-top:14px"></div>
-  <div class="grid g4" id="qKpis" style="margin-top:16px"></div>
-  <div class="card" style="margin-top:16px">
-    <h3>فهرس النقاط التي تستحق التدقيق</h3>
-    <div class="hint">البعد بين القيمة الفعلية والقيمة التي يتوقعها نموذج الاتجاه والموسمية، مقسوماً على الانحراف المعياري للبواقي · اضغط أي صف لفتح تفصيله</div>
-    <div class="tblwrap"><table id="tAlerts" class="clickable"></table></div>
-    <div class="note" id="nAlerts"></div>
-  </div>
-  <div class="grid g2" style="margin-top:16px">
-    <div class="card">
-      <h3>كم مصدراً مستقلاً يسند أرقامَ كلِّ فترة؟</h3>
-      <div class="hint">عدد التقارير المستقلة التي وردت فيها أرقام الفترة نفسها</div>
-      <div class="chartbox sm"><canvas id="cCoverage"></canvas></div>
-      <div class="note" id="nCoverage"></div>
-    </div>
-    <div class="card">
-      <h3>الفروق المرصودة بين إصدارات التقارير</h3>
-      <div class="hint">الحالات التي اختلفت فيها قيمة بند بين تقريرين</div>
-      <div class="tblwrap" style="max-height:300px"><table id="tRev"></table></div>
-      <div class="note" id="nRevis"></div>
-    </div>
-  </div>
-</section>
 
 <!-- ============ البيانات ============ -->
-<section id="s-data">
-  <div class="sechead"><h2>البيانات التفصيلية</h2>
-  <p>كل رقم في هذه اللوحة مستخرج آلياً من تقارير أداء الميزانية الربعية والسنوية المنشورة على موقع وزارة المالية.</p></div>
-  <div class="filters" style="margin-bottom:16px">
-    <div class="f"><label>الجدول</label>
-      <select id="tsel" aria-label="الجدول المعروض">
-        <option value="rev">الإيرادات، ربعي</option>
-        <option value="exp">المصروفات، ربعي</option>
-        <option value="bud">الميزانية المعتمدة مقابل الفعلي، سنوي</option>
-        <option value="sec">الإنفاق حسب القطاع</option>
-        <option value="debt">الدين العام</option>
-      </select></div>
-  </div>
-  <div class="card"><div class="tblwrap"><table id="tbl"></table></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>المنهجية</span> معادلات احتساب المؤشرات</div>
-  <div class="card">
-    <h3>كيف حُسب كل مؤشر في هذه اللوحة</h3>
-    <div class="hint">كل مؤشر مشتق مذكور هنا بمعادلته ووحدته ومصدر مدخلاته، ليكون كل رقم في اللوحة قابلاً لإعادة الاحتساب من الجداول أعلاه</div>
-    <div class="f" style="max-width:340px;margin-bottom:14px"><label>بحث في المعادلات</label>
-      <input class="inp" id="fSearch" type="search" aria-label="بحث في المعادلات" placeholder="اكتب اسم مؤشر أو كلمة من معادلته…"></div>
-    <div class="tblwrap" style="max-height:600px"><div id="fBody"></div></div>
-  </div>
-
-  <div class="blockhead" style="margin-top:34px"><span>المصطلحات</span> مطابقة التسميات بالمعاجم الرسمية</div>
-  <div class="card">
-    <h3>الاسم المعروض في اللوحة مقابل الاسم المعتمد رسمياً</h3>
-    <div class="hint">تُعتمد في هذه اللوحة المفردات والمصطلحات والمفاهيم المقرّة في المعاجم الرسمية الصادرة عن الجهات الحكومية بالتعاون مع مجمع الملك سلمان العالمي للغة العربية: <b>معجم المصطلحات المالية والاقتصادية</b> (وزارة المالية) و<b>معجم المصطلحات الإحصائية</b> (الهيئة العامة للإحصاء)، ويُرجَع عند التسمية إلى ما تنشره وزارة المالية في تقرير أداء الميزانية. ويُختصر الاسم في مفاتيح الرسوم عند الضرورة اختصاراً لا يغيّر المعنى، ويبقى الاسم الكامل معروضاً هنا وفي تعريف كل بند.</div>
-    <div class="tblwrap"><table id="tTerms"></table></div>
-    <div id="nTerms" class="note"></div>
-  </div>
-
-  <!-- gx-22: بطاقاتُ الحوكمة السبع كانت في تبويبٍ واحد من اثنين وثلاثين،
-       وتُوصف بأنها «في كل لوحة». وهي وصفٌ للوحة كلِّها لا للوحة المالية.
-       فجُمعت في كتلةٍ واحدة تُنقَل إلى تبويب بيانات اللوحة المفتوحة،
-       نقلاً لا نسخاً، فتبقى المعرِّفاتُ فريدةً ولا يتفرّق المحتوى نسخاً. -->
-  <div id="govBlock">
-  <div class="blockhead" style="margin-top:34px"><span>سجل التصحيحات</span> ما عُدِّل بعد النشر</div>
-  <div class="card"><div id="fCorr"></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>سجل الفحوص</span> ما فُحص ولم يتغيّر</div>
-  <div class="card"><div id="fGates"></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>سياسة المراجعات</span> متى يتغيّر الرقم وكيف يُقيَّد</div>
-  <div class="card"><div id="fRevPol"></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>تقويم الإصدار والتوقيت</span> متى نُشر كل رقم وكم تقادَم</div>
-  <div class="card"><div id="fRel"></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>أرشيف النسخ</span> كيف تُسترجَع نسخةٌ استُشهد بها</div>
-  <div class="card"><div id="fArch"></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>الفهرس الآلي</span> وصفٌ معياريٌّ تقرؤه الآلة</div>
-  <div class="card"><div id="fCat"></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>بيان الإتاحة</span> ما تحقّق وما لم يُختبر</div>
-  <div class="card"><div id="fA11y"></div></div>
-
-  <!-- lg-6: بيانٌ شخصيٌّ منشورٌ فعلاً بلا وعيٍ ولا موقفٍ ولا ذكرٍ للنظام. -->
-  <div class="blockhead" style="margin-top:34px"><span>البيانات الشخصية</span> ما تُعرض وما تمتنع عنه اللوحة</div>
-  <div class="card"><div id="fPdpl"></div></div>
-
-  <!-- lg-4 · lg-8 · lg-9 · lg-11: شروطُ كلِّ ناشرٍ على حدة، والنظامُ
-       المرجعيّ لحقوق المؤلف، ورخصةُ البيانات المفتوحة، كلُّها غائبة. -->
-  <div class="blockhead" style="margin-top:34px"><span>الالتزام النظامي</span> نصوصٌ قِيست عليها، ومسائلُ تُعرض على مختصّ</div>
-  <div class="card"><div id="fLegal"></div></div>
-
-  </div><!-- /govBlock -->
-
-  <div class="blockhead" style="margin-top:34px"><span>الاعتماد الخارجي</span> ما تطلبه الصفحة من الشبكة</div>
-  <div class="card">
-    <h3>طلب شبكي واحد، ولا أثر لسقوطه على أي رقم</h3>
-    <div class="note">
-      <b>ما يُطلب:</b> ورقة أنماط الخطوط من <span dir="ltr">fonts.googleapis.com</span>
-      (وملفات الخطوط من <span dir="ltr">fonts.gstatic.com</span>)، وهو <b>الطلب الشبكي الوحيد</b>
-      في الصفحة كلها. <b>ولا تُطلب بيانات من أي خادم:</b> كل رقم في اللوحة مضمَّن في الملف نفسه،
-      فلا واجهة برمجية ولا استعلام ولا تتبُّع.
-      <br><b>وماذا يحدث حين يسقط الطلب</b> (شبكة مقطوعة · جدار حماية · وكيل خروج يحجب النطاق):
-      تُعرض الصفحة بخطوط النظام من قائمة الاحتياط المعلنة
-      (<span dir="ltr">SF Arabic</span> · <span dir="ltr">Segoe UI</span> · <span dir="ltr">Noto Sans Arabic</span> · <span dir="ltr">Tahoma</span>)،
-      ولا يتغيّر رقم ولا رسم ولا وظيفة، يتغيّر شكل الحرف وحده. والخاصية
-      <span dir="ltr">display=swap</span> تمنع أي حجب للعرض أثناء الانتظار.
-      <br><b>ولماذا يُذكر هذا هنا:</b> لأن اعتماداً خارجياً يسقط بصمتٍ في بيئة القارئ
-      يستحق أن يُعلَن، لا أن يُكتشف من سجلّ الشبكة.
-    </div>
-  </div>
-
-  <div class="blockhead" style="margin-top:34px"><span>الرابط والاستشهاد</span> ما يحمله العنوان وما لا يحمله</div>
-  <div class="card">
-    <h3>ما يُشارَك في الرابط</h3>
-    <div class="note">
-      <b>يحمل العنوان:</b> اللوحة المفتوحة والتبويب المفتوح، بالشكل
-      <span dir="ltr">#/fiscal/var</span>، فنسخُ الرابط من شريط المتصفح ولصقه يفتح
-      الموضع نفسه عند القارئ الآخر، ويعمل زرّا الرجوع والتقدّم بين اللوحات.
-      <br><b>ولا يحمل العنوان:</b> المدى الزمني ولا التواتر ولا الوحدة ولا أي مرشِّح
-      داخل التبويب، فهذه تعود إلى حالتها الافتراضية عند فتح الرابط. فإن كان المقصود
-      الاستشهاد بقيمةٍ بعينها فالأدقّ ذكرُ المدى صراحةً مع الرابط، أو تنزيل ملف
-      <span dir="ltr">CSV</span> من تبويب «البيانات» فهو يحمل المدى والوحدة والأساس
-      والمصدر ورقم النسخة في ترويسته.
-      <br><b>ورقم النسخة</b> مثبَّت في تذييل الصفحة، ويتغيّر مع كل تصحيح مُدرَجٍ في
-      سجل التصحيحات، فالاستشهاد الكامل يذكره.
-    </div>
-  </div>
-</section>
 
 <!-- ============ القاعدة المعرفية ============ -->
-<section id="s-kb">
-  <div class="sechead"><h2>القاعدة المعرفية، مصطلحات المالية العامة</h2>
-  <p>تعريفات بنود الإيرادات والمصروفات كما تنشرها وزارة المالية وفق دليل إحصاءات مالية الحكومة (GFSM 2014)، ومهام القطاعات الحكومية التسعة.</p></div>
-  <div class="filters" style="margin-bottom:16px">
-    <div class="f" style="flex:1"><label>بحث في المصطلحات</label>
-      <input id="gsearch" aria-label="بحث في القاعدة المعرفية والمعجم" placeholder="اكتب مصطلحاً بالعربية أو الإنجليزية…" style="background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:var(--fs-sm)"></div>
-  </div>
-  <div class="grid g2">
-    <div class="card"><h3>بنود الإيرادات والمصروفات</h3><div class="hint">التعريف الرسمي ومكوّنات كل بند</div><div id="gItems"></div></div>
-    <div class="card"><h3>القطاعات الحكومية</h3><div class="hint">أبرز مهام كل قطاع من قطاعات الإنفاق التسعة</div><div id="gSectors"></div></div>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <h3>معجم المصطلحات المالية والاقتصادية، وزارة المالية <span class="pill" id="gCount"></span></h3>
-    <div class="hint" id="gEdition">بالتعاون مع مجمع الملك سلمان العالمي للغة العربية · اكتب في مربع البحث أعلاه للتصفية</div>
-    <div id="gDict"></div>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <h3>مفاهيم أساسية في المالية العامة</h3>
-    <div class="hint">شرح موجز للمصطلحات المستخدمة في التقارير</div>
-    <div id="gConcepts"></div>
-  </div>
-</section>
 
 
 </div>
@@ -3725,6 +3579,20 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <br><b>وما يترتب على ذلك:</b> لا تُجمع أعمدة هذا التبويب لتعطي الناتج، ولا تُقرأ
       حصصُها من الناتج على أنها حصصُ جانب الطلب كاملةً.
     </div></div>
+
+  <div class="subsec" id="sub-income">
+  <div class="blockhead" style="margin-top:34px"><span>الدخل والادخار</span> من الطلب إلى الدخل</div>
+  <div class="note"><b>الدخل القومي والادخار:</b> الدخلُ القوميُّ الإجماليُّ والمتاحُ والادخارُ ومكوّناتُ الدخل. <b>ولا يَعرض:</b> لا يعرض هذا التبويب توزيعَ الدخل بين الفئات، ولا دخلَ الأسرة، ولا الأجور بالقطاع. <b>وحدُّ القراءة:</b> «صافي الضرائب على الإنتاج» هنا غيرُ «صافي الضرائب على المنتجات» في تبويب التركيبة، والفارقُ بينهما منشورٌ ومصالَحٌ هناك.</div>
+
+  <div class="grid g2">
+    <div class="card"><h3>كيف يفترق الدخلُ القومي عن الناتج، وكم يُدَّخر؟</h3><div class="hint">مليون ريال</div>
+      <div class="chartbox"><canvas id="cIncome"></canvas></div>
+      <div class="note" id="nIncome"></div></div>
+    <div class="card"><h3>كيف يتوزّع الناتجُ بين العمل ورأس المال والضرائب؟</h3><div class="hint">تعويضات العاملين وفائض التشغيل والضرائب</div>
+      <div class="chartbox"><canvas id="cIncMix"></canvas></div>
+      <div class="note" id="nIncMix"></div></div>
+  </div>
+  </div><!-- /sub-income -->
 </section>
 
 <section id="e-s-ext">
@@ -3740,18 +3608,6 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   </div>
 </section>
 
-<section id="e-s-income">
-  <div class="sechead"><h2>الدخل والادخار</h2>
-  <p>من الناتج إلى الدخل القومي إلى الادخار: كل خطوة تكشف ما يُضاف إلى الناتج أو يُطرح منه قبل أن يصير دخلاً متاحاً، صافي دخل عوامل الإنتاج مع الخارج، ثم استهلاك رأس المال الثابت وصافي التحويلات الجارية، وكم يُدَّخر منه بدل أن يُستهلك.</p></div>
-  <div class="grid g2">
-    <div class="card"><h3>كيف يفترق الدخلُ القومي عن الناتج، وكم يُدَّخر؟</h3><div class="hint">مليون ريال</div>
-      <div class="chartbox"><canvas id="cIncome"></canvas></div>
-      <div class="note" id="nIncome"></div></div>
-    <div class="card"><h3>كيف يتوزّع الناتجُ بين العمل ورأس المال والضرائب؟</h3><div class="hint">تعويضات العاملين وفائض التشغيل والضرائب</div>
-      <div class="chartbox"><canvas id="cIncMix"></canvas></div>
-      <div class="note" id="nIncMix"></div></div>
-  </div>
-</section>
 
 <section id="e-s-link">
   <div class="sechead"><h2>الجسر بين الاقتصاد والميزانية</h2>
@@ -3774,43 +3630,6 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   </div>
 </section>
 
-<section id="e-s-data">
-  <div class="sechead"><h2>البيانات التفصيلية</h2>
-  <!-- ecx-7: الدعوى كانت تنسب «كل الأرقام» إلى الهيئة، واثنان من الجداول
-       التسعة مصدرهما البنك الدولي ووزارة المالية، والمصدرُ مذكورٌ في حاشية
-       كلِّ جدولٍ منهما ومسكوتٌ عنه في هذه الجملة الجامعة. -->
-  <p>سبعةٌ من الجداول التسعة مستخرجةٌ آلياً من نشرة الحسابات القومية السنوية ونشرات الناتج المحلي الربعية
-  الصادرة عن <b>الهيئة العامة للإحصاء</b>. واثنان من مصدرين آخرين: «النمو الحقيقي السنوي» من قاعدة
-  <b>البنك الدولي</b> بعد المراجعة الشاملة، و«الميزانية (مدخلات الجسر)» من تقارير أداء الميزانية،
-  <b>وزارة المالية</b>. ومصدرُ كلِّ جدولٍ مذكورٌ في حاشيته.</p></div>
-  <div class="filters" style="margin-bottom:16px">
-    <div class="f"><label>الجدول</label>
-      <select id="e-tsel" aria-label="الجدول المعروض">
-        <option value="sections">الناتج حسب النشاط</option>
-        <option value="hh">الاستهلاك النهائي للأسر</option>
-        <option value="ext">القطاع الخارجي</option>
-        <option value="agg">المجاميع القومية</option>
-        <option value="gfcf">تكوين رأس المال الثابت</option>
-        <option value="oilref">الاستخراج والتكرير</option>
-        <option value="rgq">النمو الحقيقي الربعي</option>
-        <option value="rgy">النمو الحقيقي السنوي</option>
-        <option value="fisc">الميزانية (مدخلات الجسر)</option>
-      </select></div>
-  </div>
-  <div class="card"><div class="tblwrap"><table id="e-tbl"></table></div></div>
-
-  <div class="blockhead" style="margin-top:34px"><span>المنهجية</span> معادلات احتساب المؤشرات</div>
-  <div class="card">
-    <h3>كيف حُسب كل مؤشر في لوحة الاقتصاد الكلي</h3>
-    <!-- ecx-15: الوعد كان مُستغرِقاً، وبعضُ المدخلات مشتقٌّ لا صفٌّ منشور
-         (القيمة المضافة غير النفطية بالأسعار الأساسية مثلاً). -->
-    <div class="hint">المعادلات وفق نظام الحسابات القومية (SNA 2008). ومدخلاتها في الجداول أعلاه <b>ما لم تُذكر حاشيةٌ بخلاف ذلك</b>، وبعض المدخلات مجموعٌ مشتقٌّ من صفوف الجدول لا صفٌّ قائمٌ فيه، وتقول حاشيةُ الصفّ ذلك</div>
-    <div class="f" style="max-width:340px;margin-bottom:14px"><label>بحث في المعادلات</label>
-      <input class="inp" id="e-fSearch" type="search" aria-label="بحث في المعادلات" placeholder="اكتب اسم مؤشر أو كلمة من معادلته…"></div>
-    <div class="tblwrap" style="max-height:600px"><div id="e-fBody"></div></div>
-  </div>
-  <div data-gov></div>
-</section>
 
 
 </div>
@@ -3871,11 +3690,11 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <div class="chartbox"><canvas id="cNPerUsd"></canvas></div>
       <div class="note" id="nNPerUsd"></div></div>
   </div>
-</section>
 
-<section id="n-s-break">
-  <div class="sechead"><h2>فجوة التعادل</h2>
-  <p>سعر التعادل المالي هو السعر الذي تتوازن عنده الميزانية. الفجوة بينه وبين السعر المحقق فعلاً هي الفائض أو العجز مُترجَماً إلى دولارات للبرميل، وهي أوضح صياغة لسؤال «هل السعر كافٍ؟».</p></div>
+  <div class="subsec" id="sub-break">
+  <div class="blockhead" style="margin-top:34px"><span>فجوة التعادل</span> السعرُ الذي تحتاجه الميزانية</div>
+  <div class="note"><b>فجوة التعادل:</b> سعرُ التعادل المحتسَبُ من بيانات وزارة المالية، مقابلَ المنشورِ من صندوق النقد، ومقابلَ السعر المحقَّق. <b>ولا يَعرض:</b> لا يعرض هذا التبويب سعرَ تعادلٍ رسمياً سعودياً (لا يُنشر)، ولا تعادلَ ميزان المدفوعات، ولا أثرَ الاقتراض على الحاجة التمويلية. <b>وحدُّ القراءة:</b> سعرُ التعادل <b>محتسَبٌ بمعادلةٍ معلَنة</b> على سنواتٍ مكتملةٍ وحدها، وليس هدفَ سياسةٍ ولا رقماً تُقرّه جهةٌ سعودية.</div>
+
   <div class="card">
     <h3>كم يفصل السعرَ المحقَّق عن سعر التعادل سنوياً؟</h3>
     <div class="hint">كلاهما بالدولار للبرميل، سنوياً</div>
@@ -3888,30 +3707,10 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     <div class="chartbox sm"><canvas id="cNSens"></canvas></div>
     <div class="note" id="nNSens"></div>
   </div>
+  </div><!-- /sub-break -->
 </section>
 
-<section id="n-s-data">
-  <div class="sechead"><h2>البيانات والمعادلات</h2>
-  <p>كل سعر في هذه اللوحة من سلسلة إدارة معلومات الطاقة الأمريكية للسعر الفوري لخام برنت، دون أي معالجة عدا حساب المتوسطات المعلنة.</p></div>
-  <div class="filters" style="margin-bottom:16px">
-    <div class="f"><label>الجدول</label>
-      <select id="n-tsel" aria-label="الجدول المعروض">
-        <option value="d">الأسعار اليومية</option>
-        <option value="m">المتوسط الشهري</option>
-        <option value="q">المتوسط الربعي</option>
-        <option value="y">المتوسط السنوي</option>
-      </select></div>
-  </div>
-  <div class="card"><div class="tblwrap" style="max-height:520px"><table id="n-tbl"></table></div>
-    <div class="note" id="nNPart"></div></div>
-  <div class="blockhead" style="margin-top:34px"><span>المنهجية</span> معادلات احتساب المؤشرات</div>
-  <div class="card">
-    <h3>كيف حُسب كل مؤشر في لوحة الطاقة</h3>
-    <div class="hint">مدخلات كل معادلة موجودة في الجداول أعلاه وفي تبويب بيانات المالية العامة</div>
-    <div class="tblwrap" style="max-height:520px"><div id="n-fBody"></div></div>
-  </div>
-  <div data-gov></div>
-</section>
+
 
 </div>
 
@@ -3939,7 +3738,19 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <div class="card"><h3>عائد المساهم، ثلاث صيغ منشورة</h3>
         <div id="f-tsr"></div></div>
     </div>
-  </section>
+  
+  <div class="subsec" id="sub-impact">
+  <div class="blockhead" style="margin-top:34px"><span>الأثر الاقتصادي</span> ما يُفصح عنه الصندوق</div>
+  <div class="note"><b>الأثر الاقتصادي:</b> ما ينشره الصندوقُ عن إسهامه في الناتج والوظائف والمحتوى المحلي. <b>ولا يَعرض:</b> لا يعرض هذا التبويب تقديراً مستقلاً للأثر، ولا منهجيةَ الاحتساب (لا تُنشر مفصَّلة). <b>وحدُّ القراءة:</b> ناشرُ أرقام الأثر هو <b>الجهةُ المُقيَّمة نفسُها</b>، فتُقرأ إفصاحاً عن دعوىً لا قياساً مستقلاً.</div>
+
+    <div class="card"><h3>الأثر في الاقتصاد الوطني</h3><div id="f-impTbl"></div></div>
+    <div class="card"><h3>قراءة صندوق النقد الدولي</h3><div id="f-imf"></div></div>
+    <div class="card"><h3>الوظائف</h3><div id="f-jobs"></div></div>
+    <!-- طبقة النضج (٢): بطاقة انكشاف الميزانية على الصندوق، نِسبٌ تُقاس
+         وتصريحٌ بما لا يُقاس من المنشور. -->
+    <div class="card"><div id="f-expo"></div></div>
+  </div><!-- /sub-impact -->
+</section>
 
   <section id="f-s-fin">
 <!-- LEG-06: يُقدَّم النفيُ إلى صدر القسم كما قُدِّم في تبويبات الحيازات،
@@ -3950,9 +3761,11 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <div class="card"><h3>التصنيف الائتماني</h3><div id="f-rate"></div></div>
       <div class="card"><h3>المراجعة والإفصاح</h3><div id="f-aud"></div></div>
     </div>
-  </section>
+  
+  <div class="subsec" id="sub-targets">
+  <div class="blockhead" style="margin-top:34px"><span>المستهدفات</span> المعلَنُ والمتحقق</div>
+  <div class="note"><b>المستهدفات، المعلَنُ والمتحقق:</b> مستهدفاتُ استراتيجية 2021–2025م ونسبُ بلوغها، وما نُشر من استراتيجية 2026–2030م. <b>ولا يَعرض:</b> لا يعرض هذا التبويب مستهدفاتٍ لم يُنشرها الصندوق، ولا ما تتداوله التقارير الصحفية بلا وثيقة. <b>وحدُّ القراءة:</b> مستهدفٌ صيغتُه «سنوياً» لا يُحكَم عليه بسنةٍ واحدة، ونسبةُ البلوغ لا تُحتسب لمستهدفات السقف والأرضية، والحالاتُ مبيَّنةٌ في الجدول.</div>
 
-  <section id="f-s-targets">
     <div class="perbar" id="f-tgtBar"></div>
     <div id="f-t1">
       <div class="card"><h3>أيُّ مستهدفاتِ الاستراتيجية تحقّقت؟</h3>
@@ -3966,8 +3779,10 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     <div id="f-t2" hidden>
       <div class="card"><h3>استراتيجية 2026-2030م</h3><div id="f-t2Body"></div></div>
     </div>
-  </section>
+  </div><!-- /sub-targets -->
+</section>
 
+  
   <section id="f-s-tad">
 <!-- LEG-06 (19-09-2026م): سجلُّ التصحيحات قال «بطاقةُ نفيٍ **مقرونة**»، وقِيس
      في ثلاثةٍ من المواضع الخمسة أنها في **ذيل القسم** بعد الرسم والجدول
@@ -3983,9 +3798,11 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <div class="tallbox"><canvas id="f-cTad"></canvas></div></div>
     <div class="card"><h3>الجدول التفصيلي</h3><div id="f-tadTbl"></div></div>
     <div class="card"><h3>ما وراء الجدول</h3><div id="f-tadNotes"></div></div>
-  </section>
+  
+  <div class="subsec" id="sub-us">
+  <div class="blockhead" style="margin-top:34px"><span>المحفظة الأمريكية المُقرّة</span> نموذج 13F</div>
+  <div class="note"><b>المحفظة الأمريكية المُقرّة، نموذج 13F:</b> ما يُقرّ به الصندوقُ لدى هيئة الأوراق المالية والبورصات الأمريكية من أوراقٍ أمريكيةٍ مؤهَّلة. <b>ولا يَعرض:</b> <b>ولايةٌ قضائيةٌ واحدة:</b> لا حيازاتِ تداول، ولا استثماراتٍ مباشرةً وخاصة، ولا صناديق، ولا أسواقاً أخرى، وهي نحو 93% من المحفظة الدولية المعلَنة. <b>وحدُّ القراءة:</b> دخولُ ورقةٍ أو خروجُها قد يكون تغيُّرَ أهليةٍ لا سلوكاً استثمارياً، والإقرارُ لا يحمل تاريخَ التملّك ولا كلفتَه.</div>
 
-  <section id="f-s-us">
 <!-- LEG-06 (19-09-2026م): سجلُّ التصحيحات قال «بطاقةُ نفيٍ **مقرونة**»، وقِيس
      في ثلاثةٍ من المواضع الخمسة أنها في **ذيل القسم** بعد الرسم والجدول
      والحواشي: الفاصلُ بين رأس جدول حيازات تداول والبطاقة 1,926 بكسلاً،
@@ -3999,8 +3816,10 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
       <div class="chartbox"><canvas id="f-cUs"></canvas></div></div>
     <div class="card"><h3>آخر إقرار</h3><div id="f-usTbl"></div></div>
     <div class="card"><h3>حدود هذه البيانات</h3><div id="f-usNotes"></div></div>
-  </section>
+  </div><!-- /sub-us -->
+</section>
 
+  
   <section id="f-s-peers">
 <!-- LEG-06 (19-09-2026م): سجلُّ التصحيحات قال «بطاقةُ نفيٍ **مقرونة**»، وقِيس
      في ثلاثةٍ من المواضع الخمسة أنها في **ذيل القسم** بعد الرسم والجدول
@@ -4039,23 +3858,247 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     </div>
   </section>
 
-  <section id="f-s-impact">
-    <div class="card"><h3>الأثر في الاقتصاد الوطني</h3><div id="f-impTbl"></div></div>
-    <div class="card"><h3>قراءة صندوق النقد الدولي</h3><div id="f-imf"></div></div>
-    <div class="card"><h3>الوظائف</h3><div id="f-jobs"></div></div>
-    <!-- طبقة النضج (٢): بطاقة انكشاف الميزانية على الصندوق، نِسبٌ تُقاس
-         وتصريحٌ بما لا يُقاس من المنشور. -->
-    <div class="card"><div id="f-expo"></div></div>
-  </section>
+  
+  
+</div>
 
-  <section id="f-s-data">
+
+
+<!-- ══ لوحةُ «المرجع»، 01-11-2026م ═══════════════════════════════════
+     ثلاثةٌ وثلاثون سياقَ تبويبٍ قيست، وفيها أربعةُ تبويبات «بيانات»
+     متماثلةِ البنية: محتواها من نفسه 2,393 و519 و3,315 و970 محرفاً،
+     وكتلةُ الحوكمة التسعةُ (30,799 محرفاً) تنتقل بينها فتكون 98% من
+     ثلاثةٍ منها. وتبويبُ «القاعدة المعرفية» 367 محرفاً وتبويبُ «جودة
+     البيانات» وصفٌ للبيان لا تحليلٌ له. فجُمع المرجعُ كلُّه في لوحةٍ
+     واحدةٍ تخدم اللوحات الخمس: الجداول والتنزيل، والمنهجية والمعادلات،
+     وجودةُ البيانات، والحوكمةُ والالتزام، والمعجم. فلا تُكرَّر كتلةٌ،
+     ولا يُفتَّش عن سجلّ التصحيحات في أربعة مواضع، ويعود صفُّ تبويبات
+     كلِّ لوحةٍ إلى التحليل وحده. -->
+<div class="domain" id="dom-ref">
+<nav class="tabs" id="r-tabs"></nav>
+
+<section id="r-s-tables" class="on">
+  <div class="sechead"><h2>الجداول والتنزيل</h2>
+  <p>الصفوف التي تُبنى منها كل لوحة، جدولاً جدولاً، ومعها زرّ التنزيل في لوحتها. وكل جدول يتبع المدى المنتقى في لوحته، وافتراضُه المدى الكامل.</p></div>
+  <div class="blockhead" style="margin-top:34px"><span>المالية العامة</span> تقارير أداء الميزانية، وزارة المالية</div>
+
+  <div class="filters" style="margin-bottom:16px">
+    <div class="f"><label>الجدول</label>
+      <select id="tsel" aria-label="الجدول المعروض، المالية العامة">
+        <option value="rev">الإيرادات، ربعي</option>
+        <option value="exp">المصروفات، ربعي</option>
+        <option value="bud">الميزانية المعتمدة مقابل الفعلي، سنوي</option>
+        <option value="sec">الإنفاق حسب القطاع</option>
+        <option value="debt">الدين العام</option>
+      </select></div>
+  </div>
+  <div class="card"><div class="tblwrap"><table id="tbl"></table></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>الاقتصاد الكلي</span> الحسابات القومية، الهيئة العامة للإحصاء</div>
+
+  <div class="filters" style="margin-bottom:16px">
+    <div class="f"><label>الجدول</label>
+      <select id="e-tsel" aria-label="الجدول المعروض، الاقتصاد الكلي">
+        <option value="sections">الناتج حسب النشاط</option>
+        <option value="hh">الاستهلاك النهائي للأسر</option>
+        <option value="ext">القطاع الخارجي</option>
+        <option value="agg">المجاميع القومية</option>
+        <option value="gfcf">تكوين رأس المال الثابت</option>
+        <option value="oilref">الاستخراج والتكرير</option>
+        <option value="rgq">النمو الحقيقي الربعي</option>
+        <option value="rgy">النمو الحقيقي السنوي</option>
+        <option value="fisc">الميزانية (مدخلات الجسر)</option>
+      </select></div>
+  </div>
+  <div class="card"><div class="tblwrap"><table id="e-tbl"></table></div></div>
+
+
+
+  <div class="blockhead" style="margin-top:34px"><span>الطاقة والنفط</span> السعر الفوري لخام برنت، إدارة معلومات الطاقة</div>
+
+  <div class="filters" style="margin-bottom:16px">
+    <div class="f"><label>الجدول</label>
+      <select id="n-tsel" aria-label="الجدول المعروض، الطاقة والنفط">
+        <option value="d">الأسعار اليومية</option>
+        <option value="m">المتوسط الشهري</option>
+        <option value="q">المتوسط الربعي</option>
+        <option value="y">المتوسط السنوي</option>
+      </select></div>
+  </div>
+  <div class="card"><div class="tblwrap" style="max-height:520px"><table id="n-tbl"></table></div>
+    <div class="note" id="nNPart"></div></div>
+</section>
+
+<section id="r-s-method">
+  <div class="sechead"><h2>المنهجية والمعادلات</h2>
+  <p>كيف حُسب كل مؤشر مشتق في اللوحات الخمس، بمعادلته ووحدته ومصدر مدخلاته، ومطابقةُ التسميات بالمعاجم الرسمية.</p></div>
+  <div class="blockhead" style="margin-top:34px"><span>المالية العامة</span> معادلات اللوحة ومطابقة التسميات</div>
+  <div class="blockhead" style="margin-top:34px"><span>المنهجية</span> معادلات احتساب المؤشرات</div>
+  <div class="card">
+    <h3>كيف حُسب كل مؤشر في هذه اللوحة</h3>
+    <div class="hint">كل مؤشر مشتق مذكور هنا بمعادلته ووحدته ومصدر مدخلاته، ليكون كل رقم في اللوحة قابلاً لإعادة الاحتساب من الجداول أعلاه</div>
+    <div class="f" style="max-width:340px;margin-bottom:14px"><label>بحث في المعادلات</label>
+      <input class="inp" id="fSearch" type="search" aria-label="بحث في معادلات المالية العامة" placeholder="اكتب اسم مؤشر أو كلمة من معادلته…"></div>
+    <div class="tblwrap" style="max-height:600px"><div id="fBody"></div></div>
+  </div>
+
+  <div class="blockhead" style="margin-top:34px"><span>المصطلحات</span> مطابقة التسميات بالمعاجم الرسمية</div>
+  <div class="card">
+    <h3>الاسم المعروض في اللوحة مقابل الاسم المعتمد رسمياً</h3>
+    <div class="hint">تُعتمد في هذه اللوحة المفردات والمصطلحات والمفاهيم المقرّة في المعاجم الرسمية الصادرة عن الجهات الحكومية بالتعاون مع مجمع الملك سلمان العالمي للغة العربية: <b>معجم المصطلحات المالية والاقتصادية</b> (وزارة المالية) و<b>معجم المصطلحات الإحصائية</b> (الهيئة العامة للإحصاء)، ويُرجَع عند التسمية إلى ما تنشره وزارة المالية في تقرير أداء الميزانية. ويُختصر الاسم في مفاتيح الرسوم عند الضرورة اختصاراً لا يغيّر المعنى، ويبقى الاسم الكامل معروضاً هنا وفي تعريف كل بند.</div>
+    <div class="tblwrap"><table id="tTerms"></table></div>
+    <div id="nTerms" class="note"></div>
+  </div>
+
+  <div class="blockhead" style="margin-top:34px"><span>الاقتصاد الكلي</span> معادلات اللوحة</div>
+  <div class="blockhead" style="margin-top:34px"><span>المنهجية</span> معادلات احتساب المؤشرات</div>
+  <div class="card">
+    <h3>كيف حُسب كل مؤشر في لوحة الاقتصاد الكلي</h3>
+    <!-- ecx-15: الوعد كان مُستغرِقاً، وبعضُ المدخلات مشتقٌّ لا صفٌّ منشور
+         (القيمة المضافة غير النفطية بالأسعار الأساسية مثلاً). -->
+    <div class="hint">المعادلات وفق نظام الحسابات القومية (SNA 2008). ومدخلاتها في الجداول أعلاه <b>ما لم تُذكر حاشيةٌ بخلاف ذلك</b>، وبعض المدخلات مجموعٌ مشتقٌّ من صفوف الجدول لا صفٌّ قائمٌ فيه، وتقول حاشيةُ الصفّ ذلك</div>
+    <div class="f" style="max-width:340px;margin-bottom:14px"><label>بحث في المعادلات</label>
+      <input class="inp" id="e-fSearch" type="search" aria-label="بحث في معادلات الاقتصاد الكلي" placeholder="اكتب اسم مؤشر أو كلمة من معادلته…"></div>
+    <div class="tblwrap" style="max-height:600px"><div id="e-fBody"></div></div>
+  </div>
+  <div class="blockhead" style="margin-top:34px"><span>الطاقة والنفط</span> معادلات اللوحة</div>
+  <div class="blockhead" style="margin-top:34px"><span>المنهجية</span> معادلات احتساب المؤشرات</div>
+  <div class="card">
+    <h3>كيف حُسب كل مؤشر في لوحة الطاقة</h3>
+    <div class="hint">مدخلات كل معادلة موجودة في الجداول أعلاه وفي تبويب بيانات المالية العامة</div>
+    <div class="tblwrap" style="max-height:520px"><div id="n-fBody"></div></div>
+  </div>
+  <div class="blockhead" style="margin-top:34px"><span>صندوق الاستثمارات العامة</span> المصادر والمعادلات والمنهجية</div>
+
     <div class="card"><h3>المصادر</h3><div id="f-src"></div></div>
     <div class="card"><h3>المعادلات والتعريفات</h3><div id="f-frm"></div></div>
     <div class="card"><h3>المنهجية</h3><div id="f-meth"></div></div>
-    <div data-gov></div>
   </section>
-</div>
 
+<section id="r-s-quality">
+
+  <div class="sechead"><h2>ما الذي يستحق التدقيق، وهل تتغيّر الأرقام بعد نشرها؟</h2>
+  <p>بقية التبويبات تعرض الأرقام، وهذا التبويب يقيس مدى استحقاقها للثقة. يجيب عن سؤالين قبل أي تحليل: <b>أيّ نقطة من نحو ستمئة نقطة بيانات تستحق أن تُفتح لها التقارير الأصلية؟</b> و<b>هل تنشر وزارة المالية الرقم نفسه في كل إصدار لاحق، أم تعدّله؟</b> الأول يُنتجه نموذج الاتجاه والموسمية، والثاني تُنتجه مقارنة كل فترة عبر جميع التقارير التي وردت فيها.</p></div>
+  <div class="verdict" id="qVerdict"></div>
+  <div class="verdict" id="qAdd" style="margin-top:14px"></div>
+  <div class="grid g4" id="qKpis" style="margin-top:16px"></div>
+  <div class="card" style="margin-top:16px">
+    <h3>فهرس النقاط التي تستحق التدقيق</h3>
+    <div class="hint">البعد بين القيمة الفعلية والقيمة التي يتوقعها نموذج الاتجاه والموسمية، مقسوماً على الانحراف المعياري للبواقي · اضغط أي صف لفتح تفصيله</div>
+    <div class="tblwrap"><table id="tAlerts" class="clickable"></table></div>
+    <div class="note" id="nAlerts"></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h3>كم مصدراً مستقلاً يسند أرقامَ كلِّ فترة؟</h3>
+      <div class="hint">عدد التقارير المستقلة التي وردت فيها أرقام الفترة نفسها</div>
+      <div class="chartbox sm"><canvas id="cCoverage"></canvas></div>
+      <div class="note" id="nCoverage"></div>
+    </div>
+    <div class="card">
+      <h3>الفروق المرصودة بين إصدارات التقارير</h3>
+      <div class="hint">الحالات التي اختلفت فيها قيمة بند بين تقريرين</div>
+      <div class="tblwrap" style="max-height:300px"><table id="tRev"></table></div>
+      <div class="note" id="nRevis"></div>
+    </div>
+  </div>
+</section>
+
+<section id="r-s-gov">
+  <div class="sechead"><h2>الحوكمة والالتزام</h2>
+  <p>ما عُدِّل بعد النشر، وما فُحص فلم يتغيّر، ومتى يتغيّر الرقم، وكيف تُسترجَع نسخةٌ استُشهد بها، والفهرسُ الآليّ وبيانُ الإتاحة والبيانات الشخصية والنصوصُ النظامية.</p></div>
+  <div id="govBlock">
+  <div class="blockhead" style="margin-top:34px"><span>سجل التصحيحات</span> ما عُدِّل بعد النشر</div>
+  <div class="card"><div id="fCorr"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>سجل الفحوص</span> ما فُحص ولم يتغيّر</div>
+  <div class="card"><div id="fGates"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>سياسة المراجعات</span> متى يتغيّر الرقم وكيف يُقيَّد</div>
+  <div class="card"><div id="fRevPol"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>تقويم الإصدار والتوقيت</span> متى نُشر كل رقم وكم تقادَم</div>
+  <div class="card"><div id="fRel"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>أرشيف النسخ</span> كيف تُسترجَع نسخةٌ استُشهد بها</div>
+  <div class="card"><div id="fArch"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>الفهرس الآلي</span> وصفٌ معياريٌّ تقرؤه الآلة</div>
+  <div class="card"><div id="fCat"></div></div>
+
+  <div class="blockhead" style="margin-top:34px"><span>بيان الإتاحة</span> ما تحقّق وما لم يُختبر</div>
+  <div class="card"><div id="fA11y"></div></div>
+
+  <!-- lg-6: بيانٌ شخصيٌّ منشورٌ فعلاً بلا وعيٍ ولا موقفٍ ولا ذكرٍ للنظام. -->
+  <div class="blockhead" style="margin-top:34px"><span>البيانات الشخصية</span> ما تُعرض وما تمتنع عنه اللوحة</div>
+  <div class="card"><div id="fPdpl"></div></div>
+
+  <!-- lg-4 · lg-8 · lg-9 · lg-11: شروطُ كلِّ ناشرٍ على حدة، والنظامُ
+       المرجعيّ لحقوق المؤلف، ورخصةُ البيانات المفتوحة، كلُّها غائبة. -->
+  <div class="blockhead" style="margin-top:34px"><span>الالتزام النظامي</span> نصوصٌ قِيست عليها، ومسائلُ تُعرض على مختصّ</div>
+  <div class="card"><div id="fLegal"></div></div>
+
+  </div><!-- /govBlock -->  <div class="blockhead" style="margin-top:34px"><span>الاعتماد الخارجي</span> ما تطلبه الصفحة من الشبكة</div>
+  <div class="card">
+    <h3>طلب شبكي واحد، ولا أثر لسقوطه على أي رقم</h3>
+    <div class="note">
+      <b>ما يُطلب:</b> ورقة أنماط الخطوط من <span dir="ltr">fonts.googleapis.com</span>
+      (وملفات الخطوط من <span dir="ltr">fonts.gstatic.com</span>)، وهو <b>الطلب الشبكي الوحيد</b>
+      في الصفحة كلها. <b>ولا تُطلب بيانات من أي خادم:</b> كل رقم في اللوحة مضمَّن في الملف نفسه،
+      فلا واجهة برمجية ولا استعلام ولا تتبُّع.
+      <br><b>وماذا يحدث حين يسقط الطلب</b> (شبكة مقطوعة · جدار حماية · وكيل خروج يحجب النطاق):
+      تُعرض الصفحة بخطوط النظام من قائمة الاحتياط المعلنة
+      (<span dir="ltr">SF Arabic</span> · <span dir="ltr">Segoe UI</span> · <span dir="ltr">Noto Sans Arabic</span> · <span dir="ltr">Tahoma</span>)،
+      ولا يتغيّر رقم ولا رسم ولا وظيفة، يتغيّر شكل الحرف وحده. والخاصية
+      <span dir="ltr">display=swap</span> تمنع أي حجب للعرض أثناء الانتظار.
+      <br><b>ولماذا يُذكر هذا هنا:</b> لأن اعتماداً خارجياً يسقط بصمتٍ في بيئة القارئ
+      يستحق أن يُعلَن، لا أن يُكتشف من سجلّ الشبكة.
+    </div>
+  </div>
+
+  <div class="blockhead" style="margin-top:34px"><span>الرابط والاستشهاد</span> ما يحمله العنوان وما لا يحمله</div>
+  <div class="card">
+    <h3>ما يُشارَك في الرابط</h3>
+    <div class="note">
+      <b>يحمل العنوان:</b> اللوحة المفتوحة والتبويب المفتوح، بالشكل
+      <span dir="ltr">#/fiscal/var</span>، فنسخُ الرابط من شريط المتصفح ولصقه يفتح
+      الموضع نفسه عند القارئ الآخر، ويعمل زرّا الرجوع والتقدّم بين اللوحات.
+      <br><b>ولا يحمل العنوان:</b> المدى الزمني ولا التواتر ولا الوحدة ولا أي مرشِّح
+      داخل التبويب، فهذه تعود إلى حالتها الافتراضية عند فتح الرابط. فإن كان المقصود
+      الاستشهاد بقيمةٍ بعينها فالأدقّ ذكرُ المدى صراحةً مع الرابط، أو تنزيل ملف
+      <span dir="ltr">CSV</span> من تبويب «البيانات» فهو يحمل المدى والوحدة والأساس
+      والمصدر ورقم النسخة في ترويسته.
+      <br><b>ورقم النسخة</b> مثبَّت في تذييل الصفحة، ويتغيّر مع كل تصحيح مُدرَجٍ في
+      سجل التصحيحات، فالاستشهاد الكامل يذكره.
+    </div>
+  </div>
+</section>
+
+<section id="r-s-glossary">
+
+  <div class="sechead"><h2>القاعدة المعرفية، مصطلحات المالية العامة</h2>
+  <p>تعريفات بنود الإيرادات والمصروفات كما تنشرها وزارة المالية وفق دليل إحصاءات مالية الحكومة (GFSM 2014)، ومهام القطاعات الحكومية التسعة.</p></div>
+  <div class="filters" style="margin-bottom:16px">
+    <div class="f" style="flex:1"><label>بحث في المصطلحات</label>
+      <input id="gsearch" aria-label="بحث في القاعدة المعرفية والمعجم" placeholder="اكتب مصطلحاً بالعربية أو الإنجليزية…" style="background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:var(--fs-sm)"></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>بنود الإيرادات والمصروفات</h3><div class="hint">التعريف الرسمي ومكوّنات كل بند</div><div id="gItems"></div></div>
+    <div class="card"><h3>القطاعات الحكومية</h3><div class="hint">أبرز مهام كل قطاع من قطاعات الإنفاق التسعة</div><div id="gSectors"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>معجم المصطلحات المالية والاقتصادية، وزارة المالية <span class="pill" id="gCount"></span></h3>
+    <div class="hint" id="gEdition">بالتعاون مع مجمع الملك سلمان العالمي للغة العربية · اكتب في مربع البحث أعلاه للتصفية</div>
+    <div id="gDict"></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>مفاهيم أساسية في المالية العامة</h3>
+    <div class="hint">شرح موجز للمصطلحات المستخدمة في التقارير</div>
+    <div id="gConcepts"></div>
+  </div>
+</section>
+
+</div>
 
 <!-- ══ لوحةُ «عن اللوحة»، 10-09-2026م ══════════════════════════════
      نصُّ الصفة والرخصة والإسناد والمصادر والاصطلاحات كان في التذييل،
@@ -4096,7 +4139,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل مُوجَبات المادة <span dir="ltr">3(a)(1)</span> <b>الثمانية</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد مرّتين:</b> كان «ستّة» فصار «سبعة» في 19-09-2026م حين أُضيف الشقُّ الثاني من <span dir="ltr">(B)</span> إلى الفحص، <b>والعددُ الصحيح ثمانيةٌ لا سبعة</b> (L-05 في 31-10-2026م): 5 + 2 + 1 = 8، وهو تفكيكُ الجملة نفسِها، وهو عددُ ما تفحصه بوّابتُها (<span dir="ltr">vlegal</span>)، فكان الرقمُ المنشور يخالف تفكيكَه الذي يَليه ويخالف فاحصَه:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.557</span>+<span id="fHashAttr">62ff62dc</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.558</span>+<span id="fHashAttr">224d0c48</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات وحدّ المسؤولية: القسم 5</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -4118,7 +4161,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل، ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.557+62ff62dc · 01-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">62ff62dc</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن بطاقات الحوكمة في تبويب البيانات.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.558+224d0c48 · 01-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">224d0c48</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن لوحة المرجع، تبويب الحوكمة والالتزام.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL، فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -4142,7 +4185,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.557+62ff62dc · 01-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">62ff62dc</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVerFoot" dir="ltr">2.558+224d0c48 · 01-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHashFoot" dir="ltr" style="font-family:var(--font-mono,monospace)">224d0c48</span></div>
 </footer>
 </div>
 
@@ -15473,7 +15516,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   "def_ar": "أي يوم في السنة لا يختص بأيام العمل فقط."
  }
 ]</script>
-<script>window.MIRSAD_GATES={"plants": {"vfresh": 4, "vcsv": 13, "vlegal": 7, "vtabs": 4, "vaxis": 4, "vtext": 18, "va11y": 18, "vall": 2, "vstamps": 3, "vleak": 2, "vdcat": 2, "vsr": 5, "vdash": 4, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vtok": 8, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vname": ["home", "fiscal", "econ", "energy", "pif"], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "about"], "vall": ["fiscal", "econ", "energy", "pif"], "vaxis": ["home", "fiscal", "econ", "energy", "pif"], "vcov": ["home", "fiscal", "econ", "energy", "pif"], "vcsv": ["home", "fiscal", "econ", "energy", "pif"], "vdash": ["home", "fiscal", "econ", "energy", "pif"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif"], "vfade": ["home", "fiscal", "econ", "energy", "pif"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif"], "vlegal": [], "vname": ["home", "fiscal", "econ", "energy", "pif"], "vneg": ["home", "fiscal", "econ", "energy", "pif"], "vpaint": ["home", "fiscal", "econ", "energy", "pif"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
+<script>window.MIRSAD_GATES={"plants": {"vfresh": 4, "vcsv": 14, "vlegal": 8, "vtabs": 5, "vaxis": 4, "vtext": 18, "va11y": 18, "vall": 2, "vstamps": 3, "vleak": 3, "vdcat": 2, "vsr": 6, "vdash": 4, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vtok": 8, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["econ", "energy", "fiscal", "home", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif", "ref"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
  "periods": [
   "2017Q1",
   "2017Q2",
@@ -24490,9 +24533,19 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     "was": "ثلاثُ ملاحظاتٍ تحسينيةٍ قيست ولم تُعالَج في هذا الإصدار: سلّمُ المقاسات سبعةَ عشرَ حجماً فيها عشرةُ أزواجٍ متتاليةٍ تفصلُها بكسلٌ أو أقلّ؛ وسلّمُ المسافات ثلاثٌ وعشرون قيمةً منها أربعَ عشرةَ ليست من مضاعفات أربعة بينما السلّمُ الرباعيُّ مستعملٌ في 739 موضعاً؛ ومهمَّةٌ طويلةٌ عند التحميل تبلغ 145 مللي ثانية والعتبةُ المنشورة خمسون.",
     "now": "لم تُعالَج، وتُعلَن هنا بمقدارها المقيس: السلّمان محروسان ببوّابة الرموز فكلُّ قيمةٍ تمرُّ برمزٍ معلَن، والاختصارُ تغييرٌ بصريٌّ واسعُ الأثر يُعرض على صاحب العمل قبل تنفيذه؛ والمهمّةُ الطويلةُ واحدةٌ من ثلاثٍ ومجموعُها 278 مللي ثانية وأوّلُ رسمٍ للمحتوى 332 إلى 448، والأداءُ في مجمله داخلَ الحدود.",
     "why": "قيدٌ يُعلَن بمقداره خيرٌ من قيدٍ يُسكَت عنه، ولا يُقفل قيدٌ بغير إصلاحٍ أو إعلانِ حدٍّ أو ردٍّ بدليل."
+   },
+   {
+    "d": "01-11-2026م",
+    "v": "2.558",
+    "t": "واجهة",
+    "w": "عمارةُ اللوحات: المرجعُ لوحةٌ واحدة، والتبويباتُ النحيلةُ كتلاتٌ في أمّها",
+    "ref": "UX-17 · UX-18 · UX-19 · UX-20 · UX-21 · GATE-42",
+    "was": "ثلاثةٌ وثلاثون سياقَ تبويبٍ قيست واحداً واحداً، وفيها عدمُ تناسبٍ لا كثرةُ نصّ: أربعةُ تبويبات «بيانات» متماثلةِ البنية محتواها من نفسه 2,393 و519 و3,315 و970 محرفاً، وكتلةُ الحوكمة التسعُ (30,799 محرفاً) تنتقل بينها فتكون 98% من ثلاثةٍ منها؛ وثمانيةُ تبويباتٍ نحيلةٍ لا تحمل إلا رسماً واحداً أو صفراً وخمسَ بطاقاتٍ أو أقلّ (تحليلُ الانحراف 442 محرفاً، والتصنيفُ الائتمانيُّ 723، والقاعدةُ المعرفيةُ 367، والمستهدفاتُ 1,315، والأداءُ الماليُّ 1,883، والأثرُ الاقتصاديُّ 1,964، ومعهما الدخلُ والادخار وفجوةُ التعادل)؛ وخريطةُ اللوحات والتبويبات مكتوبةٌ حرفياً في أربعةَ عشرَ فاحصاً نسخةً نسخةً، فمن يحذف تبويباً أو يُضيفه يحرِّر موضعاً وينسى ثلاثةَ عشرَ، والنتيجةُ صامتةٌ في الاتجاهين: فاحصٌ يدخل تبويباً لا وجودَ له، أو تبويبٌ قائمٌ لا يدخله فاحص؛ وبصمةُ بنية الجدول في الطبقة المشتركة عددُ صفوفه وحده، فإعادةُ كتابة الجدول تمحو رؤوسَ صفوفه ولا تُعاد ترقيتُها؛ واسمُ الجدول المُشتقُّ يأخذ أوّلَ عنوانٍ في القسم لا أقربَ عنوانٍ سابقٍ له؛ وقطعُ اسم الملفّ المُنزَّل من ذيله يحذف ما يُميِّزه؛ ومسحُ مسار التركيز يقع في آخر تبويبٍ تركته الحلقةُ مفتوحاً لا في سياقٍ مُعلَن؛ وحدُّ الطباعة يُقاس في سياقٍ واحد؛ ومعرِّفا الإصدار والبصمة مكرَّران على عنصرين في الصفحة الواحدة.",
+    "now": "المرجعُ صار لوحةً واحدةً تخدم اللوحات الخمس، بخمسة تبويبات: الجداولُ والتنزيل، والمنهجيةُ والمعادلات، وجودةُ البيانات، والحوكمةُ والالتزام، والمعجمُ والقاعدةُ المعرفية. وكتلةُ الحوكمة لها فيها بيتٌ ثابتٌ فلا تُنقَل. والتبويباتُ النحيلةُ الثمانيةُ عادت كتلاتٍ داخل أمّها بمعرِّفاتٍ مُعلَنة، ومعها بيانُ تبويبها كاملاً لم يُحذف منه حرف. فصارت السياقاتُ 24 بدل 33: البداية 1، والمالية 7، والاقتصاد 5، والطاقة 2، والصندوق 4، والمرجع 5. والخريطةُ مُعلَنةٌ في موضعٍ واحد يتبعه الفواحصُ كلُّهم، وبوّابةٌ جديدة (GATE-42) تقرأ صفوفَ التبويبات من الصفحة المبنيّة وتقابلها بالمُعلَن عنصراً عنصراً وبالترتيب نفسِه، فتُسقط البناءَ عند أيِّ فارقٍ في الاتجاهين. وبصمةُ بنية الجدول صارت تحمل نوعَ أوّل خليةٍ في أوّل صفِّ بيانات، فمحوُ رؤوس الصفوف يُكشف حتماً (وقيس 1,002 خليةٍ كانت تُقرأ أرقاماً بلا مرساةٍ زمنية). واسمُ الجدول يُشتقّ من أقربِ عنوانٍ سابقٍ له، وقطعُ اسم الملفّ يحفظ ذيلَه المميِّز. ومسحُ مسار التركيز صار في سياقٍ مُعلَنٍ يُنشر اسمُه (51 محطّةً من 79 في الصورة الكلية)، وحدُّ الطباعة يُقاس في سياقين مُعلَنين فيشمل الجداولَ الطويلةَ والرسومَ معاً. ومعرِّفا التذييل أُفردا. وأزراعُ الحرّاس صارت 143: خمسةٌ جديدةٌ تُثبت التقاطَ ما أُصلح (بصمةُ بنية الجدول · تصادمُ أسماء الملفّات بعد قطعِ الذيل · خريطةُ اللوحات · مرساةُ اقتران نفي الصفة الاستشارية · تسرُّبُ معالجٍ بمعدّل واحدٍ لكلِّ دورة)، وأربعةَ عشرَ زرعاً أُعيد توجيهُ نطاقها إلى حيث انتقل هدفُها فعلاً، وزرعان حُذفا لتداخلهما مع ما يحرسه غيرُهما. واشتقاقُ اسم الجدول من أقربِ عنوانٍ سابقٍ لا زرعَ له على حدة، ويحرسه حارسُ تفرُّد أسماء الملفّات نفسُه، وهذا حدُّه مُعلَناً. وعدُّ المستمعين صار يُقاس بعد دورةِ تسخينٍ مُعلَنةٍ لا تُحسب، لأن بعضَ البطاقات يُبنى في أوّل زيارةٍ لتبويبه فيُقرأ بناؤه تسرُّباً.",
+    "why": "التبويبُ يستحقّ موضعَه إن أجاب سؤالاً بنفسه، والمرجعُ وصفٌ للوحة كلِّها فموضعُه لوحةٌ واحدةٌ لا أربعةُ تبويباتٍ متماثلة. والخريطةُ في موضعٍ واحدٍ محروسٍ تمنع صنفاً كاملاً من العطب: دعوى فحصٍ أوسعَ من تطبيقها."
    }
   ],
-  "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في تبويب «البيانات والمصادر» الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
+  "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في لوحة المرجع، تبويب المنهجية والمعادلات الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
   "termsNote": "تُعتمد في هذه اللوحة المفردات والمصطلحات والمفاهيم المقرّة في المعاجم الرسمية الصادرة عن الجهات الحكومية بالتعاون مع مجمع الملك سلمان العالمي للغة العربية: معجم المصطلحات المالية والاقتصادية (وزارة المالية) ومعجم المصطلحات الإحصائية (الهيئة العامة للإحصاء)، ويُرجَع في تسمية البنود إلى ما تنشره وزارة المالية في تقرير أداء الميزانية.",
   "glossaryEdition": {
    "name": "معجم المصطلحات المالية والاقتصادية",
@@ -24563,7 +24616,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     "u": "https://www.saudiexchange.sa/wps/portal/saudiexchange/ourmarkets/main-market-watch/major-shareholders"
    }
   ],
-  "gatesNote": "سجل التصحيحات يقول ما تغيّر في اللوحة، ولا يقول ما فُحص فوجِد سليماً، والثاني شرطُ قراءةِ الأول: خلوُّ السجل من بابٍ لا يدلّ على سلامته ما لم يُعلَن أنه فُحص. وهذه البوابات تعمل على <b>الصفحة المنشورة نفسها</b> (<span dir=\"ltr\">index.html</span> بعد التغليف، في الوضع المعياري لا في وضع التوافق)، ولا يُنشر بناءٌ أخفقت فيه واحدة. <b>ونطاقُ كلِّ بوابةٍ في العمود الثالث من الجدول، مشتقٌّ من شيفرتها وقتَ البناء لا مكتوبٌ في نصّ</b>، فليست كلُّها تفتح اللوحات الخمس. وآخرها <span dir=\"ltr\">vplant</span> تزرع مخالفاتٍ متعمَّدة في نسخةٍ من الصفحة وتُسقط البناء إن مرّت واحدةٌ منها دون أن تلتقطها بوابتها، فالفحص نفسه مفحوص، وعددُ المزروع وتوزيعُه في العمود الرابع وفي حاشية التغطية تحت الجدول، وكلاهما محتسبٌ من <span dir=\"ltr\">vplant.js</span> نفسه. <b>وقاعدةٌ واحدة تحكم هذه البطاقة:</b> ما يتغيّر يُحتسب، وما يُكتب لا يتغيّر، فقد تناقضت هذه البطاقةُ نفسَها في ثلاثة مواضع حين كانت أعدادُها مكتوبةً بيد. <b>وخطُّ النشر مُبرهَنٌ من داخل المستودع:</b> هدفُ <span dir=\"ltr\">publish</span> في <span dir=\"ltr\">Makefile</span> يعتمد على هدف <span dir=\"ltr\">check</span> الذي يشغّل السلسلة كاملة، فلا يقع نشرٌ إلا بعد اجتيازها بالرمز صفر. <b>وكانت الدعوى قبلَه تعتمد على نصوص المهام المجدولة</b> وهي خارج المستودع فلا تُفحَص، فكان الإلزامُ عرفيّاً لا مُبرهَناً. <b>وما لا تفحصه هذه البوابات</b> منصوصٌ عليه في بيان الإتاحة تحت «ما لم يُفحص آلياً» فلا يُقرأ سكوتُها شهادةَ سلامة.",
+  "gatesNote": "سجل التصحيحات يقول ما تغيّر في اللوحة، ولا يقول ما فُحص فوجِد سليماً، والثاني شرطُ قراءةِ الأول: خلوُّ السجل من بابٍ لا يدلّ على سلامته ما لم يُعلَن أنه فُحص. وهذه البوابات تعمل على <b>الصفحة المنشورة نفسها</b> (<span dir=\"ltr\">index.html</span> بعد التغليف، في الوضع المعياري لا في وضع التوافق)، ولا يُنشر بناءٌ أخفقت فيه واحدة. <b>ونطاقُ كلِّ بوابةٍ في العمود الثالث من الجدول، مشتقٌّ من شيفرتها وقتَ البناء لا مكتوبٌ في نصّ</b>، فليست كلُّها تفتح اللوحات الستّ. وآخرها <span dir=\"ltr\">vplant</span> تزرع مخالفاتٍ متعمَّدة في نسخةٍ من الصفحة وتُسقط البناء إن مرّت واحدةٌ منها دون أن تلتقطها بوابتها، فالفحص نفسه مفحوص، وعددُ المزروع وتوزيعُه في العمود الرابع وفي حاشية التغطية تحت الجدول، وكلاهما محتسبٌ من <span dir=\"ltr\">vplant.js</span> نفسه. <b>وقاعدةٌ واحدة تحكم هذه البطاقة:</b> ما يتغيّر يُحتسب، وما يُكتب لا يتغيّر، فقد تناقضت هذه البطاقةُ نفسَها في ثلاثة مواضع حين كانت أعدادُها مكتوبةً بيد. <b>وخطُّ النشر مُبرهَنٌ من داخل المستودع:</b> هدفُ <span dir=\"ltr\">publish</span> في <span dir=\"ltr\">Makefile</span> يعتمد على هدف <span dir=\"ltr\">check</span> الذي يشغّل السلسلة كاملة، فلا يقع نشرٌ إلا بعد اجتيازها بالرمز صفر. <b>وكانت الدعوى قبلَه تعتمد على نصوص المهام المجدولة</b> وهي خارج المستودع فلا تُفحَص، فكان الإلزامُ عرفيّاً لا مُبرهَناً. <b>وما لا تفحصه هذه البوابات</b> منصوصٌ عليه في بيان الإتاحة تحت «ما لم يُفحص آلياً» فلا يُقرأ سكوتُها شهادةَ سلامة.",
   "gates": [
    {
     "n": "vfresh",
@@ -24595,19 +24648,19 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
    },
    {
     "n": "vtabs",
-    "g": "تُفتح تبويبات لوحة المالية الثلاثة عشر تحت خمس حالات نطاقٍ مختلفة بلا خطأ تشغيل واحد؛ <b>ويُنزَّل ملفُّ التصدير الرئيس ويُقابَل بالمنتقى</b>: عددُ صفوفه يساوي عدد الفترات، وديباجتُه تحمل المدى نفسه ورابطَ الرخصة ومعرّفَ المجموعة، وعرضُ حقوله موحَّد."
+    "g": "تُفتح تبويبات لوحة المالية السبعة تحت خمس حالات نطاقٍ مختلفة بلا خطأ تشغيل واحد؛ <b>ويُنزَّل ملفُّ التصدير الرئيس ويُقابَل بالمنتقى</b>: عددُ صفوفه يساوي عدد الفترات، وديباجتُه تحمل المدى نفسه ورابطَ الرخصة ومعرّفَ المجموعة، وعرضُ حقوله موحَّد."
    },
    {
     "n": "vdash",
-    "g": "لا بطاقةَ تُعلن أن التقطيع يحمل معنىً وفيها تقطيعٌ أضافه المحرّك آلياً، وإلا انقلب المعنى. على اللوحات الخمس."
+    "g": "لا بطاقةَ تُعلن أن التقطيع يحمل معنىً وفيها تقطيعٌ أضافه المحرّك آلياً، وإلا انقلب المعنى. على اللوحات الستّ (الخمسُ ولوحةُ المرجع)."
    },
    {
     "n": "vtext",
-    "g": "لا ترميزَ يظهر نصّاً للقارئ ولا يتسرّب إلى اسمٍ برمجيّ، في أي تبويبٍ من اللوحات الخمس."
+    "g": "لا ترميزَ يظهر نصّاً للقارئ ولا يتسرّب إلى اسمٍ برمجيّ، في أي تبويبٍ من اللوحات الستّ (الخمسُ ولوحةُ المرجع)."
    },
    {
     "n": "vaxis",
-    "g": "لا محورَ يحمل وسمين متطابقين، فلا تلتبس فترتان. <b>وتُزار مصفوفةُ الحالات</b> (النطاق × التواتر × الوحدة) <b>حيث توجد عناصرُ التحكّم التي تقودها</b>، وهي خمسةُ تبويباتٍ في لوحة المالية (الصورة الكلية · الإيرادات · المصروفات · العجز والدين · البيانات)، وما عداها يُقاس <b>مرّةً في حالته القائمة</b> (G-13: كان النصُّ يقول «كلُّها» بلا قيد، والمقيسُ 88 حالةً منها 60 حالةَ مصفوفةٍ و28 حالةً قائمة)، باختيار الأزرار بمفاتيحها البنيوية لا بنصوصها، ويسقط البناءُ إن لم يوجد هدفُ ضغطٍ معلَن."
+    "g": "لا محورَ يحمل وسمين متطابقين، فلا تلتبس فترتان. <b>وتُزار مصفوفةُ الحالات</b> (النطاق × التواتر × الوحدة) <b>حيث توجد عناصرُ التحكّم التي تقودها</b>، وهي أربعةُ تبويباتٍ في لوحة المالية (الصورة الكلية · الإيرادات · المصروفات · العجز والدين) وجداولُ المرجع، وما عداها يُقاس <b>مرّةً في حالته القائمة</b> (G-13: كان النصُّ يقول «كلُّها» بلا قيد، والمقيسُ 88 حالةً منها 60 حالةَ مصفوفةٍ و28 حالةً قائمة)، باختيار الأزرار بمفاتيحها البنيوية لا بنصوصها، ويسقط البناءُ إن لم يوجد هدفُ ضغطٍ معلَن."
    },
    {
     "n": "vcov",
@@ -24643,15 +24696,15 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
    },
    {
     "n": "vleak",
-    "g": "لا معالِجَ حدثٍ يتراكم: تُدار ثلاثُ دوراتٍ كاملةٍ على اللوحات الأربع وتبويباتها مع جمعِ المهملات صراحةً، ويُشترط أن <b>يستقرّ استقراراً تامّاً</b> عددُ مستمعي الأحداث بين الدورتين الثانية والثالثة (لا زيادةَ ولو واحداً)، وأن <b>لا تزيد العقدُ الحيّة على 200 عقدة</b> بينهما (G-12: الحدُّ كان مطبَّقاً وغيرَ مُعلَن، والمقيسُ اليوم فارقٌ سالبٌ قدرُه 40 عقدة، فالسماحُ غيرُ مُستهلَك)، وأن يبقى زمنُ معالجة نقرةٍ واحدة <b>دون 120 مللي ثانية</b>. وهذا صنفٌ من العطب لم يكن له مسارٌ إلى الاكتشاف: لا بوابةَ كانت تقيس زمناً ولا مستمعاً ولا ذاكرة."
+    "g": "لا معالِجَ حدثٍ يتراكم: تُدار ثلاثُ دوراتٍ كاملةٍ على اللوحات الخمس وتبويباتها (الأربعُ ولوحةُ المرجع) مع جمعِ المهملات صراحةً، ويُشترط أن <b>يستقرّ استقراراً تامّاً</b> عددُ مستمعي الأحداث بين الدورتين الثانية والثالثة (لا زيادةَ ولو واحداً)، وأن <b>لا تزيد العقدُ الحيّة على 200 عقدة</b> بينهما (G-12: الحدُّ كان مطبَّقاً وغيرَ مُعلَن، والمقيسُ اليوم فارقٌ سالبٌ قدرُه 40 عقدة، فالسماحُ غيرُ مُستهلَك)، وأن يبقى زمنُ معالجة نقرةٍ واحدة <b>دون 120 مللي ثانية</b>. وهذا صنفٌ من العطب لم يكن له مسارٌ إلى الاكتشاف: لا بوابةَ كانت تقيس زمناً ولا مستمعاً ولا ذاكرة."
    },
    {
     "n": "vcsv",
-    "g": "الملفُّ المُصدَّر يُفحص كما تُفحص الصفحة: يُنزَّل كلُّ زرِّ تصديرٍ <b>ظاهرٍ</b> في اللوحات الخمس، ويُمرَّر على محلّل <span dir=\"ltr\">RFC 4180</span> صارم، ويُشترط عرضُ حقولٍ موحَّد، وديباجةٌ تحمل كلَّ حقلٍ يَعِد به وصفُ الوصْلة في الفهرس، وأن يبدأ كلُّ سطرِ ديباجةٍ بمحرف # فعلاً فتتخطّاه أداةُ القراءة، وأن يكون في الملفّ صفُّ بياناتٍ واحدٌ على الأقل، وأن يميّز عمودُ «نوع الصف» الحاشيةَ النثرية من صفّ البيانات."
+    "g": "الملفُّ المُصدَّر يُفحص كما تُفحص الصفحة: يُنزَّل كلُّ زرِّ تصديرٍ <b>ظاهرٍ</b> في اللوحات الستّ (الخمسُ ولوحةُ المرجع)، ويُمرَّر على محلّل <span dir=\"ltr\">RFC 4180</span> صارم، ويُشترط عرضُ حقولٍ موحَّد، وديباجةٌ تحمل كلَّ حقلٍ يَعِد به وصفُ الوصْلة في الفهرس، وأن يبدأ كلُّ سطرِ ديباجةٍ بمحرف # فعلاً فتتخطّاه أداةُ القراءة، وأن يكون في الملفّ صفُّ بياناتٍ واحدٌ على الأقل، وأن يميّز عمودُ «نوع الصف» الحاشيةَ النثرية من صفّ البيانات."
    },
    {
     "n": "vdir",
-    "g": "اتجاهُ العرض تابعٌ للغة المحتوى: المحتوى العربيُّ يجري فيه الزمنُ من اليمين إلى اليسار، ومحورُ القيم على اليمين، والتلميحاتُ والمفاتيحُ كذلك. ويُقاس ذلك على كلِّ رسمٍ ظاهرٍ في اللوحات الخمس لا على الشيفرة، والاشتقاقُ في ممرٍّ واحدٍ لكلِّ رسم. والاستثناءُ الوحيد بلا إعلان: المبعثرُ بمحورَي قيمٍ كمّيَّين، فقلبُ محورٍ كمّيٍّ يعكس اتجاهَ العلاقة بصرياً؛ وما عداه يحتاج إعلاناً في بطاقة الرسم تَعُدُّه البوابةُ وتُظهره."
+    "g": "اتجاهُ العرض تابعٌ للغة المحتوى: المحتوى العربيُّ يجري فيه الزمنُ من اليمين إلى اليسار، ومحورُ القيم على اليمين، والتلميحاتُ والمفاتيحُ كذلك. ويُقاس ذلك على كلِّ رسمٍ ظاهرٍ في اللوحات الستّ (الخمسُ ولوحةُ المرجع) لا على الشيفرة، والاشتقاقُ في ممرٍّ واحدٍ لكلِّ رسم. والاستثناءُ الوحيد بلا إعلان: المبعثرُ بمحورَي قيمٍ كمّيَّين، فقلبُ محورٍ كمّيٍّ يعكس اتجاهَ العلاقة بصرياً؛ وما عداه يحتاج إعلاناً في بطاقة الرسم تَعُدُّه البوابةُ وتُظهره."
    },
    {
     "n": "vfade",
@@ -24976,12 +25029,12 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
    "std": "إرشادات إتاحة محتوى الويب (WCAG) الإصدار 2.2، مستوى AA",
    "state": "تقييمٌ ذاتيٌّ جزئي، لا دعوى مطابقة",
    "who": "<b>مَن أجرى التقييم:</b> مُنتِج اللوحة نفسه، <b>لا طرفٌ مستقلّ</b> ولا مدقّقُ إتاحةٍ معتمَد. ولم تطلبه جهةٌ ولم تراجعه.",
-   "method": "استُرشد بمنهجية <span dir=\"ltr\">WCAG-EM</span> ولم تُستوفَ أركانُ تقريرها كاملةً (لا هويّةَ مُقيِّمٍ مستقل، ولا اختبارَ عمليّاتٍ كاملة)، <b>وقد استُوفي منها في هذا الإصدار نشرُ النتيجة معياراً معياراً للخمسة والخمسين</b> في الجدول أدناه. والعيّنةُ هي اللوحات الخمس وتبويباتها كلُّها، <b>وعددُها يُحتسب عند التصيير لا يُكتب نصّاً</b>. <b>التقنيات المعتمَد عليها:</b> <span dir=\"ltr\">HTML · CSS · JavaScript · Canvas (Chart.js)</span>، والصفحةُ لا تعمل بلا JavaScript. <b>الأدوات:</b> فحصٌ آليٌّ بـ<span dir=\"ltr\">Playwright/Chromium</span> على الصفحة المنشورة في كل بناء (البوابة <span dir=\"ltr\">va11y</span>)، مسنودٌ بفحصٍ يدويٍّ بلوحة المفاتيح في متصفّحٍ واحد.",
+   "method": "استُرشد بمنهجية <span dir=\"ltr\">WCAG-EM</span> ولم تُستوفَ أركانُ تقريرها كاملةً (لا هويّةَ مُقيِّمٍ مستقل، ولا اختبارَ عمليّاتٍ كاملة)، <b>وقد استُوفي منها في هذا الإصدار نشرُ النتيجة معياراً معياراً للخمسة والخمسين</b> في الجدول أدناه. والعيّنةُ هي اللوحات الستّ (الخمسُ ولوحةُ المرجع) وتبويباتها كلُّها، <b>وعددُها يُحتسب عند التصيير لا يُكتب نصّاً</b>. <b>التقنيات المعتمَد عليها:</b> <span dir=\"ltr\">HTML · CSS · JavaScript · Canvas (Chart.js)</span>، والصفحةُ لا تعمل بلا JavaScript. <b>الأدوات:</b> فحصٌ آليٌّ بـ<span dir=\"ltr\">Playwright/Chromium</span> على الصفحة المنشورة في كل بناء (البوابة <span dir=\"ltr\">va11y</span>)، مسنودٌ بفحصٍ يدويٍّ بلوحة المفاتيح في متصفّحٍ واحد.",
    "auto": [
     "اسمٌ برمجيٌّ لكل حقل إدخال، <span dir=\"ltr\">select · input · textarea</span> (معيارا 3.3.2 و4.1.2)",
     "بديلٌ نصّيٌّ لكل رسمٍ بيانيّ، <b>ويُقاس محتواه لا وجودُه</b>: تُقابَل أرقامُ البديل بأرقام الرسم، وتُنسب كلُّ قيمةٍ قصوى إلى سلسلتها (معيار 1.1.1)",
     "هدفُ لمسٍ لا يقلّ عن 24×24 نقطة لكل عنصرٍ تفاعليّ (معيار 2.5.8)",
-    "تباينُ النصّ فوق 4.5:1 في <b>كلِّ عنصرٍ ظاهرٍ يحمل نصّاً مباشراً</b> في اللوحات الخمس وتبويباتها (معيار 1.4.3). <b>والمستثنى صريح:</b> المخفيُّ لقارئ الشاشة (<span dir=\"ltr\">.sronly</span>) وما عليه <span dir=\"ltr\">aria-hidden</span>، <b>وما يُرسم داخل <span dir=\"ltr\">canvas</span></b> فلا تراه شجرةُ المستند. (G-06 في 31-10-2026م: كان الفحصُ على قائمةٍ محدَّدةٍ ثم صار شاملاً في 19-09-2026م، وبقي هذا البيانُ يقول «قائمةٌ محدَّدة» و«جزئياً، لا على كل نصٍّ في الصفحة»، فكان البيانُ الرسميُّ أضيقَ من المطبَّق.)",
+    "تباينُ النصّ فوق 4.5:1 في <b>كلِّ عنصرٍ ظاهرٍ يحمل نصّاً مباشراً</b> في اللوحات الستّ وتبويباتها (معيار 1.4.3). <b>والمستثنى صريح:</b> المخفيُّ لقارئ الشاشة (<span dir=\"ltr\">.sronly</span>) وما عليه <span dir=\"ltr\">aria-hidden</span>، <b>وما يُرسم داخل <span dir=\"ltr\">canvas</span></b> فلا تراه شجرةُ المستند. (G-06 في 31-10-2026م: كان الفحصُ على قائمةٍ محدَّدةٍ ثم صار شاملاً في 19-09-2026م، وبقي هذا البيانُ يقول «قائمةٌ محدَّدة» و«جزئياً، لا على كل نصٍّ في الصفحة»، فكان البيانُ الرسميُّ أضيقَ من المطبَّق.)",
     "<b>حدودُ عناصر التحكّم فوق 3:1</b>، بتركيب طبقات الشفافية نزولاً حتى أول طبقةٍ معتمة (معيار 1.4.11)",
     "بنيةُ الصفحة: <span dir=\"ltr\">main</span> واحد ورابطُ تخطٍّ ولغةٌ واتجاهٌ وعنوانٌ معلَنة (معايير 3.1.1 و2.4.1 و2.4.2)",
     "ما يُنطَق فعلاً لقارئ الشاشة، من شجرة الإتاحة التي يبنيها المتصفّح: اسمٌ منطوقٌ لكل عنصرٍ تفاعليّ، وتمايُزُه بالسمع عمّا حوله، وألّا يُرى نصٌّ ذو معنًى لا يدخل الشجرة، <b>وأن يحكم كلَّ خليةِ جدولٍ رأسُ عمودٍ ورأسُ صفٍّ معاً، على مستوى الخلية لا الجدول</b>، <b>وأن تُعلن المنطقةُ الحيّة عند تغيير كلِّ صنفٍ من عناصر التحكّم في كل لوحة</b> (القوائم والمجموعات والمنزلقات ومربّعات الاختيار)، وألّا يقفز مسارُ التركيز إلى الوراء (البوابة <span dir=\"ltr\">vsr</span>)",
@@ -25620,7 +25673,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
    "fx": "لوحة المالية العامة، جولةٌ لاحقة",
    "gx": "الحوكمة والإفصاح والفهرس الآليّ",
    "sr": "محاكاة قارئ الشاشة",
-   "kb": "القاعدة المعرفية والمعجم",
+   "kb": "لوحة المرجع، المعجم",
    "fc": "تبويب التوقّع",
    "sim": "تبويب المحاكاة",
    "rev": "تبويب الإيرادات",
@@ -25629,8 +25682,8 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
    "ratios": "تبويب النسب إلى الناتج",
    "intl": "تبويب المؤشرات الدولية",
    "rate": "تبويب التصنيف الائتماني",
-   "quality": "تبويب جودة البيانات",
-   "data": "تبويب البيانات والمصادر",
+   "quality": "لوحة المرجع، جودة البيانات",
+   "data": "لوحة المرجع، الجداول والمنهجية",
    "mq": "تدقيقٌ مستقلّ (04-09-2026م)، جودة البيانات والمنهجية الإحصائية",
    "tg": "تدقيقٌ مستقلّ (04-09-2026م)، الشفافية والحوكمة والإفصاح",
    "ax2": "تدقيقٌ مستقلّ (04-09-2026م)، الإتاحة وتجربة القراءة",
@@ -31202,9 +31255,19 @@ function ixSrHead(t){
     }
     th.appendChild(tr); t.insertBefore(th,t.firstChild);
   }
+  /* ── 01-11-2026م · حارسُ «لا يُعاد» كان يحرس عددَ الصفوف وحده ─────────
+     كان المفتاحُ عددَ الصفوف، والمُصيِّرُ يُعيد كتابة الجدول بـinnerHTML
+     فيمحو رؤوسَ الصفوف التي رقّاها هذا المرور، ويبقى العددُ كما هو، فلا
+     يُعاد المرورُ ويبقى الجدولُ بلا رأسِ صفٍّ بقيّةَ العمر. وقع ذلك مقيساً:
+     1,002 خليةً في جداول المرجع تُقرأ أرقاماً بلا مرساةٍ زمنية بعد أوّل
+     إعادة تصيير (التقطتها vsr). فصار المفتاحُ بصمةً تتغيّر بتغيُّر ما يُحرَس
+     فعلاً: عددُ الصفوف، وعددُ أعمدة الرأس، ونوعُ أوّل خليةٍ في أوّل صفِّ
+     بيانات — وهو TD قبل الترقية وTH بعدها، فمحوُ الترقية يُكشف حتماً. */
+  const _ixSig=t=>t.rows.length+'|'+(t.rows[0]?t.rows[0].cells.length:0)+'|'+
+    ((t.tBodies[0]&&t.tBodies[0].rows[0]&&t.tBodies[0].rows[0].firstElementChild)?
+      t.tBodies[0].rows[0].firstElementChild.tagName:'-');
   document.querySelectorAll('.card table, section table').forEach(t=>{
-    if(t.__ixStruct===t.rows.length) return;      /* لا يُعاد على بنيةٍ لم تتغيّر */
-    t.__ixStruct=t.rows.length;
+    if(t.__ixStruct===_ixSig(t)) return;      /* لا يُعاد على بنيةٍ لم تتغيّر */
     /* المحدِّق كان ‎thead th‎، فأيُّ جدولٍ يضع رؤوسه في أول ‎tr‎ بلا ‎thead‎
       ، كجدول إحصاءات التوقّع، لا ينال ‎scope‎. فصار الاشتقاقُ من الموضع. */
     t.querySelectorAll('th').forEach(th=>{
@@ -31327,16 +31390,28 @@ function ixSrHead(t){
          أبيه فلا سابقَ له، وكان ذلك يُفقد اسمَ جدولين. */
       const anchor=t.closest('.tblwrap')||t;
       const blk=ixPrevHead(anchor);
-      /* وإلا فأقربُ عنوانٍ فوق الغلاف في شجرة الآباء. */
-      const up=(function(){ let e=anchor.parentElement, g=0;
-        while(e&&g++<4){ const q=e.querySelector('h3,.blockhead'); if(q) return q; e=e.parentElement; }
-        return null; })();
+      /* ── 01-11-2026م · «أقربُ عنوان» كان أوّلَ عنوانٍ في القسم ──────────
+         كان الاحتياطُ يسأل الآباءَ عن **أوّل** عنوانٍ في ذُرّيتهم
+         (querySelector يبحث في الأبناء لا في السوابق)، فثلاثةُ جداولٍ في
+         قسمٍ واحدٍ تحت ثلاث ترويساتٍ أخذت كلُّها نصَّ الترويسة الأولى، ثم
+         مُيِّزت بالترقيم «الجدول 2» و«الجدول 3»، فخرج ملفّان بالاسم نفسِه
+         بعد قطع الاسم عند ستّين محرفاً (التقطته vcsv). فصار البحثُ عن
+         **أقربِ عنوانٍ سابقٍ** صعوداً في شجرة الآباء، وهو ما يحكم الجدولَ
+         فعلاً في ترتيب القراءة. */
+      const up=(function(){ let e=anchor, g=0;
+        while(e && g++<6 && e.tagName!=='SECTION'){
+          const q=ixPrevHead(e); if(q) return q;
+          e=e.parentElement;
+        }
+        return e&&e.tagName==='SECTION'? e.querySelector('h2,.blockhead') : null; })();
       const nm=((blk&&blk.textContent)||(h&&h.textContent)||(up&&up.textContent)||'').trim();
       if(nm){ const cap=document.createElement('caption');
         cap.className='sronly'; cap.textContent=nm;
         cap.setAttribute('data-ixcap','1');
         t.insertBefore(cap,t.firstChild); }
     }
+    /* البصمةُ تُخزَّن بعد العمل لا قبله، فهي بصمةُ ما استقرّ عليه الجدول. */
+    t.__ixStruct=_ixSig(t);
   });
   /* ════ A2-02 (11-10-2026م) · المُسمّي لا يُنتج اسمًٍ مكرّر ════
      الاسمُ المشتقّ من عنوانٍ يتكرّر بالضرورة إن حمل العنوانُ جدولين.
@@ -31707,9 +31782,16 @@ function ixTableCsv(tbl){
    مقصورٌ على ‎section‎ الواحد، فأحدَ عشرَ ملفاً من ثمانيةٍ وثلاثين خرجت
    بأربعة أسماء لمحتوىً مختلف، ويجدها المستخدم في مجلَّده (1) و(2) و(3).
    فصار اسمُ اللوحة والتبويب جزءاً من الاسم. */
+/* 01-11-2026م: القطعُ من الذيل كان يحذف ما يُميِّز الاسمَ («الجدول 2»
+   و«الجدول 3» يصيران «الجدول-»)، فيخرج ملفّان بالاسم نفسِه ومحتوىً
+   مختلف. فصار القطعُ يحفظ الذيلَ: صدرٌ ثم ذيلٌ من اثني عشر محرفاً. */
 function ixCsvSlug(t,n){
-  return ixCsvNorm(t).replace(/[\/\\:*?"<>|\u0000-\u001F]+/g,' ')
-    .replace(/[\s\u00a0]+/g,'-').replace(/^-+|-+$/g,'').slice(0,n||60);
+  const x=ixCsvNorm(t).replace(/[\/\\:*?"<>|\u0000-\u001F]+/g,' ')
+    .replace(/[\s\u00a0]+/g,'-').replace(/^-+|-+$/g,'');
+  const lim=n||60;
+  if(x.length<=lim) return x;
+  if(lim<=16) return x.slice(0,lim);
+  return (x.slice(0,lim-13)+'-'+x.slice(-12)).replace(/-+/g,'-');
 }
 function ixCsvName(base,board,tab){
   const b=ixCsvSlug(board,24), t=ixCsvSlug(tab,24), s=ixCsvSlug(base,60);
@@ -31785,7 +31867,8 @@ function ixWireTableExport(){
     btn.setAttribute('aria-label','تنزيل بيانات الجدول: '+title+'، ملف CSV');
     btn.addEventListener('click',function(){
       /* od-25: كان معالِجُ الزرّ يحتجز عُقَدَ الجداول في إغلاقه عند التوصيل،
-         ثم تُنقل الكتلة (ixMountGov) فتتفرّغ العُقَدُ المحتجَزة، فواحدٌ
+         ثم تُنقل الكتلة (ixMountGov، أُلغي النقلُ في 01-11-2026م) فتتفرّغ
+         العُقَدُ المحتجَزة، فواحدٌ
          وخمسون زرّاً يُخرج ملفاً فيه الديباجةُ وحدها. فيُستعلَم عن الجداول
          عند النقر لا عند التوصيل، ويُعلَن الخلوُّ بدل تنزيل ملفٍّ أجوف. */
       const tabs=[...w.querySelectorAll('table')];
@@ -31824,7 +31907,8 @@ function ixWireTableExport(){
          فتُعلَن القاعدةُ في الملفّ بدل تركِ المستهلك يكتشفها. */
       pre.push(['# قواعد القيم: السالبُ بعلامة ناقصٍ لا بأقواس · والفاصلةُ الألفيّة محذوفة · والنسبةُ المئوية تُكتب برقمها متبوعاً بعلامة % · والمضاعِف برقمه وعمودُ الوحدة بجواره']);
       pre.push(['# إصدار اللوحة: '+ver]);
-      /* rg-12: بطاقاتُ الحوكمة السبعُ تنتقل بين اللوحات (ixMountGov)، فكان
+      /* rg-12: بطاقاتُ الحوكمة كانت تنتقل بين اللوحات (ixMountGov، أُلغي
+         النقلُ في 01-11-2026م وصار بيتُها لوحةَ المرجع)، فكان
          الجدولُ الواحد يُصدَّر من أربع لوحاتٍ بأربع ديباجاتٍ مختلفة: جدولُ
          معايير WCAG، وهو بيانُ إتاحةٍ لا علاقةَ له بأرقام ناشر، يخرج من
          تبويب الطاقة منسوباً إلى مجموعات بيانات الطاقة. والمستهلِكُ الآليّ
@@ -31950,23 +32034,10 @@ function ixLangParts(root){
      if(!el.hasAttribute('dir')) el.setAttribute('dir','ltr');
    });
 }
-/* ── gx-22: بطاقاتُ الحوكمة السبع (سجلّ التصحيحات · سجلّ الفحوص · سياسة
-   المراجعات · تقويم الإصدار · أرشيف النسخ · الفهرس الآلي · بيان الإتاحة)
-   كانت في تبويبٍ واحد من اثنين وثلاثين، وهي وصفٌ للوحة كلِّها لا للوحة
-   المالية وحدها؛ ومن يفتح لوحةَ الاقتصاد أو الطاقة أو الصندوق لا يجد كيف
-   تُصحَّح أرقامُها ولا متى تُراجَع. فتُنقل الكتلةُ، نقلاً لا نسخاً، إلى
-   تبويب البيانات المفتوح، فتبقى المعرِّفاتُ فريدةً ولا يتفرّق المحتوى نسخاً
-   تتقادم. وتعود إلى موضعها الأصلي حين لا يكون تبويبُ بياناتٍ مفتوحاً. */
-function ixMountGov(){
-  const blk=document.getElementById('govBlock'); if(!blk) return;
-  if(!blk.__ixHome) blk.__ixHome=blk.parentElement;
-  const dom=document.querySelector('.domain.on'); if(!dom) return;
-  const sec=dom.querySelector('section.on')||dom.querySelector('section:not([style*="display:none"])');
-  const slot=sec? sec.querySelector(':scope > [data-gov]') : null;
-  if(slot){ if(blk.parentElement!==slot) slot.appendChild(blk); return; }
-  /* لا منفذ في هذا التبويب: تعود الكتلةُ إلى بيتها فلا تُعرض في غير موضعها. */
-  if(blk.__ixHome && blk.parentElement!==blk.__ixHome) blk.__ixHome.appendChild(blk);
-}
+/* ── gx-22 ثم 01-11-2026م: كانت كتلةُ الحوكمة تُنقَل إلى تبويب البيانات
+   المفتوح لأنها وصفٌ للوحة كلِّها وكانت ساكنةً في تبويبٍ واحد. وصار لها
+   بيتٌ ثابتٌ في لوحة المرجع، فلا منفذَ [data-gov] في الصفحة ولا نقلَ:
+   حُذفت الدالّةُ ولم تُترك صامتةً تبحث عن منفذٍ لا وجود له. */
 /* ── ap-14: تخطّي تخطيطِ ما هو خارج الشاشة ────────────────────────────────
    تبويباتُ «البيانات» ارتفاعُها تسعةُ آلاف نقطةٍ فأكثر وفيها ثمانيةَ عشرَ
    جدولاً، وتخطيطُها كلِّه يقع داخل إطار النقر: أسوأُ زمنِ تبديلٍ 1,711 مِلّي
@@ -32101,7 +32172,6 @@ function ixWireTabs(){
      يُضيف بطاقاتٍ لم تكن موجودة. */
   try{ ixWireSearch(); if(window.MIRSAD_INDEX_RESET) window.MIRSAD_INDEX_RESET(); }catch(e){}
   ixReap();
-  ixMountGov();
   ixLangParts();
   document.querySelectorAll('canvas').forEach(ixChartAlt);
   ixWireScrollables();
@@ -34026,7 +34096,6 @@ window.MIRSAD_IX={
   foldFilters:ixFoldFilters,
   openFolds:ixOpenFolds,
   tabIndex:ixTabIndex,
-  mountGov:ixMountGov,
   cellText:ixCellText,
   langParts:ixLangParts,
   say:ixSay,
@@ -35344,12 +35413,12 @@ function renderExp(){
         + ' الفئات شريطاً دون ثلاثة بكسلات. والفئاتُ فئاتُ (GFSM 2014) كما ينشرها'
         + ' المصدر فلا تُدمج في بندٍ مخترَع. ولقراءتها: <b>بدِّل إلى «حصّة %»</b> أعلى'
         + ' الرسم، أو انتقل إلى التواتر السنوي فيتّسع الشريط أربعة أضعاف، وكلُّ قيمةٍ'
-        + ' مفردةٍ معروضةٌ في تبويب البيانات.';})();
+        + ' مفردةٍ معروضةٌ في لوحة المرجع، تبويب الجداول والتنزيل.';})();
   const shr=k=>v.agg('exp',k).map((x,i)=>{const t=v.agg('exp','TOTAL')[i];return x==null||!t?null:x/t*100;});
   draw('cCapex',{type:'line',data:{labels:v.labels,datasets:[
       {label:'رأسمالي %',data:shr('CAPEX'),borderColor:C.s7,borderWidth:2,tension:.28,pointRadius:0,pointHoverRadius:5},
       {label:'تعويضات العاملين %',data:shr('COMP_EMP'),borderColor:C.s1,borderWidth:2,borderDash:DASH[1],tension:.28,pointRadius:0,pointHoverRadius:5},
-      /* الإنفاق التشغيلي بتعريف القاعدة المعرفية في اللوحة نفسها: الإجمالي
+      /* الإنفاق التشغيلي بتعريف المعجم في لوحة المرجع: الإجمالي
          ناقص الأصول غير المالية. كان العنوان يَعِد به والرسم يعرض تعويضات
          العاملين وحدها، وهي أقلّ من نصفه. */
       {label:'تشغيلي % (الإجمالي − الرأسمالي)',
@@ -36096,7 +36165,7 @@ function renderFc(){
              ': نصفُ عرضه عند الربع السادس '+fmt(Math.round(_drawn))+' مليون ريال، '+
              'والصيغةُ المجرَّدةُ تعطي '+fmt(Math.round(_plain))+'، '+
              'فالمرسومُ أوسعُ منها بـ'+nf1.format((_f-1)*100)+'%. '+
-             'فهو <b>مُصحَّحٌ لا حدٌّ أدنى</b>، والتصحيحُ مُعلَنٌ في المعادلة المنشورة في تبويب «البيانات». ')
+             'فهو <b>مُصحَّحٌ لا حدٌّ أدنى</b>، والتصحيحُ مُعلَنٌ في المعادلة المنشورة في لوحة المرجع. ')
           : ('ولم ينزل إحصاءُ داربن–واتسون دون الحدّ الأدنى، فلم يُطبَّق تصحيحٌ، '+
              'والنطاقُ المرسومُ هو ما تعطيه الصيغةُ المجرَّدة: '+fmt(Math.round(_plain))+' مليون ريال نصفَ عرضٍ عند الربع السادس. '))+
         '<b>وملاءمة النموذج تُقرأ مع مداه:</b> يفسّر '+
@@ -38531,7 +38600,7 @@ function renderIntl2(){
       ylab(bRec.slice().sort((a,b)=>Math.abs(b.d)-Math.abs(a.d))[0].y)+
       '، ومتوسطُ الفارق المطلق '+nf2i.format(bRec.reduce((a,r)=>a+Math.abs(r.d),0)/bRec.length)+' دولاراً على '+
       arYearsJ(bRec.length)+' <span class="muted">(وسطٌ حسابيٌّ غيرُ مرجَّح)</span>. وهو فارقُ منهجيةٍ لا خطأ: الأولى وسطُ متوسطاتٍ شهرية والثانية ما تنشره الإدارةُ سنوياً، '+
-      'والجدولُ الكامل للفارق في تبويب «البيانات».') : '')+'</span>';
+      'والجدولُ الكامل للفارق في لوحة المرجع، تبويب الجداول والتنزيل.') : '')+'</span>';
   /* xc-02: جدولُ المصالحة يُنشر بأعيانه لا يُوصف. */
   (function(){
     const el=document.getElementById('nBrentRec'); if(!el) return;
@@ -38717,8 +38786,10 @@ function renderFormulas(elId, groups, q){
 
 /* ---------- tabs & wiring ---------- */
 const TABS=[['overview','الصورة الكلية'],['rev','الإيرادات'],['exp','المصروفات'],
-  ['debt','العجز والدين'],['ratios','النسب إلى الناتج'],['intl','المؤشرات الدولية'],['var','تحليل الانحراف'],['rate','التصنيف الائتماني'],
-  ['fc','التوقعات'],['sim','السيناريوهات'],['quality','جودة البيانات'],['data','البيانات'],['kb','القاعدة المعرفية']];
+  ['debt','العجز والدين'],['ratios','النسب إلى الناتج'],['intl','المؤشرات الدولية'],
+  ['fc','التوقعات والسيناريوهات']];
+/* 01-11-2026م: «جودة البيانات» و«البيانات» و«القاعدة المعرفية» انتقلت إلى
+   لوحة المرجع، وتُصيَّر من هنا بخطّافاتٍ معلَنة في آخر init. */
 /* ── أين يعمل «نطاق العرض» فعلاً ─────────────────────────────────────
    قِيس أثره تبويباً تبويباً بمقارنة بصمة المحتوى قبل تغيير النطاق وبعده:
    فوجدنا أربعة تبويبات تتغيّر رسومها ونصوصها به (الصورة الكلية · الإيرادات ·
@@ -38759,34 +38830,10 @@ const TABMETA={
    lead:'موقعُ المملكة من مجموعاتٍ مرجعية في مؤشراتٍ ينشرها صندوق النقد والبنك الدولي.',
    not:'لا يعرض هذا التبويب سلاسلَ الدول الكاملة ولا تعريفاتِ كلّ ناشرٍ لكلّ مؤشر، ولا فتراتِ عدم يقين للتقديرات.',
    why:'الأرقامُ المقارَنة تقديراتٌ وتوقعاتٌ في السنة الأخيرة لا بياناتٍ محقَّقة، والمصدران قد لا يكونان مستقلَّين، فالتطابقُ شاهدُ اتساقٍ لا شاهدَ صحّة.'},
- var:{d:'المعتمد مقابل الفعلي', t:'تحليل الانحراف، الفعليُّ عن المعتمَد',
-   lead:'جسرٌ يفكّك الفارقَ بين ميزانيةِ سنةٍ معتمَدةٍ ومنصرفِها الفعليّ بنداً بنداً. و«الانحراف» هنا انحرافُ الفعليّ عن المعتمَد، لا الانحرافُ المعياريّ.',
-   not:'لا يعرض هذا التبويب أسبابَ الانحراف ولا قراراتِ التعزيز التي أحدثته، لا تُنشر مفصَّلة.',
-   why:'الفارقُ رقمٌ مركَّب: يجتمع فيه تعزيزُ الاعتماد وتأخُّرُ التنفيذ وفروقُ التقدير، ولا يُفكَّك من المنشور.'},
- rate:{d:'وكالات التصنيف', t:'التصنيف الائتماني',
-   lead:'مسارُ تصنيف المملكة لدى الوكالات الثلاث على سُلَّمٍ موحَّدٍ من صنع هذه اللوحة.',
-   not:'لا يعرض هذا التبويب تقارير الوكالات ولا مبرّراتِ كلّ إجراء، ولا تصنيفَ الجهات الأخرى.',
-   why:'السُّلَّمُ الموحَّدُ ترتيبٌ لا مسافة: الفرقُ بين درجتين ليس كمّياً، ولا يُجمع ولا يُتوسَّط.'},
  fc:{d:'ستّةُ أرباعٍ قادمة', t:'التوقعات، ستّةُ أرباعٍ قادمة',
    lead:'امتدادٌ لاتجاهٍ خطّيٍّ بموسميةٍ ربعية، بنطاقٍ يحمل عدمَ يقينه، ومعه مرجعٌ بسيطٌ يُقاس عليه.',
    not:'لا يعرض هذا التبويب توقُّعاً رسمياً ولا تقديراً لجهةٍ ناشرة، ولا أثرَ سياساتٍ معلَنةٍ أو أسعارٍ متوقَّعة.',
    why:'هو <b>امتدادُ اتجاهٍ لا تنبؤٌ سببيّ</b>: لا يعرف قراراً ولا صدمةً، وقد لا يتفوّق على مرجعٍ بسيط، والمقارنةُ منشورةٌ في البطاقة.'},
- sim:{d:'ماذا لو؟', t:'السيناريوهات، ماذا لو؟',
-   lead:'أثرُ تغيُّرٍ مفترَضٍ في السعر أو الإنفاق أو النمو على الرصيد ومسارِ الدين.',
-   not:'لا يعرض هذا التبويب احتمالاتِ وقوع السيناريوهات ولا توزيعاً لها، ولا آثاراً غيرَ خطّية ولا ردودَ فعلٍ سلوكية.',
-   why:'السيناريو <b>حسابٌ شرطيٌّ لا توقُّع</b>: يفترض ثباتَ كلِّ ما عدا المنزلق، وهو افتراضٌ لا يقع في الواقع.'},
- quality:{d:'فحوصٌ وفروق', t:'جودة البيانات، ما يستحقّ التدقيق',
-   lead:'فهرسُ النقاط التي رصدتها فحوصُ اللوحة، وتغطيةُ المصادر لكلّ فترة، والفروقُ بين إصدارات التقارير.',
-   not:'لا يعرض هذا التبويب حكماً على جودة عمل الناشر، ولا تدقيقاً مستقلاً لأرقامه.',
-   why:'ما يُرصد هنا فروقٌ ومواضعُ تستحقّ التحقّق، وليس إثباتاً لخطأٍ في أيّ مصدر.'},
- data:{d:'السلاسل والتنزيلات', t:'البيانات، السلاسلُ وتنزيلاتُها',
-   lead:'الجدولُ الكامل للسلاسل، وملفُّ التصدير، وفهرسُ المصادر. <b>وبطاقاتُ الحوكمة والمنهجية</b>، المعادلاتُ والأسماءُ الرسمية والمراجعاتُ والبوّابات، <b>معروضةٌ في هذا التبويب أيضاً وفهرسُه يفصلها</b>.',
-   not:'لا يعرض هذا التبويب سلاسلَ اللوحات الأخرى: لكلّ لوحةٍ تبويبُ بياناتها.',
-   why:'ملفُّ التصدير صورةٌ من المعروض لا قاعدةَ بياناتٍ رسمية، ولا يُستشهد به بديلاً عن منشور الجهة.'},
- kb:{d:'معجمٌ ومفاهيم', t:'القاعدة المعرفية',
-   lead:'تعريفاتُ البنود والقطاعات والمفاهيم، ومعجمُ المصطلحات بالعربية والإنجليزية.',
-   not:'لا يعرض هذا التبويب أرقاماً ولا سلاسل، هو مرجعُ مصطلحاتٍ لا بيانات.',
-   why:'التعريفاتُ منقولةٌ عن مصادرها المسمّاة، وليست اجتهاداً من هذه اللوحة.'}
 };
 const RANGE_TABS=['overview','rev','exp','debt','data'];
 /* ولمَن أُخفي عنه: سببُ الإخفاء يُقال في التبويب نفسه لا يُترك للتخمين. */
@@ -38914,27 +38961,15 @@ function renderAll(){
   if(RANGE_TABS.indexOf(S.tab)>=0) renderKPI(); else renderScopeBar();
   if(S.tab==='overview') renderOverview();
   if(S.tab==='rev') renderRev();
-  if(S.tab==='exp') renderExp();
-  if(S.tab==='debt'){ renderDebt(); renderMaturity(); }
+  if(S.tab==='exp'){ renderExp(); renderVar(); }
+  if(S.tab==='debt'){ renderDebt(); renderMaturity(); renderRate(); }
   if(S.tab==='ratios'){ renderRatios(); renderIntl(); }
   if(S.tab==='intl') renderIntl2();
-  if(S.tab==='quality') renderQuality();
-  if(S.tab==='var') renderVar();
-  if(S.tab==='rate') renderRate();
-  if(S.tab==='fc') renderFc();
-  if(S.tab==='sim') renderSim();
+  if(S.tab==='fc'){ renderFc(); renderSim(); }
   /* rg-08: سجلُّ التصحيحات 325 صفّاً × 9 أعمدة والمعجمُ أضخمُ منه، وكلاهما
      ثابتٌ لا يتأثر بالمرشِّحات، وكانا يُبنيان في كلِّ إعادة تصيير. */
   /* ap-14: الجدولُ الرئيس جوابُ التبويب فيُبنى فوراً، والمعادلاتُ والسجلّاتُ
      مرجعٌ أسفله فتُبنى في أوّل فراغٍ للخيط، فلا تدفع نبضةُ النقر كلفتَها. */
-  if(S.tab==='data'){ renderTable();
-    ((window.MIRSAD_IX&&window.MIRSAD_IX.defer)||(f=>setTimeout(f,32)))(()=>{
-      renderFormulas('fBody',FRM,document.getElementById('fSearch').value);
-      try{ const IX=window.MIRSAD_IX; if(IX&&IX.wireTabs) IX.wireTabs(); }catch(e){}
-    },'fBody');
-    ixLater('fCorr',renderCorrections,'سجلّ التصحيحات');
-    ixLater('tTerms',renderTerms,'جدول المصطلحات المعروضة'); }
-  if(S.tab==='kb') renderKB();
   /* cx-12: كان النداء في أول renderAll فيسبق مُصيِّرات التبويبات، فيفحص
      الطبقةُ المشتركة بنيةً لم تُبنَ بعد، فجدولٌ يُكتب في هذه الدورة لا
      يُغلَّف ولا يُوسَم منطقةً قابلة للتمرير حتى الدورة التالية. فنُقل إلى
@@ -39122,6 +39157,21 @@ function init(){
      الاقتصاد أولاً كان يجدها فارغة. */
   try{ ixOnce('fCorr',renderCorrections); }catch(e){}
   window.__fiscalRender=renderAll;
+  /* ── خطّافاتُ لوحة المرجع (01-11-2026م) ───────────────────────────────
+     الجدولُ والمعادلاتُ والمصطلحاتُ وكتلةُ الحوكمة وجودةُ البيانات والمعجم
+     انتقلت إلى لوحة المرجع، ومُصيِّراتُها هي هي، تُنادى من هناك. والجدولُ
+     جوابُ التبويب فيُبنى فوراً، والمرجعُ أسفله يُبنى في أوّل فراغٍ للخيط. */
+  window.__refTables = renderTable;
+  window.__refMethod = function(){
+    ((window.MIRSAD_IX&&window.MIRSAD_IX.defer)||(f=>setTimeout(f,32)))(()=>{
+      renderFormulas('fBody',FRM,(document.getElementById('fSearch')||{}).value||'');
+      try{ const IX=window.MIRSAD_IX; if(IX&&IX.wireTabs) IX.wireTabs(); }catch(e){}
+    },'fBody');
+    ixLater('tTerms',renderTerms,'جدول المصطلحات المعروضة');
+  };
+  window.__refGov     = function(){ ixLater('fCorr',renderCorrections,'سجلّ التصحيحات'); };
+  window.__refQuality = renderQuality;
+  window.__refKB      = renderKB;
   /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير، الرسومُ
      تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
   try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
@@ -40488,8 +40538,8 @@ function renderFormulasE(q){
 }
 
 /* ---------- wiring ---------- */
-const TABS=[['overview','الصورة الكلية'],['comp','تركيبة الناتج'],['demand','الاستهلاك والاستثمار'],
-  ['ext','القطاع الخارجي'],['income','الدخل والادخار'],['link','الجسر مع الميزانية'],['data','البيانات']];
+const TABS=[['overview','الصورة الكلية'],['comp','تركيبة الناتج'],['demand','الاستهلاك والاستثمار والدخل'],
+  ['ext','القطاع الخارجي'],['link','الجسر مع الميزانية']];
 /* ux-sub-01 · ux-open-01 · ux-scope-02، سجلٌّ واحدٌ لكلِّ تبويب. */
 const TABMETA={
  overview:{d:'الناتج ونموّه', t:'الصورة الكلية للاقتصاد',
@@ -40508,18 +40558,10 @@ const TABMETA={
    lead:'الصادراتُ والوارداتُ والحسابُ الجاري كما تعرضها الحساباتُ القومية.',
    not:'لا يعرض هذا التبويب ميزانَ المدفوعات بمعيار BPM6 ولا الحسابَ الرأسماليَّ والماليَّ ولا الاحتياطيات، وهي لدى البنك المركزي.',
    why:'رصيدُ الحساب الجاري هنا من الحسابات القومية، فقد يفارق رصيدَ ميزان المدفوعات لاختلاف التبويب، ولا يُصالَح بينهما في هذه اللوحة.'},
- income:{d:'الدخل والادخار', t:'الدخل القومي والادخار',
-   lead:'الدخلُ القوميُّ الإجماليُّ والمتاحُ والادخارُ ومكوّناتُ الدخل.',
-   not:'لا يعرض هذا التبويب توزيعَ الدخل بين الفئات، ولا دخلَ الأسرة، ولا الأجور بالقطاع.',
-   why:'«صافي الضرائب على الإنتاج» هنا غيرُ «صافي الضرائب على المنتجات» في تبويب التركيبة، والفارقُ بينهما منشورٌ ومصالَحٌ هناك.'},
  link:{d:'مع الميزانية', t:'الجسر مع الميزانية',
    lead:'ربطُ سلاسل الحسابات القومية بسلاسل المالية العامة، أساسان مختلفان يُوصَل بينهما بالبيان لا بالجمع.',
    not:'لا يعرض هذا التبويب تسويةً محاسبيةً كاملةً بين النظامين، ولا تحويلَ المالية العامة إلى أساس الاستحقاق.',
    why:'الأساسان مختلفان (نقديٌّ مقابل استحقاق) والتغطيةُ المؤسسيةُ مختلفة، فلا تُطرح أرقامُ أحدهما من الآخر.'},
- data:{d:'السلاسل والتنزيلات', t:'البيانات، سلاسلُ الاقتصاد الكلي',
-   lead:'الجداولُ الكاملة وملفُّ التصدير ومعادلاتُ الاحتساب وفهرسُ المصادر.',
-   not:'لا يعرض هذا التبويب سلاسلَ اللوحات الأخرى: لكلّ لوحةٍ تبويبُ بياناتها.',
-   why:'ملفُّ التصدير صورةٌ من المعروض لا قاعدةَ بياناتٍ رسمية، ولا يُستشهد به بديلاً عن منشور الجهة.'}
 };
 /* ux-src-02: مصدرُ اللوحة يُسجَّل مرّةً ويُلحَق بكلّ بطاقةٍ ومجموعةِ مؤشّرات. */
 function registerSrc(){
@@ -40545,18 +40587,10 @@ function renderAll(){
   registerSrc(); applyTabMeta();
   if(S.tab==='overview') renderOverview();
   if(S.tab==='comp') renderComp();
-  if(S.tab==='demand') renderDemand();
+  if(S.tab==='demand'){ renderDemand(); renderIncome(); }
   if(S.tab==='ext') renderExt();
-  if(S.tab==='income') renderIncome();
   if(S.tab==='link') renderLink();
   /* ap-14: المعادلاتُ مرجعٌ أسفل الجدول، تُبنى خارج نبضة النقر. */
-  if(S.tab==='data'){ renderTable();
-    ((window.MIRSAD_IX&&window.MIRSAD_IX.defer)||(f=>setTimeout(f,32)))(()=>{
-      renderFormulasE(document.getElementById('e-fSearch').value);
-      /* جدولٌ يُبنى بعد الطبقة المشتركة لا يُغلَّف ولا تُوضع رؤوسُه، فتُعاد
-         عليه بعد بنائه (التقطته vsr: 51 خليةً بلا رأس). */
-      try{ const IX=window.MIRSAD_IX; if(IX&&IX.wireTabs) IX.wireTabs(); }catch(e){}
-    }); }
   /* cx-12: كان النداء في أول renderAll فيسبق مُصيِّرات التبويبات، فيفحص
      الطبقةُ المشتركة بنيةً لم تُبنَ بعد، فجدولٌ يُكتب في هذه الدورة لا
      يُغلَّف ولا يُوسَم منطقةً قابلة للتمرير حتى الدورة التالية. فنُقل إلى
@@ -40584,6 +40618,14 @@ function init(){
   document.getElementById('e-tsel').onchange=renderTable;
   document.getElementById('e-fSearch').oninput=e=>renderFormulasE(e.target.value);
   window.__econRender=renderAll;
+  /* خطّافا لوحة المرجع (01-11-2026م): الجدولُ والمعادلات. */
+  window.__refETables = renderTable;
+  window.__refEMethod = function(){
+    ((window.MIRSAD_IX&&window.MIRSAD_IX.defer)||(f=>setTimeout(f,32)))(()=>{
+      renderFormulasE((document.getElementById('e-fSearch')||{}).value||'');
+      try{ const IX=window.MIRSAD_IX; if(IX&&IX.wireTabs) IX.wireTabs(); }catch(e){}
+    });
+  };
   /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير، الرسومُ
      تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
   try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
@@ -41634,7 +41676,7 @@ function ciLabel(){
 }
 
 /* ---------- التبويبات ---------- */
-const TABS=[['price','الأسعار'],['link','من السعر إلى الإيراد'],['break','فجوة التعادل'],['data','البيانات']];
+const TABS=[['price','الأسعار'],['link','من السعر إلى الإيراد والتعادل']];
 /* ux-sub-01 · ux-open-01 · ux-scope-02 */
 const TABMETA={
  price:{d:'برنت يومياً وشهرياً', t:'أسعار برنت',
@@ -41645,14 +41687,6 @@ const TABMETA={
    lead:'انحدارٌ بالمربعات الصغرى للإيراد النفطي الربعي على متوسط برنت للربع، بفترةِ ثقةٍ وتشخيصٍ منشورَين.',
    not:'لا يعرض هذا النموذج الكميةَ المنتَجة ولا سعرَ البيع الرسميَّ ولا توقيتَ التحصيل، وهي مجتمعةً ما تبقّى خارج السعر.',
    why:'العلاقةُ <b>ارتباطٌ مقيسٌ في مدى البيانات لا سببية</b>، ولا تُمدّ خارج مدى الأسعار الملاحَظ؛ وميلُ الفترة الأخيرة يفارق ميلَ المدى الكامل، والفارقُ منشور.'},
- break:{d:'سعرُ التعادل وفجوتُه', t:'فجوة التعادل',
-   lead:'سعرُ التعادل المحتسَبُ من بيانات وزارة المالية، مقابلَ المنشورِ من صندوق النقد، ومقابلَ السعر المحقَّق.',
-   not:'لا يعرض هذا التبويب سعرَ تعادلٍ رسمياً سعودياً (لا يُنشر)، ولا تعادلَ ميزان المدفوعات، ولا أثرَ الاقتراض على الحاجة التمويلية.',
-   why:'سعرُ التعادل <b>محتسَبٌ بمعادلةٍ معلَنة</b> على سنواتٍ مكتملةٍ وحدها، وليس هدفَ سياسةٍ ولا رقماً تُقرّه جهةٌ سعودية.'},
- data:{d:'السلاسل والتنزيلات', t:'البيانات، سلاسلُ الطاقة',
-   lead:'السلاسلُ اليوميةُ والشهريةُ والربعيةُ والسنوية، ومعادلاتُ الاحتساب، وفهرسُ المصادر.',
-   not:'لا يعرض هذا التبويب سلاسلَ اللوحات الأخرى: لكلّ لوحةٍ تبويبُ بياناتها.',
-   why:'المتوسطُ الشهريُّ والسنويُّ منشوران من إدارة معلومات الطاقة، والربعيُّ محتسَبٌ هنا، فلا يُنسب المحتسَبُ إلى الناشر.'}
 };
 /* ux-src-02: مصدرُ اللوحة يُسجَّل مرّةً ويُلحَق بكلّ بطاقةٍ ومجموعةِ مؤشّرات. */
 function registerSrc(){
@@ -41714,9 +41748,7 @@ function applyTabMeta(){
 function renderAll(){
   registerSrc(); applyTabMeta();
   if(S.tab==='price') renderPrice();
-  if(S.tab==='link') renderLink();
-  if(S.tab==='break') renderBreak();
-  if(S.tab==='data') renderNData();
+  if(S.tab==='link'){ renderLink(); renderBreak(); }
   /* cx-12: كان النداء في أول renderAll فيسبق مُصيِّرات التبويبات، فيفحص
      الطبقةُ المشتركة بنيةً لم تُبنَ بعد، فجدولٌ يُكتب في هذه الدورة لا
      يُغلَّف ولا يُوسَم منطقةً قابلة للتمرير حتى الدورة التالية. فنُقل إلى
@@ -41746,6 +41778,9 @@ function init(){
   document.getElementById('n-tsel').onchange=renderNData;
   window.__covEnergy = dlab(dly[0][0])+' – '+dlab(lastD[0]);
   window.__energyRender = renderAll;
+  /* خطّافا لوحة المرجع (01-11-2026م): الجدولُ والمعادلات، ومُصيِّرهما واحد. */
+  window.__refNTables = renderNData;
+  window.__refNMethod = renderNData;
   /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير، الرسومُ
      تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
   try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
@@ -42883,9 +42918,9 @@ function renderData(){
 }
 
 /* ── التشغيل ─────────────────────────────────────────────── */
-const TABS=[['over','الأداء العام'],['fin','الأداء المالي'],['targets','المستهدفات'],
-            ['tad','ملكية الصندوق في السوق السعودي'],['us','المحفظة الأمريكية المُقرّة'],['peers','المقارنة الدولية'],
-            ['impact','الأثر الاقتصادي'],['data','البيانات والمصادر']];
+const TABS=[['over','الأداء العام'],['fin','الأداء المالي والمستهدفات'],
+            ['tad','المحفظة: السعودي والأمريكي'],['peers','المقارنة الدولية'],
+            ];
 
 /* ux-sub-01 · ux-open-01 · ux-scope-02 · ux-name-04 */
 const TABMETA={
@@ -42897,30 +42932,14 @@ const TABMETA={
    lead:'المركزُ الماليُّ والأرباحُ من القوائم الموحدة المدققة، ومقابلتُها بالأصول تحت الإدارة.',
    not:'لا يعرض هذا التبويب القوائمَ كاملةً ولا الإيضاحاتِ ولا تفصيلَ الشركات التابعة.',
    why:'صافي الربح يشمل نصيبَ غير المسيطرين، فلا يُقرأ كلُّه عائداً لمالك الصندوق، والتفصيلُ في الجدول.'},
- targets:{d:'المعلن والمتحقق', t:'المستهدفات، المعلَنُ والمتحقق',
-   lead:'مستهدفاتُ استراتيجية 2021–2025م ونسبُ بلوغها، وما نُشر من استراتيجية 2026–2030م.',
-   not:'لا يعرض هذا التبويب مستهدفاتٍ لم يُنشرها الصندوق، ولا ما تتداوله التقارير الصحفية بلا وثيقة.',
-   why:'مستهدفٌ صيغتُه «سنوياً» لا يُحكَم عليه بسنةٍ واحدة، ونسبةُ البلوغ لا تُحتسب لمستهدفات السقف والأرضية، والحالاتُ مبيَّنةٌ في الجدول.'},
  tad:{d:'ملكيةٌ تتجاوز 5%', t:'ملكية الصندوق في السوق السعودي',
    lead:'حصصُ الصندوق المفصَح عنها في الشركات المدرَجة حيث تتجاوز الملكيةُ عتبةَ الإفصاح.',
    not:'<b>ليست هذه لوحةَ سوقٍ:</b> لا مؤشّرَ تاسي، ولا قيمةً سوقيةً للسوق، ولا سيولة، ولا حصصاً دون عتبة الإفصاح، ولا ملكيةً غيرَ مباشرة إلا حيث تُفصَح.',
    why:'ما لا يظهر هنا ليس عدماً: الحصةُ دون العتبة لا تُفصَح، فغيابُ الشركة لا يعني غيابَ الملكية.'},
- us:{d:'المحفظة الأمريكية المُقرّة', t:'المحفظة الأمريكية المُقرّة، نموذج 13F',
-   lead:'ما يُقرّ به الصندوقُ لدى هيئة الأوراق المالية والبورصات الأمريكية من أوراقٍ أمريكيةٍ مؤهَّلة.',
-   not:'<b>ولايةٌ قضائيةٌ واحدة:</b> لا حيازاتِ تداول، ولا استثماراتٍ مباشرةً وخاصة، ولا صناديق، ولا أسواقاً أخرى، وهي نحو 93% من المحفظة الدولية المعلَنة.',
-   why:'دخولُ ورقةٍ أو خروجُها قد يكون تغيُّرَ أهليةٍ لا سلوكاً استثمارياً، والإقرارُ لا يحمل تاريخَ التملّك ولا كلفتَه.'},
  peers:{d:'صناديق سيادية', t:'المقارنة الدولية بالصناديق السيادية',
    lead:'أصولُ الصناديق السيادية وعوائدُها المنشورة وعناصرُ إفصاحها.',
    not:'لا يعرض هذا التبويب أرقاماً موحَّدةَ الأساس: عمودُ القيمة يجمع أصولاً تحت الإدارة وإجماليَّ أصولٍ وتقديراتِ مزوّد، وكلُّ خليةٍ موسومةٌ بأساسها.',
    why:'<b>لا تُرتَّب العوائدُ ولا تُقارَن:</b> تختلف المدةُ والأساسُ والعملةُ وطريقةُ الترجيح، ومعايير GIPS تشترط توحيدَها قبل أيّ مقارنة، ولم يُوحَّد منها شيء.'},
- impact:{d:'الأثر في الاقتصاد', t:'الأثر الاقتصادي',
-   lead:'ما ينشره الصندوقُ عن إسهامه في الناتج والوظائف والمحتوى المحلي.',
-   not:'لا يعرض هذا التبويب تقديراً مستقلاً للأثر، ولا منهجيةَ الاحتساب (لا تُنشر مفصَّلة).',
-   why:'ناشرُ أرقام الأثر هو <b>الجهةُ المُقيَّمة نفسُها</b>، فتُقرأ إفصاحاً عن دعوىً لا قياساً مستقلاً.'},
- data:{d:'السلاسل والمصادر', t:'البيانات والمصادر',
-   lead:'الجداولُ الكاملة وسجلُّ التصحيحات وفهرسُ المصادر وتنزيلاتُها.',
-   not:'لا يعرض هذا التبويب سلاسلَ اللوحات الأخرى: لكلّ لوحةٍ تبويبُ بياناتها.',
-   why:'ملفُّ التصدير صورةٌ من المعروض لا قاعدةَ بياناتٍ رسمية، ولا يُستشهد به بديلاً عن منشور الجهة.'}
 };
 /* ux-src-02: مصدرُ اللوحة يُسجَّل مرّةً ويُلحَق بكلّ بطاقةٍ ومجموعةِ مؤشّرات. */
 function registerSrc(){
@@ -42946,14 +42965,10 @@ function applyTabMeta(){
 }
 function renderAll(){
   registerSrc(); applyTabMeta();
-  if(S.tab==='over') renderOver();
-  else if(S.tab==='fin') renderFin();
-  else if(S.tab==='targets') renderTargets();
-  else if(S.tab==='tad') renderTad();
-  else if(S.tab==='us') renderUS();
+  if(S.tab==='over'){ renderOver(); renderImpact(); renderExposure(); }
+  else if(S.tab==='fin'){ renderFin(); renderTargets(); }
+  else if(S.tab==='tad'){ renderTad(); renderUS(); }
   else if(S.tab==='peers') renderPeers();
-  else if(S.tab==='impact'){ renderImpact(); renderExposure(); }
-  else if(S.tab==='data') renderData();
   /* cx-12: كان النداء في أول renderAll فيسبق مُصيِّرات التبويبات، فيفحص
      الطبقةُ المشتركة بنيةً لم تُبنَ بعد، فجدولٌ يُكتب في هذه الدورة لا
      يُغلَّف ولا يُوسَم منطقةً قابلة للتمرير حتى الدورة التالية. فنُقل إلى
@@ -42994,6 +43009,8 @@ function init(){
     '</div>');
   window.__covPif = 'الصندوق، بيانات رسمية حتى '+P.tadawul.asOfLabel;
   window.__pifRender = renderAll;
+  /* خطّافُ لوحة المرجع (01-11-2026م): المصادرُ والمعادلاتُ والمنهجية. */
+  window.__refPMethod = renderData;
   /* عند تبديل الوضع: تُحدَّث اللوحةُ في مكانها ثم يُعاد التصيير، الرسومُ
      تحمل ألوانَها في إعداداتها فلا تتبدّل بتبدّل الرمز وحده. */
   try{ window.MIRSAD_IX && window.MIRSAD_IX.onTheme && window.MIRSAD_IX.onTheme(function(P){
@@ -43001,6 +43018,86 @@ function init(){
   renderAll();
 }
 init();
+})();
+</script>
+<script>/* ══ لوحةُ المرجع ══════════════════════════════════════════════════════
+   01-11-2026م · قِيست اللوحةُ تبويباً تبويباً فظهر عدمُ تناسبٍ لا كثرةُ
+   نصّ: ثلاثةٌ وثلاثون سياقَ تبويب، فيها أربعةُ تبويبات «بيانات» متماثلةِ
+   البنية محتواها من نفسه 2,393 و519 و3,315 و970 محرفاً، وكتلةُ الحوكمة
+   التسعةُ (30,799 محرفاً) تنتقل بينها فتكون 98% من ثلاثةٍ منها؛ وتبويبُ
+   القاعدة المعرفية 367 محرفاً؛ وتبويبُ جودة البيانات وصفٌ للبيان لا
+   تحليلٌ له. فصار المرجعُ لوحةً واحدةً تخدم اللوحات الخمس، وعاد صفُّ
+   تبويبات كلِّ لوحةٍ إلى التحليل وحده.
+
+   والمحتوى نُقل نقلاً لا نسخاً: المعرِّفاتُ كما هي، فما كان يُصيِّره كلُّ
+   ملفِّ لوحةٍ يبقى هو المُصيِّر، وتُنادَى دوالُّه من هنا بخطّافاتٍ معلَنة
+   (window.__ref*). فلا تتفرّق نسخةٌ تتقادم، ولا يُعاد كتابةُ مُصيِّر. */
+(function(){
+const TABS=[['tables','الجداول والتنزيل'],['method','المنهجية والمعادلات'],
+            ['quality','جودة البيانات'],['gov','الحوكمة والالتزام'],
+            ['glossary','المعجم والقاعدة المعرفية']];
+const TABMETA={
+ tables:{d:'الصفوف ومنها التنزيل', t:'الجداول والتنزيل',
+   lead:'الصفوفُ التي تُبنى منها اللوحاتُ الخمس، جدولاً جدولاً، ولكلِّ جدولٍ زرُّ تنزيله.',
+   not:'لا يعرض هذا التبويب رسماً ولا مؤشراً مشتقاً، وهي في لوحات التحليل.',
+   why:'كلُّ جدولٍ يتبع المدى المنتقى في لوحته، وافتراضُه المدى الكامل، فالترشيحُ قرارُ لوحة التحليل لا قرارُ المرجع.'},
+ method:{d:'معادلاتُ كلِّ مؤشر', t:'المنهجية والمعادلات',
+   lead:'كلُّ مؤشرٍ مشتقٍّ في اللوحات الخمس بمعادلته ووحدته ومصدرِ مدخلاته، ومطابقةُ التسميات بالمعاجم الرسمية.',
+   not:'لا يعرض هذا التبويب منهجيةَ الناشر الأصلي ولا تعريفاتِه الكاملة، وهي في منشوراته.',
+   why:'المعادلةُ المنشورة تكفي وحدها لإعادة الاحتساب من الجداول: بمقامها ومطروحها ونافذتها.'},
+ quality:{d:'فحوصٌ وفروق', t:'جودة البيانات، ما يستحقّ التدقيق',
+   lead:'فهرسُ النقاط التي رصدتها فحوصُ اللوحة، وتغطيةُ المصادر لكلّ فترة، والفروقُ بين إصدارات التقارير.',
+   not:'لا يعرض هذا التبويب حكماً على جودة عمل الناشر، ولا تدقيقاً مستقلاً لأرقامه.',
+   why:'ما يُرصد هنا فروقٌ ومواضعُ تستحقّ التحقّق، وليس إثباتاً لخطأٍ في أيّ مصدر.'},
+ gov:{d:'ما عُدِّل وما فُحص', t:'الحوكمة والالتزام',
+   lead:'ما عُدِّل بعد النشر، وما فُحص فلم يتغيّر، ومتى يتغيّر الرقم، وكيف تُسترجَع نسخةٌ استُشهد بها.',
+   not:'لا يعرض هذا التبويب تدقيقاً مستقلاً ولا رأياً قانونياً، والنصوصُ مقيسٌ عليها لا مُفسَّرة.',
+   why:'هذه الكتلةُ وصفٌ للوحة كلِّها لا للوحةٍ واحدة، فبيتُها المرجعُ ولا تُنسب إلى مجموعةِ بياناتٍ في الفهرس.'},
+ glossary:{d:'التعريفات والمعجم', t:'المعجم والقاعدة المعرفية',
+   lead:'تعريفاتُ بنود الإيراد والمصروف ومهامُّ القطاعات، ومعجمُ المصطلحات المالية والاقتصادية.',
+   not:'لا يعرض هذا التبويب أرقاماً، ولا يُغني تعريفُ البند عن تعريف الناشر في منشوره.',
+   why:'التسمياتُ تتبع المعاجم الرسمية، وما لا نظيرَ له منشورٌ يُعلَن وصفياً لا يُنسب إلى جهة.'}
+};
+const S={tab:'tables'};
+/* خطّافٌ غائبٌ لا يُسقط اللوحةَ صامتاً: يُقال اسمُه في السجلّ. */
+function hook(n){
+  const f=window[n];
+  if(typeof f!=='function'){ try{ console.error('MIRSAD ref: خطّافٌ غائب — '+n); }catch(e){} return; }
+  try{ f(); }catch(e){ try{ console.error('MIRSAD ref: '+n,e); }catch(_e){} }
+}
+const CONTENT={
+  tables:  ['__refTables','__refETables','__refNTables'],
+  method:  ['__refMethod','__refEMethod','__refNMethod','__refPMethod'],
+  quality: ['__refQuality'],
+  gov:     ['__refGov'],
+  glossary:['__refKB']
+};
+function renderAll(){
+  const IX=window.MIRSAD_IX;
+  if(IX&&IX.tabDesc) IX.tabDesc(document.getElementById('r-tabs'),TABMETA);
+  const sec=document.getElementById('r-s-'+S.tab);
+  if(IX&&IX.tabLead) IX.tabLead(document.getElementById('dom-ref'),sec,TABMETA[S.tab]);
+  if(IX&&IX.tabIndex) IX.tabIndex(sec);
+  (CONTENT[S.tab]||[]).forEach(hook);
+  (function(){ const X=window.MIRSAD_IX; if(X&&X.wireTabs) X.wireTabs(); })();
+}
+function init(){
+  const nav=document.getElementById('r-tabs'); if(!nav) return;
+  nav.innerHTML=TABS.map(t=>
+    '<button class="tab'+(t[0]===S.tab?' on':'')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('');
+  document.querySelectorAll('#dom-ref .tab').forEach(b=>b.addEventListener('click',()=>{
+    const _go=()=>{
+      S.tab=b.dataset.t;
+      document.querySelectorAll('#dom-ref .tab').forEach(x=>x.classList.toggle('on',x===b));
+      document.querySelectorAll('#dom-ref section').forEach(s=>s.classList.toggle('on',s.id==='r-s-'+S.tab));
+      renderAll();
+    };
+    (window.MIRSAD_IX&&window.MIRSAD_IX.vt)? window.MIRSAD_IX.vt(_go) : _go();
+  }));
+  window.__covRef='يخدم اللوحات الخمس';
+  window.__refRender=renderAll;
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
 <script>/* ============ الشاشة الرئيسة للبوابة ============ */
@@ -43332,12 +43429,15 @@ window.__homeRender=function(){
             foot:'القيم بالمليون ريال سعودي بالأسعار الجارية وفق نظام الحسابات القومية (SNA 2008)، وتبدأ السلسلة من 2018م بعد المراجعة الشاملة. المصدر: نشرة الحسابات القومية السنوية ونشرات الناتج المحلي الربعية، الهيئة العامة للإحصاء.'},
     energy:{std:'EIA Brent',    src:'إدارة معلومات الطاقة', unit:'دولار للبرميل',
             foot:'أسعار برنت بالدولار الأمريكي للبرميل. المصدر: إدارة معلومات الطاقة الأمريكية (EIA)، سلسلة RBRTE. وسعر التعادل المالي محتسب في هذه اللوحة من بيانات وزارة المالية ولا يمثل تقديراً رسمياً.'},
+    ref:   {std:'DCAT 3 · GFSM 2014 · SNA 2008', src:'اللوحة نفسها ومصادرُها', unit:'لا وحدةَ عرضٍ، جداولُ ونصوص',
+            covLbl:'النطاق',
+            foot:'لوحةُ المرجع لا تُنشئ رقماً: جداولُ اللوحات الخمس كما استُخرجت، ومعادلاتُ ما احتُسب منها، وكتلةُ الحوكمة والالتزام، والمعجم. وكلُّ جدولٍ يتبع المدى المنتقى في لوحته، وافتراضُه المدى الكامل.'},
     pif:   {std:'IFRS · 13F',   src:'الصندوق · الهيئة الأمريكية · تداول', unit:'مليار (ريال أو دولار، مبيَّن في كل رسم)',
             foot:'قيم الصندوق بالمليار، والعملة مبيَّنة في ختم كل رسم. المصادر: التقارير المنشورة لصندوق الاستثمارات العامة، وإقرارات 13F لدى هيئة الأوراق المالية والبورصات الأمريكية، وإفصاحات السوق المالية السعودية (تداول). ولا شيء منها مدقَّقٌ في هذه اللوحة.'}
   };
   const covEl=document.getElementById('bCov');
-  const RENDER={econ:'__econRender',fiscal:'__fiscalRender',energy:'__energyRender',home:'__homeRender',pif:'__pifRender'};
-  const COV={econ:'__covEcon',fiscal:'__covFiscal',energy:'__covEnergy',home:'__covHome',pif:'__covPif'};
+  const RENDER={econ:'__econRender',fiscal:'__fiscalRender',energy:'__energyRender',home:'__homeRender',pif:'__pifRender',ref:'__refRender'};
+  const COV={econ:'__covEcon',fiscal:'__covFiscal',energy:'__covEnergy',home:'__covHome',pif:'__covPif',ref:'__covRef'};
   /* ── cx-33: كان التبديل يقفز بالصفحة إلى أعلاها دائماً، فالعائد إلى لوحةٍ
      كان يقرأ فيها جدولاً في أسفلها يجدها من أولها ويعيد البحث عن موضعه.
      فيُحفظ موضع كل لوحة على حِدة ويُستعاد عند العودة إليها، ويبقى الصفر
@@ -43366,7 +43466,7 @@ window.__homeRender=function(){
     /* 10-09-2026م: «about» لوحةٌ سادسة خارج المبدّل، لا زرَّ لها فيه،
        ويُدخل إليها من التذييل ومن شارة الصفة في الترويسة. فتدخل حلقةَ
        الإظهار والإخفاء كبقيّة اللوحات ولا تُترك ظاهرةً تحت غيرها. */
-    ['home','fiscal','econ','energy','pif','about'].forEach(k=>{
+    ['home','fiscal','econ','energy','pif','ref','about'].forEach(k=>{
       const el=document.getElementById('dom-'+k); if(el) el.classList.toggle('on',k===d);
     });
     /* ولمّا لم يكن لها زرٌّ في المبدّل، لا يُترك زرٌّ آخرُ مُعلَّماً عليها.
@@ -43419,7 +43519,7 @@ window.__homeRender=function(){
      يستبدل المدخل الأخير لا يدفع مدخلاً (وإلا امتلأ التاريخ بستّين خطوة
      من تصفّحٍ واحد). والمدى والمرشِّحات ليست في العنوان، وهذا مُعلَنٌ في
      بطاقة «عن هذه اللوحة» لا مسكوتٌ عنه. */
-  const BOARDS=['home','fiscal','econ','energy','pif'];
+  const BOARDS=['home','fiscal','econ','energy','pif','ref'];
   let routing=false;
   function tabOf(d){ const el=document.querySelector('#dom-'+d+' .tab.on'); return el? el.dataset.t : ''; }
   /* UX-05: العنوانُ يحمل حالةَ العرض (النطاق والتواتر والوحدة) لا المسارَ
