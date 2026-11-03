@@ -105,7 +105,7 @@ try{
   "@type": "xsd:date"
  },
  "dcterms:modified": {
-  "@value": "2026-11-02",
+  "@value": "2026-11-03",
   "@type": "xsd:date"
  },
  "dcat:landingPage": {
@@ -147,8 +147,8 @@ try{
    "@language": "ar"
   }
  ],
- "dcat:version": "2.565",
- "owl:versionInfo": "2.565",
+ "dcat:version": "2.570",
+ "owl:versionInfo": "2.570",
  "dcat:dataset": [
   {
    "@type": "dcat:Dataset",
@@ -1519,19 +1519,40 @@ try{
   --shadow-1:light-dark(0 10px 26px rgb(20 28 42 / .10),0 12px 34px rgb(0 0 0 / .50));
   --shadow-2:light-dark(0 18px 42px rgb(20 28 42 / .14),0 18px 42px rgb(0 0 0 / .42));
 
-  /* ── سُلَّمٌ طباعيّ نسبيّ: يتبع إعداد القارئ، ولا يُثبَّت بالبكسل ──
-     الأرضيةُ ‎--fs-3xs‎ = ‎.75rem‎ أي 12 بكسلاً عند الإعداد الافتراضي، والمقيسُ 12 على 15 عنصراً و13 على 44 (VIS-20: كان التعليقُ يقول 15 والمنفَّذُ 12). */
-  --fs-3xs:.75rem;     /* 12، الأرضية، كانت 10.5 */
-  --fs-2xs:.8125rem;   /* 13 */
-  --fs-xs:.875rem;     /* 14، المتنُ الشائع، كان 12.5/13 */
-  --fs-sm:.9375rem;    /* 15 */
-  --fs-base:1rem;      /* 16 */
-  --fs-md:1.0625rem;   /* 17 */
-  --fs-lg:1.1875rem;   /* 19 */
-  --fs-xl:1.3125rem;   /* 21 */
-  --fs-2xl:clamp(1.375rem,1.2rem + .7vw,1.5625rem);   /* 22 → 25 */
-  --fs-3xl:clamp(1.5625rem,1.3rem + 1.1vw,1.9375rem); /* 25 → 31 */
-  --fs-4xl:clamp(1.8125rem,1.45rem + 1.7vw,2.3125rem); --fs-5xl:clamp(2.125rem,1.7rem + 2vw,2.75rem);/* 29 → 37 */
+  /* ── UX-08 (03-11-2026م) · سُلَّمٌ نمطيٌّ بنسبةٍ مُعلَنة، لا سلسلةٌ بكسلية ──
+     كان السلّمُ ثمانيَ درجاتٍ ثابتةٍ تقرأ 12 و13 و14 و15 و16 و17 و19 و21
+     بكسلاً: أربعُ درجاتٍ متتابعةٍ يفصل بينها **بكسلٌ واحد** (نسبةُ 1.08 ثم
+     1.077 ثم 1.071 ثم 1.067)، وفرقُ بكسلٍ لا يُرى. فأربعُ درجاتٍ تُنفق من
+     السلّم ولا تُنتج تسلسلاً بصرياً، ويُكتب الاختيارُ بينها بالحدس لا
+     بالمعنى: 111 إعلاناً موزّعةً على أربعةِ رموزٍ لا يُفرَّق بينها.
+     فصار السلّمُ **نمطياً**: الأساسُ 1rem (16 بكسلاً عند الإعداد
+     الافتراضي) والنسبةُ **1.125** (الثانيةُ الكبرى)، وكلُّ درجةٍ
+     ‎16 × 1.125^n‎ بالبكسل. والدرجاتُ المستعملة:
+       n = -2  12.64  --fs-3xs   الوسومُ والشرائحُ والبيانُ المصغَّر (58 إعلاناً)
+       n = -1  14.22  --fs-2xs   المتنُ الثانويُّ والحواشي (53 إعلاناً)
+       n =  0  16.00  --fs-base  المتن
+       n = +1  18.00  --fs-md
+       n = +2  20.25  --fs-lg
+       n = +3  22.78  --fs-xl
+       n = +3…+4     --fs-2xl   مائعٌ بين درجتين
+       n = +4…+6     --fs-3xl
+       n = +5…+7     --fs-4xl
+       n = +6…+8     --fs-5xl
+     ودرجتان قديمتان (‎--fs-xs‎ و‎--fs-sm‎) حُذفتا ونُقل إعلانُهما إلى
+     الدرجتين الباقيتين بحسب **الدور** لا بحسب أقرب قيمة. والمعاملاتُ في
+     ‎clamp‎ محسوبةٌ لتبلغ الدرجةَ الدنيا عند عرضِ 360 بكسلاً والعليا عند
+     1440، فلا تُقدَّر بالتجربة. وتحرسها vtok: كلُّ درجةٍ على السلّم بهامشِ
+     0.5%، ولا درجتان متقاربتان دون أدنى خطوةٍ مُعلَنة. */
+  --fs-3xs:.7901rem;   /* 12.64 = 16 × 1.125^-2 */
+  --fs-2xs:.8889rem;   /* 14.22 = 16 × 1.125^-1 */
+  --fs-base:1rem;      /* 16.00 */
+  --fs-md:1.125rem;    /* 18.00 = 16 × 1.125 */
+  --fs-lg:1.2656rem;   /* 20.25 = 16 × 1.125^2 */
+  --fs-xl:1.4238rem;   /* 22.78 = 16 × 1.125^3 */
+  --fs-2xl:clamp(1.4238rem,1.3645rem + .2637vw,1.6018rem);  /* 22.78 → 25.63 */
+  --fs-3xl:clamp(1.6018rem,1.4600rem + .6304vw,2.0273rem);  /* 25.63 → 32.44 */
+  --fs-4xl:clamp(1.8020rem,1.6424rem + .7092vw,2.2807rem);  /* 28.83 → 36.49 */
+  --fs-5xl:clamp(2.0273rem,1.8478rem + .7978vw,2.5658rem);  /* 32.44 → 41.05 */
 
   /* ── إيقاعٌ رأسيّ محسوب من ارتفاع السطر، لا مُقدَّرٌ بالبكسل ── */
   /* UX-14 (31-10-2026م): كانت ثلاثةُ مواضعَ تكتب ‎line-height:var(--lh-mid)‎،
@@ -1560,7 +1581,14 @@ try{
      وقعت على إعلانٍ واحدٍ 6 بكسلات، و11 إعلاناً 4 بكسلات، والبقيةُ 2 أو
      أقلّ. و--hair هو الشعرة: حدٌّ أو إزاحةُ بكسلٍ واحدٍ لتداخل حدّين. */
   --hair:1px; --bw-2:2px; --bw-3:3px;   /* VIS-09: سلَّمُ سَمْكِ الحدود والحلقات */
-  --sp-1:2px; --sp-2:4px; --sp-3:8px; --sp-4:12px; --sp-5:16px; --sp-6:20px;
+  /* ── UX-07 (03-11-2026م) · الأساسُ أربعةٌ بلا نصفِ درجة ────────────────
+     كان في السلّم درجةٌ واحدةٌ خارجَ الشبكة (--sp-1 = 2px) بحجّة أنَّ الكتلَ
+     الدقيقةَ تحتاجها، واستُعملت في 26 موضعاً. وأثرُها أنَّ الإيقاعَ الرأسيَّ
+     لا ينطبق على شبكةٍ واحدة: حاشيةٌ 2 وأخرى 4 فوق العنصر نفسِه لا يُفرَّق
+     بينهما بالعين، وتُنفق درجةً من السلّم على فرقٍ لا يُرى. فحُذفت ونُقلت
+     مواضعُها كلُّها إلى 4، فصار كلُّ طولٍ في السلّم **مضاعفاً لأربعة**
+     بلا استثناء، وتحرسه vtok بالقسمة لا بالقائمة. */
+  --sp-2:4px; --sp-3:8px; --sp-4:12px; --sp-5:16px; --sp-6:20px;
   --sp-7:24px; --sp-8:32px; --sp-9:48px; --sp-10:64px; --sp-11:80px;
   --r-xs:3px; --r-sm:6px; --r-md:10px; --r:14px; --r-pill:999px;
   /* ── VIS-15 (19-09-2026م) · سلَّمُ الطبقات ──────────────────────────────
@@ -1685,13 +1713,13 @@ try{
 .sronly{position:absolute;width:1px;height:1px;padding:0;margin:calc(0px - var(--hair));overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 /* شريطُ تنزيل الجدول، طبقة النضج (٢): كل جدولٍ يُؤخذ لا يُقرأ فقط. */
-.a11ylist{margin:var(--sp-3) 0 0;padding-inline-start:var(--sp-6);color:var(--ink-2);font-size:var(--fs-xs);line-height:2}
+.a11ylist{margin:var(--sp-3) 0 0;padding-inline-start:var(--sp-6);color:var(--ink-2);font-size:var(--fs-2xs);line-height:2}
 .a11ylist li{margin-bottom:var(--sp-2)}
 .tblbar{display:flex;justify-content:flex-start;margin:0 0 var(--sp-3)}
 .tblbar .tbldl{background:var(--surface-2);border:var(--hair) solid var(--ctl-border);color:var(--ink-2);
-  border-radius:var(--r-md);padding:var(--sp-2) var(--sp-4);font-family:inherit;font-size:var(--fs-2xs);cursor:pointer;
+  border-radius:var(--r-md);padding:var(--sp-2) var(--sp-4);font-family:inherit;font-size:var(--fs-3xs);cursor:pointer;
   min-height:28px;display:inline-flex;align-items:center;gap:var(--sp-2);transition:background-color .15s,color .15s,border-color .15s}
-.tblbar .tbldl::before{content:"\2913";font-size:var(--fs-2xs);opacity:.75}
+.tblbar .tbldl::before{content:"\2913";font-size:var(--fs-3xs);opacity:.75}
 .tblbar .tbldl:hover{background:var(--surface-3);color:var(--ink);border-color:var(--brand-deep)}
 @media print{.tblbar{display:none}}
 *{box-sizing:border-box}
@@ -1726,7 +1754,7 @@ a[href]{display:inline-block;min-height:24px;min-width:24px;line-height:1.5}
 .tablead .tlead-p{display:none}
 .tablead.lead-on .tlead-p{display:block}
 .tablead .tlead-h{cursor:pointer}
-.tablead .tlead-h::after{content:'\00a0\25be';font-size:var(--fs-2xs);opacity:.7}
+.tablead .tlead-h::after{content:'\00a0\25be';font-size:var(--fs-3xs);opacity:.7}
 .tablead.lead-on .tlead-h::after{content:'\00a0\25b4'}
 .muted{color:var(--ink-3)}
 .sub{color:var(--ink-2)}
@@ -1737,9 +1765,9 @@ header.top{display:flex;flex-wrap:wrap;gap:var(--sp-5);align-items:flex-end;just
 .brand{display:flex;align-items:center;gap:var(--sp-4)}
 .mark{width:48px;height:48px;flex:0 0 auto;display:block}
 h1{font-size:var(--fs-3xl);font-weight:600}
-.tagline{font-size:var(--fs-sm);color:var(--ink-3);margin-top:var(--sp-1)}
+.tagline{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:var(--sp-2)}
 .badges{display:flex;gap:var(--sp-3);flex-wrap:wrap}
-.badge{font-size:var(--fs-2xs);padding:var(--sp-2) var(--sp-4);border-radius:var(--r-pill);background:var(--surface-2);
+.badge{font-size:var(--fs-3xs);padding:var(--sp-2) var(--sp-4);border-radius:var(--r-pill);background:var(--surface-2);
   border:var(--hair) solid var(--line);color:var(--ink-2);white-space:nowrap}
 .badge b{color:var(--brand-soft);font-weight:600}
 
@@ -1764,7 +1792,7 @@ nav.tabs .tab{flex:0 0 auto;scroll-snap-align:center}
 nav.tabs .tab .tdesc{display:none}
 /* UX-07: مسارُ التنقّل، يُجيب «أين أنا؟» ويكمّل عنوانَ المستند. */
 .crumb{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3);margin:0 0 var(--sp-4);
-  font-size:var(--fs-2xs);color:var(--ink-3);letter-spacing:.01em}
+  font-size:var(--fs-3xs);color:var(--ink-3);letter-spacing:.01em}
 .crumb .sep{color:var(--ink-3);font-size:1.05em}   /* A2-07: كان var(--line) عند 2.24:1
    مقيسة، وهو زخرفةٌ مستثناةٌ من عتبة 1.4.11 ولا يلزمها 3:1، لكنَّ رفعَه بلا كلفةٍ
    يُفيد ضعافَ البصر، وشريطُ النطاق يفعله أصلاً فيتوحّد الموضعان. */
@@ -1786,30 +1814,30 @@ nav.tabs .tab .tdesc{display:none}
 .kpi .spark{display:block;width:100%;height:32px}
 .kpi .spark path{stroke-width:2}
 /* UX-08: زرُّ توسيع نتائج البحث داخل سطر العدّاد. */
-.gs-more{background:transparent;border:0;padding:0 var(--sp-1);color:var(--brand-text);
+.gs-more{background:transparent;border:0;padding:0 var(--sp-2);color:var(--brand-text);
   font:inherit;font-size:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .gs-more:hover{color:var(--ink)}
 @media(max-width:520px){ .kpi .sparkwrap,.kpi .spark{height:24px} }
 .tabscount{display:none}   /* UX-03: يظهر على الضيّق وحده */
 .tab{padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);background:transparent;border:var(--hair) solid var(--line);
-  color:var(--ink-2);font-size:var(--fs-sm);cursor:pointer;font-family:inherit;transition:background-color .15s,color .15s,border-color .15s}
+  color:var(--ink-2);font-size:var(--fs-2xs);cursor:pointer;font-family:inherit;transition:background-color .15s,color .15s,border-color .15s}
 .tab:hover{background:var(--surface-2);color:var(--ink)}
 .tab.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 /* ux-sub-01: سطرُ وصفٍ تحت اسم كلِّ تبويبٍ فرعيّ، كما في اللوحات الخمس
    في الشريط الأعلى تماماً. */
 .tab{text-align:start;line-height:1.5}
-.tab .tdesc{display:block;font-size:var(--fs-2xs);opacity:.72;font-weight:400;margin-top:var(--sp-1)}
+.tab .tdesc{display:block;font-size:var(--fs-3xs);opacity:.72;font-weight:400;margin-top:var(--sp-2)}
 .tab.on .tdesc{opacity:.85}
 /* ux-open-01: رأسُ التبويب، عنوانٌ وجملةُ توجيهٍ قبل أدوات الضبط. */
 .tablead{margin:0 0 var(--sp-5)}
 .tablead .tlead-h{font-size:var(--fs-xl);margin:0 0 var(--sp-2);font-weight:700;color:var(--ink)}
-.tablead .tlead-p{margin:0;color:var(--ink-2);font-size:var(--fs-sm);line-height:var(--lh-loose);max-width:78ch}
+.tablead .tlead-p{margin:0;color:var(--ink-2);font-size:var(--fs-2xs);line-height:var(--lh-loose);max-width:78ch}
 /* ux-scope-02: كتلةُ الحدود، مطويّةٌ فلا تزاحم الجواب، ومتاحةٌ في كل تبويب. */
 .tablead .tlim{margin-top:var(--sp-3);border:var(--hair) solid var(--line-soft);border-radius:var(--r-md);
   background:var(--surface-1);padding:0 var(--sp-4)}
-.tablead .tlim>summary{cursor:pointer;padding:var(--sp-3) 0;font-size:var(--fs-xs);color:var(--ink-2);min-height:24px}
+.tablead .tlim>summary{cursor:pointer;padding:var(--sp-3) 0;font-size:var(--fs-2xs);color:var(--ink-2);min-height:24px}
 .tablead .tlim>summary:hover{color:var(--ink)}
-.tablead .tlim p{margin:0 0 var(--sp-3);font-size:var(--fs-xs);line-height:var(--lh-loose);color:var(--ink-2)}
+.tablead .tlim p{margin:0 0 var(--sp-3);font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-2)}
 /* ── 02-11-2026م · حدُّ النصّ الظاهر: صدرٌ يُقرأ وتتمّةٌ تُطلب ────────────
    قيس النصُّ الظاهر خارج المرجع كتلةً كتلة: 233 كتلةً تتجاوز 160 محرفاً
    بمجموع 101,650 محرفاً، وأثقلُ تبويبٍ 12,562. والقارئُ يقرأ سطراً ويترك
@@ -1819,8 +1847,8 @@ nav.tabs .tab .tdesc{display:none}
    بجوار ما تحكمه)، ولا يُحذف حرفٌ واحد. */
 .rdmore{margin-top:var(--sp-2)}
 .rdmore>summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;
-  gap:var(--sp-2);min-height:24px;padding:var(--sp-1) 0;
-  font-size:var(--fs-2xs);color:var(--ink-3)}
+  gap:var(--sp-2);min-height:24px;padding:var(--sp-2) 0;
+  font-size:var(--fs-3xs);color:var(--ink-3)}
 .rdmore>summary::-webkit-details-marker{display:none}
 .rdmore>summary::after{content:"";width:var(--sp-3);height:var(--sp-3);
   border-inline-end:var(--bw-2) solid currentColor;border-block-end:var(--bw-2) solid currentColor;
@@ -1831,7 +1859,7 @@ nav.tabs .tab .tdesc{display:none}
 /* ux-open-01: طيُّ أدوات الضبط */
 details.tfold{margin-bottom:var(--sp-5);border:var(--hair) solid var(--line-soft);border-radius:var(--r);
   background:var(--surface-1)}
-details.tfold>summary{cursor:pointer;padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm);color:var(--ink-2);min-height:24px}
+details.tfold>summary{cursor:pointer;padding:var(--sp-3) var(--sp-5);font-size:var(--fs-2xs);color:var(--ink-2);min-height:24px}
 /* ── ux-23 (26-10-2026م) · شريطا الحالة والضبط يتجاوران لا يتراكمان ──────
    «ضبطُ العرض» و«النطاقُ المعروض» يقولان الحالةَ نفسَها في شريطين
    متتابعين: 52 و51 بكسلاً على الشاشة الواسعة، و77 و83 على الجوال. وأحدُهما
@@ -1844,14 +1872,14 @@ details.tfold>summary{cursor:pointer;padding:var(--sp-3) var(--sp-5);font-size:v
 }
 @media (max-width:720px){
   details.tfold{margin-bottom:var(--sp-2)}
-  .scopebar{margin-top:0;row-gap:var(--sp-1)}
+  .scopebar{margin-top:0;row-gap:var(--sp-2)}
 }
 details.tfold>summary:hover{color:var(--ink)}
 details.tfold .filters{margin:0;border:0;border-top:var(--hair) solid var(--line-soft);border-radius:0;background:transparent}
 /* ux-load-02: فهرسُ التبويب الطويل */
 nav.tabidx{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);align-items:baseline;margin:0 0 var(--sp-5);
   padding:var(--sp-4) var(--sp-4);border:var(--hair) solid var(--line-soft);border-radius:var(--r);background:var(--surface-1);
-  font-size:var(--fs-xs);line-height:var(--lh-loose)}
+  font-size:var(--fs-2xs);line-height:var(--lh-loose)}
 nav.tabidx b{color:var(--ink-2);font-weight:600}
 /* ── ux-23 · الفهرسُ أداةُ تنقّلٍ تُطلَب، لا كتلةٌ تُدفَع ────────────────
    بطاقةُ الفهرس تعرض ثمانيةَ أسئلةٍ طويلة فترتفع 179 بكسلاً على الجوال
@@ -1866,25 +1894,25 @@ nav.tabidx b{color:var(--ink-2);font-weight:600}
    تبويباتٍ تتجاوز 6,000. فالفهرسُ الذي يُبنى في رأس التبويب يغيب عن القارئ
    بعد أوّل شاشة. فيبقى لاصقاً: هو المرساةُ الوحيدة في صفحةٍ بهذا الطول. */
 nav.tabidx{position:sticky;top:0;z-index:var(--z-sticky);background:var(--bg);
-  padding-block:var(--sp-3);margin-inline:calc(0px - var(--sp-1))}
+  padding-block:var(--sp-3);margin-inline:calc(0px - var(--sp-2))}
 @media (max-width:720px){ nav.tabidx{position:static} }
 nav.tabidx a{color:var(--ink-2);text-decoration:none;border-bottom:var(--hair) dotted var(--line);
-  padding:var(--sp-2) var(--sp-1);min-height:24px;display:inline-block}
+  padding:var(--sp-2) var(--sp-2);min-height:24px;display:inline-block}
 nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bottom-color:var(--brand)}
 /* ux-search-01: مربّعُ البحث الجامع في الترويسة */
 .gsearchbox{position:relative;margin-top:var(--sp-4);max-width:520px}
 .gsearchbox input{width:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:var(--hair) solid var(--ctl-border);
-  background:var(--surface-1);color:var(--ink);font-family:inherit;font-size:var(--fs-sm);min-height:44px}
+  background:var(--surface-1);color:var(--ink);font-family:inherit;font-size:var(--fs-2xs);min-height:44px}
 .gsearchbox input:focus-visible{outline:var(--bw-2) solid var(--brand);outline-offset:var(--hair)}
 .gsearchout{position:absolute;inset-block-start:calc(100% + 6px);inset-inline-start:0;inset-inline-end:0;
   z-index:var(--z-pop);max-height:min(58vh,460px);overflow:auto;background:var(--surface);
   border:var(--hair) solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow-2);padding:var(--sp-2)}
-.gsearchout .gs-g{font-size:var(--fs-2xs);color:var(--ink-3);padding:var(--sp-3) var(--sp-3) var(--sp-2)}
+.gsearchout .gs-g{font-size:var(--fs-3xs);color:var(--ink-3);padding:var(--sp-3) var(--sp-3) var(--sp-2)}
 .gsearchout a{display:block;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);color:var(--ink-2);
-  text-decoration:none;font-size:var(--fs-xs);line-height:var(--lh);min-height:24px}
+  text-decoration:none;font-size:var(--fs-2xs);line-height:var(--lh);min-height:24px}
 .gsearchout a:hover,.gsearchout a:focus-visible,.gsearchout a.sel{background:var(--surface-2);color:var(--ink)}
-.gsearchout a small{display:block;color:var(--ink-3);font-size:var(--fs-2xs)}
-.gsearchout .gs-none{padding:var(--sp-4);color:var(--ink-3);font-size:var(--fs-xs)}
+.gsearchout a small{display:block;color:var(--ink-3);font-size:var(--fs-3xs)}
+.gsearchout .gs-none{padding:var(--sp-4);color:var(--ink-3);font-size:var(--fs-2xs)}
 /* ap-14: تخطّي تخطيطِ ما هو خارج الشاشة، يُلبَس بالصنف من الشيفرة على
    البطاقات التي لا رسمَ فيها وحدَها (الرسمُ يحتاج قياساً حقيقياً عند إنشائه).
    ‎contain-intrinsic-size‎ يحفظ ارتفاعاً تقديرياً فلا يقفز شريطُ التمرير. */
@@ -1892,18 +1920,18 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bot
 @media print{.card.cv{content-visibility:visible}}
 /* ux-why-01: قائمةُ الأحداث تحت الرسم */
 .evtnote{margin-top:var(--sp-3);border:var(--hair) solid var(--line-soft);border-radius:var(--r-md);background:var(--surface-1);padding:0 var(--sp-4)}
-.evtnote>summary{cursor:pointer;padding:var(--sp-3) 0;font-size:var(--fs-xs);color:var(--ink-2);min-height:24px}
+.evtnote>summary{cursor:pointer;padding:var(--sp-3) 0;font-size:var(--fs-2xs);color:var(--ink-2);min-height:24px}
 .evtnote>summary:hover{color:var(--ink)}
-.evtnote ol{font-size:var(--fs-xs);line-height:var(--lh-loose);color:var(--ink-2)}
+.evtnote ol{font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-2)}
 .evtnote li{margin-bottom:var(--sp-3)}
 /* A11Y-11 (19-09-2026م): كان ‎min-height:24px‎، وهو حدُّ SC 2.5.8 بالضبط،
    فالقياسُ مجتازٌ بهامشٍ صفر. وتسعَ عشرةَ خانةً أخرى في الصفحة نفسِها تبلغ
    ثلاثين، فالهامشُ موجودٌ في موضعٍ وغائبٌ في آخر. وأيُّ تغيّرٍ لاحقٍ في حجم
    الخطّ أو الحشو أو ارتفاع السطر يُنزل القيمةَ تحت العتبة. */
-.evtnote .ck{font-size:var(--fs-xs);color:var(--ink-2);align-items:center;gap:var(--sp-3);min-height:30px;margin-bottom:var(--sp-3)}
+.evtnote .ck{font-size:var(--fs-2xs);color:var(--ink-2);align-items:center;gap:var(--sp-3);min-height:30px;margin-bottom:var(--sp-3)}
 /* ux-src-02: سطرُ الإسناد تحت كلّ بطاقةٍ ومجموعةِ مؤشّرات */
 .attrib{margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:var(--hair) dashed var(--line-soft);
-  font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-3);display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);align-items:center}
+  font-size:var(--fs-3xs);line-height:var(--lh-loose);color:var(--ink-3);display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);align-items:center}
 .attrib b{color:var(--ink-2);font-weight:600}
 .grid>.attrib,.g4>.attrib,.g3>.attrib,.g2>.attrib{grid-column:1/-1}
 /* ux-mob-02: الشريطُ الوصفيّ، مفتوحٌ دائماً على الواسع، مطويٌّ على الضيّق */
@@ -1915,7 +1943,7 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bot
    تحت الطيّة بـ33%، وعلى الجوال بـ62%. فصار المطويُّ مطويّاً في كلّ عرض،
    وبقي قيدُ الصفة («مستقلّة · غير رسمية») ظاهراً لأنه قيدٌ يجب أن يبلغ
    القارئَ لا أن يُتاح له (LEG-03). */
-.badgefold>summary{display:block;cursor:pointer;list-style:none;font-size:var(--fs-xs);
+.badgefold>summary{display:block;cursor:pointer;list-style:none;font-size:var(--fs-2xs);
   color:var(--ink-2);padding:var(--sp-3) var(--sp-4);min-height:24px;border:var(--hair) solid var(--ctl-border);
   border-radius:var(--r-md);background:var(--surface-1);margin-top:var(--sp-3)}
 .badgefold>summary::-webkit-details-marker{display:none}
@@ -1929,8 +1957,8 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bot
 /* UX-22: على الشاشات الواسعة يجلس زرُّ الشريط الوصفيّ في سطر البيانات
    نفسِه لا في سطرٍ مستقلّ، فلا يُستبدَل سطران بسطرٍ وزرّ. */
 @media (min-width:721px){
-  .badgefold>summary{display:inline-block;margin-top:0;padding:var(--sp-1) var(--sp-4);
-    font-size:var(--fs-2xs);background:transparent}
+  .badgefold>summary{display:inline-block;margin-top:0;padding:var(--sp-2) var(--sp-4);
+    font-size:var(--fs-3xs);background:transparent}
   .badgefold:not([open]) .badges{margin-top:0;align-items:center}
   .badgefold:not([open]) .badges #bIndep{margin-top:0}
 }
@@ -1955,9 +1983,9 @@ nav.tabidx a:hover,nav.tabidx a:focus-visible{color:var(--brand-text);border-bot
   .f .seg::-webkit-scrollbar{height:4px}
 }
 [hidden]{display:none!important}
-.f label{font-size:var(--fs-2xs);color:var(--ink-3);letter-spacing:.02em}
+.f label{font-size:var(--fs-3xs);color:var(--ink-3);letter-spacing:.02em}
 select,input[type=number],input.inp,input[type=search]{background:var(--surface-2);border:var(--hair) solid var(--line);color:var(--ink);
-  border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-sm);min-width:110px}
+  border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-2xs);min-width:110px}
 .seg{display:flex;background:var(--surface-2);border:var(--hair) solid var(--line);border-radius:var(--r-md);overflow:hidden}
 /* ── UX-16 (31-10-2026م) · زرٌّ غيرُ نشِطٍ بلا حدٍّ يُدرَك ───────────────────
    قيس: 86 عنصراً متمايزاً حدُّه دون 3:1 عند 1280 بكسلاً و117 عند 390،
@@ -1968,7 +1996,7 @@ select,input[type=number],input.inp,input[type=search]{background:var(--surface-
    أثرٍ على التباين: فاصلٌ بين الأزرار بلون حدٍّ مُعلَنٍ يبلغ 3:1، فيُدرَك
    أنَّ الكتلةَ مجموعةُ أزرارٍ لا نصّاً واحداً. */
 .seg button{background:transparent;border:0;color:var(--ink-2);padding:var(--sp-3) var(--sp-4);font-family:inherit;
-  font-size:var(--fs-sm);cursor:pointer}
+  font-size:var(--fs-2xs);cursor:pointer}
 .seg button + button{border-inline-start:var(--hair) solid var(--ctl-border)}
 .seg button.on + button, .seg button:has(+ button.on){border-inline-start-color:transparent}
 .seg button.on{background:var(--brand);color:var(--on-brand);font-weight:600}
@@ -1984,27 +2012,27 @@ select,input[type=number],input.inp,input[type=search]{background:var(--surface-
 .g3{grid-template-columns:repeat(3,1fr)}
 .g2{grid-template-columns:repeat(2,1fr)}
 .card{background:var(--surface-1);border:var(--hair) solid var(--line-soft);border-radius:var(--r);padding:var(--sp-5)}
-.card h3{font-size:var(--fs-base);margin-bottom:var(--sp-1)}
-.card .hint{font-size:var(--fs-xs);color:var(--ink-3);margin-bottom:var(--sp-4)}
+.card h3{font-size:var(--fs-base);margin-bottom:var(--sp-2)}
+.card .hint{font-size:var(--fs-2xs);color:var(--ink-3);margin-bottom:var(--sp-4)}
 .kpi .v{font-size:var(--fs-3xl);font-weight:600;letter-spacing:-.02em;margin-top:var(--sp-3);font-variant-numeric:tabular-nums;font-family:var(--font-display)}
-.kpi .l{font-size:var(--fs-2xs);color:var(--ink-3);letter-spacing:.03em;text-transform:none}
-.kpi .d{font-size:var(--fs-xs);margin-top:var(--sp-2);display:flex;align-items:center;gap:var(--sp-2)}
+.kpi .l{font-size:var(--fs-3xs);color:var(--ink-3);letter-spacing:.03em;text-transform:none}
+.kpi .d{font-size:var(--fs-2xs);margin-top:var(--sp-2);display:flex;align-items:center;gap:var(--sp-2)}
 .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--ink-3)}
 .chartbox{position:relative;height:330px}
 .chartbox.sm{height:250px}
 .chartbox.lg{height:420px}
-.note{font-size:var(--fs-xs);color:var(--ink-3);margin-top:var(--sp-4);border-right:var(--bw-2) solid var(--brand-deep);padding-right:var(--sp-4)}
+.note{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:var(--sp-4);border-right:var(--bw-2) solid var(--brand-deep);padding-right:var(--sp-4)}
 .note b{color:var(--ink-2);font-weight:600}
 section{display:none}
 section.on{display:block}
 .sechead{margin:var(--sp-2) 0 var(--sp-5)}
 .sechead h2{font-size:var(--fs-xl)}
-.sechead p{margin:var(--sp-2) 0 0;font-size:var(--fs-sm);color:var(--ink-3);max-width:78ch}
+.sechead p{margin:var(--sp-2) 0 0;font-size:var(--fs-2xs);color:var(--ink-3);max-width:78ch}
 
 /* table */
-table{width:100%;border-collapse:collapse;font-size:var(--fs-xs);font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-2xs);font-variant-numeric:tabular-nums}
 th,td{padding:var(--sp-3) var(--sp-3);border-bottom:var(--hair) solid var(--line-soft);text-align:right}
-th{color:var(--ink-3);font-weight:600;font-size:var(--fs-2xs);position:sticky;top:0;background:var(--surface-1)}
+th{color:var(--ink-3);font-weight:600;font-size:var(--fs-3xs);position:sticky;top:0;background:var(--surface-1)}
 tbody tr:hover{background:var(--surface-2)}
 /* UXB-13 (05-10-2026م): كان القيدُ 460 بكسلاً فيضع تمريراً رأسياً متداخلاً
    داخل صفحةٍ عمقُها عشرةُ آلاف، و37 جدولاً يتجاوز عرضَ حاويته عند 390 بكسلاً
@@ -2025,7 +2053,7 @@ tbody tr:hover{background:var(--surface-2)}
 details.kpifold{margin:0}
 details.kpifold > summary{cursor:pointer;list-style:none;padding:var(--sp-3) var(--sp-4);min-height:28px;
   border:var(--hair) solid var(--ctl-border);border-radius:var(--r-md);background:var(--surface-2);
-  color:var(--ink-2);font-size:var(--fs-xs);margin-bottom:var(--sp-4)}
+  color:var(--ink-2);font-size:var(--fs-2xs);margin-bottom:var(--sp-4)}
 details.kpifold > summary::-webkit-details-marker{display:none}
 details.kpifold > summary::after{content:"▾";margin-inline-start:var(--sp-3);color:var(--ink-2)}
 details.kpifold[open] > summary::after{content:"▴"}
@@ -2051,20 +2079,20 @@ details.kpifold > summary .kf-h{color:var(--ink-3)}
 
 /* sliders */
 .sl{display:grid;grid-template-columns:1fr auto;gap:var(--sp-2) var(--sp-4);align-items:center;margin-bottom:var(--sp-5)}
-.sl .nm{font-size:var(--fs-sm);color:var(--ink-2)}
-.sl .val{font-size:var(--fs-sm);font-weight:700;font-variant-numeric:tabular-nums;min-width:64px;text-align:left}
+.sl .nm{font-size:var(--fs-2xs);color:var(--ink-2)}
+.sl .val{font-size:var(--fs-2xs);font-weight:700;font-variant-numeric:tabular-nums;min-width:64px;text-align:left}
 .sl input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--brand)}
 .btn{background:var(--surface-2);border:var(--hair) solid var(--line);color:var(--ink-2);border-radius:var(--r-md);
-  padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-xs);cursor:pointer}
+  padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-2xs);cursor:pointer}
 .btn:hover{background:var(--surface-3);color:var(--ink)}
 .btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 
 /* glossary */
 .gitem{border-bottom:var(--hair) solid var(--line-soft);padding:var(--sp-4) 0}
 .gitem .t{font-size:var(--fs-base);font-weight:700}
-.gitem .te{font-size:var(--fs-xs);color:var(--brand-soft);direction:ltr;text-align:left}
-.gitem .d{font-size:var(--fs-xs);color:var(--ink-2);margin-top:var(--sp-2)}
-.gitem .de{font-size:var(--fs-2xs);color:var(--ink-3);direction:ltr;text-align:left;margin-top:var(--sp-2)}
+.gitem .te{font-size:var(--fs-2xs);color:var(--brand-soft);direction:ltr;text-align:left}
+.gitem .d{font-size:var(--fs-2xs);color:var(--ink-2);margin-top:var(--sp-2)}
+.gitem .de{font-size:var(--fs-3xs);color:var(--ink-3);direction:ltr;text-align:left;margin-top:var(--sp-2)}
 #gsearch,input.inp{width:100%;min-width:0}
 /* ===== لوحة التفصيل التفاعلية ===== */
 #scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;pointer-events:none;
@@ -2088,22 +2116,22 @@ details.kpifold > summary .kf-h{color:var(--ink-3)}
 #detail .dhead{padding:var(--sp-6) var(--sp-6) var(--sp-5);border-bottom:var(--hair) solid var(--line-soft);flex:0 0 auto}
 #detail .dhead .eyebrow{font-size:var(--fs-3xs);letter-spacing:.12em;color:var(--brand-text);margin-bottom:var(--sp-3)}
 #detail .dhead h2{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:0;line-height:var(--lh-tight)}
-#detail .dhead .sub{font-size:var(--fs-xs);color:var(--ink-3);margin-top:var(--sp-2)}
+#detail .dhead .sub{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:var(--sp-2)}
 #detail .dbody{padding:var(--sp-5) var(--sp-6) var(--sp-7);overflow:auto;flex:1 1 auto}
 #detail .dclose{position:absolute;inset-block-start:16px;inset-inline-end:16px;background:var(--surface-2);
   border:var(--hair) solid var(--line);color:var(--ink-2);border-radius:var(--r-sm);width:30px;height:30px;
   font-size:var(--fs-base);cursor:pointer;line-height:1;font-family:inherit}
 #detail .dclose:hover{background:var(--surface-3);color:var(--ink)}
 #detail .big{font-family:var(--font-display);font-size:var(--fs-4xl);font-weight:600;letter-spacing:-.02em;
-  font-variant-numeric:tabular-nums;margin:var(--sp-1) 0 var(--sp-1)}
-#detail .bigu{font-size:var(--fs-xs);color:var(--ink-3);margin-bottom:var(--sp-5)}
+  font-variant-numeric:tabular-nums;margin:var(--sp-2) 0 var(--sp-2)}
+#detail .bigu{font-size:var(--fs-2xs);color:var(--ink-3);margin-bottom:var(--sp-5)}
 .drow{display:flex;justify-content:space-between;gap:var(--sp-4);padding:var(--sp-3) 0;border-block-end:var(--hair) solid var(--line-soft);
-  font-size:var(--fs-xs);align-items:baseline}
+  font-size:var(--fs-2xs);align-items:baseline}
 .drow:last-child{border-block-end:0}
 .drow .k{color:var(--ink-3);flex:0 0 auto}
 .drow .v{color:var(--ink);font-variant-numeric:tabular-nums;text-align:start;font-weight:500}
 .dsec{font-size:var(--fs-3xs);letter-spacing:.1em;color:var(--brand-deep-txt);margin:var(--sp-6) 0 var(--sp-2);font-weight:600}
-.dnote{font-size:var(--fs-xs);color:var(--ink-3);line-height:var(--lh-mid);margin-top:var(--sp-4);
+.dnote{font-size:var(--fs-2xs);color:var(--ink-3);line-height:var(--lh-mid);margin-top:var(--sp-4);
   border-inline-start:var(--bw-2) solid var(--brand-deep);padding-inline-start:var(--sp-4)}
 .dnote b{color:var(--ink-2)}
 .dspark{height:78px;margin:var(--sp-4) 0 var(--sp-2);position:relative;width:100%}
@@ -2122,20 +2150,20 @@ canvas{cursor:pointer}
   font-family:var(--font-display);font-size:var(--fs-md);font-weight:600;color:var(--ink)}
 .blockhead:first-of-type{margin-top:var(--sp-6)}
 .blockhead span{font-size:var(--fs-3xs);letter-spacing:.12em;color:var(--brand-text);
-  border:var(--hair) solid var(--line);background:var(--surface-2);border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-3);font-weight:500}
+  border:var(--hair) solid var(--line);background:var(--surface-2);border-radius:var(--r-sm);padding:var(--sp-2) var(--sp-3);font-weight:500}
 .scopebar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3);margin:calc(0px - var(--sp-2)) 0 var(--sp-6);
   padding:var(--sp-4) var(--sp-5);background:var(--surface-1);border:var(--hair) solid var(--line-soft);
-  border-inline-start:var(--bw-3) solid var(--brand);border-radius:var(--r-md);font-size:var(--fs-xs);color:var(--ink-2)}
+  border-inline-start:var(--bw-3) solid var(--brand);border-radius:var(--r-md);font-size:var(--fs-2xs);color:var(--ink-2)}
 .scopebar b{color:var(--ink);font-weight:600}
 .scopebar .sep{color:var(--ink-3)}   /* فاصل زخرفي، رُفع تباينه ومع ذلك يُخفى عن قارئات الشاشة */
 .scopebar .tag{font-size:var(--fs-3xs);color:var(--brand-text);border:var(--hair) solid var(--line);
-  background:var(--surface-2);border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-3);letter-spacing:.04em}
+  background:var(--surface-2);border-radius:var(--r-sm);padding:var(--sp-2) var(--sp-3);letter-spacing:.04em}
 /* ===== الشاشة الرئيسة ===== */
 .hero{padding:var(--sp-2) 0 var(--sp-6)}
 .hero h2{font-family:var(--font-display);font-size:var(--fs-3xl);font-weight:600;
   letter-spacing:-.02em;margin:0 0 var(--sp-3)}
 .hero p{max-width:70ch;color:var(--ink-2);font-size:var(--fs-base);line-height:1.8;margin:0}
-.hero .asof{margin-top:var(--sp-4);font-size:var(--fs-2xs);color:var(--ink-3)}
+.hero .asof{margin-top:var(--sp-4);font-size:var(--fs-3xs);color:var(--ink-3)}
 .hero .asof b{color:var(--ink-2);font-weight:500}
 /* A11Y-09 (19-09-2026م): البطاقةُ ‎role="button"‎ و‎tabindex="0"‎، أي تَعِد
    بالضغط، وحدُّها ‎--line-soft‎ عند 1.09:1 فاتحاً و1.80 داكناً، غيرُ
@@ -2149,11 +2177,11 @@ canvas{cursor:pointer}
 .homecard:focus-visible{outline:var(--bw-2) solid var(--brand);outline-offset:var(--bw-2)}
 .homecard .hl{font-size:var(--fs-3xs);letter-spacing:.12em;color:var(--brand-text)}
 .homecard h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:0}
-.homecard .q{font-size:var(--fs-sm);color:var(--ink-3);line-height:var(--lh-mid)}
+.homecard .q{font-size:var(--fs-2xs);color:var(--ink-3);line-height:var(--lh-mid)}
 .homecard .a{font-size:var(--fs-base);color:var(--ink-2);line-height:1.8;border-inline-start:var(--bw-2) solid var(--brand-deep);
   padding-inline-start:var(--sp-4)}
 .homecard .a b{color:var(--ink)}
-.homecard .go{margin-top:auto;font-size:var(--fs-xs);color:var(--brand-text);padding-top:var(--sp-2)}
+.homecard .go{margin-top:auto;font-size:var(--fs-2xs);color:var(--brand-text);padding-top:var(--sp-2)}
 /* ===== سلسلة السببية ===== */
 .chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin-top:var(--sp-4)}
 .chain .lk{flex:1 1 150px;min-width:140px;background:var(--surface-2);border:var(--hair) solid var(--line-soft);
@@ -2163,14 +2191,14 @@ canvas{cursor:pointer}
 .chain .lk .n{font-size:var(--fs-3xs);letter-spacing:.06em;color:var(--ink-3);margin-bottom:var(--sp-3)}
 .chain .lk .v{font-family:var(--font-display);font-size:var(--fs-xl);font-weight:600;color:var(--ink);
   font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.chain .lk .u{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:var(--sp-2)}
+.chain .lk .u{font-size:var(--fs-3xs);color:var(--ink-3);margin-top:var(--sp-2)}
 /* cx-18: دورانٌ سالب، مع محور y نحو الأسفل يقلب الدورانُ الموجبُ السهمَ
    اليساريَّ إلى علويٍّ بينما تنساب السلسلة إلى أسفل. */
 @media(max-width:820px){.chain .ar{transform:rotate(-90deg);width:100%;flex:1 1 100%;height:22px}}
 .perbar{display:flex;flex-wrap:wrap;gap:var(--sp-3);margin:0 0 var(--sp-5)}
 .perbar .chip{display:inline-flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-3xs);line-height:var(--lh);
   color:var(--ink-2);background:var(--surface-2);border:var(--hair) solid var(--line-soft);
-  border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-3);font-variant-numeric:tabular-nums;
+  border-radius:var(--r-sm);padding:var(--sp-2) var(--sp-3);font-variant-numeric:tabular-nums;
   /* A11Y-03: كان ‎white-space:nowrap‎ يجعل الرقاقةَ الواحدة أعرضَ من
      حاويتها (قِيست 847 بكسلاً في حاويةٍ 570)، والالتفافُ على مستوى
      الحاوية لا يُجدي مع عنصرٍ واحدٍ لا ينكسر. فصار النصُّ ينكسر. */
@@ -2185,19 +2213,19 @@ canvas{cursor:pointer}
 .covbar > div{flex:1 1 200px;padding:var(--sp-4) var(--sp-5);border-inline-start:var(--hair) solid var(--line-soft)}
 .covbar > div:first-child{border-inline-start:0}
 .covbar .cl{font-size:var(--fs-3xs);letter-spacing:.09em;color:var(--brand-deep-txt);margin-bottom:var(--sp-2)}
-.covbar .cv{font-size:var(--fs-sm);color:var(--ink);font-variant-numeric:tabular-nums;font-weight:500}
-.covbar .cd{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:var(--sp-1);line-height:1.6}
+.covbar .cv{font-size:var(--fs-2xs);color:var(--ink);font-variant-numeric:tabular-nums;font-weight:500}
+.covbar .cd{font-size:var(--fs-3xs);color:var(--ink-3);margin-top:var(--sp-2);line-height:1.6}
 /* ===== جدول معادلات الاحتساب ===== */
 .fgrp{font-size:var(--fs-3xs);letter-spacing:.1em;color:var(--brand-text);margin:var(--sp-7) 0 var(--sp-3);font-weight:600}
 .fgrp:first-of-type{margin-top:var(--sp-2)}
-table.frm{font-size:var(--fs-sm)}
+table.frm{font-size:var(--fs-2xs)}
 table.frm td:first-child{color:var(--ink);font-weight:500;width:27%;min-width:180px}
 table.frm td.fml{color:var(--ink-2);line-height:var(--lh-loose);display:table-cell}
 table.frm .op{display:inline}
-table.frm td.u{color:var(--ink-3);font-size:var(--fs-2xs);white-space:nowrap;width:16%}
-table.frm .op{color:var(--brand-soft);padding:0 var(--sp-1);font-variant-numeric:tabular-nums}
+table.frm td.u{color:var(--ink-3);font-size:var(--fs-3xs);white-space:nowrap;width:16%}
+table.frm .op{color:var(--brand-soft);padding:0 var(--sp-2);font-variant-numeric:tabular-nums}
 /* سطرُ الحدّ تحت المعادلة: كان نمطاً سطريّاً مكتوباً أربعَ مرّاتٍ. */
-.frmnote{margin-top:var(--sp-2);font-size:var(--fs-2xs);line-height:var(--lh);color:var(--ink-3)}
+.frmnote{margin-top:var(--sp-2);font-size:var(--fs-3xs);line-height:var(--lh);color:var(--ink-3)}
 table.clickable tbody tr{cursor:pointer;transition:background .13s}
 table.clickable tbody tr:hover{background:var(--surface-3)}
 table.clickable tbody tr:focus-visible{outline:var(--bw-2) solid var(--ink);outline-offset:calc(0px - var(--bw-2));
@@ -2225,20 +2253,20 @@ table.clickable tbody tr:focus-visible{outline:var(--bw-2) solid var(--ink);outl
 .totop{position:fixed;inset-inline-end:var(--sp-5);inset-block-end:var(--sp-5);z-index:40;
   background:var(--surface-2);color:var(--ink-2);border:var(--hair) solid var(--ctl-border);
   border-radius:var(--r-pill);padding:var(--sp-3) var(--sp-5);font-family:inherit;
-  font-size:var(--fs-2xs);cursor:pointer;min-height:40px;display:inline-flex;align-items:center;
+  font-size:var(--fs-3xs);cursor:pointer;min-height:40px;display:inline-flex;align-items:center;
   gap:var(--sp-2);box-shadow:var(--shadow-1);transition:background-color .15s,color .15s}
 .totop:hover{background:var(--surface-3);color:var(--ink)}
 .totop[hidden]{display:none}
 @media print{ .totop{display:none!important} }
 @media (prefers-reduced-motion:reduce){ .totop{transition:none} }
-.tiphint{font-size:var(--fs-2xs);color:var(--ink-3);display:inline-flex;align-items:center;gap:var(--sp-2);
+.tiphint{font-size:var(--fs-3xs);color:var(--ink-3);display:inline-flex;align-items:center;gap:var(--sp-2);
   background:var(--surface-2);border:var(--hair) solid var(--line-soft);border-radius:var(--r-pill);padding:var(--sp-2) var(--sp-4)}
-.pill{display:inline-block;font-size:var(--fs-2xs);padding:var(--sp-1) var(--sp-3);border-radius:var(--r-pill);
+.pill{display:inline-block;font-size:var(--fs-3xs);padding:var(--sp-2) var(--sp-3);border-radius:var(--r-pill);
   background:var(--surface-2);border:var(--hair) solid var(--line);color:var(--ink-3);margin-inline-start:var(--sp-2)}
 
-.legend{display:flex;gap:var(--sp-4);flex-wrap:wrap;margin-top:var(--sp-4);font-size:var(--fs-xs);color:var(--ink-2)}
+.legend{display:flex;gap:var(--sp-4);flex-wrap:wrap;margin-top:var(--sp-4);font-size:var(--fs-2xs);color:var(--ink-2)}
 .legend i{width:11px;height:11px;border-radius:var(--r-xs);display:inline-block;margin-inline-end:var(--sp-2);vertical-align:-1px}
-footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) solid var(--line-soft);font-size:var(--fs-xs);color:var(--ink-3)}
+footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) solid var(--line-soft);font-size:var(--fs-2xs);color:var(--ink-3)}
 @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}}
 @media(max-width:640px){.g4{grid-template-columns:1fr}.chartbox{height:290px}}
 
@@ -2253,7 +2281,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
    ينكسر إلى صفّين أو ثلاثة في كلِّ عرضٍ دون 1280. فصارت القاعدةُ واحدةً:
    صفٌّ لا ينكسر ويُمرَّر أفقياً، كما في الشريط الفرعيّ. */
 .domswitch{display:flex;gap:var(--sp-3);margin:0 0 var(--sp-5);flex-wrap:nowrap;overflow-x:auto;
-  scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:var(--sp-1)}
+  scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:var(--sp-2)}
 /* ── ux-23 (26-10-2026م) · مبدّلُ اللوحات صفٌّ واحدٌ على الضيّق ──────────
    ‎flex-wrap:wrap‎ يغلب ‎overflow-x‎، فعلى 390 بكسلاً تقع اللوحاتُ الخمس في
    ثلاثة صفوف ترتفع 162 بكسلاً وتترك الخامسةَ وحدَها في سطرها، وهو شكلٌ
@@ -2263,7 +2291,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
    الفرعيّ منذ UX-03، ويسقط وصفُ اللوحة من الزرّ لأنّ سطرَ صدارة التبويب
    يحمله تحته مباشرةً. */
 .domswitch button{scroll-snap-align:start}
-.domswitch button{flex:0 0 auto;display:flex;flex-direction:column;gap:var(--sp-1);align-items:flex-start;
+.domswitch button{flex:0 0 auto;display:flex;flex-direction:column;gap:var(--sp-2);align-items:flex-start;
   background:var(--surface-1);border:var(--hair) solid var(--line);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
   color:var(--ink-2);font-family:inherit;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;text-align:right;min-width:210px}
 /* ── UX-01 (31-10-2026م) · تجاوزٌ يسبق ما يتجاوزه فلا يتجاوزه ──────────────
@@ -2293,7 +2321,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 .domswitch button.on::after{content:"";position:absolute;inset-inline:8px;bottom:-1px;height:3px;
   background:var(--brand);border-radius:var(--r-xs)}
 .domswitch b{font-family:var(--font-display);font-weight:600;font-size:var(--fs-base)}
-.domswitch span{font-size:var(--fs-2xs);color:var(--ink-3)}
+.domswitch span{font-size:var(--fs-3xs);color:var(--ink-3)}
 .domswitch button.on span{color:var(--brand-soft)}
 /* UX-01 (31-10-2026م): أُسقطت هنا قاعدةٌ قديمة تجعل المبدّلَ عموديّاً
    (‎flex-direction:column‎ و‎width:100%‎) على الضيّق، وكانت تَجُبّ قاعدةَ
@@ -2347,7 +2375,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
   .domswitch button{width:auto;min-width:0;padding:var(--sp-3) var(--sp-4);min-height:44px;
     align-items:center;justify-content:center;text-align:center}
   .domswitch button span{display:none}
-  .domswitch b{font-size:var(--fs-sm)}
+  .domswitch b{font-size:var(--fs-2xs)}
 
   /* الترويسة أهدأ وأصغر ارتفاعاً */
   h1{font-size:var(--fs-2xl)}
@@ -2366,7 +2394,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 
   /* أهداف لمس لا تقل عن 44px ونصوص لا تقل عن 11px */
   select,button,.chip{min-height:38px}
-  .perbar .chip{min-height:0;font-size:var(--fs-2xs)}
+  .perbar .chip{min-height:0;font-size:var(--fs-3xs)}
   .perbar .chip i{font-size:var(--fs-3xs)}
   .covbar .cl{font-size:var(--fs-3xs)}
 
@@ -2380,29 +2408,29 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 
 /* ===== لوحة صندوق الاستثمارات العامة ===== */
 #dom-pif .kpi{background:var(--surface-1);border:var(--hair) solid var(--line);border-radius:var(--r);padding:var(--sp-5) var(--sp-5)}
-#dom-pif .kpi .kl{font-size:var(--fs-2xs);color:var(--ink-3);margin-bottom:var(--sp-3)}
+#dom-pif .kpi .kl{font-size:var(--fs-3xs);color:var(--ink-3);margin-bottom:var(--sp-3)}
 #dom-pif .kpi .kv{font-size:var(--fs-3xl);font-weight:600;font-family:var(--font-display);
   font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.25}
-#dom-pif .kpi .ks{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:var(--sp-2);line-height:1.6}
+#dom-pif .kpi .ks{font-size:var(--fs-3xs);color:var(--ink-3);margin-top:var(--sp-2);line-height:1.6}
 #dom-pif .kpi.good .kv{color:var(--good)} #dom-pif .kpi.bad .kv{color:var(--bad)}
 #dom-pif .chipbtn{background:var(--surface-1);border:var(--hair) solid var(--line);color:var(--ink-2);
-  border-radius:var(--r-md);padding:var(--sp-3) var(--sp-5);font-family:inherit;font-size:var(--fs-sm);cursor:pointer;transition:background-color .15s,color .15s,border-color .15s}
+  border-radius:var(--r-md);padding:var(--sp-3) var(--sp-5);font-family:inherit;font-size:var(--fs-2xs);cursor:pointer;transition:background-color .15s,color .15s,border-color .15s}
 #dom-pif .chipbtn:hover{background:var(--surface-2);color:var(--ink)}
 #dom-pif .chipbtn.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
-#dom-pif .badge{display:inline-block;padding:var(--sp-1) var(--sp-3);border-radius:var(--r);font-size:var(--fs-2xs);font-weight:500}
+#dom-pif .badge{display:inline-block;padding:var(--sp-2) var(--sp-3);border-radius:var(--r);font-size:var(--fs-3xs);font-weight:500}
 #dom-pif .badge.ok{background:var(--tint-good);color:var(--good)}
 #dom-pif .badge.no{background:var(--tint-bad);color:var(--bad)}
 #dom-pif .badge.na{background:color-mix(in oklab,var(--ink-3) 16%,transparent);color:var(--ink-3)}
 #dom-pif .warnbox{background:var(--tint-warn);border:var(--hair) solid color-mix(in oklab,var(--warn) 34%,transparent);
-  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);margin:var(--sp-4) 0;font-size:var(--fs-xs);line-height:1.85;color:var(--ink-2)}
+  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);margin:var(--sp-4) 0;font-size:var(--fs-2xs);line-height:1.85;color:var(--ink-2)}
 #dom-pif .note{background:var(--surface-1);border:var(--hair) solid var(--line-soft);border-radius:var(--r-md);
-  padding:var(--sp-4) var(--sp-5);margin:var(--sp-3) 0;font-size:var(--fs-xs);line-height:1.85;color:var(--ink-2)}
+  padding:var(--sp-4) var(--sp-5);margin:var(--sp-3) 0;font-size:var(--fs-2xs);line-height:1.85;color:var(--ink-2)}
 #dom-pif .quote{border-inline-start:var(--bw-3) solid var(--brand);background:var(--surface-1);
-  padding:var(--sp-4) var(--sp-5);margin:var(--sp-4) 0;font-size:var(--fs-sm);line-height:var(--lh-loose);color:var(--ink-2);border-radius:0 var(--r-md) var(--r-md) 0}
+  padding:var(--sp-4) var(--sp-5);margin:var(--sp-4) 0;font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-2);border-radius:0 var(--r-md) var(--r-md) 0}
 #dom-pif .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin:var(--sp-4) 0}
 #dom-pif .pcard,#homeScope .pcard{background:var(--surface-1);border:var(--hair) solid var(--line);border-radius:var(--r);padding:var(--sp-5)}
-#dom-pif .pcard b,#homeScope .pcard b{display:block;color:var(--brand-soft);font-size:var(--fs-sm);margin-bottom:var(--sp-3)}
-#dom-pif .pcard p,#homeScope .pcard p{margin:0;font-size:var(--fs-xs);line-height:var(--lh-loose);color:var(--ink-3)}
+#dom-pif .pcard b,#homeScope .pcard b{display:block;color:var(--brand-soft);font-size:var(--fs-2xs);margin-bottom:var(--sp-3)}
+#dom-pif .pcard p,#homeScope .pcard p{margin:0;font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-3)}
 /* A11Y-03: أربعةُ أعمدةٍ ثابتة تُخرج بطاقةً كاملةً خارجَ الشاشة عند تكبير
    200% («5/5 المرونة»، حافتاها −242 و−411، وأقصى تمريرٍ صفر). فصارت
    الأعمدةُ تتكيّف بالعرض المتاح لا بالعدد المكتوب. */
@@ -2412,8 +2440,8 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 #dom-pif .gs{background:var(--surface-2);border:var(--hair) solid var(--line);border-radius:var(--r-md);padding:var(--sp-4);text-align:center}
 #dom-pif .gs .gsv{font-size:var(--fs-3xl);font-weight:600;color:var(--brand-text);font-family:var(--font-display);
   font-variant-numeric:tabular-nums}
-#dom-pif .gs .gsl{font-size:var(--fs-2xs);color:var(--ink-3);margin-top:var(--sp-2)}
-#dom-pif .ck{display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-xs);color:var(--ink-2);
+#dom-pif .gs .gsl{font-size:var(--fs-3xs);color:var(--ink-3);margin-top:var(--sp-2)}
+#dom-pif .ck{display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-2xs);color:var(--ink-2);
   background:var(--surface-1);border:var(--hair) solid var(--line-soft);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);cursor:pointer}
 #dom-pif .ck input{accent-color:var(--brand);cursor:pointer}
 #dom-pif .ck input:disabled{opacity:.55;cursor:not-allowed}
@@ -2457,7 +2485,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
 .idot-tip{position:fixed;z-index:var(--z-tip);max-width:330px;
   background:var(--surface-2);color:var(--ink);
   border:var(--hair) solid var(--line);border-radius:var(--r-md);
-  padding:var(--sp-4) var(--sp-4);font-size:var(--fs-xs);line-height:var(--lh-mid);
+  padding:var(--sp-4) var(--sp-4);font-size:var(--fs-2xs);line-height:var(--lh-mid);
   box-shadow:var(--shadow-1);pointer-events:auto;text-align:start}
 .idot-tip b{color:var(--brand-ink,var(--brand-text))}
 @media (prefers-reduced-motion:reduce){.idot>span{transition:none}}
@@ -2607,12 +2635,12 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
   .tab{padding-block:var(--sp-4)}
   .btn,.tbldl{min-height:44px}
   #dom-pif .cks label{display:inline-flex;align-items:center;min-height:44px}
-  .dim,.muted,.asof,small{font-size:var(--fs-2xs)}
+  .dim,.muted,.asof,small{font-size:var(--fs-3xs)}
 }
 /* روابط المصادر: عنصر <a> ظاهر ومميَّز، بتباينٍ كافٍ وهدف لمسٍ سليم. */
 /* مربّعات اختيار المقارنة وأزرار التعريف: هدف اللمس 24×24 على الأقل. */
-#dom-pif .cks input[type=checkbox]{width:18px;height:18px;margin:var(--sp-1)}
-#dom-pif .cks label{display:inline-flex;align-items:center;gap:var(--sp-3);min-height:24px;padding:var(--sp-1) var(--sp-2)}
+#dom-pif .cks input[type=checkbox]{width:18px;height:18px;margin:var(--sp-2)}
+#dom-pif .cks label{display:inline-flex;align-items:center;gap:var(--sp-3);min-height:24px;padding:var(--sp-2) var(--sp-2)}
 .idot{min-width:24px;min-height:24px;display:inline-flex;align-items:center;justify-content:center}
 .skiplink{position:absolute;inset-inline-start:-9999px;top:8px;z-index:var(--z-skip);
   /* A11Y-06: كان ‎#0A1220‎ مثبَّتاً على أرضية العلامة = 4.00:1. و‎--on-brand‎
@@ -2621,10 +2649,10 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 .skiplink:focus{inset-inline-start:12px}
 .srclinks{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-5);margin-bottom:var(--sp-2)}
 .srclinks a{color:var(--brand-soft);text-decoration:underline;text-underline-offset:3px;
-  display:inline-flex;align-items:center;min-height:24px;font-size:var(--fs-2xs)}
+  display:inline-flex;align-items:center;min-height:24px;font-size:var(--fs-3xs)}
 .srclinks a:hover{color:var(--ink)}
 .srclinks a .o{color:var(--ink-3);margin-inline-start:var(--sp-2);text-decoration:none}
-.srclinks a::after{content:"\2197";font-size:var(--fs-3xs);margin-inline-start:var(--sp-1);opacity:.7}
+.srclinks a::after{content:"\2197";font-size:var(--fs-3xs);margin-inline-start:var(--sp-2);opacity:.7}
 
 /* ══════════════════════════════════════════════════════════════════════
    طبقة الإخراج الفني، مراجعة الاتصال البصري 02-09-2026م
@@ -2702,16 +2730,16 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 .perbar .chip.axis i{color:var(--brand-soft);opacity:.8}
 
 /* رقاقات الترويسة كذلك: بياناتٌ تعريفية لا أفعال، فلا تُعرض بهيئة الأزرار. */
-header.top .badge{background:transparent;border:0;padding:var(--sp-2) 0;font-size:var(--fs-2xs);color:var(--ink-3)}
+header.top .badge{background:transparent;border:0;padding:var(--sp-2) 0;font-size:var(--fs-3xs);color:var(--ink-3)}
 header.top .badge + .badge{padding-inline-start:var(--sp-5);position:relative}
 header.top .badge + .badge::before{content:"";position:absolute;inset-inline-start:1px;
   top:50%;transform:translateY(-50%);width:1px;height:12px;background:var(--line)}
-header.top .badges{gap:0 var(--sp-5);row-gap:var(--sp-1)}
+header.top .badges{gap:0 var(--sp-5);row-gap:var(--sp-2)}
 
 /* ── ٤) سُلَّم طباعي بخطواتٍ محسوسة ───────────────────────────────────
    كان الفرق بين العنوان والتلميح والحاشية أقلّ من أن يُقرأ تدرّجاً. */
 .card h3{font-size:var(--fs-md);font-weight:600;letter-spacing:-.01em;line-height:1.45}
-.card .hint{font-size:var(--fs-2xs);line-height:1.65;margin-bottom:var(--sp-4);max-width:82ch}
+.card .hint{font-size:var(--fs-3xs);line-height:1.65;margin-bottom:var(--sp-4);max-width:82ch}
 .sechead h2{font-size:var(--fs-2xl);letter-spacing:-.015em}
 
 /* ── ٥) الحاشية تُقرأ في ثوانٍ لا تُقتحم ──────────────────────────────
@@ -2733,7 +2761,7 @@ header.top .badges{gap:0 var(--sp-5);row-gap:var(--sp-1)}
 #kpis .kpi .d + .d{margin-top:var(--sp-2)}
 #kpis .kpi .d:last-child{margin-bottom:0}
 #kpis .kpi > .d:nth-last-child(1){margin-top:auto;padding-top:var(--sp-3)}
-#kpis .kpi.t2 .d{font-size:var(--fs-2xs);line-height:1.5}
+#kpis .kpi.t2 .d{font-size:var(--fs-3xs);line-height:1.5}
 
 /* ── ٧) استرجاع الثلث العلوي ─────────────────────────────────────────
    أربعة أشرطة تحكّم متتابعة كانت تلتهم نحو 15% من الصفحة قبل أول رقم،
@@ -2759,10 +2787,10 @@ nav.tabs{margin-bottom:var(--sp-5);gap:var(--sp-2)}
   header.top .badge,#kpis .kpi.t2 .d,
   .blockhead span,.covbar .cl,.perbar .chip i,.idot>span,
   .homecard .hl,.homecard .q,.homecard .go,#homeCards .hl,
-  .chain .lk .n,.lk .n,div.n{font-size:var(--fs-2xs)}
+  .chain .lk .n,.lk .n,div.n{font-size:var(--fs-3xs)}
   /* ux-mob-02: على الضيّق يُطوى الشريطُ الوصفيّ في زرٍّ واحد فيرتفع أولُ رقم
      فوق الطيّة، والبيانُ كلُّه باقٍ خلف الزرّ لا محذوف. */
-  .badgefold>summary{display:block;cursor:pointer;list-style:none;font-size:var(--fs-xs);
+  .badgefold>summary{display:block;cursor:pointer;list-style:none;font-size:var(--fs-2xs);
     color:var(--ink-2);padding:var(--sp-3) var(--sp-4);min-height:24px;border:var(--hair) solid var(--ctl-border);
     border-radius:var(--r-md);background:var(--surface-1);margin-top:var(--sp-3)}
   .badgefold>summary::-webkit-details-marker{display:none}
@@ -2781,9 +2809,9 @@ nav.tabs{margin-bottom:var(--sp-5);gap:var(--sp-2)}
   /* ux-26 (26-10-2026م): نُقلت هذه القواعدُ خارجَ استعلام العرض في
      31-10-2026م (UX-01)، فالطيُّ صار قاعدةً واحدةً في العروض كلِّها. */
   .herofold>summary{display:block;cursor:pointer;list-style:none;min-height:24px;
-    color:var(--ink-2);font-size:var(--fs-sm);line-height:1.85}
+    color:var(--ink-2);font-size:var(--fs-2xs);line-height:1.85}
   .herofold>summary::-webkit-details-marker{display:none}
-  .herofold>summary::after{content:' · المزيد ▾';opacity:.7;font-size:var(--fs-2xs)}
+  .herofold>summary::after{content:' · المزيد ▾';opacity:.7;font-size:var(--fs-3xs)}
   .herofold[open]>summary::after{content:' · أقل ▴'}
   .herofold[open] p{margin-top:var(--sp-3)}
 }
@@ -2793,18 +2821,18 @@ nav.tabs{margin-bottom:var(--sp-5);gap:var(--sp-2)}
    اللون وحدَه (SC 1.4.1)، ولا يسقط بانهيار الألوان تحت عمى الألوان. */
 .jd{font-size:var(--fs-3xs);border:var(--hair) solid currentColor;border-radius:var(--r-sm);
   padding:0 var(--sp-2);line-height:1.6;white-space:nowrap;opacity:.92}
-.jd-up::before{content:"+";margin-inline-end:var(--sp-1);font-weight:700}
-.jd-dn::before{content:"\2212";margin-inline-end:var(--sp-1);font-weight:700}
+.jd-up::before{content:"+";margin-inline-end:var(--sp-2);font-weight:700}
+.jd-dn::before{content:"\2212";margin-inline-end:var(--sp-2);font-weight:700}
 
 /* ── صفحة «عن اللوحة» والتذييل النحيف، 10-09-2026م ─────────────── */
-.footline{font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:92ch}
+.footline{font-size:var(--fs-3xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:92ch}
 .footline b{color:var(--ink-2);font-weight:600}
 .aboutlink{background:transparent;border:0;border-bottom:var(--hair) solid var(--ctl-border);
-  color:var(--brand-soft);font-family:inherit;font-size:var(--fs-xs);cursor:pointer;
-  padding:var(--sp-2) var(--sp-1);min-height:24px;line-height:var(--lh);text-align:start}
+  color:var(--brand-soft);font-family:inherit;font-size:var(--fs-2xs);cursor:pointer;
+  padding:var(--sp-2) var(--sp-2);min-height:24px;line-height:var(--lh);text-align:start}
 .aboutlink::after{content:"\2190";margin-inline-start:var(--sp-3);opacity:.75}
 .aboutlink:hover{color:var(--ink);border-bottom-color:var(--brand)}
-#dom-about .abtext{font-size:var(--fs-xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:88ch}
+#dom-about .abtext{font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:88ch}
 #dom-about .abtext b{color:var(--ink-2);font-weight:600}
 #dom-about .abtext>div{margin-bottom:var(--sp-3)}
 #dom-about .abtext>div:last-child{margin-bottom:0}
@@ -2832,7 +2860,7 @@ body:has(#dom-about.on) header.top .badges .badge:not(#bIndep){display:none}
 .card,.homecard,#dom-pif .kpi{container-type:inline-size;container-name:card}
 @container card (max-width:300px){
   .kpi .v{font-size:var(--fs-2xl)}
-  .card h3{font-size:var(--fs-sm)}
+  .card h3{font-size:var(--fs-2xs)}
   .perbar{gap:var(--sp-2)}
   .attrib{font-size:var(--fs-3xs)}
 }
@@ -2886,7 +2914,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
 /* مبدّلُ الوضع، هدفُ لمسٍ 44 وتباينُ حدٍّ 3:1 كبقيّة الضوابط. */
 .themebtn{display:inline-flex;align-items:center;gap:var(--sp-3);background:var(--surface-1);
   border:var(--hair) solid var(--ctl-border);color:var(--ink-2);border-radius:var(--r-pill);
-  padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-2xs);cursor:pointer;
+  padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-3xs);cursor:pointer;
   min-height:36px;margin-top:var(--sp-4);transition:background .15s,color .15s,border-color .15s}
 .themebtn:hover{background:var(--surface-2);color:var(--ink);border-color:var(--brand)}
 .themebtn .tico{width:14px;height:14px;border-radius:50%;flex:0 0 auto;
@@ -2936,7 +2964,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
            واحداً (إعادةُ نشرٍ بعد تعديلِ نصّ فاحص، أو مهمّةٌ مجدولة) يُعلن على
            القارئ تحديثاً لم يقع. فصار الحقلان اثنين: «آخر بيان منشور» يُشتقّ
            من آخر فترةٍ في البيان، و«تاريخ البناء» باسمه الصحيح. -->
-      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">02-11-2026م</span></div>
+      <div class="tagline">أداء الميزانية والحسابات القومية، المملكة العربية السعودية. آخر بيان منشور <span id="lastData">ر2 2026م</span> · بُنيت هذه النسخة في <span id="lastUpdate">03-11-2026م</span></div>
     </div>
   </div>
   <!-- ux-mob-02: على 390 نقطةً كانت الشاشةُ الأولى كلُّها ترويسةً وشريطَ
@@ -4098,7 +4126,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   <p>تعريفات بنود الإيرادات والمصروفات كما تنشرها وزارة المالية وفق دليل إحصاءات مالية الحكومة (GFSM 2014)، ومهام القطاعات الحكومية التسعة.</p></div>
   <div class="filters" style="margin-bottom:16px">
     <div class="f" style="flex:1"><label>بحث في المصطلحات</label>
-      <input id="gsearch" aria-label="بحث في القاعدة المعرفية والمعجم" placeholder="اكتب مصطلحاً بالعربية أو الإنجليزية…" style="background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:var(--fs-sm)"></div>
+      <input id="gsearch" aria-label="بحث في القاعدة المعرفية والمعجم" placeholder="اكتب مصطلحاً بالعربية أو الإنجليزية…" style="background:var(--surface-2);border:1px solid var(--ctl-border);color:var(--ink);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:var(--fs-2xs)"></div>
   </div>
   <div class="grid g2">
     <div class="card"><h3>بنود الإيرادات والمصروفات</h3><div class="hint">التعريف الرسمي ومكوّنات كل بند</div><div id="gItems"></div></div>
@@ -4156,8 +4184,8 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
          الموجبُ يحمل «+» صريحاً. فيقرأ القارئُ (4.8%) موجباً وهي انكماش. --></div></div>
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل مُوجَبات المادة <span dir="ltr">3(a)(1)</span> <b>الثمانية</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد مرّتين:</b> كان «ستّة» فصار «سبعة» في 19-09-2026م حين أُضيف الشقُّ الثاني من <span dir="ltr">(B)</span> إلى الفحص، <b>والعددُ الصحيح ثمانيةٌ لا سبعة</b> (L-05 في 31-10-2026م): 5 + 2 + 1 = 8، وهو تفكيكُ الجملة نفسِها، وهو عددُ ما تفحصه بوّابتُها (<span dir="ltr">vlegal</span>)، فكان الرقمُ المنشور يخالف تفكيكَه الذي يَليه ويخالف فاحصَه:
-      <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-2xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.565</span>+<span id="fHashAttr">5345679d</span>) &mdash; https://mrsdx-fo.net<br>
+      <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-3xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.570</span>+<span id="fHashAttr">8629f2f5</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات وحدّ المسؤولية: القسم 5</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -4179,7 +4207,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل، ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.565+5345679d · 02-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">5345679d</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن لوحة المرجع، تبويب الحوكمة والالتزام.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.570+8629f2f5 · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">8629f2f5</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن لوحة المرجع، تبويب الحوكمة والالتزام.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL، فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -4203,7 +4231,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVerFoot" dir="ltr">2.565+5345679d · 02-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHashFoot" dir="ltr" style="font-family:var(--font-mono,monospace)">5345679d</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVerFoot" dir="ltr">2.570+8629f2f5 · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHashFoot" dir="ltr" style="font-family:var(--font-mono,monospace)">8629f2f5</span></div>
 </footer>
 </div>
 
@@ -15534,7 +15562,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   "def_ar": "أي يوم في السنة لا يختص بأيام العمل فقط."
  }
 ]</script>
-<script>window.MIRSAD_GATES={"plants": {"vlen": 5, "vsr": 7, "vfresh": 4, "vcsv": 14, "vlegal": 8, "vtabs": 5, "vaxis": 4, "vtext": 18, "va11y": 18, "vall": 2, "vstamps": 3, "vleak": 3, "vdcat": 2, "vdash": 4, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vtok": 8, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["econ", "energy", "fiscal", "home", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif", "ref"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vlen", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
+<script>window.MIRSAD_GATES={"plants": {"vtok": 13, "va11y": 19, "vsr": 8, "vlen": 5, "vfresh": 4, "vcsv": 14, "vlegal": 8, "vtabs": 5, "vaxis": 4, "vtext": 18, "vall": 2, "vstamps": 3, "vleak": 3, "vdcat": 2, "vdash": 4, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["econ", "energy", "fiscal", "home", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif", "ref"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vlen", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
  "periods": [
   "2017Q1",
   "2017Q2",
@@ -24631,6 +24659,56 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     "was": "يكتب البناءُ ملفَّ البيانات بصورةٍ واحدةٍ معلَنة (مسافةٌ بادئةٌ واحدةٌ لكلّ مستوى، وحروفٌ عربيّةٌ كما هي). ثمَّ وقع تحريرٌ أعاد كتابتَه مضغوطاً بلا مسافات: المعنى واحد، والصفحةُ صحيحة، وكلُّ سطرٍ تغيّر. فماتت مزروعتان تُثبتان حارسَ الدقّة لأنّهما ترسوان على نصِّ قيمةٍ رقميّةٍ بمسافاتها البادئة، وسقطت بوّابةُ الحرّاس تقول إنَّ الزرعَ لا يجد مطلوبَه. والعطبُ الكامن أخطرُ من ظاهره: لو كانت المزروعتان ترسوان على نصٍّ يبقى قائماً لمرَّتا صامتتَين، فيبقى الحارسُ بلا برهانٍ ويُقرأ نجاحُه شهادةَ سلامة.",
     "now": "صارت الصورةُ محروسةً في البناء نفسِه: يُقابَل الملفُّ بصورته المُعلَنة قبل أيِّ خطوة، ويسقط البناءُ عند الاختلاف بنصٍّ يُسمّي الصورةَ ويحمل أمرَ إعادة الكتابة. وأُثبت الالتقاط: شُغِّل البناءُ على نسخةٍ مضغوطةٍ فسقط بالرمز 1 قبل أن يكتب شيئاً.",
     "why": "ليست الصورةُ تجميلاً: المزروعاتُ ترسو على نصِّ المصدر، فتبدُّلُ الصورة يُميتها بلا أن يُخطئ أحد. وحارسٌ بلا برهانٍ قائمٍ ليس حارساً، فحمايةُ المرساة جزءٌ من حمايةِ الحارس."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.570",
+    "t": "واجهة",
+    "w": "سلّمُ المسافات أربعةٌ بلا نصفِ درجة، ويُقاس بالقسمة",
+    "ref": "UX-07 · GATE-28",
+    "was": "كان الحكمُ أنَّ كلَّ طولٍ في خصائص المسافة يمرُّ <b>برمزٍ</b> مُعلَن، وهو شرطٌ ناقص: رمزٌ يحمل قيمةً خارجَ الشبكة يمرُّ بلا أن ينطق حارس. وفي السلّم درجةٌ واحدةٌ خارجَ شبكة الأربعة (2 بكسل) بحجّة أنَّ الكتلَ الدقيقةَ تحتاجها، استُعملت في 27 إعلاناً. وأثرُها أنَّ الإيقاعَ الرأسيَّ لا ينطبق على شبكةٍ واحدة: حاشيةٌ 2 وأخرى 4 فوق العنصر نفسِه لا يُفرَّق بينهما بالعين، فتُنفَق درجةٌ من السلّم على فرقٍ لا يُرى، ويُكتب الاختيارُ بينهما بالحدس.",
+    "now": "حُذفت الدرجةُ ونُقلت مواضعُها السبعةُ والعشرون إلى 4، فصار كلُّ طولٍ في السلّم <b>مضاعفاً لأربعةٍ</b> بلا استثناء: 4 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64 · 80. وتحرسه البوّابةُ الساكنة <b>بالقسمة لا بقائمةِ استثناءات</b>: أيُّ درجةٍ لا تنقسم على أربعةٍ تُسقط البناءَ ويُطبع لها أقربُ درجتين. والمقيسُ بعده: 10 درجاتٍ كلُّها على الشبكة، و396 إعلانَ مسافةٍ يمرُّ بها. ومزروعةٌ تُثبت الالتقاط.",
+    "why": "القائمةُ تُستثنى منها، والقسمةُ لا. وحارسٌ يفحص <b>اسمَ</b> الرمز ولا يفحص <b>قيمتَه</b> يحرس الصياغةَ لا القاعدة."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.570",
+    "t": "واجهة",
+    "w": "سلّمٌ طباعيٌّ نمطيٌّ بنسبةٍ مُعلَنة، لا سلسلةٌ بكسلية",
+    "ref": "UX-08 · GATE-28",
+    "was": "كان السلّمُ ثمانيَ درجاتٍ ثابتةٍ تقرأ 12 و13 و14 و15 و16 و17 و19 و21 بكسلاً: <b>أربعُ درجاتٍ متتابعةٍ يفصل بينها بكسلٌ واحد</b> (النسبُ 1.083 ثمّ 1.077 ثمّ 1.071 ثمّ 1.067)، وفرقُ بكسلٍ لا تراه العين. فأربعةُ رموزٍ تُنفق من السلّم ولا تُنتج تسلسلاً بصرياً، و114 إعلاناً موزّعةً عليها يُكتب الاختيارُ بينها بالحدس لا بالمعنى: 21 إعلاناً على 12، و39 على 13، و34 على 14، و20 على 15.",
+    "now": "صار السلّمُ <b>نمطياً</b>: الأساسُ 1rem (16 بكسلاً عند الإعداد الافتراضي) والنسبةُ 1.125 (الثانيةُ الكبرى)، وكلُّ درجةٍ <b>16 × 1.125 مرفوعةً إلى n</b>. ودرجتان قديمتان حُذفتا ونُقل إعلانُهما بحسب <b>الدور</b> لا بحسب أقرب قيمة: 60 إعلاناً للوسوم والشرائح والبيان المصغَّر على 12.64، و54 للمتن الثانويِّ والحواشي على 14.22، ثمَّ 16 للمتن، و18 و20.25 و22.78 للعناوين، وأربعُ درجاتٍ مائعةٍ طرفاها على السلّم. ومعاملاتُ ‎clamp‎ محسوبةٌ لتبلغ الدرجةَ الدنيا عند عرضِ 360 بكسلاً والعليا عند 1440، فلا تُقدَّر بالتجربة. وتحرسه البوّابةُ بثلاثٍ: كلُّ درجةٍ على السلّم بهامشِ 0.5% (ويُفحَص طرفا المائعة كلاهما لا وسطُها فهو معاملُ ميل)، ولا درجتان ثابتتان أقربُ من أدنى خطوةٍ مُعلَنة 6%، والمستثنى مُعلَنٌ بالاسم (مقاسُ عنوانِ رابطٍ في ورقةِ الطباعة). والمقيسُ بعده: 14 طرفَ درجةٍ كلُّها على السلّم، و6 درجاتٍ ثابتةٍ أدنى خطوةٍ بينها 12.5%. ومزروعتان تُثبتان الالتقاط: درجةٌ خارجَ السلّم، ودرجتان على خطوةٍ واحدة.",
+    "why": "السلّمُ الذي تُرتَّب درجاتُه بالبكسل سلسلةٌ لا سلّم: ما لا يُرى فرقُه لا يُنشئ تسلسلاً. والنسبةُ المُعلَنة تجعل كلَّ درجةٍ قابلةً للاحتساب، فيُسأل الرمزُ عن موضعه في السلّم لا عن الرقم الذي حُدس له."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.570",
+    "t": "واجهة",
+    "w": "حركةٌ بسقفٍ مُعلَنٍ وإلغاءٌ شاملٌ عند تفضيل القارئ",
+    "ref": "UX-31 · معيار 2.3.3",
+    "was": "كانت الانتقالاتُ محروسةً في <b>هدفها</b> (لا تُعمَّم على all، ولا اختصارٌ بلا خاصّيةٍ مُسمّاة) ولا شيءَ يحرس <b>مدّتها</b>: مدّةٌ تطول تُؤجّل الاستجابةَ المرئيّةَ بلا مقابل، ولا يُعرف إن طالت. ووعدُ «احترامِ تفضيل تقليل الحركة» كان مكتوباً في سبع كتلٍ ولا حارسَ يقول إنَّ إحداها شاملة.",
+    "now": "سقفُ المدّة مُعلَنٌ عند 260 مللي ثانيةً (وهو أقصى المقيس)، وتُقاس كلُّ مدّةٍ في الأنماط فتسقط ما تجاوزته. ومعه شرطٌ ثانٍ: كتلةٌ شاملةٌ واحدةٌ على الأقلّ تُلغي مدّةَ الحركة <b>والانتقال معاً</b> عند ‎prefers-reduced-motion: reduce‎. والمقيسُ بعده: 38 مدّةً أقصاها 260 مللي ثانية. ومزروعتان تُثبتان الالتقاط: مدّةٌ فوق السقف، وإلغاءٌ يفقد مدّةَ الحركة من كلِّ موضعٍ شامل.",
+    "why": "الوعدُ باحترام تفضيل القارئ دعوى تُقاس لا تُكتب. ومدّةٌ بلا سقفٍ تنمو إعلاناً بعد إعلانٍ ولا يُنبِّه أحد."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.570",
+    "t": "واجهة",
+    "w": "أرقامُ المقارنة جدوليّةٌ، مقيسةً على الشجرة الحيّة",
+    "ref": "UX-30 · GATE-27",
+    "was": "الرقمُ في خليّةِ جدولٍ أو خانةِ قيمةٍ يُقرأ <b>بالمقارنة</b> مع ما فوقه وما تحته. والخطوطُ النِّسبيّةُ تجعل المحرف 1 أضيقَ من 0، فتهتزُّ الخانةُ العشريةُ ولا تصطفُّ الأعمدة، فيَخسر القارئُ أسرعَ ما تُفيده الأعمدة: المقارنةُ بالنظرة. والقاعدةُ كانت مطبَّقةً في 13 موضعاً من الأنماط <b>ولا حارسَ لها</b>، فتسقط صمتاً عن أيِّ خانةٍ جديدة.",
+    "now": "تُقاس على الشجرة الحيّة في اللوحات كلِّها وفي الوضعين: كلُّ خانةٍ من المجموعة المُعلَنة (خليّةُ جدولٍ ورأسُه وخاناتُ القيم والمؤشرات) نصُّها رقمٌ يجب أن تُحتسب لها ‎font-variant-numeric: tabular-nums‎. والمقيسُ بعده: <b>1,482 خانةَ رقمٍ</b> كلُّها جدوليّة، صفرُ مخالفة. ومزروعةٌ تُثبت الالتقاط. ومزلقٌ قُيِّد في القياس نفسِه: نصُّ القيمة المعزولة اتجاهياً يحمل محارفَ عزلٍ لا تُرى، فلا يُطابق نمطَ الرقم ، وأوّلُ تشغيلٍ قاس صفرَ خانةٍ وأعلن سلامةً لم يفحصها، فصارت المحارفُ تُنزَع قبل القياس وللذراع أرضيّةٌ تُسقط البناءَ عند صفر.",
+    "why": "القاعدةُ المطبَّقةُ بلا حارسٍ تسقط عند أوّل إضافة. وصفرُ قياسٍ ليس سلامةً، فلكلِّ ذراعٍ أرضيّةٌ تمنع أن يُقرأ غيابُ الفحص نجاحاً."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.570",
+    "t": "إتاحة",
+    "w": "Home و End في كلِّ مجموعةِ اختيارٍ واحد",
+    "ref": "UX-29 · GATE-27 · ARIA APG",
+    "was": "دليلُ ممارسات ARIA يقتضي لمجموعة الاختيار الواحد: الأسهمُ للانتقال، و‎Home‎ إلى الخيار الأول و‎End‎ إلى الأخير. والمفتاحان كانا في التبويبات وفي مبدّل اللوحات وفي مجموعات الراديو، وغائبَين عن مجموعات الأزرار ‎button[data-v]‎ ، أي القاعدةُ مطبَّقةٌ في ثلاثة مواضعَ من أربعة، وهي دعوى أوسعُ من تطبيقها، ولا حارسَ يكشف الموضعَ الرابع.",
+    "now": "أُضيف المفتاحان إلى المجموعة الباقية، وصار الحكمُ مقيساً: تُضغَط ‎End‎ ثمّ ‎Home‎ ضغطاً فعلياً على كلِّ مجموعةٍ ظاهرةٍ ذاتِ ثلاثةِ خياراتٍ أو أكثرَ في سياقين مُعلَنين، ويُقابَل <b>مفتاحُ الزرِّ المركَّز</b> بأوّلِ المجموعة وآخرِها. والحكمُ بالمفتاح لا بهُويّة العقدة، لأنَّ الانتقالَ يُعيد التصييرَ فقد تُستبدَل العقد. ومزروعةٌ تُثبت الالتقاط.",
+    "why": "قاعدةٌ مطبَّقةٌ في ثلاثةٍ من أربعةٍ تُقرأ مطبَّقةً كلَّها. والفرقُ لا يظهر إلا بالقياس، فصار الضغطُ فعلياً لا مفترضاً."
    }
   ],
   "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في لوحة المرجع، تبويب المنهجية والمعادلات الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
@@ -25153,7 +25231,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
    ],
    "contact": "تُرسل ملاحظات الإتاحة بفتح مسألةٍ في مستودع اللوحة على <span dir=\"ltr\">GitHub</span>: <span dir=\"ltr\">github.com/salrajih90/mirsad/issues</span>، وتُقيَّد كل معالجة في سجل التصحيحات.",
    "asOf": "05-09-2026م",
-   "autoAsOf": "02-11-2026م",
+   "autoAsOf": "03-11-2026م",
    "sc": [
     [
      "1.1.1",
@@ -26486,7 +26564,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
      يراه فاحصٌ يقرأ المستندَ نصّاً ولا من يقرأ الملفَّ بلا JavaScript. وتأخّرُ
      الناشر دعوىً عن البيان المنشور، فيُكتب في البناء من data.json ويُثبَّت في
      المستند. ويبقى فارغاً حين لا تأخّرَ مقيساً. -->
-<div id="lagNote" class="hint" style="margin-top:10px"><b>تأخّرُ ناشرٍ مقيس:</b> <b>سعر برنت، السلسلة اليومية:</b> لم ينشر المصدرُ بعد 2026-10-27، وآخرُ فحصٍ ناجحٍ للمصدر 2026-10-29 (قبل 4 أيام). والقياسُ يفصل تأخّرَ الناشر عن انقطاع مسار الجلب: الفحصُ حديثٌ والنقطةُ قديمة.</div>
+<div id="lagNote" class="hint" style="margin-top:10px"><b>تأخّرُ ناشرٍ مقيس:</b> <b>سعر برنت، السلسلة اليومية:</b> لم ينشر المصدرُ بعد 2026-10-27، وآخرُ فحصٍ ناجحٍ للمصدر 2026-10-29 (قبل 5 أيام). والقياسُ يفصل تأخّرَ الناشر عن انقطاع مسار الجلب: الفحصُ حديثٌ والنقطةُ قديمة.</div>
 <div id="printNote" style="margin-top:14px;font-size:var(--fs-3xs);color:#555">
   طُبعت هذه الصفحة من «المرصد المالي والاقتصادي». والمطبوع يعرض <b>التبويب المفتوح وقت الطباعة</b>،
   ومعه <b>بطاقاتُ الصفة ونفي التأييد وحدِّ المسؤولية</b>؛ ولكل لوحة تبويبات أخرى لا تظهر هنا.
@@ -32769,13 +32847,22 @@ function ixWireTabs(){
     }
     if(excl&&!g.__ixArrow){
       g.__ixArrow=1;
+      /* ── UX-29 (03-11-2026م) · Home و End في كلِّ مجموعةٍ لا في بعضها ──────
+         دليلُ ممارسات ARIA (APG) يقتضي لمجموعة الاختيار الواحد: الأسهمُ
+         للانتقال، و‎Home‎ إلى الأولى و‎End‎ إلى الأخيرة. وكانت المفتاحان
+         موجودَين في التبويبات وفي مبدّل اللوحات وفي مجموعات الراديو،
+         وغائبَين عن مجموعات ‎button[data-v]‎ — فالقاعدةُ مطبَّقةٌ في ثلاثة
+         مواضعَ من أربعة، وهي دعوى أوسعُ من تطبيقها. */
       g.addEventListener('keydown',ev=>{
-        const K={ArrowRight:-1,ArrowLeft:1,ArrowUp:1,ArrowDown:-1}[ev.key];
+        const K={ArrowRight:-1,ArrowLeft:1,ArrowUp:1,ArrowDown:-1,Home:'h',End:'e'}[ev.key];
         if(K===undefined) return;
         const bs=[...g.querySelectorAll('button[data-v]')];
         const cur=bs.indexOf(document.activeElement); if(cur<0) return;
         ev.preventDefault();
-        const nx=bs[(cur+K+bs.length)%bs.length]; if(nx){ nx.focus(); nx.click(); }
+        const nx = K==='h' ? bs[0]
+                 : K==='e' ? bs[bs.length-1]
+                 : bs[(cur+K+bs.length)%bs.length];
+        if(nx){ nx.focus(); nx.click(); }
       });
     }
   });
