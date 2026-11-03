@@ -147,8 +147,8 @@ try{
    "@language": "ar"
   }
  ],
- "dcat:version": "2.570",
- "owl:versionInfo": "2.570",
+ "dcat:version": "2.575",
+ "owl:versionInfo": "2.575",
  "dcat:dataset": [
   {
    "@type": "dcat:Dataset",
@@ -1580,6 +1580,18 @@ try{
      (--sp-1) لأن الكتلَ الدقيقةَ (الوسوم والشرائح) تحتاجها؛ وأقصى إزاحةٍ
      وقعت على إعلانٍ واحدٍ 6 بكسلات، و11 إعلاناً 4 بكسلات، والبقيةُ 2 أو
      أقلّ. و--hair هو الشعرة: حدٌّ أو إزاحةُ بكسلٍ واحدٍ لتداخل حدّين. */
+  /* ── UX-32 (03-11-2026م) · رقمُ هدفِ التفعيل يُعلَن مرّةً واحدة ──────────
+     كانت ثلاثةُ تعليقاتٍ في الأنماط تقول «هدفُ لمسٍ لا يقلّ عن 44»، والقواعدُ
+     تحتها تكتب 38 و40 و36 و28 و30 و24. وقيس الواقعُ على عرضِ 390 بكسلاً:
+     294 ضابطاً أساسياً من 468 دون 44، وأقصرُها مربّعُ تبديلٍ 13×13. فالدعوى
+     أوسعُ من تطبيقها بثلاثة أرباعِ ما تدّعيه، وسببُها أنَّ الرقمَ مكتوبٌ في
+     ستّة مواضعَ لا في واحد: فيُرفع في موضعٍ ويُنسى في خمسة.
+     فصار رقماً واحداً مُعلَناً، وكلُّ قاعدةٍ تطلبه منه. وأساسُه نصُّ المعيار:
+     2.5.8 (المستوى AA) عتبتُه 24×24 على كلِّ عرض، و2.5.5 (المستوى AAA)
+     عتبتُه 44×44 وتُطبَّق على مجموعةٍ مُعلَنةٍ من الضوابط الأساسية عند العرض
+     الضيّق أو المؤشِّر الخشن, وهو موضعُ الحاجة. والروابطُ داخل النصّ
+     مستثناةٌ بنصِّ البند نفسِه، فرفعُها يقطع سياقَ الجملة. */
+  --tap:44px;
   --hair:1px; --bw-2:2px; --bw-3:3px;   /* VIS-09: سلَّمُ سَمْكِ الحدود والحلقات */
   /* ── UX-07 (03-11-2026م) · الأساسُ أربعةٌ بلا نصفِ درجة ────────────────
      كان في السلّم درجةٌ واحدةٌ خارجَ الشبكة (--sp-1 = 2px) بحجّة أنَّ الكتلَ
@@ -2305,7 +2317,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
   .domswitch{flex-wrap:nowrap;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
     margin-inline:calc(-1 * var(--wrapx,20px));padding-inline:var(--wrapx,20px);scrollbar-width:none}
   .domswitch::-webkit-scrollbar{display:none}
-  .domswitch button{min-width:0;white-space:nowrap;padding:var(--sp-3) var(--sp-4);min-height:40px}
+  .domswitch button{min-width:0;white-space:nowrap;padding:var(--sp-3) var(--sp-4);min-height:var(--tap)}
   .domswitch button span{display:none}
 }
 .domswitch button:hover{background:var(--surface-2);color:var(--ink)}
@@ -2348,7 +2360,7 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
     padding-block:var(--sp-2);
     margin-inline:calc(-1 * var(--wrapx,20px));padding-inline:var(--wrapx,20px);scrollbar-width:none}
   nav.tabs::-webkit-scrollbar{display:none}
-  nav.tabs .tab{flex:0 0 auto;scroll-snap-align:center;min-height:40px}
+  nav.tabs .tab{flex:0 0 auto;scroll-snap-align:center;min-height:var(--tap);padding-block:var(--sp-5)}
   /* ── UX-03 (19-09-2026م) · الشريطُ الممرَّر بلا عاطفٍ بصريّ ──────────────
      قِيس عند 390 بكسلاً أنّ تبويبين اثنين من ثلاثةَ عشرَ مرئيّان كاملَين في
      لوحة المالية، وأنّ فائضَ التمرير 1,355 بكسلاً. ومؤشّرُ التمرير الوحيد
@@ -2392,8 +2404,11 @@ footer{margin-top:var(--sp-9);padding-top:var(--sp-6);border-top:var(--hair) sol
   header.top>.badgefold{flex:1 1 100%}
   .wrap{padding:var(--sp-5) var(--wrapx) var(--sp-10)}
 
-  /* أهداف لمس لا تقل عن 44px ونصوص لا تقل عن 11px */
-  select,button,.chip{min-height:38px}
+  /* أهدافُ لمسٍ لا تقلّ عن الرقم المُعلَن، والرقمُ واحدٌ لا ستّة. */
+  select,button,.chip,.evtnote .ck,.tblbar .tbldl,
+  input.inp,input[type=search],input[type=number],input[type=text],
+  .rdmore>summary,.tablead .tlim>summary,details.tfold>summary,
+  details.kpifold>summary,.badgefold>summary,.evtnote>summary,.gs-more,.aboutlink{min-height:var(--tap)}
   .perbar .chip{min-height:0;font-size:var(--fs-3xs)}
   .perbar .chip i{font-size:var(--fs-3xs)}
   .covbar .cl{font-size:var(--fs-3xs)}
@@ -2624,23 +2639,47 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 @media(max-width:820px){
   .idot,.idot>span{position:relative}
   .idot::after{content:'';position:absolute;left:50%;top:50%;
-    width:44px;height:44px;transform:translate(-50%,-50%)}
-  a[href]{display:inline-block;min-height:44px;padding-block:var(--sp-4)}
-  .idot{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center}
+    width:var(--tap);height:var(--tap);transform:translate(-50%,-50%)}
+  a[href]{display:inline-block;min-height:var(--tap);padding-block:var(--sp-4)}
+  .idot{width:var(--tap);height:var(--tap);display:inline-flex;align-items:center;justify-content:center}
   .idot>span{width:24px;height:24px}
   /* الحدُّ الأدنى لحجم الخطّ على الضيّقة، كان 10.5 و11 و11.5 في 34 موضعاً،
      وهو مقياسٌ مادّيٌّ لصعوبة القراءة على الهاتف. والقواعدُ الأخصُّ تسبق
      المحدِّدَ العامّ، فتُسمّى الأصنافُ المُصابة بأعيانها. */
 
   .tab{padding-block:var(--sp-4)}
-  .btn,.tbldl{min-height:44px}
-  #dom-pif .cks label{display:inline-flex;align-items:center;min-height:44px}
+  .btn,.tbldl{min-height:var(--tap)}
+  label:has(input[type=checkbox]){display:inline-flex;align-items:center;min-height:var(--tap)}
   .dim,.muted,.asof,small{font-size:var(--fs-3xs)}
 }
 /* روابط المصادر: عنصر <a> ظاهر ومميَّز، بتباينٍ كافٍ وهدف لمسٍ سليم. */
 /* مربّعات اختيار المقارنة وأزرار التعريف: هدف اللمس 24×24 على الأقل. */
 #dom-pif .cks input[type=checkbox]{width:18px;height:18px;margin:var(--sp-2)}
-#dom-pif .cks label{display:inline-flex;align-items:center;gap:var(--sp-3);min-height:24px;padding:var(--sp-2) var(--sp-2)}
+/* مربّعُ تبديل الحوادث كان 13×13 بمقاس المتصفّح الافتراضيّ، والبقيّةُ 18×18:
+   فالشكلُ المرسومُ نفسُه يختلف بين مربّعَين لمعنىً واحد. وهدفُ التفعيل هو
+   وسمُه المحيط (‎.ck‎) لا المربّعُ المرسوم. */
+.evtnote .ck input[type=checkbox]{width:18px;height:18px;margin:var(--sp-2)}
+/* كان نمطُ السطر مكتوباً داخلياً في الشيفرة بطولٍ خامّ (‎margin-top:8px‎),
+   فصار صنفاً يمرُّ بالسلّم كبقيّة الأنماط. */
+.ckrow{margin-top:var(--sp-3);display:inline-flex}
+/* ── UX-33 (03-11-2026م) · الحالاتُ الثلاث: شكلٌ واحدٌ لكلٍّ منها ────────
+   الحالةُ تُقرأ قبل محتوى البطاقة فتسكن صدرَها، ولونُها من دور اللون لا من
+   لونٍ مخترَع: الفراغُ تحفُّظٌ (warn) والخطأُ عطبٌ (bad) والانتظارُ محايد. */
+.cstate{display:flex;align-items:center;gap:var(--sp-3);
+  font-size:var(--fs-3xs);line-height:var(--lh-tight);
+  border:var(--hair) solid var(--line-soft);border-radius:var(--r-md);
+  padding:var(--sp-3) var(--sp-4);margin-bottom:var(--sp-4);
+  background:var(--surface-2);color:var(--ink-2)}
+.cstate::before{content:"";inline-size:var(--sp-3);block-size:var(--sp-3);
+  border-radius:var(--r-pill);background:var(--ink-3);flex:0 0 auto}
+.cstate[data-kind="empty"]{background:var(--tint-warn);color:var(--ink)}
+.cstate[data-kind="empty"]::before{background:var(--warn)}
+.cstate[data-kind="err"]{background:var(--tint-bad);color:var(--ink)}
+.cstate[data-kind="err"]::before{background:var(--bad)}
+/* UX-32: الرقمُ من مُعلَنه في موضع القاعدة نفسِها. وجُرِّب رفعُه بقاعدةٍ في
+   كتلة العرض الضيّق فلم يغلب (نوعيّةٌ متساويةٌ وترتيبُ المصدر يقدّم هذه)،
+   والتقطت البوّابةُ الأثرَ: ستّةُ وسومٍ بـ36 بكسلاً في أربعة عروض. */
+#dom-pif .cks label{display:inline-flex;align-items:center;gap:var(--sp-3);min-height:var(--tap);padding:var(--sp-2) var(--sp-2)}
 .idot{min-width:24px;min-height:24px;display:inline-flex;align-items:center;justify-content:center}
 .skiplink{position:absolute;inset-inline-start:-9999px;top:8px;z-index:var(--z-skip);
   /* A11Y-06: كان ‎#0A1220‎ مثبَّتاً على أرضية العلامة = 4.00:1. و‎--on-brand‎
@@ -2915,7 +2954,10 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
 .themebtn{display:inline-flex;align-items:center;gap:var(--sp-3);background:var(--surface-1);
   border:var(--hair) solid var(--ctl-border);color:var(--ink-2);border-radius:var(--r-pill);
   padding:var(--sp-3) var(--sp-4);font-family:inherit;font-size:var(--fs-3xs);cursor:pointer;
-  min-height:36px;margin-top:var(--sp-4);transition:background .15s,color .15s,border-color .15s}
+  /* UX-32: الرقمُ من مُعلَنه لا 36 مكتوبةً هنا. وجُرِّب التدرُّجُ بقاعدةٍ
+     أخصَّ في كتلة العرض الضيّق فلم يغلب (المقيسُ بقي 36)، فأُصلح في موضعه:
+     قاعدةٌ واحدةٌ تحمل الرقمَ المُعلَن أصدقُ من قاعدتين تتنازعان. */
+  min-height:var(--tap);margin-top:var(--sp-4);transition:background .15s,color .15s,border-color .15s}
 .themebtn:hover{background:var(--surface-2);color:var(--ink);border-color:var(--brand)}
 .themebtn .tico{width:14px;height:14px;border-radius:50%;flex:0 0 auto;
   background:linear-gradient(90deg,var(--ink) 0 50%,var(--surface-3) 50% 100%);
@@ -3684,7 +3726,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
 <nav class="tabs" id="n-tabs"></nav>
 
 <div class="filters">
-  <div class="f"><label>مدى العرض</label>
+  <div class="f"><label>نطاق العرض</label>
     <div class="seg" id="n-win">
       <button data-v="90" class="on">90 يوم تداول</button>
       <button data-v="250">250 يوم تداول</button>
@@ -4185,7 +4227,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل مُوجَبات المادة <span dir="ltr">3(a)(1)</span> <b>الثمانية</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد مرّتين:</b> كان «ستّة» فصار «سبعة» في 19-09-2026م حين أُضيف الشقُّ الثاني من <span dir="ltr">(B)</span> إلى الفحص، <b>والعددُ الصحيح ثمانيةٌ لا سبعة</b> (L-05 في 31-10-2026م): 5 + 2 + 1 = 8، وهو تفكيكُ الجملة نفسِها، وهو عددُ ما تفحصه بوّابتُها (<span dir="ltr">vlegal</span>)، فكان الرقمُ المنشور يخالف تفكيكَه الذي يَليه ويخالف فاحصَه:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-3xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.570</span>+<span id="fHashAttr">8629f2f5</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.575</span>+<span id="fHashAttr">4ef8a0dc</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات وحدّ المسؤولية: القسم 5</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -4207,7 +4249,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل، ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.570+8629f2f5 · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">8629f2f5</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن لوحة المرجع، تبويب الحوكمة والالتزام.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.575+4ef8a0dc · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">4ef8a0dc</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن لوحة المرجع، تبويب الحوكمة والالتزام.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL، فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -4231,7 +4273,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVerFoot" dir="ltr">2.570+8629f2f5 · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHashFoot" dir="ltr" style="font-family:var(--font-mono,monospace)">8629f2f5</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVerFoot" dir="ltr">2.575+4ef8a0dc · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHashFoot" dir="ltr" style="font-family:var(--font-mono,monospace)">4ef8a0dc</span></div>
 </footer>
 </div>
 
@@ -15562,7 +15604,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   "def_ar": "أي يوم في السنة لا يختص بأيام العمل فقط."
  }
 ]</script>
-<script>window.MIRSAD_GATES={"plants": {"vtok": 13, "va11y": 19, "vsr": 8, "vlen": 5, "vfresh": 4, "vcsv": 14, "vlegal": 8, "vtabs": 5, "vaxis": 4, "vtext": 18, "vall": 2, "vstamps": 3, "vleak": 3, "vdcat": 2, "vdash": 4, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["econ", "energy", "fiscal", "home", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif", "ref"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vlen", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
+<script>window.MIRSAD_GATES={"plants": {"va11y": 20, "vdash": 8, "vtok": 14, "vsr": 8, "vlen": 5, "vfresh": 4, "vcsv": 14, "vlegal": 8, "vtabs": 5, "vaxis": 4, "vtext": 18, "vall": 2, "vstamps": 3, "vleak": 3, "vdcat": 2, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["econ", "energy", "fiscal", "home", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif", "ref"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vlen", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
  "periods": [
   "2017Q1",
   "2017Q2",
@@ -24617,7 +24659,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     "w": "الإعلانُ يقع قبل التصيير، وزمنُه مقيسٌ بسقف",
     "ref": "A-13 · GATE-27 · معيار 4.1.3",
     "was": "كان إعلانُ تغيُّر المحتوى مؤجَّلاً بتهدئةٍ مقدارُها 260 مللي ثانيةً <b>تُستأنف من الصفر عند كلِّ نداء</b>، والتصييرُ الواحد يُنادي الإعلانَ مرّاتٍ متتابعة، فيُدفَع الكتبُ إلى الأمام ما دامت النداءاتُ تتوالى. وأخطرُ منه أنَّ معالِجَ الضابط يُصيِّر تزامنياً فيحجز الخيطَ الوحيد، فأيُّ كتبٍ مؤجَّلٍ ينتظر انتهاءَ التصيير كلِّه. والمقيس: 2,274 مللي ثانيةً في جدول المرجع، و1,578 في مصروفات المالية، و1,146 في الدين، و963 في النظرة العامة، وضابطان قُرِئا «صامتَين» وهما ناطقان بعد النافذة. وحكمُ البوّابة كان ثنائياً: «أعلن» أو «صمت»، فلا يفرّق بين الصمت والوصولِ بعد انتقال القارئ.",
-    "now": "صار الإعلانُ البنيويُّ يُكتب <b>تزامنياً في طور الالتقاط</b> (قبل معالِج العنصر وقبل التصيير) لثلاثة أصنافٍ من الضوابط: القوائم، ومربّعات الاختيار، وأزرارُ المجموعات والراديو؛ وله سقفٌ للتأجيل من أوّل نداءٍ (420 مللي ثانية) فلا تهدئةَ تُجوِّعه. وما يُعلنه التصييرُ بعده بصياغةٍ أخرى للفعل نفسِه يُمسَك في نافذةٍ مُعلَنة، <b>والإمساكُ بالمضمون لا بالزمن وحدَه</b>: نافذةٌ زمنيّةٌ مجرّدةٌ كتمت إعلانَ ضابطٍ آخرَ حُرِّك بعد الأوّل بثانية (أُثبت بالزرع: نُقرت مجموعةٌ ثم حُرِّك منزلقٌ فصمت المنزلق)، فصار لا يُكتَم إلا نصٌّ يحمل قيمةَ الإعلان البنيويِّ نفسَها. والمنزلقُ خارجَ الطبقة البنيوية <b>بالقياس</b>: جُرِّب إسقاطُ إعلانه البنيويِّ بزرعٍ فبقي زمنُه دون السقف، وطبقةٌ لا يُثبت الزرعُ حاجتَها لا تُبقى. وبوّابةُ قارئ الشاشة صارت تقيس <b>الزمنَ</b> من لحظة الفعل إلى أوّل نصٍّ في المنطقة الحيّة وتحكم بسقفٍ مُعلَن (900 مللي ثانية) وتنشر أقصى ما قاسته. والمقيسُ بعده: صفرُ ضابطٍ صامتٍ من 39 تركيبة، وأقصى زمنٍ 706 مللي ثانية. ومزروعةٌ تُثبت الالتقاط: الإعلانُ البنيويُّ يُؤجَّل فيصل بعد السقف.",
+    "now": "صار الإعلانُ البنيويُّ يُكتب <b>تزامنياً في طور الالتقاط</b> (قبل معالِج العنصر وقبل التصيير) لثلاثة أصنافٍ من الضوابط: القوائم، ومربّعات الاختيار، وأزرارُ المجموعات والراديو؛ وله سقفٌ للتأجيل من أوّل نداءٍ (420 مللي ثانية) فلا تهدئةَ تُجوِّعه. وما يُعلنه التصييرُ بعده بصياغةٍ أخرى للفعل نفسِه يُمسَك في نافذةٍ مُعلَنة، <b>والإمساكُ بالمضمون لا بالزمن وحدَه</b>: نافذةٌ زمنيّةٌ مجرّدةٌ كتمت إعلانَ ضابطٍ آخرَ حُرِّك بعد الأوّل بثانية (أُثبت بالزرع: نُقرت مجموعةٌ ثم حُرِّك منزلقٌ فصمت المنزلق)، فصار لا يُكتَم إلا نصٌّ يحمل قيمةَ الإعلان البنيويِّ نفسَها. والمنزلقُ خارجَ الطبقة البنيوية <b>بالقياس</b>: جُرِّب إسقاطُ إعلانه البنيويِّ بزرعٍ فبقي زمنُه دون السقف، وطبقةٌ لا يُثبت الزرعُ حاجتَها لا تُبقى. وبوّابةُ قارئ الشاشة صارت تفرّق <b>زمنَين</b> كانا واحداً: زمنُ <b>كتابة</b> الإعلان وتملكه الطبقةُ وحدَها فيُحكَم عليه بسقفٍ ضيّقٍ (120 مللي ثانية، والمقيسُ 16)، وزمنُ <b>مشاهدته</b> في الشجرة وهو محكومٌ بطول المهمّة المتزامنة (المعالِجُ يُصيِّر تزامنياً فيحجز الخيطَ الوحيد) فيُنشر مقيساً ولا يُحكَم عليه. وجُرِّب الحكمُ عليه فسقط البناءُ بلا عطب: قيس 1,846 ثمّ 2,215 مللي ثانيةً على الصفحة نفسِها بتبدُّل حِمل الجهاز، وعتبةٌ تجاور مقيساً متبدِّلاً تُسقط البناءَ ولا تكشف شيئاً. ومعه حكمٌ ثالثٌ أمتنُ: الأصنافُ التي تُعلنها الطبقةُ تزامنياً (القوائمُ ومربّعاتُ الاختيار وأزرارُ المجموعات) مُعلَنةٌ بأسمائها، وغيابُ علامةِ الكتابة في أحدها إخفاقٌ لا استثناء. والمقيسُ بعده: صفرُ ضابطٍ صامتٍ من 39 تركيبة، وزمنُ كتابةٍ أقصاه 16 مللي ثانية في 37 تركيبةً، وزمنُ مشاهدةٍ منشورٌ أقصاه 1,595. <b>وطولُ المهمّة المتزامنة حدٌّ مُعلَنٌ بمقداره ولم يُعالَج</b>: علاجُه إعادةُ بناء مسار التصيير لا ضبطُ طبقة الإعلان. ومزروعةٌ تُثبت الالتقاط: الإعلانُ البنيويُّ يُؤجَّل فيصل بعد السقف.",
     "why": "إعلانٌ يصل بعد ثانيتين ليس إعلاناً: القارئُ انتقل. والحكمُ الثنائيُّ «أعلن أو صمت» يُخفي الصنفَ الأوسطَ وهو الأكثرُ وقوعاً، فصار الزمنُ مقيساً منشوراً لا مفترَضاً. وطبقةٌ تُضاف بلا زرعٍ يُثبت حاجتَها زيادةٌ لا حارس، فأُسقطت."
    },
    {
@@ -24709,6 +24751,56 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     "was": "دليلُ ممارسات ARIA يقتضي لمجموعة الاختيار الواحد: الأسهمُ للانتقال، و‎Home‎ إلى الخيار الأول و‎End‎ إلى الأخير. والمفتاحان كانا في التبويبات وفي مبدّل اللوحات وفي مجموعات الراديو، وغائبَين عن مجموعات الأزرار ‎button[data-v]‎ ، أي القاعدةُ مطبَّقةٌ في ثلاثة مواضعَ من أربعة، وهي دعوى أوسعُ من تطبيقها، ولا حارسَ يكشف الموضعَ الرابع.",
     "now": "أُضيف المفتاحان إلى المجموعة الباقية، وصار الحكمُ مقيساً: تُضغَط ‎End‎ ثمّ ‎Home‎ ضغطاً فعلياً على كلِّ مجموعةٍ ظاهرةٍ ذاتِ ثلاثةِ خياراتٍ أو أكثرَ في سياقين مُعلَنين، ويُقابَل <b>مفتاحُ الزرِّ المركَّز</b> بأوّلِ المجموعة وآخرِها. والحكمُ بالمفتاح لا بهُويّة العقدة، لأنَّ الانتقالَ يُعيد التصييرَ فقد تُستبدَل العقد. ومزروعةٌ تُثبت الالتقاط.",
     "why": "قاعدةٌ مطبَّقةٌ في ثلاثةٍ من أربعةٍ تُقرأ مطبَّقةً كلَّها. والفرقُ لا يظهر إلا بالقياس، فصار الضغطُ فعلياً لا مفترضاً."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.573",
+    "t": "إتاحة",
+    "w": "هدفُ التفعيل 44: رقمٌ واحدٌ مُعلَنٌ ومقيس",
+    "ref": "UX-32 · GATE-27 · معيار 2.5.5",
+    "was": "كانت في الأنماط ثلاثُ دعاوى تقول «هدفُ لمسٍ لا يقلّ عن 44»: كتلةُ العرض الضيّق، وتعليقُ مبدّلِ الوضع، وتعليقُ مربّعات المقارنة. والقواعدُ تحتها تكتب 38 و40 و36 و30 و28 و24. وسببُ التناقض أنَّ الرقمَ مكتوبٌ في ستّة مواضعَ لا في واحد، فيُرفع في موضعٍ ويُنسى في خمسة. والمقيسُ على عرضِ 390 بكسلاً: <b>294 ضابطاً أساسياً من 468 دون العتبة</b>، منها شريطُ التبويبات 40 ومبدّلُ الوضع 36 والقوائمُ 38 وأزرارُ المجموعات 33 إلى 38 ومربّعُ تبديل الحوادث 13×13 بمقاس المتصفّح الافتراضيّ بينما نظائرُه 18×18.",
+    "now": "صار الرقمُ رمزاً واحداً مُعلَناً في :root، وكلُّ قاعدةٍ تطلبه منه فلا تتنازع قاعدتان. وأساسُ التطبيق نصُّ المعيار لا التعميم: معيار 2.5.8 (المستوى AA) عتبتُه 24×24 وتسري على كلِّ عرضٍ وهي محروسةٌ أصلاً؛ ومعيار 2.5.5 (المستوى AAA) عتبتُه 44×44 وتُطبَّق على <b>مجموعةٍ مُعلَنةٍ من الضوابط الأساسية</b> حيث يكون العرضُ ضيّقاً أو المؤشِّرُ خشناً، وهو موضعُ الحاجة. والروابطُ داخل النصّ مستثناةٌ بنصِّ البند نفسِه فرفعُها يقطع سياقَ الجملة، ولم تُرفَع العتبةُ على الشاشات الواسعة بالمؤشِّر الدقيق لأنَّ ثمنَها مقيسٌ هو الآخر: المساحةُ الرأسيةُ تدفع أوّلَ رقمٍ تحت الطيّة وهو ما عولج بالقياس في جولات سابقة. وهدفُ مربّع الاختيار هو <b>وسمُه المحيط</b> لا المربّعُ المرسوم، فيُقاس الوسم. والمقيسُ بعده: الضوابطُ الأساسيةُ دون العتبة من 294 إلى <b>صفر</b>، و<b>1,904 هدفَ تفعيلٍ</b> قيست في اللوحات السبع على العروض الأربعة كلُّها ≥44. وأمسكت البوّابةُ في أوّل تشغيلٍ كاملٍ ما فاتَ القياسَ اليدويّ: ستّةُ وسومٍ لمربّعات المقارنة بـ36 بكسلاً في أربعة عروض، سببُها قاعدتان متساويتا النوعيّة يقدّم ترتيبُ المصدر إحداهما, فأُصلح في موضع القاعدة نفسِها. وبوّابةُ الإتاحة تقيسها في كلِّ عرضٍ تُطبَّق فيه القاعدةُ (320 و400 و512 و640) وتنشر عددَ ما قاست، ومزروعةٌ تُثبت الالتقاط.",
+    "why": "رقمٌ مكتوبٌ في ستّة مواضعَ ليس رقماً واحداً. وثلاثُ دعاوى تقول 44 وستُّ قواعدَ تكتب غيرَه هو العطبُ نفسُه الذي تحرس منه هذه السلسلة: دعوى أوسعُ من تطبيقها، وثمنُها أنَّ من يقرأ التعليقَ يحسب الأمرَ مُنجَزاً."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.573",
+    "t": "واجهة",
+    "w": "ثلاثُ حالاتٍ لبطاقة البيانات، لكلٍّ مسارُها",
+    "ref": "UX-33 · GATE-30 · معيار 4.1.3",
+    "was": "كانت للبطاقة حالةٌ واحدةٌ منفَّذة: «فيها بيان». وما سواها متفرِّقٌ أو غائب: جملةُ «لا بيانات في النطاق المعروض» مكتوبةٌ في مُصيَّرٍ واحد، و«لا نتائج» في أربعة مواضعَ بصياغتها الخاصّة، <b>ولا حالةَ انتظارٍ ولا حالةَ خطأٍ أصلاً</b>. فالبطاقةُ التي يُخفق مُصيَّرُها تبقى فارغةً بلا أثر، والقارئُ لا يعلم أهي فارغةٌ لأنَّ البيانَ غيرُ منشورٍ أم لأنَّ شيئاً انكسر، وهما حالتان لا تُقرآن قراءةً واحدة.",
+    "now": "صارت ثلاثاً مُعلَنةً في موضعٍ واحدٍ من الطبقة المشتركة، لكلٍّ منها صنفُها ودورُها المنطوق: انتظارٌ (status) يُوسَم به كلُّ هدفٍ مؤجَّلٍ حتى ينتهي مُصيَّرُه ثمَّ يُرفَع، وفراغٌ (status) <b>يُكتشف بالعدّ</b> لا يُكتب بيدٍ في كلِّ مُصيَّر (رسمٌ بلا نقطةٍ منتهيةٍ واحدةٍ فارغٌ أيّاً كان سببُه، والوسمُ يُرفَع من نفسه حين تعود النقاط)، وخطأٌ (alert) يُوسَم به ما يُخفق مُصيَّرُه. <b>والحالةُ لا تكتم الخطأ</b>: الاستثناءُ يُعاد إلقاؤه كما كان فيبلغ حارسَ التصيير المقطوع وتسقط السلسلة، والحالةُ للقارئ لا للبوّابة. وتُجرَّب كلُّ حالةٍ على مسارها الحقيقيِّ في سياقٍ مُعلَن: يُجدَل مُصيَّرٌ بطيءٌ فيُقاس وسمُ الانتظار قبل انتهائه ثمَّ رفعُه بعده، ويُجدَل مُصيَّرٌ يرمي فيُقاس وسمُ الخطأ ودورُه، ويُفرَّغ بيانُ رسمٍ ظاهرٍ فيُقاس وسمُ الفراغ. والمقيسُ في الصفحة السليمة: صفرُ رسمٍ فارغٍ من 67، فالفرعُ محروسٌ بالزرع لا بمسارٍ قائم. وأربعُ مزروعاتٍ تُثبت الالتقاط.",
+    "why": "الفراغُ والعطبُ لا يُقرآن قراءةً واحدة، وبطاقةٌ بيضاءُ بلا سببٍ تجعل القارئَ يحدس. وحالةٌ تكتم الخطأَ عن البوّابة تشتري راحةَ القارئ بثمنِ الحارس، فتُفصَل الجهتان: للقارئ اسمٌ، وللبوّابة الاستثناءُ نفسُه."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.573",
+    "t": "واجهة",
+    "w": "مفهومٌ واحدٌ باسمٍ واحد في الضوابط",
+    "ref": "UX-34 · GATE-28",
+    "was": "قيست وسومُ الضوابط في اللوحات الست، فكان مفهومُ «الفترات المعروضة» يُكتب بثلاث صيغ: «نطاق العرض» في المالية (6 مواضع)، و«النطاق المعروض» في شريط الحالة (19 موضعاً)، و«مدى العرض» في الطاقة (موضعٌ واحد). والقارئُ الذي يتعلّم ضابطاً في لوحةٍ يُعيد تعلُّمَه في أخرى، والفرقُ ليس في المعنى بل في اللفظ وحدَه.",
+    "now": "للمفهوم اسمٌ واحدٌ هو الاسمُ الغالبُ المقيس، ومرادفاتُه الممنوعةُ مُعلَنةٌ في جدولٍ يُفحَص نصُّ الصفحة عليه في كلِّ بناء: مرادفٌ ممنوعٌ يُسقط البناءَ ويُطبع عددُ مواضعه، واسمٌ مُعلَنٌ غائبٌ عن الصفحة يُسقطه كذلك فلا يُحرَس جدولٌ لاسمٍ لا وجودَ له. <b>والسجلُّ التاريخيُّ مستثنىً بالإعلان</b>: أوّلُ تشغيلٍ أسقط البناءَ على قيدٍ في سجلّ التصحيحات يحكي العطبَ نفسَه ويقتبس المرادفَ الممنوع، والسجلُّ لا يستقيم إن مُنع من تسمية ما أُصلح. فيُستثنى حملُ البيانات المحقون ويُفحَص ما يقرؤه المستعمِل (1,328,390 محرفاً من 2,659,014)، ويسقط البناءُ إن لم يقع الاستثناءُ أصلاً فلا يُفحَص السجلُّ صمتاً. ومزروعةٌ تُثبت الالتقاط.",
+    "why": "أيُّ معنًى يتكرّر في الواجهة يُقفَل في مفردةٍ ولا يُترَك نثراً حُرّاً. والجدولُ يُوسَّع ببندٍ واحدٍ كلَّما رُصد مرادفٌ جديد، فالعلاجُ في القاعدة لا في جولةِ تنقيح."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.574",
+    "t": "حوكمة",
+    "w": "لا يُقاس لونٌ وهو في منتصف انتقاله",
+    "ref": "G-31 · OPS-20 · GATE-38",
+    "was": "سقطت بوّابةُ الإتاحة في الوضع الداكن على وسمَي تبويبٍ بتباينٍ 3.24 و3.79 دون العتبة 4.5، ومرّت على التبويب نفسِه بنطاقٍ مُضيَّقٍ بلا إخفاق. والسببُ سباقٌ لا عطبٌ في الصفحة: لونُ وسم التبويب يتحرّك 150 مللي ثانيةً عند التبديل، فإن أُخذت العيّنةُ أثناءه قُرئ لونٌ وسيطٌ لا لونٌ مُعلَن. وهو نمطٌ عُولج مرّتين في هذا المستودع (OPS-20 وGATE-38): سباقٌ بين نومِ الفاحص وحال الصفحة.",
+    "now": "تُنتظر الإشارةُ لا المدّة: لا تُؤخَذ العيّنةُ وفي الصفحة انتقالٌ جارٍ، بحدٍّ أقصى مُعلَن. وجُرِّب أوّلاً إعلانُ تفضيلِ تقليل الحركة للصفحة فأسقط مِجسَّ ألوان السلاسل (قرأ 1:1) لأنَّ المِجسَّ يعتمد على ما تُلغيه القاعدةُ الشاملة، فعُدل عنه إلى انتظار الإشارة. والمقيسُ بعده: الوضعُ الداكن يجتاز في اللوحات السبع.",
+    "why": "العيّنةُ المأخوذةُ في أثناء انتقالٍ تقيس حالةً لا يراها القارئُ ولا تُعلنها الأنماط، فهي إخفاقٌ في القياس لا في المقيس. والفرقُ بين الاثنين يُعرَف بالإعادة في نطاقٍ مُضيَّق: ما يسقط في الحلقة ويمرُّ منفرداً سباقٌ."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.575",
+    "t": "حوكمة",
+    "w": "وسمُ الحالة لا يُشعل مرورَ الطيّ",
+    "ref": "G-32 · UX-33 · UX-22",
+    "was": "حالاتُ البطاقة الثلاث تُدرِج عقدةً وتُزيلها عند كلِّ تصييرٍ مؤجَّل، ومُراقبُ التغيير الذي يحرس حدَّ النصّ كان يستأنف المرورَ على المستند كلِّه عند أيِّ تغيير. فصار كلُّ وسمِ انتظارٍ يُعيد قياسَ 380 كتلةَ نصّ، وقيس الأثرُ: زمنُ مشاهدة إعلان قارئ الشاشة في تبويب السيناريوهات 3,700 مللي ثانيةً بعد أن كان دون 706.",
+    "now": "تُستثنى سجلّاتُ التغيير التي كلُّ عقدها وسمُ حالة: وسمٌ من ثلاث كلماتٍ لا يحتاج إعادةَ قياسِ كتل النصّ كلِّها. والمقيسُ بعده: 1,595 مللي ثانيةً أقصى زمنِ مشاهدة، وهو طولُ المهمّة المتزامنة لا أثرُ الطيّ.",
+    "why": "طبقةٌ تُضاف تدفع ثمنَها في طبقةٍ أخرى إن لم يُحَدَّ أثرُها. والمُراقبُ الذي يستأنف على كلِّ تغييرٍ يجعل كلَّ إضافةٍ صغيرةٍ غاليةً، فالاستثناءُ يُكتب حيث يُعرَف أنَّ التغييرَ لا يمسّ المقيس."
    }
   ],
   "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في لوحة المرجع، تبويب المنهجية والمعادلات الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
@@ -32301,6 +32393,65 @@ function ixCVRelease(){
    القائسُ **صفرَه** لا مدّةً. وما لا يبلغ صفراً خلال حدٍّ معلَن إخفاقٌ
    مُسمّى لا فراغٌ مجهولُ السبب. وهو إعلانٌ عن الصفحة لا حيلةٌ للفحص، كما
    هي رايةُ انتقال العرض ‎data-vt‎. */
+/* ══ UX-33 (03-11-2026م) · ثلاثُ حالاتٍ مُعلَنةٍ لكلِّ بطاقةِ بيانات ═══════
+   كانت للبطاقة حالةٌ واحدةٌ مُنفَّذة: «فيها بيانٌ». وما سواها متفرِّقٌ أو
+   غائب: جملةُ «لا بيانات في النطاق المعروض» مكتوبةٌ في مُصيَّرٍ واحد،
+   و«لا نتائج» في أربعة مواضعَ بصياغتها الخاصّة، **ولا حالةَ انتظارٍ ولا
+   حالةَ خطأٍ أصلاً**. فالبطاقةُ التي يُخفق مُصيَّرُها تبقى فارغةً بلا أثر،
+   والقارئُ لا يعلم أهي فارغةٌ لأن البيانَ غيرُ منشورٍ أم لأنَّ شيئاً انكسر,
+   وهما حالتان لا تُقرآن قراءةً واحدة.
+   فصارت ثلاثاً مُعلَنةً في موضعٍ واحد، لكلٍّ منها صنفُها ودورُها المنطوق:
+     · ‎load‎  انتظارُ احتسابٍ مؤجَّل (role=status)
+     · ‎empty‎ لا بيانَ منشورٌ في المدى المعروض (role=status)
+     · ‎err‎   تعذّر العرض (role=alert)
+   **والحالةُ لا تكتم الخطأ**: الخطأُ يُعاد إلقاؤه كما كان (OPS-16) فيبلغ
+   حارسَ التصيير المقطوع وتسقط السلسلة؛ والحالةُ للقارئ لا للبوّابة. */
+const IX_STATE={load:'يُحتسب الآن',empty:'لا بيانات',err:'تعذّر العرض'};
+function ixState(host,kind,msg){
+  const el=(typeof host==='string')? document.getElementById(host) : host;
+  if(!el) return null;
+  const card=(el.closest&&el.closest('.card'))||el;
+  let box=null;
+  for(const k of card.children) if(k.classList&&k.classList.contains('cstate')){ box=k; break; }
+  if(kind==null){ if(box) box.remove(); card.removeAttribute('data-state'); return null; }
+  if(!IX_STATE[kind]) return null;
+  if(!box){ box=document.createElement('div'); box.className='cstate'; card.insertBefore(box,card.firstChild); }
+  box.setAttribute('data-kind',kind);
+  box.setAttribute('role', kind==='err'? 'alert' : 'status');
+  box.textContent=IX_STATE[kind]+(msg? ('، '+msg) : '');
+  card.setAttribute('data-state',kind);
+  /* الانتظارُ لا يُعلَن: يقع في كلِّ تصييرٍ فيُثرثر. والفراغُ والخطأُ يُعلَنان. */
+  if(kind!=='load'){ try{ ixSayNow(box.textContent, IX_STATE[kind]); }catch(e){} }
+  return box;
+}
+/* ── UX-33-ب · الفراغُ يُكتشف بالعدّ لا يُكتب بيدٍ في كلِّ مُصيَّر ─────────
+   رسمٌ بلا نقطةٍ منتهيةٍ واحدةٍ فارغٌ، أيّاً كان سببُه. فيُقاس بعد كلِّ تصييرٍ
+   ويُوسَم صدرُ بطاقته بالحالة، فلا يُترك للقارئ أن يحدس أهو فراغٌ أم عطب.
+   والوسمُ يُرفَع من نفسه حين تعود النقاط، فلا يبقى أثرٌ كاذب. */
+function ixStateScan(){
+  let n=0, e=0;
+  try{
+    if(typeof Chart==='undefined'||!Chart.instances) return {n:0,e:0};
+    Object.values(Chart.instances).forEach(ch=>{
+      const cv=ch&&ch.canvas; if(!cv||!cv.offsetParent) return;
+      n++;
+      let pts=0;
+      (ch.data&&ch.data.datasets||[]).forEach(d=>{
+        (d.data||[]).forEach(v=>{
+          const x=(v&&typeof v==='object')? (v.y!=null? v.y : v.x) : v;
+          if(x!=null && isFinite(+x)) pts++;
+        });
+      });
+      if(!pts){ e++; ixState(cv,'empty','لا نقطةَ منشورةً في المدى المعروض'); }
+      else{
+        const card=cv.closest&&cv.closest('.card');
+        if(card&&card.getAttribute('data-state')==='empty') ixState(card,null);
+      }
+    });
+  }catch(_e){}
+  window.__ixStateScan={charts:n,empty:e};
+  return {n:n,e:e};
+}
 function ixDeferEnter(){ try{ window.__ixDeferPending=(window.__ixDeferPending||0)+1; }catch(e){} }
 function ixDeferExit(){
   try{ window.__ixDeferPending=Math.max(0,(window.__ixDeferPending||1)-1); }catch(e){}
@@ -32322,7 +32473,16 @@ function ixDefer(fn,targetId){
      خطأٍ (شرطٌ يُرجِع مبكّراً) فيبقى الفراغُ بلا أثر. */
   if(targetId){ try{ (window.__ixDeferTargets=window.__ixDeferTargets||[]).push(targetId); }catch(e){} }
   ixDeferEnter();
-  const go=()=>{ try{ fn(); }catch(e){ setTimeout(()=>{ throw e; },0); } finally{ ixDeferExit(); } };
+  /* UX-33: ما يُؤجَّل يُعلن انتظارَه، فلا يُقرأ الفراغُ المؤقَّت غياباً. */
+  if(targetId){ try{ ixState(targetId,'load'); }catch(e){} }
+  const go=()=>{
+    try{ fn(); if(targetId) try{ ixState(targetId,null); }catch(_e){} }
+    catch(e){
+      /* للقارئ حالةٌ مُسمّاة، وللبوّابة الخطأُ نفسُه يُعاد إلقاؤه. */
+      if(targetId) try{ ixState(targetId,'err'); }catch(_e){}
+      setTimeout(()=>{ throw e; },0);
+    }
+    finally{ ixDeferExit(); } };
   if(typeof window.requestIdleCallback==='function') window.requestIdleCallback(go,{timeout:900});
   else setTimeout(go,32);
 }
@@ -32535,8 +32695,27 @@ function ixWireFoldLong(){
     let q=false;
     const run=()=>{ q=false; window.__ixFoldBusy=1;
       try{ ixFoldLong(); } finally{ window.__ixFoldBusy=0; } };
-    window.__ixFoldObs=new MutationObserver(()=>{
-      if(window.__ixFoldBusy||q) return; q=true;
+    /* ── 03-11-2026م · وسمُ الحالة لا يُشعل مرورَ الطيّ ─────────────────
+       حالاتُ البطاقة (انتظارٌ وفراغٌ وخطأ) تُدرِج عقدةً وتُزيلها عند كلِّ
+       تصييرٍ مؤجَّل، وكلُّ تغييرٍ كان يوقظ مرورَ الطيّ على المستند كلِّه.
+       فقيس زمنُ مشاهدة الإعلان في تبويب السيناريوهات 3,700 مللي ثانيةً بعد
+       أن كان دون 706. فتُستثنى سجلّاتُ التغيير التي كلُّ عقدها وسمُ حالة:
+       وسمٌ من ثلاث كلماتٍ لا يحتاج إعادةَ قياسِ 380 كتلةَ نصّ. */
+    const _onlyState=recs=>{
+      for(const r of recs){
+        const ns=[...(r.addedNodes||[]),...(r.removedNodes||[])];
+        if(!ns.length) return false;
+        for(const n of ns){
+          if(n.nodeType!==1) return false;
+          if(!(n.classList&&n.classList.contains('cstate'))) return false;
+        }
+      }
+      return true;
+    };
+    window.__ixFoldObs=new MutationObserver(recs=>{
+      if(window.__ixFoldBusy||q) return;
+      try{ if(_onlyState(recs)) return; }catch(e){}
+      q=true;
       if(typeof requestAnimationFrame==='function') requestAnimationFrame(run);
       else setTimeout(run,32);
     });
@@ -32651,6 +32830,7 @@ function ixWireTabs(){
   try{ ixWireFoldLong(); }catch(e){ try{ console.error('MIRSAD fold',e); }catch(_e){} }
   ixLangParts();
   document.querySelectorAll('canvas').forEach(ixChartAlt);
+  try{ ixStateScan(); }catch(e){}
   ixWireScrollables();
   ixWireTableExport();
   ixMarkSortable();
@@ -32960,6 +33140,16 @@ function ixSayNow(msg,val){
   _ixSayMsg=String(msg);
   if(el.textContent!==_ixSayMsg) el.textContent=_ixSayMsg;
   _ixSayHeld=_ixNow(); _ixSayVal=String(val==null?msg:val);
+  /* ── 03-11-2026م · علامةٌ مُعلَنةٌ لزمن الكتابة نفسِه ────────────────────
+     زمنُ **مشاهدة** المنطقة الحيّة محكومٌ بطول المهمّة المتزامنة (التصييرُ
+     يحجز الخيط)، وهو حدٌّ لا تملكه هذه الطبقة. وزمنُ **كتابتها** تملكه
+     وحدَها. فتُعلَن العلامةُ ليُقاس ما تملكه الطبقةُ على حِدَة، كما يُعلَن
+     عدّادُ التأجيل (OPS-20): إعلانٌ عن الصفحة لا حيلةُ فحص. */
+  /* **أوّلُ** كتابةٍ بعد كلِّ تصفير، لا آخرُها: التصييرُ قد يُحدِث إعلاناً
+     بنيوياً ثانياً في المهمّة نفسِها (ضابطٌ يُنقَر برمجياً مثلاً)، فتُقرأ
+     العلامةُ متأخّرةً وهي في موضعها الأول (قيس: 1,394 مللي ثانيةً لعلامةٍ
+     موضعُها 1). والتصفيرُ من القارئ الخارجيّ، والصفحةُ تُسجّل الأوّل. */
+  try{ if(!window.__ixSayMark) window.__ixSayMark={at:_ixNow(), msg:_ixSayMsg}; }catch(_e){}
   return true;
 }
 function ixSay(msg){
@@ -33332,7 +33522,7 @@ function ixEvtNote(card,labels){
     '<details class="evtnote"'+(hit.length<=3?' open':'')+'><summary>علاماتُ الأحداث على هذا الرسم ('+hit.length+')، وقائعُ مؤرَّخة لا تفسيرٌ سببيّ</summary>'+
     '<div class="note" style="margin-top:8px">'+((E&&E.note)||'')+'</div>'+
     '<ol style="margin:8px 0 0;padding-inline-start:20px">'+li+'</ol>'+
-    '<label class="ck" style="margin-top:8px;display:inline-flex"><input type="checkbox" class="evttog"'+
+    '<label class="ck ckrow"><input type="checkbox" class="evttog"'+
     (_ixEvtOn?' checked':'')+' aria-label="إظهارُ علامات الأحداث على الرسوم'+
     (_cardName?'، من بطاقة «'+ixEsc(_cardName)+'»':'')+' (يسري على كلّ الرسوم)">'+
     ' إظهارُ العلامات على الرسوم</label></details>');
@@ -34612,6 +34802,7 @@ window.MIRSAD_IX={
   wireSearch:ixWireSearch,
   tabDesc:ixTabDesc,
   defer:ixDefer, deferEnter:ixDeferEnter, deferExit:ixDeferExit,   /* OPS-20 */
+  state:ixState, STATES:IX_STATE, stateScan:ixStateScan,   /* UX-33 */
   evtNote:ixEvtNote,
   arNorm:ixArNorm,
   arStem:ixArStem,
@@ -44055,7 +44246,18 @@ window.__homeRender=function(){
     const fEl=document.getElementById('fUnit'); if(fEl) fEl.innerHTML=md.foot||'';
     covEl.textContent=window[COV[d]]||'—';
     const cl=document.getElementById('bCovL'); if(cl) cl.textContent=md.covLbl||'التغطية';
-    const fn=window[RENDER[d]]; if(typeof fn==='function') fn();
+    /* UX-33: مُصيَّرُ اللوحة يُخفق فتبقى اللوحةُ فارغةً بلا أثر. فصارت لها
+       حالةٌ مُسمّاة، والخطأُ يُعاد إلقاؤه فيبلغ البوّابات كما كان. */
+    const fn=window[RENDER[d]];
+    if(typeof fn==='function'){
+      try{ fn(); }
+      catch(_e){
+        try{ const box=document.getElementById('dom-'+d);
+          const c1=box&&box.querySelector('.card');
+          if(c1&&window.MIRSAD_IX&&window.MIRSAD_IX.state) window.MIRSAD_IX.state(c1,'err'); }catch(_x){}
+        setTimeout(()=>{ throw _e; },0);
+      }
+    }
     /* إعلانٌ مسموع بما فُتح، SC 4.1.3. كان تبديل اللوحة صامتاً كلياً
        لقارئ الشاشة: يتغيّر المحتوى ولا شيء يقول إنه تغيّر. */
     const live=document.getElementById('a11yLive');
