@@ -147,8 +147,8 @@ try{
    "@language": "ar"
   }
  ],
- "dcat:version": "2.575",
- "owl:versionInfo": "2.575",
+ "dcat:version": "2.577",
+ "owl:versionInfo": "2.577",
  "dcat:dataset": [
   {
    "@type": "dcat:Dataset",
@@ -1591,6 +1591,25 @@ try{
      عتبتُه 44×44 وتُطبَّق على مجموعةٍ مُعلَنةٍ من الضوابط الأساسية عند العرض
      الضيّق أو المؤشِّر الخشن, وهو موضعُ الحاجة. والروابطُ داخل النصّ
      مستثناةٌ بنصِّ البند نفسِه، فرفعُها يقطع سياقَ الجملة. */
+  /* ── UX-35 (03-11-2026م) · مقاسُ السطر بوحدةٍ تصدق على العربية ──────────
+     قيس طولُ السطر في 481 كتلةَ نصٍّ في اللوحات الست بقياسٍ حقيقيٍّ للمحرف
+     (عرضُ عيّنةٍ عربيّةٍ من الصفحة مقسوماً على عدد محارفها، لا بالتقدير):
+     الوسيطُ **83 محرفاً** والمئينُ 90 **مئتان** والأقصى 206، و478 كتلةً من
+     481 فوق الحدِّ الموصى به (45 إلى 75 محرفاً، وهو حدُّ الحركة المريحة
+     للعين بين آخر السطر وأوّل الذي يليه).
+     وعلّتان لا واحدة:
+       أ) **تسعةُ أرقامٍ لمفهومٍ واحد**: 60 و70 و74 و78 و78 و82 و82 و88 و92
+          محرفاً في تسع قواعد، وكتلٌ بلا حدٍّ أصلاً (الفقراتُ وصناديقُ
+          التنبيه) فبلغت 206.
+       ب) **وحدةُ ‎ch‎ تكذب على العربية**: ‎ch‎ عرضُ المحرف «0» وهو رقمٌ
+          عريض، ومتوسّطُ المحرف العربيِّ في الخطّ المنشور أضيقُ منه بنحو
+          12%. فحدُّ «74ch» يُنتج 83 محرفاً عربياً فعليّاً: القاعدةُ تقول
+          شيئاً والمعروضُ شيءٌ آخر.
+     فصار المقاسُ رقماً واحداً بوحدة ‎em‎: متوسّطُ المحرف العربيِّ المقيس
+     0.456 من مقاس الخطّ، فـ31em تُنتج نحوَ 68 محرفاً في أيِّ درجةٍ من
+     السلّم (النسبةُ ثابتةٌ لأن العائلة واحدة)، وهي داخلَ المدى الموصى به
+     بهامشٍ يسع تبدُّلَ الوزن. وتحرسها vlen بالقياس نفسِه لا بالتقدير. */
+  --measure:31em;
   --tap:44px;
   --hair:1px; --bw-2:2px; --bw-3:3px;   /* VIS-09: سلَّمُ سَمْكِ الحدود والحلقات */
   /* ── UX-07 (03-11-2026م) · الأساسُ أربعةٌ بلا نصفِ درجة ────────────────
@@ -1843,7 +1862,7 @@ nav.tabs .tab .tdesc{display:none}
 /* ux-open-01: رأسُ التبويب، عنوانٌ وجملةُ توجيهٍ قبل أدوات الضبط. */
 .tablead{margin:0 0 var(--sp-5)}
 .tablead .tlead-h{font-size:var(--fs-xl);margin:0 0 var(--sp-2);font-weight:700;color:var(--ink)}
-.tablead .tlead-p{margin:0;color:var(--ink-2);font-size:var(--fs-2xs);line-height:var(--lh-loose);max-width:78ch}
+.tablead .tlead-p{margin:0;color:var(--ink-2);font-size:var(--fs-2xs);line-height:var(--lh-loose);max-width:var(--measure)}
 /* ux-scope-02: كتلةُ الحدود، مطويّةٌ فلا تزاحم الجواب، ومتاحةٌ في كل تبويب. */
 .tablead .tlim{margin-top:var(--sp-3);border:var(--hair) solid var(--line-soft);border-radius:var(--r-md);
   background:var(--surface-1);padding:0 var(--sp-4)}
@@ -2039,7 +2058,7 @@ section{display:none}
 section.on{display:block}
 .sechead{margin:var(--sp-2) 0 var(--sp-5)}
 .sechead h2{font-size:var(--fs-xl)}
-.sechead p{margin:var(--sp-2) 0 0;font-size:var(--fs-2xs);color:var(--ink-3);max-width:78ch}
+.sechead p{margin:var(--sp-2) 0 0;font-size:var(--fs-2xs);color:var(--ink-3);max-width:var(--measure)}
 
 /* table */
 table{width:100%;border-collapse:collapse;font-size:var(--fs-2xs);font-variant-numeric:tabular-nums}
@@ -2153,7 +2172,7 @@ details.kpifold > summary .kf-h{color:var(--ink-3)}
 canvas{cursor:pointer}
 .verdict{margin-top:var(--sp-5);background:var(--surface-1);border:var(--hair) solid var(--line);
   border-inline-start:var(--bw-3) solid var(--brand);border-radius:var(--r);padding:var(--sp-5) var(--sp-6);
-  font-size:var(--fs-base);color:var(--ink-2);line-height:1.85;max-width:82ch}
+  font-size:var(--fs-base);color:var(--ink-2);line-height:1.85;max-width:var(--measure)}
 .verdict b{color:var(--ink)}
 .verdict .vh{display:block;font-family:var(--font-display);font-size:var(--fs-base);color:var(--brand-soft);
   margin-bottom:var(--sp-3);font-weight:600}
@@ -2174,7 +2193,7 @@ canvas{cursor:pointer}
 .hero{padding:var(--sp-2) 0 var(--sp-6)}
 .hero h2{font-family:var(--font-display);font-size:var(--fs-3xl);font-weight:600;
   letter-spacing:-.02em;margin:0 0 var(--sp-3)}
-.hero p{max-width:70ch;color:var(--ink-2);font-size:var(--fs-base);line-height:1.8;margin:0}
+.hero p{max-width:var(--measure);color:var(--ink-2);font-size:var(--fs-base);line-height:1.8;margin:0}
 .hero .asof{margin-top:var(--sp-4);font-size:var(--fs-3xs);color:var(--ink-3)}
 .hero .asof b{color:var(--ink-2);font-weight:500}
 /* A11Y-09 (19-09-2026م): البطاقةُ ‎role="button"‎ و‎tabindex="0"‎، أي تَعِد
@@ -2662,6 +2681,15 @@ select[class],input[type=number],input[type=search],input.inp,textarea[class],
 /* كان نمطُ السطر مكتوباً داخلياً في الشيفرة بطولٍ خامّ (‎margin-top:8px‎),
    فصار صنفاً يمرُّ بالسلّم كبقيّة الأنماط. */
 .ckrow{margin-top:var(--sp-3);display:inline-flex}
+/* ── UX-35 · المقاسُ يسري على كلِّ كتلةِ نثرٍ لا على بعضها ───────────────
+   الفقراتُ وصناديقُ التنبيه كانت بلا حدٍّ أصلاً فبلغ سطرُها 206 محرفاً.
+   والجداولُ والضوابطُ خارجَ القاعدة: الخليّةُ يحكمها عرضُ عمودها، والوسمُ
+   ليس نثراً. */
+.note,.hint,.lede,.desc,.tlead-p,.frmnote,.warnbox,
+.wrap p,.wrap li,.card p,.card li{max-width:var(--measure)}
+table p,table li,td p,td li,th p,
+.perbar p,.tblbar p,.chip p,.seg p,.pill p,
+nav p,nav li,.gsearchout p,.gsearchout li{max-width:none}
 /* ── UX-33 (03-11-2026م) · الحالاتُ الثلاث: شكلٌ واحدٌ لكلٍّ منها ────────
    الحالةُ تُقرأ قبل محتوى البطاقة فتسكن صدرَها، ولونُها من دور اللون لا من
    لونٍ مخترَع: الفراغُ تحفُّظٌ (warn) والخطأُ عطبٌ (bad) والانتظارُ محايد. */
@@ -2778,12 +2806,12 @@ header.top .badges{gap:0 var(--sp-5);row-gap:var(--sp-2)}
 /* ── ٤) سُلَّم طباعي بخطواتٍ محسوسة ───────────────────────────────────
    كان الفرق بين العنوان والتلميح والحاشية أقلّ من أن يُقرأ تدرّجاً. */
 .card h3{font-size:var(--fs-md);font-weight:600;letter-spacing:-.01em;line-height:1.45}
-.card .hint{font-size:var(--fs-3xs);line-height:1.65;margin-bottom:var(--sp-4);max-width:82ch}
+.card .hint{font-size:var(--fs-3xs);line-height:1.65;margin-bottom:var(--sp-4);max-width:var(--measure)}
 .sechead h2{font-size:var(--fs-2xl);letter-spacing:-.015em}
 
 /* ── ٥) الحاشية تُقرأ في ثوانٍ لا تُقتحم ──────────────────────────────
    عرضٌ مقيَّد بمقاس القراءة، ومدخلٌ غامق يفصل الحكم عن شرحه. */
-.note{max-width:78ch;line-height:1.85;border-right-width:var(--bw-2);padding-right:var(--sp-4);margin-top:var(--sp-4)}
+.note{max-width:var(--measure);line-height:1.85;border-right-width:var(--bw-2);padding-right:var(--sp-4);margin-top:var(--sp-4)}
 .note b:first-child{display:inline-block;margin-bottom:var(--hair)}
 
 /* ── ٦) خطُّ أساسٍ واحد لكل صفّ من المؤشرات ───────────────────────────
@@ -2864,14 +2892,14 @@ nav.tabs{margin-bottom:var(--sp-5);gap:var(--sp-2)}
 .jd-dn::before{content:"\2212";margin-inline-end:var(--sp-2);font-weight:700}
 
 /* ── صفحة «عن اللوحة» والتذييل النحيف، 10-09-2026م ─────────────── */
-.footline{font-size:var(--fs-3xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:92ch}
+.footline{font-size:var(--fs-3xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:var(--measure)}
 .footline b{color:var(--ink-2);font-weight:600}
 .aboutlink{background:transparent;border:0;border-bottom:var(--hair) solid var(--ctl-border);
   color:var(--brand-soft);font-family:inherit;font-size:var(--fs-2xs);cursor:pointer;
   padding:var(--sp-2) var(--sp-2);min-height:24px;line-height:var(--lh);text-align:start}
 .aboutlink::after{content:"\2190";margin-inline-start:var(--sp-3);opacity:.75}
 .aboutlink:hover{color:var(--ink);border-bottom-color:var(--brand)}
-#dom-about .abtext{font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:88ch}
+#dom-about .abtext{font-size:var(--fs-2xs);line-height:var(--lh-loose);color:var(--ink-3);max-width:var(--measure)}
 #dom-about .abtext b{color:var(--ink-2);font-weight:600}
 #dom-about .abtext>div{margin-bottom:var(--sp-3)}
 #dom-about .abtext>div:last-child{margin-bottom:0}
@@ -2905,7 +2933,7 @@ body:has(#dom-about.on) header.top .badges .badge:not(#bIndep){display:none}
 }
 @container card (min-width:560px){
   .kpi .v{font-size:var(--fs-4xl)}
-  .card .hint{max-width:74ch}
+  .card .hint{max-width:var(--measure)}
 }
 
 /* ── 2) انضباطُ المحاذاة بنيويّاً لا يدوياً ─────────────────────────
@@ -2979,7 +3007,7 @@ p,.card .hint,.note,.dnote,.verdict,.sechead p,.tablead .tlead-p{text-wrap:prett
 .abtext p, .abtext li, .evtnote p, .evtnote li,
 section > p, .blocknote, .tlead-p, .srcnote, .a11ylist li,
 .note, .hint, .card .hint, .card > p, .card .note,
-section p, section li, div.muted, .card div.muted{max-width:60ch}
+section p, section li, div.muted, .card div.muted{max-width:var(--measure)}
 /* والشاراتُ والرقاقاتُ والأختامُ وسطورُ التذييل تُقرأ مسحاً لا سطراً. */
 .badge, .badges *, .perbar *, footer *, thead *, .chip, .pill{max-width:none}
 /* وما حمل جدولاً أو شبكةً أو رسماً لا يُضيَّق، فالتضييقُ للسطر لا للكتلة. */
@@ -4227,7 +4255,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   </div>
   <div class="card" id="ab-license" style="margin-top:16px"><h3>الرخصة وصيغة الإسناد</h3><div class="abtext"><div id="attrBox" style="margin-bottom:7px"><b>صيغة الإسناد المطلوبة:</b> تحمل مُوجَبات المادة <span dir="ltr">3(a)(1)</span> <b>الثمانية</b> من الرخصة (<span dir="ltr">A</span> بفروعها الخمسة، ثم <span dir="ltr">B</span> بشقَّيه، ثم <span dir="ltr">C</span>). <b>صُحّح العدد مرّتين:</b> كان «ستّة» فصار «سبعة» في 19-09-2026م حين أُضيف الشقُّ الثاني من <span dir="ltr">(B)</span> إلى الفحص، <b>والعددُ الصحيح ثمانيةٌ لا سبعة</b> (L-05 في 31-10-2026م): 5 + 2 + 1 = 8، وهو تفكيكُ الجملة نفسِها، وهو عددُ ما تفحصه بوّابتُها (<span dir="ltr">vlegal</span>)، فكان الرقمُ المنشور يخالف تفكيكَه الذي يَليه ويخالف فاحصَه:
       <div dir="ltr" style="font-family:var(--font-mono,monospace);font-size:var(--fs-3xs);line-height:var(--lh-loose);margin-top:6px;padding:9px 11px;border:1px solid var(--line);border-radius:8px">
-        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.575</span>+<span id="fHashAttr">4ef8a0dc</span>) &mdash; https://mrsdx-fo.net<br>
+        &laquo;المرصد المالي والاقتصادي&raquo; (<span id="fVerAttr">2.577</span>+<span id="fHashAttr">3f5a30d3</span>) &mdash; https://mrsdx-fo.net<br>
         &copy; 2026 <span dir="rtl">مُعِدّ المرصد المالي والاقتصادي</span> &mdash; <span dir="rtl">الطبقة المشتقّة وحدها</span> &mdash; CC BY 4.0<br>
         https://creativecommons.org/licenses/by/4.0/ &mdash; <span dir="rtl">إخلاء الضمانات وحدّ المسؤولية: القسم 5</span><br>
         <span dir="rtl">المادة معدَّلة: أُعيد تنسيق أرقام ناشريها واحتُسبت منها مؤشرات مشتقّة</span><br>
@@ -4249,7 +4277,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
          وتُسقط اسمَ من يُنسب إليه، وإشعارَ حقوق المؤلف، وإشعارَ إخلاء
          الضمانات، وبيانَ التعديل، ولا رابطَ في الصفحة كلِّها إلى نصّ
          الرخصة (‎a[href*="creativecommons"]‎ = صفر على اللوحات الخمس). --></div></div>
-    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.575+4ef8a0dc · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">4ef8a0dc</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن لوحة المرجع، تبويب الحوكمة والالتزام.</div>
+    <div class="card" id="ab-ver"><h3>الإصدار وقناة الإبلاغ</h3><div class="abtext"><div style="margin-bottom:7px"><b>الإصدار:</b> <span id="fVer" dir="ltr">2.577+3f5a30d3 · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHash" dir="ltr" style="font-family:var(--font-mono,monospace)">3f5a30d3</span> · <b>تصحيح خطأ أو ملاحظة:</b> تُفتح مسألةٌ في مستودع اللوحة على <span dir="ltr">GitHub</span>، <span class="srclinks"><a href="https://github.com/salrajih90/mirsad/issues" target="_blank" rel="noopener">صفحة المسائل (Issues)</a></span>، وهي قناةُ الإبلاغ المعلنة، وتُقيَّد كل معالجة في <b>سجلّ التصحيحات</b> ضمن لوحة المرجع، تبويب الحوكمة والالتزام.</div>
     <!-- ax-16 (كان): محاور الرسوم تسير من اليسار إلى اليمين في صفحةٍ عربية
          RTL، وأثاثُ الرسم مضبوطٌ على RTL، فالاختيارُ مشروعٌ والصمتُ عنه هو
          المشكلة.
@@ -4273,7 +4301,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   <div class="footline" style="margin-top:9px">
     <button type="button" id="goAbout" class="aboutlink">عن اللوحة: الصفة والمصادر والرخصة واصطلاحات العرض</button>
   </div>
-  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVerFoot" dir="ltr">2.575+4ef8a0dc · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHashFoot" dir="ltr" style="font-family:var(--font-mono,monospace)">4ef8a0dc</span></div>
+  <div class="footline" style="margin-top:9px"><b>الإصدار:</b> <span id="fVerFoot" dir="ltr">2.577+3f5a30d3 · 03-11-2026م</span> · <b>بصمة المحتوى:</b> <span id="fHashFoot" dir="ltr" style="font-family:var(--font-mono,monospace)">3f5a30d3</span></div>
 </footer>
 </div>
 
@@ -15604,7 +15632,7 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
   "def_ar": "أي يوم في السنة لا يختص بأيام العمل فقط."
  }
 ]</script>
-<script>window.MIRSAD_GATES={"plants": {"va11y": 20, "vdash": 8, "vtok": 14, "vsr": 8, "vlen": 5, "vfresh": 4, "vcsv": 14, "vlegal": 8, "vtabs": 5, "vaxis": 4, "vtext": 18, "vall": 2, "vstamps": 3, "vleak": 3, "vdcat": 2, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["econ", "energy", "fiscal", "home", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif", "ref"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vlen", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
+<script>window.MIRSAD_GATES={"plants": {"vlen": 6, "va11y": 20, "vdash": 8, "vtok": 14, "vsr": 8, "vfresh": 4, "vcsv": 14, "vlegal": 8, "vtabs": 5, "vaxis": 4, "vtext": 18, "vall": 2, "vstamps": 3, "vleak": 3, "vdcat": 2, "vpaint": 25, "vcov": 2, "vpart": 3, "vneg": 2, "vscope": 1, "vfade": 1, "vdir": 4, "vrev": 3, "vname": 1, "vprec": 2}, "boards": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "declared": {"va11y": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vall": ["fiscal", "econ", "energy", "pif", "ref"], "vaxis": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcov": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vcsv": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdash": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vdcat": [], "vdir": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfade": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vfresh": [], "vleak": ["fiscal", "econ", "energy", "pif", "ref"], "vlegal": [], "vlen": ["home", "fiscal", "econ", "energy", "pif"], "vname": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vneg": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpaint": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vpart": ["fiscal"], "vplant": ["econ", "energy", "fiscal", "home", "pif", "ref"], "vprec": [], "vrev": [], "vscope": ["fiscal"], "vsr": ["home", "fiscal", "econ", "energy", "pif", "ref", "about"], "vstamps": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtabs": ["fiscal"], "vtext": ["home", "fiscal", "econ", "energy", "pif", "ref"], "vtok": []}, "plantBoards": ["(كامل)", "econ", "energy", "fiscal", "home", "pif", "ref"], "noPlant": ["vplant"], "files": ["va11y", "vall", "vaxis", "vcov", "vcsv", "vdash", "vdcat", "vdir", "vfade", "vfresh", "vleak", "vlegal", "vlen", "vname", "vneg", "vpaint", "vpart", "vplant", "vprec", "vrev", "vscope", "vsr", "vstamps", "vtabs", "vtext", "vtok"]};window.DATA={
  "periods": [
   "2017Q1",
   "2017Q2",
@@ -24801,6 +24829,26 @@ section p, section li, div.muted, .card div.muted{max-width:60ch}
     "was": "حالاتُ البطاقة الثلاث تُدرِج عقدةً وتُزيلها عند كلِّ تصييرٍ مؤجَّل، ومُراقبُ التغيير الذي يحرس حدَّ النصّ كان يستأنف المرورَ على المستند كلِّه عند أيِّ تغيير. فصار كلُّ وسمِ انتظارٍ يُعيد قياسَ 380 كتلةَ نصّ، وقيس الأثرُ: زمنُ مشاهدة إعلان قارئ الشاشة في تبويب السيناريوهات 3,700 مللي ثانيةً بعد أن كان دون 706.",
     "now": "تُستثنى سجلّاتُ التغيير التي كلُّ عقدها وسمُ حالة: وسمٌ من ثلاث كلماتٍ لا يحتاج إعادةَ قياسِ كتل النصّ كلِّها. والمقيسُ بعده: 1,595 مللي ثانيةً أقصى زمنِ مشاهدة، وهو طولُ المهمّة المتزامنة لا أثرُ الطيّ.",
     "why": "طبقةٌ تُضاف تدفع ثمنَها في طبقةٍ أخرى إن لم يُحَدَّ أثرُها. والمُراقبُ الذي يستأنف على كلِّ تغييرٍ يجعل كلَّ إضافةٍ صغيرةٍ غاليةً، فالاستثناءُ يُكتب حيث يُعرَف أنَّ التغييرَ لا يمسّ المقيس."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.577",
+    "t": "واجهة",
+    "w": "مقاسُ السطر بوحدةٍ تصدق على العربية",
+    "ref": "UX-35 · GATE-43",
+    "was": "قيس طولُ السطر في 481 كتلةَ نصٍّ في اللوحات الست بقياسٍ حقيقيٍّ للمحرف (عرضُ عيّنةٍ عربيّةٍ من الصفحة مقسوماً على عدد محارفها، لا بالتقدير): الوسيطُ <b>83 محرفاً</b> والمئينُ 90 مئتان والأقصى 206، و<b>478 كتلةً من 481</b> فوق المدى الموصى به (45 إلى 75 محرفاً). وعلّتان لا واحدة: <b>تسعةُ أرقامٍ لمفهومٍ واحد</b> (60 و70 و74 و78 و78 و82 و82 و88 و92 محرفاً في تسع قواعد) وكتلٌ بلا حدٍّ أصلاً (الفقراتُ وصناديقُ التنبيه) فبلغ سطرُها 206؛ <b>ووحدةُ ch تكذب على العربية</b>: هي عرضُ المحرف «0» وهو رقمٌ عريض، ومتوسّطُ المحرف العربيِّ في الخطّ المنشور أضيقُ منه بنحو 12%، فحدُّ «74ch» كان يُنتج 83 محرفاً فعليّاً. فالقاعدةُ تقول شيئاً والمعروضُ شيءٌ آخر.",
+    "now": "صار المقاسُ رقماً واحداً مُعلَناً <b>بوحدة em</b>: متوسّطُ المحرف العربيِّ المقيس 0.456 من مقاس الخطّ، فـ31em تُنتج نحوَ 68 محرفاً في أيِّ درجةٍ من السلّم (النسبةُ ثابتةٌ لأن عائلةَ الخطّ واحدة). وسرى على كلِّ كتلةِ نثرٍ لا على بعضها، والجداولُ والضوابطُ خارجَه بالإعلان (الخليّةُ يحكمها عرضُ عمودها، والوسمُ ليس نثراً). والمقيسُ بعده: الوسيطُ <b>66</b> محرفاً والأقصى <b>68</b>، وصفرُ كتلةٍ فوق 75 من 481. وتحرسه البوّابةُ بالقياس نفسِه لا بالتقدير، وللذراع أرضيّةٌ تُسقط البناءَ عند صفرِ قياس. ومزروعةٌ تُثبت الالتقاط.",
+    "why": "أطولُ من خمسةٍ وسبعين محرفاً يُجهِد حركةَ العين بين آخر السطر وأوّل الذي يليه فيَضيع السطر، وهو أثرٌ مادّيٌّ لا ذوق. والدرسُ الأعمّ: وحدةُ القياس قد تكذب على اللغة، فالحدُّ يُعلَن في الوحدة التي تصدق على ما يُقرأ، ويُقاس بالمحرف لا بالتقدير."
+   },
+   {
+    "d": "03-11-2026م",
+    "v": "2.577",
+    "t": "حوكمة",
+    "w": "رفعُ التخطّي لا يُعلَّق على فراغ الخيط",
+    "ref": "G-33 · A-02 · G-31",
+    "was": "رفعُ صنف التخطّي عن البطاقات الظاهرة (content-visibility) كان يُجدَل بـ requestIdleCallback، وهو يُجاع تحت حِملٍ متّصل. فأخفقت بوّابةُ الإتاحة في الوضع الداكن على ثلاث بطاقاتٍ ظاهرةٍ ما زالت متخطّاةً في لوحة المرجع، ومرّت على اللوحة نفسِها منفردةً بصفرِ بطاقةٍ في أوّل قياس. وحدُّ انتظار البوّابة كان 4,000 مللي ثانيةً <b>وتجاوزُه مبتلَعٌ</b>، فتأخُّرُ الرفع يُقرأ عطبَ إتاحةٍ منسوباً إلى الصفحة وهو سباقُ قياس.",
+    "now": "الرفعُ يُجدَل بمؤقّتٍ قصيرٍ مضمونِ الوقوع لا بفراغ الخيط: الخطوةُ رفعُ صنفٍ عن أربع بطاقاتٍ لا أكثر، فلا عائدَ من تأجيلها، والثمنُ أنَّ محتوىً ظاهراً يبقى خارجَ شجرة الإتاحة ما دام الخيطُ مشغولاً. وانتظارُ البوّابة صار على إشارتين (خلوُّ طابور التأجيل ثمّ خلوُّ المتخطّى) بحدٍّ مُعلَنٍ 12,000 مللي ثانية، <b>وتجاوزُ الحدِّ إخفاقٌ مُسمّى باسمه</b> لا عطبُ إتاحةٍ منسوبٌ إلى الصفحة.",
+    "why": "ما يُؤجَّل إلى فراغٍ لا يقع حين لا يوجد فراغ، فتأجيلُ عملٍ ضئيلٍ يشتري عطباً كبيراً. وحدُّ انتظارٍ يُبتلَع تجاوزُه يُنتج تشخيصاً كاذباً: الصفحةُ تُلام على بطءِ القياس. فلكلِّ حدٍّ اسمٌ عند تجاوزه."
    }
   ],
   "correctionsNote": "سجل تصحيحات <b>لوحات المالية والاقتصاد والطاقة والبداية والطبقة المشتركة</b>. ولوحة صندوق الاستثمارات العامة لها سجلّها في لوحة المرجع، تبويب المنهجية والمعادلات الخاص بها. ومصدر القيود: المراجعة المستقلة في جولاتها المتعاقبة.",
@@ -32364,10 +32412,16 @@ function ixCVRelease(){
     left.slice(0,4).forEach(c=>{ c.classList.remove('cv'); });
     schedule();
   };
+  /* ── 03-11-2026م · رفعُ التخطّي لا يُعلَّق على فراغ الخيط ────────────────
+     كان الرفعُ يُجدَل بـ‎requestIdleCallback‎، وهو يُجاع تحت حِملٍ متّصل:
+     أخفقت بوّابةُ الإتاحة في الوضع الداكن على ثلاث بطاقاتٍ ظاهرةٍ ما زالت
+     متخطّاة في لوحة المرجع، ومرّت على اللوحة نفسِها منفردةً بصفرِ بطاقةٍ
+     في أوّل قياس. والخطوةُ نفسُها رفعُ صنفٍ عن أربع بطاقاتٍ لا أكثر، فلا
+     عائدَ من تأجيلها إلى فراغ، والثمنُ أنَّ محتوىً ظاهراً يبقى خارجَ شجرة
+     الإتاحة ما دام الخيطُ مشغولاً. فصار الجدلُ بمؤقّتٍ قصيرٍ مضمونِ الوقوع. */
   const schedule=()=>{
     if(_ixCVTimer!=null) return;
-    if(typeof window.requestIdleCallback==='function') _ixCVTimer=window.requestIdleCallback(step,{timeout:1200});
-    else _ixCVTimer=setTimeout(step,48);
+    _ixCVTimer=setTimeout(step,48);
   };
   schedule();
 }
