@@ -12,17 +12,17 @@ make check      # يبني، ثم يشغّل السلسلة كاملة، ثم ي
 make publish    # لا يقع إلا بشهادةِ اجتيازٍ ساريةٍ لهذا الملفّ، وإلا شُغّلت السلسلةُ كاملةً
 ```
 
-`node vall.js` يقود السلسلة: **29 بوابة** (`vall` ثم 28 بعدها).
+`node vall.js` يقود السلسلة: **30 بوابة** (`vall` ثم 29 بعدها).
 وترتيبُها في ثابت `ORDER` داخل `vall.js` — **وهو المصدرُ الوحيد**؛ لا يُنسخ هنا ولا في نصّ مهمة:
 
-`vall` · `vfresh` · `vdcat` · `vlegal` · `vtok` · `vstamps` · `vneg` · `vrev` · `vprec` · `vscope` · `vtabs` · `vdash` · `vtext` · `vfade` · `vaxis` · `vdir` · `vcov` · `vpart` · `va11y` · `vpaint` · `vsr` · `vname` · `vlen` · `vfold` · `vperf` · `vfocus` · `vleak` · `vcsv` · `vplant`
+`vall` · `vfresh` · `vdcat` · `vlegal` · `vtok` · `vstamps` · `vneg` · `vrev` · `vprec` · `vscope` · `vtabs` · `vdash` · `vtext` · `vfade` · `vaxis` · `vdir` · `vcov` · `vpart` · `va11y` · `vpaint` · `vsr` · `vname` · `vlen` · `vfold` · `vperf` · `vfocus` · `vdw` · `vleak` · `vcsv` · `vplant`
 
 **حارسان في السلسلة نفسها:**
 
 - بوابةٌ في المجلد وخارج `ORDER` (يتيمة) **تُسقط** التشغيل.
 - بوابةٌ في `ORDER` ومفقودةٌ من المجلد **تُسقط** التشغيل — فالبوابةُ الغائبةُ لا تفحص شيئاً وسكوتُها يُقرأ سلامة.
 
-**بوابةُ الحرّاس `vplant`:** تزرع **186 مخالفة** على 28 بوابة، وتغطّي اللوحات: (كامل) · econ · energy · fiscal · home · pif · ref.
+**بوابةُ الحرّاس `vplant`:** تزرع **194 مخالفة** على 29 بوابة، وتغطّي اللوحات: (كامل) · econ · energy · fiscal · home · pif · ref.
 ولكلِّ مخالفةٍ حقلُ `expect` يُقابَل بسبب سقوط الفاحص — فالسقوطُ لسببٍ غير المُسمّى إخفاق.
 
 **بلا زرع:** `vplant`.
